@@ -19,75 +19,75 @@
 #include "humang.h"
 
 
-//------------------------------------------------------------------------
 THuman::THuman(int _nGamer) : TGamer(_nGamer) {
-
 }
-//------------------------------------------------------------------------
-THuman::THuman(int _nGamer,TDeskView *_DeskView):TGamer(_nGamer,_DeskView) {
 
+
+THuman::THuman(int _nGamer,TDeskView *_DeskView) : TGamer(_nGamer, _DeskView) {
 }
-//------------------------------------------------------------------------
-TGamesType THuman::makemove(TGamesType lMove,TGamesType rMove) {
+
+
+TGamesType THuman::makemove (TGamesType lMove, TGamesType rMove) {
   //ход при торговле
   TGamesType tmpGamesType;
   WaitForMouse = 1;
-//    PQApplication -> mainWidget () -> setMouseTracking ( TRUE );
+  //PQApplication->mainWidget ()->setMouseTracking ( TRUE );
 
-  Formtorg -> EnableAll();
-  if (qMax(lMove,rMove) != gtPass)
-    Formtorg -> DisableLessThan( qMax(lMove,rMove) );
-  if (GamesType != undefined)
-      Formtorg -> DisalbeGames(g86);
-  Formtorg -> DisalbeGames(vist);
-  Formtorg -> EnableGames(gtPass);
-  Formtorg -> showbullet -> setEnabled(TRUE);
-  Formtorg -> bgetback -> setEnabled(FALSE);
-
-
+  Formtorg->EnableAll();
+  if (qMax(lMove, rMove) != gtPass) Formtorg->DisableLessThan(qMax(lMove, rMove));
+  if (GamesType != undefined) Formtorg->DisalbeGames(g86);
+  Formtorg->DisalbeGames(vist);
+  Formtorg->EnableGames(gtPass);
+  Formtorg->showbullet->setEnabled(TRUE);
+  Formtorg->bgetback->setEnabled(FALSE);
 
   do {
-    tmpGamesType = DeskView -> makemove(lMove,rMove);
-    if (tmpGamesType == 0 ) { // вернуть снос
-        GetBackSnos();
-        Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
-        makemove( (TCard *)NULL,(TCard *)NULL,(TGamer *)NULL,(TGamer *)NULL);
-        Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
-        makemove( (TCard *)NULL,(TCard *)NULL,(TGamer *)NULL,(TGamer *)NULL);
-        Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
-
-    } else if (tmpGamesType == 1) { // показать пулю
-      kpref -> DeskTop-> nflShowPaper = 1;
-      kpref ->  slotShowBollet();
-
+    tmpGamesType = DeskView->makemove(lMove, rMove);
+    if (tmpGamesType == 0) {
+      // вернуть снос
+      GetBackSnos();
+/*
+      Repaint(DeskView, (DeskView->DesktopWidht-DeskView->xLen)/2,
+        DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight, DeskView->xLen, DeskView->yLen);
+      makemove((TCard *)NULL, (TCard *)NULL, (TGamer *)NULL, (TGamer *)NULL);
+      Repaint(DeskView, (DeskView->DesktopWidht-DeskView->xLen)/2,
+        DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight, DeskView->xLen, DeskView->yLen);
+      makemove((TCard *)NULL, (TCard *)NULL, (TGamer *)NULL, (TGamer *)NULL);
+      Repaint(DeskView, (DeskView->DesktopWidht-DeskView->xLen)/2,
+        DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight, DeskView->xLen, DeskView->yLen);
+*/
+      RepaintSimple(true);
+    } else if (tmpGamesType == 1) {
+      // показать пулю
+      kpref->DeskTop->nflShowPaper = 1;
+      kpref->slotShowBollet();
     }
-  } while(  tmpGamesType <= 1 );
-
+  } while (tmpGamesType <= 1);
   GamesType = tmpGamesType;
-
-
-//    PQApplication -> mainWidget () ->     setMouseTracking ( FALSE );
+  //PQApplication->mainWidget()->setMouseTracking(FALSE);
   WaitForMouse = 0;
-  Formtorg -> EnableAll();
+  Formtorg->EnableAll();
   return GamesType;
-
 }
-//------------------------------------------------------------------------
-TCard *THuman::makemove(TCard *lMove,TCard *rMove,TGamer *aLeftGamer,TGamer *aRightGamer){ //ход
+
+
+TCard *THuman::makemove (TCard *lMove, TCard *rMove, TGamer *aLeftGamer, TGamer *aRightGamer) { //ход
   Q_UNUSED(aLeftGamer)
   Q_UNUSED(aRightGamer)
-    TCard *RetVal = NULL;
-    int nDx=0,j,ii;
-    int Left=0,Top=0,Width/*,Height*/;
 
+  TCard *RetVal = 0;
+/*
+  int nDx=0, j, ii;
+  int Left = 0, Top = 0, Width;
+*/
 
-    WaitForMouse = 1;
-//    PQApplication -> mainWidget () ->     setMouseTracking ( TRUE );
-
-//    Height = DeskView->yLen;
-    while ( !RetVal ) {
-            //PQApplication ->processOneEvent();
-            PQApplication ->processEvents();
+  WaitForMouse = 1;
+  //PQApplication->mainWidget ()->setMouseTracking ( TRUE );
+  //Height = DeskView->yLen;
+  while (!RetVal) {
+/*
+    //PQApplication->processOneEvent();
+    PQApplication->processEvents();
         // View Prot
           DeskView->xLen=DeskView->DesktopWidht/2-2*DeskView->xBorder;
           DeskView->yLen=DeskView->DesktopHeight/2-2*DeskView->yBorder;
@@ -111,15 +111,18 @@ TCard *THuman::makemove(TCard *lMove,TCard *rMove,TGamer *aLeftGamer,TGamer *aRi
             }
           }
         // end View Port
-
+*/
 /*        DeskView->xLen=DeskView->DesktopWidht/2-2*DeskView->xBorder;
         DeskView->yLen=DeskView->DesktopHeight/2-2*DeskView->yBorder;
         Left   = (DeskView->DesktopWidht-DeskView->xLen)/2;
         Top    = DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight;
         Width  = DeskView->xLen;*/
-
+/*
         if (aCards->aCount)
-            nDx = (DeskView->xLen - DeskView->xBorder*2) / (aCards -> aCount+1);
+            nDx = (DeskView->xLen - DeskView->xBorder*2) / (aCards->aCount+1);
+*/
+    int cNo = cardAt(X, Y);
+/*
         j=0;
         ii=-1;
         for (int i = 0;i<aCards->aCount ;i++) {
@@ -130,39 +133,42 @@ TCard *THuman::makemove(TCard *lMove,TCard *rMove,TGamer *aLeftGamer,TGamer *aRi
                 ii = i;   // Remember only last
             j++;
         }
-        if ( ii != -1 ) {
-              TCard *Validator;
-              int koz = nGetKoz();
-            Validator = RetVal = (TCard *)aCards->At(ii);
-            if ( lMove || rMove ) {
-                Validator = lMove;
-              if (lMove == NULL)
-                Validator = rMove;
-            }
-            // пропускаем ход через правила
-            if ( (Validator->CMast == RetVal->CMast) || ( !aCards->MinCard(Validator->CMast) && ( RetVal->CMast == koz || ( (!aCards->MinCard(koz) ) ) )/*&&*/ ) ) {
-              ;
-            } else {
-              RetVal = NULL;
-            }
-        }
+*/
+    if ( cNo != -1 ) {
+      TCard *Validator;
+      int koz = nGetKoz();
+      Validator = RetVal = (TCard *)aCards->At(cNo);
+      if (lMove || rMove) {
+        Validator = lMove;
+        if (lMove == NULL) Validator = rMove;
+      }
+      // пропускаем ход через правила
+      if ((Validator->CMast == RetVal->CMast) ||
+          (!aCards->MinCard(Validator->CMast) && (RetVal->CMast == koz || ((!aCards->MinCard(koz)))))) {
+      } else {
+        RetVal = NULL;
+      }
     }
-    aCards    -> Remove(RetVal);
-    aCardsOut -> Insert(RetVal);
-    X=Y=0;
-//    PQApplication -> mainWidget () ->     setMouseTracking ( FALSE );
-
-    WaitForMouse = 0;
-    return RetVal;
+  }
+  if (RetVal) {
+    aCards->Remove(RetVal);
+    aCardsOut->Insert(RetVal);
+  }
+  X = Y = 0;
+  WaitForMouse = 0;
+  return RetVal;
 }
-//-------------------------------------------------------------------------
+
+
 TGamesType THuman::makeout4miser(void) { // после сноса чего играем
   WaitForMouse = 1;
   makemove( (TCard *)NULL,(TCard *)NULL,(TGamer *)NULL,(TGamer *)NULL);
-  Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
-  DeskView -> mySleep(1);
+  //!Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
+  RepaintSimple(true);
+  DeskView->mySleep(1);
   makemove( (TCard *)NULL,(TCard *)NULL,(TGamer *)NULL,(TGamer *)NULL);
-  Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
+  //!Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
+  RepaintSimple(true);
   WaitForMouse = 0;
   return g86;
 }
@@ -170,48 +176,53 @@ TGamesType THuman::makeout4miser(void) { // после сноса чего играем
 TGamesType THuman::makeout4game(void) { // после сноса чего играем
   WaitForMouse = 1;
   TGamesType tmpGamesType;
-//    PQApplication -> mainWidget () ->     setMouseTracking ( TRUE );
+//    PQApplication->mainWidget ()->setMouseTracking ( TRUE );
   X=Y=0;
   THuman::makemove( (TCard *)NULL,(TCard *)NULL,(TGamer *)NULL,(TGamer *)NULL);
-  Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
-  DeskView -> mySleep(1);
+  //Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
+  RepaintSimple(true);
+  DeskView->mySleep(1);
 //  Repaint(DeskView,);
   //Repaint (TDeskView *DeskView,int Left,int Top,int Width,int Height) {
   THuman::makemove( (TCard *)NULL,(TCard *)NULL,(TGamer *)NULL,(TGamer *)NULL);
-  Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
-  Formtorg -> EnableAll();
-  Formtorg -> DisalbeGames(vist);
-  Formtorg -> DisalbeGames(gtPass);
+  //Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
+  RepaintSimple(true);
+  Formtorg->EnableAll();
+  Formtorg->DisalbeGames(vist);
+  Formtorg->DisalbeGames(gtPass);
   if (GamesType != g86) {
-    Formtorg -> DisalbeGames(g86);
+    Formtorg->DisalbeGames(g86);
   }
-  Formtorg -> DisableLessThan(  GamesType );
-//  GamesType = DeskView -> makemove((TGamesType)NULL,(TGamesType)NULL);
-  Formtorg -> showbullet -> setEnabled(TRUE);
-  Formtorg -> bgetback -> setEnabled(TRUE);
+  Formtorg->DisableLessThan(  GamesType );
+//  GamesType = DeskView->makemove((TGamesType)NULL,(TGamesType)NULL);
+  Formtorg->showbullet->setEnabled(TRUE);
+  Formtorg->bgetback->setEnabled(TRUE);
 
 
   do {
-    tmpGamesType = DeskView -> makemove(zerogame, zerogame);
+    tmpGamesType = DeskView->makemove(zerogame, zerogame);
     if (tmpGamesType == 0 ) { // вернуть снос
         GetBackSnos();
-        Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
+        //Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
+        RepaintSimple(true);
         makemove( (TCard *)NULL,(TCard *)NULL,(TGamer *)NULL,(TGamer *)NULL);
-        Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
+        //Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
+        RepaintSimple(true);
         makemove( (TCard *)NULL,(TCard *)NULL,(TGamer *)NULL,(TGamer *)NULL);
-        Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
+        //Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
+        RepaintSimple(true);
 
     } else if (tmpGamesType == 1) { // показать пулю
-      kpref ->  slotShowBollet();
+      kpref->slotShowBollet();
 
     }
   } while(  tmpGamesType <= 1 );
   GamesType = tmpGamesType;
 
-//  GamesType = DeskView -> makemove(zerogame, zerogame );
+//  GamesType = DeskView->makemove(zerogame, zerogame );
 
-  Formtorg -> EnableAll();
-//    PQApplication -> mainWidget () ->     setMouseTracking ( FALSE );
+  Formtorg->EnableAll();
+//    PQApplication->mainWidget ()->setMouseTracking ( FALSE );
 
   WaitForMouse = 0;
   return GamesType;
@@ -220,23 +231,35 @@ TGamesType THuman::makeout4game(void) { // после сноса чего играем
 TGamesType THuman::makemove(TGamesType MaxGame,int HaveAVist,int nGamerVist) {
   Q_UNUSED(HaveAVist)
   Q_UNUSED(nGamerVist)
-//      Formtorg -> DisalbeLessThan()
+//      Formtorg->DisalbeLessThan()
       if ( MaxGame == g86 ) {
         GamesType = g86catch;
       } else {
-        Formtorg ->DisalbeAll();
-          Formtorg ->EnableGames(gtPass);
-          Formtorg ->EnableGames(vist);
-          GamesType = DeskView -> makemove(zerogame,zerogame);
-          Formtorg ->EnableAll();
+        Formtorg->DisalbeAll();
+          Formtorg->EnableGames(gtPass);
+          Formtorg->EnableGames(vist);
+          GamesType = DeskView->makemove(zerogame,zerogame);
+          Formtorg->EnableAll();
         }
       return GamesType;
 }
 //-------------------------------------------------------------------------
-void THuman::HintCard(int lx,int ly) {
+void THuman::HintCard (int lx,int ly) {
+  if (!WaitForMouse) {
+    if (oldii == -1) return;
+    oldii = -1;
+    //Repaint(DeskView, int Left, int Top, int Width, int Height, bool opened=false, int selNo=-1);
+    RepaintSimple(true);
+    return;
+  }
+  int cNo = cardAt(lx, ly);
+  if (cNo == oldii) return;
+  oldii = cNo;
+  RepaintSimple(true);
+/*
   TCard *RetVal = NULL;
   int nDx=0,j,ii;
-  int Left=0,Top=0,Width/*,Height*/;
+  int Left=0,Top=0,Width;
   if ( WaitForMouse ) {
   // View Prot
     DeskView->xLen=DeskView->DesktopWidht/2-2*DeskView->xBorder;
@@ -261,7 +284,7 @@ void THuman::HintCard(int lx,int ly) {
     }
   // end View Port
     if (aCards->aCount)
-      nDx = (DeskView->xLen - DeskView->xBorder*2) / (aCards -> aCount+1);
+      nDx = (DeskView->xLen - DeskView->xBorder*2) / (aCards->aCount+1);
     j=0;
     ii=-1;
     for (int i = 0;i<aCards->aCount ;i++) {
@@ -296,5 +319,6 @@ void THuman::HintCard(int lx,int ly) {
     j++;
     }
   } // waiting for mouse
+  */
 }
 //-------------------------------------------------------------------------

@@ -116,6 +116,11 @@ TDeskView::~TDeskView () {
 }
 
 
+void TDeskView::emitRepaint () {
+  emit deskChanged();
+}
+
+
 void TDeskView::mySleep (int seconds) {
   time_t tStart = time(NULL);
   Event = 0;
@@ -126,12 +131,17 @@ void TDeskView::mySleep (int seconds) {
     timer->start(seconds*1000);
   }
   while (!Event) {
-    PQApplication->processEvents();
+    emitRepaint();
+    qApp->processEvents();
+    qApp->sendPostedEvents();
+    qApp->flush();
     if (seconds > 0) {
       if (difftime(time(NULL), tStart) >= seconds) Event = 1;
     }
+    usleep(10000); //1000000
   }
   if (timer) delete timer;
+  emitRepaint();
 }
 
 

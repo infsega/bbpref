@@ -15,7 +15,8 @@
 #include "card.h"
 
 
-class TDeskView {
+class TDeskView : public QObject {
+  Q_OBJECT
 public:
   TDeskView (int aW, int aH);
   ~TDeskView ();
@@ -34,6 +35,11 @@ public:
   void StatusBar (const QString &text);
   void drawRotatedText (QPainter &p, int x, int y, float angle, const QString &text);
 
+  void emitRepaint ();
+
+signals:
+  void deskChanged ();
+
 public:
   int Event;
   QPixmap *mDeskBmp;
@@ -42,7 +48,7 @@ public:
   int DesktopWidht, DesktopHeight;
   int CardWidht, CardHeight;
   int xBorder, yBorder;
-  int xLen,yLen;
+  //int xLen,yLen;
   int xDelta, yDelta;
 };
 

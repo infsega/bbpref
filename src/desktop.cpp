@@ -583,6 +583,11 @@ void TDeskTop::Repaint (int nGamer) {
   TGamer *tmpg = GetGamerByNum(nGamer);
   if (!tmpg) return;
   tmpg->DeskView = DeskView;
+  tmpg->RepaintSimple(!(tmpg->nInvisibleHand));
+/*
+  TGamer *tmpg = GetGamerByNum(nGamer);
+  if (!tmpg) return;
+  tmpg->DeskView = DeskView;
   switch (nGamer) {
     case 1:
       tmpg->Repaint(DeskView, (DeskView->DesktopWidht-DeskView->xLen)/2,
@@ -596,6 +601,12 @@ void TDeskTop::Repaint (int nGamer) {
         DeskView->yBorder, DeskView->xLen,DeskView->yLen);
     default: ;
   }
+*/
+/*
+  Repaint(1);
+  Repaint(2);
+  Repaint(3);
+*/
 }
 
 
@@ -633,8 +644,10 @@ void TDeskTop::Repaint (int left, int top, int right, int bottom) {
 
 void TDeskTop::Repaint () {
   DeskView->ClearScreen();
+/*
   DeskView->xLen = DeskView->DesktopWidht/2-2*DeskView->xBorder;
   DeskView->yLen = DeskView->DesktopHeight/2-2*DeskView->yBorder;
+*/
   Repaint(1);
   Repaint(2);
   Repaint(3);

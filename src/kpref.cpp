@@ -47,6 +47,7 @@ void Kpref::init () {
   DeskView = new TDeskView(width(), height());
   DeskTop = new TDeskTop(DeskView);
   connect(DeskTop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
+  connect(DeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
 }
 
 
@@ -60,7 +61,7 @@ Kpref::~Kpref () {
 
 void Kpref::adjustDesk () {
   if (DeskView) DeskView->ClearScreen();
-  repaint();
+  update();
 }
 
 
@@ -129,7 +130,7 @@ void Kpref::slotShowBollet () {
 
 
 void Kpref::forceRepaint () {
-  repaint();
+  update();
 }
 
 
@@ -173,6 +174,7 @@ void Kpref::slotNewSingleGame () {
     g10vist = false; //k8:!!!
     globvist = true; //k8:!!!
     connect(DeskTop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
+    connect(DeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
     //DeskView->ClearScreen();
   }
   //!!!fileMenu->setItemEnabled(nSaveGameID,TRUE);

@@ -1841,8 +1841,11 @@ void TGamer::OnlyMessage (TDeskView *DeskView, int Left, int Top, int Width, int
 // at least 28 ints (14 int pairs); return # of used ints; the last int is -1
 // result: ofs, cardNo, ..., -1
 int TGamer::buildHandXOfs (int *dest, int startX, bool opened) {
-  int cnt = 0;
+  int cnt = 0, oldXX = startX, *oDest = dest;
   TCard *cur = 0, *prev = 0;
+
+  if (nGamer == 3) startX = 0;
+  // normal
   for (int i = 0; i < aCards->aCount; i++) {
     TCard *pp = (TCard *)aCards->At(i);
     if (!pp) continue;
@@ -1859,19 +1862,55 @@ int TGamer::buildHandXOfs (int *dest, int startX, bool opened) {
   }
   *dest++ = -1;
   *dest = -1;
+
+  if (nGamer == 3 && cnt) {
+    // righttop
+    startX = oldXX-(oDest[(cnt-1)*2]+CARDWIDTH+4);
+    for (int f = 0; f < cnt; f++) oDest[f*2] += startX;
+  }
+
   return cnt;
 }
 
 
+void TGamer::getLeftTop (int playerNo, int *left, int *top) {
+  *left = 0; *top = 0;
+  int ofs[28], cnt;
+  switch (playerNo) {
+    case 1:
+      *left = (DeskView->DesktopWidht-(DeskView->DesktopWidht/2-2*DeskView->xBorder))/2;
+      *top = DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight;
+      break;
+    case 2:
+      *left = DeskView->xBorder;
+      *top = DeskView->yBorder;
+      break;
+    case 3:
+      //*left = DeskView->DesktopWidht/2+DeskView->xBorder;
+      *left = DeskView->DesktopWidht-DeskView->xBorder;
+      *top = DeskView->yBorder;
+/*
+      cnt = buildHandXOfs(ofs, *left, true);
+      if (cnt) *left = ofs[0]; else *left -= CARDWIDTH+4;
+*/
+      break;
+    default: ;
+  }
+}
+
 int TGamer::cardAt (int lx, int ly, bool opened) {
   int ii = -1, ofs[28];
-  int Left = 0, Top = 0, Width;
+  int left, top;
+  getLeftTop(nGamer, &left, &top);
+/*
   DeskView->xLen = DeskView->DesktopWidht/2-2*DeskView->xBorder;
   DeskView->yLen = DeskView->DesktopHeight/2-2*DeskView->yBorder;
   Width = DeskView->xLen;
+*/
+/*
   switch (nGamer) {
     case 1:
-      Left = (DeskView->DesktopWidht-DeskView->xLen)/2;
+      Left = (DeskView->DesktopWidht-(DeskView->DesktopWidht/2-2*DeskView->xBorder))/2;
       Top = DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight;
       break;
     case 2:
@@ -1884,11 +1923,12 @@ int TGamer::cardAt (int lx, int ly, bool opened) {
       break;
     default: return -1;
   }
+*/
   // end View Port
-  buildHandXOfs(ofs, Left, opened);
+  buildHandXOfs(ofs, left, opened);
   for (int f = 0; ofs[f] >= 0; f += 2) {
     int curX = ofs[f];
-    int x1 = curX, y1 = Top;//+DeskView->yBorder;
+    int x1 = curX, y1 = top;//+DeskView->yBorder;
     int x2 = x1+CARDWIDTH, y2 = y1+CARDHEIGHT;
     if (x1 < lx && lx < x2 && y1 < ly && ly < y2) ii = ofs[f+1];
   } // end for
@@ -1909,7 +1949,7 @@ void TGamer::Repaint (TDeskView *aDeskView, int Left, int Top, int Width, int He
     TCard *card = (TCard *)aCards->At(ofs[f+1]);
     aDeskView->drawCard(card, x, y, !nInvisibleHand, ofs[f+1]==selNo);
   }
-  if (GamesType != undefined ) {
+  if (GamesType != undefined) {
     QString msg;
     if (nGetsCard) {
       msg += QString::number(nGetsCard);
@@ -1921,8 +1961,15 @@ void TGamer::Repaint (TDeskView *aDeskView, int Left, int Top, int Width, int He
       msg += NikName;
       msg += ")";
     }
-    aDeskView->drawText(msg, Left+2, Top+CARDHEIGHT+4);
+    aDeskView->drawText(msg, ofs[0]>=0 ? ofs[0] : Left, Top+CARDHEIGHT+4);
   }
+}
+
+
+void TGamer::RepaintSimple (bool opened) {
+  int left, top;
+  getLeftTop(nGamer, &left, &top);
+  Repaint(DeskView, left, top, opened, oldii);
 }
 
 

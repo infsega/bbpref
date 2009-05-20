@@ -40,6 +40,7 @@ public:
   // result: ofs, cardNo, ..., -1
   int buildHandXOfs (int *dest, int startX, bool opened);
   int cardAt (int lx, int ly, bool opened=true);
+  void getLeftTop (int playerNo, int *left, int *top);
 
   QString NikName;
   // networking part
@@ -70,6 +71,7 @@ public:
 
   void clear ();
   void Repaint (TDeskView *aDeskView, int Left, int Top, int Width, int Height, bool opened=false, int selNo=-1);
+  void RepaintSimple (bool opened);
   //void OnlyMessage (TDeskView *,int,int,int,int);
 
 private:
