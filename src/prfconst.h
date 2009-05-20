@@ -4,36 +4,44 @@
 #include <QString>
 
 
-#define itoa(i,c,r) sprintf(c,"%i",i)
 /*
+#define itoa(i,c,r) sprintf(c,"%i",i)
 #define min(a,b) (((a)<(b))?(a):(b))
 #define max(a,b) (((a)>(b))?(a):(b))
 */
 
+/*
+#define CARDWIDTH    71
+#define CARDHEIGHT   96
+*/
+#define CARDWIDTH    56
+#define CARDHEIGHT   67
+
 #define FONTSIZE 10
+
+#define SUIT_OFFSET      22
+#define NEW_SUIT_OFFSET  ((CARDWIDTH)+8)
+#define CLOSED_CARD_OFFSET  ((CARDWIDTH)*2/3)
 
 #define PEVENTMILLISECOND 50
 #define CARDINCOLODA 32
 #define MAXMASTLEN   8
-#define CARDWIDTH    71
-#define CARDHEIGHT   96
-#define MAXGAMELEN   1024
 
-#define SECSTDWAIT 1
+#define MAXGAMELEN   1024
 
 
 enum TSide {
-  left=0,
-  right,
-  noside
+  LeftHand=0,
+  RightHand,
+  NoHand
 };
 
 enum TMast {
-  pica=1,
-  trefa,
-  bubna,
-  cherva,
-  withoutmast,
+  SuitSpades=1,
+  SuitClubs,
+  SuitDiamonds,
+  SuitHearts,
+  SuitNone,
 };
 
 enum TGamesType {
@@ -42,7 +50,7 @@ enum TGamesType {
   raspass=57,
   vist=58,
   undefined=59,
-  pass=60,
+  gtPass=60,
   g61=61,g62,g63,g64,g65,
   g71=71,g72,g73,g74,g75,
   g81=81,g82,g83,g84,g85,g86,

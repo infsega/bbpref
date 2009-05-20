@@ -1,9 +1,11 @@
 #include "card.h"
+/*
 #define DEBUG
 #ifdef DEBUG
 #include <stdio.h>
 #include "debug.h"
 #endif
+*/
 
 #include <QVector>
 

@@ -51,6 +51,8 @@ public:
   //int flthread;
 
 public slots:
+  void forceRepaint ();
+
   void slotNewSingleGame();
   void slotShowBollet();
   void slotEndSleep();
@@ -63,6 +65,11 @@ private:
   QMenu *fileMenu;
   QMenu *viewMenu;
   QMenu *helpMenu;
+
+  QAction *actNewGame;
+  QAction *actFileOpen;
+  QAction *actFileSave;
+  QAction *actQuit;
 
 public:
   TDeskTop *DeskTop;

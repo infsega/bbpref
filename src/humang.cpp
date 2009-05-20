@@ -35,12 +35,12 @@ TGamesType THuman::makemove(TGamesType lMove,TGamesType rMove) {
 //    PQApplication -> mainWidget () -> setMouseTracking ( TRUE );
 
   Formtorg -> EnableAll();
-  if (qMax(lMove,rMove) != pass)
+  if (qMax(lMove,rMove) != gtPass)
     Formtorg -> DisableLessThan( qMax(lMove,rMove) );
   if (GamesType != undefined)
       Formtorg -> DisalbeGames(g86);
   Formtorg -> DisalbeGames(vist);
-  Formtorg -> EnableGames(pass);
+  Formtorg -> EnableGames(gtPass);
   Formtorg -> showbullet -> setEnabled(TRUE);
   Formtorg -> bgetback -> setEnabled(FALSE);
 
@@ -181,7 +181,7 @@ TGamesType THuman::makeout4game(void) { // после сноса чего играем
   Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
   Formtorg -> EnableAll();
   Formtorg -> DisalbeGames(vist);
-  Formtorg -> DisalbeGames(pass);
+  Formtorg -> DisalbeGames(gtPass);
   if (GamesType != g86) {
     Formtorg -> DisalbeGames(g86);
   }
@@ -225,7 +225,7 @@ TGamesType THuman::makemove(TGamesType MaxGame,int HaveAVist,int nGamerVist) {
         GamesType = g86catch;
       } else {
         Formtorg ->DisalbeAll();
-          Formtorg ->EnableGames(pass);
+          Formtorg ->EnableGames(gtPass);
           Formtorg ->EnableGames(vist);
           GamesType = DeskView -> makemove(zerogame,zerogame);
           Formtorg ->EnableAll();
@@ -290,11 +290,7 @@ void THuman::HintCard(int lx,int ly) {
             aBorder = 1;
             oldii = ii;
           }
-          if ( i+1 == aCards->aCount ) {
-            DeskView->SysDrawCard(RetVal,Left+j*nDx,Top+DeskView->yBorder,1,aBorder);
-          } else {
-            DeskView->SysDrawCardPartialy(RetVal,Left+j*nDx,Top+DeskView->yBorder,1,aBorder,Left+(j+1)*nDx);
-          }
+          DeskView->drawCard(RetVal,Left+j*nDx,Top+DeskView->yBorder,1,aBorder);
         }
 //      }//if ( i >= qMin(oldii,ii) )
     j++;

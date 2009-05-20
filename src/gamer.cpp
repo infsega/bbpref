@@ -34,66 +34,51 @@
 //#include "netconst.h"
 
 
-//-------------------------------------------------------------------
 TGamer::TGamer(int _nGamer) {
-    nGamer = _nGamer;
-    aScore = new TPlScore();
-    aCards = new TCardList(12); // мои
-    aLeft  = new TCardList(10);  // Противника с лева (предполагаемый или открытые)
-    aRight = new TCardList(10); // С права (предполагаемый или открытые)
-    aOut   = new TCardList(2);   // Снос (мой или предполагаемый)
-    aCardsOut = new TCardList(12); // во взятках мои
-    aLeftOut  = new TCardList(12);  // во взятках Противника с лева (предполагаемый или открытые)
-    aRightOut = new TCardList(12); // во взятках С права (предполагаемый или открытые)
-    Message = new char[MAXMESSAGELEN];
-    NikName = new char[MAXNIKNAMELEN];
-    NikPasswd = new char[MAXNIKNAMELEN];
-    strcpy(Message,"");
-    strcpy(NikName,"");
-    socket =0;
-    set0();
+  nGamer = _nGamer;
+  aScore = new TPlScore();
+  aCards = new TCardList(12); // мои
+  aLeft  = new TCardList(10);  // Противника с лева (предполагаемый или открытые)
+  aRight = new TCardList(10); // С права (предполагаемый или открытые)
+  aOut   = new TCardList(2);   // Снос (мой или предполагаемый)
+  aCardsOut = new TCardList(12); // во взятках мои
+  aLeftOut  = new TCardList(12);  // во взятках Противника с лева (предполагаемый или открытые)
+  aRightOut = new TCardList(12); // во взятках С права (предполагаемый или открытые)
+  NikName = QString();
+  clear();
 }
-//-------------------------------------------------------------------
-TGamer::TGamer(int _nGamer,TDeskView *_DeskView) {
-    nGamer = _nGamer;
-    aScore = new TPlScore();
-    aCards = new TCardList(12);
-    aLeft  = new TCardList(10);
-    aRight = new TCardList(10);
-    aOut   = new TCardList(2);
-    aCardsOut = new TCardList(12);
-    aLeftOut  = new TCardList(12);
-    aRightOut = new TCardList(12);
-    DeskView = _DeskView;
-    Message = new char[MAXMESSAGELEN];
-    NikName = new char[MAXNIKNAMELEN];
-    NikPasswd = new char[MAXNIKNAMELEN];
-    strcpy(Message,"");
-    strcpy(NikName,"");
-    socket = 0;
-    set0();
-}
-//-------------------------------------------------------------------
-TGamer::~TGamer() {
-    /*if (socket)
-      close(socket);
- */
-    delete aCards;
-    delete aLeft;
-    delete aRight;
-    delete aOut;
-    delete aCardsOut;
-    delete aLeftOut;
-    delete aRightOut;
-    delete aScore;
-    delete Message;
-    delete NikName;
-    delete NikPasswd;
 
+
+TGamer::TGamer(int _nGamer,TDeskView *aDeskView) {
+  nGamer = _nGamer;
+  aScore = new TPlScore();
+  aCards = new TCardList(12);
+  aLeft  = new TCardList(10);
+  aRight = new TCardList(10);
+  aOut   = new TCardList(2);
+  aCardsOut = new TCardList(12);
+  aLeftOut  = new TCardList(12);
+  aRightOut = new TCardList(12);
+  DeskView = aDeskView;
+  NikName = QString();
+  clear();
 }
-//-----------------------------------------------------------------------
-void TGamer::set0(void) {
-  flMiser=0;
+
+
+TGamer::~TGamer() {
+  delete aCards;
+  delete aLeft;
+  delete aRight;
+  delete aOut;
+  delete aCardsOut;
+  delete aLeftOut;
+  delete aRightOut;
+  delete aScore;
+}
+
+
+void TGamer::clear () {
+  flMiser = 0;
   aCards->RemoveAll();
   aLeft->RemoveAll();
   aRight->RemoveAll();
@@ -101,48 +86,49 @@ void TGamer::set0(void) {
   aCardsOut->RemoveAll();
   aLeftOut->RemoveAll();
   aRightOut->RemoveAll();
-  Mast=withoutmast;
-  GamesType=undefined;
-  Enemy=noside;
+  Mast = SuitNone;
+  GamesType = undefined;
+  Enemy = NoHand;
   nGetsCard = 0;
   WaitForMouse = 0;
   oldii = -1;
-  for ( int i=0;i<=4;i++ )  {
-    MastTable[i].vzatok=0;
-    MastTable[i].perehvatov=0;
+  for (int i = 0; i <= 4; i++)  {
+    MastTable[i].vzatok = 0;
+    MastTable[i].perehvatov = 0;
   }
-  if (nGamer == 1) {
-    nCardClosed = 0;
-  } else {
-    nCardClosed = 1;
-  }
+  nInvisibleHand = (nGamer != 1);
   Pronesti = NULL;
-
 }
-//-----------------------------------------------------------------------
-void TGamer::AddCard(TCard *aCard) {
+
+
+void TGamer::AddCard (TCard *aCard) {
   aCards->Insert(aCard);
 }
-//-----------------------------------------------------------------------
-void TGamer::AddCard(int _CName, int _CMast) {
+
+
+void TGamer::AddCard (int _CName, int _CMast) {
   aCards->Insert(new TCard (_CName,_CMast));
 }
-//-----------------------------------------------------------------------
+
+
+///////////////////////////////////////////////////////////////////////////////
+// game mechanics
+///////////////////////////////////////////////////////////////////////////////
 TCard *TGamer::Miser1(TGamer *aLeftGamer,TGamer *aRightGamer) {
-    TCard *RetVal=NULL;
-    if (aCards -> AllCard()==10) {  // first move первый выход в 8..A если она одна
+    TCard *cur=NULL;
+    if (aCards -> AllCard()==10) {  // first move первый выход в 8..туз если она одна
         for (int m=1;m<=4;m++) {
           if (aCards->AllCard(m)==1) {
-            RetVal = aCards -> MinCard(m);
+            cur = aCards -> MinCard(m);
             break;
           }
         }
     }
-    if (!RetVal) {
+    if (!cur) {
         for (int m=4;m>=1;m--) {
-          if (RetVal) break;
-          for (int c=A;c>=7;c--) {
-            if (RetVal) break;
+          if (cur) break;
+          for (int c=FACE_ACE;c>=7;c--) {
+            if (cur) break;
             TCard *my;
             //,*leftmax,*leftmin,*rightmax,*rightmin;
             my = aCards->Exist(c,m);
@@ -153,24 +139,24 @@ TCard *TGamer::Miser1(TGamer *aLeftGamer,TGamer *aRightGamer) {
               matrixindex  += aRightGamer -> aCards -> LessThan(my) ? 1:0;  matrixindex <<= 1;
               matrixindex  += aRightGamer -> aCards -> MoreThan(my) ? 1:0;
               if (matrixindex == 1 || matrixindex == 9 || matrixindex==13||(matrixindex >=4 && matrixindex <=7)) {
-                RetVal = my;
+                cur = my;
               }
             }
           }
         }
     }
-    if (!RetVal) RetVal = aCards->MinCard(1);
-    if (!RetVal) RetVal = aCards->MinCard(2);
-    if (!RetVal) RetVal = aCards->MinCard(3);
-    if (!RetVal) RetVal = aCards->MinCard(4);
-    return RetVal;
+    if (!cur) cur = aCards->MinCard(1);
+    if (!cur) cur = aCards->MinCard(2);
+    if (!cur) cur = aCards->MinCard(3);
+    if (!cur) cur = aCards->MinCard(4);
+    return cur;
 }
 //-----------------------------------------------------------------------
 TCard *TGamer::Miser2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) {
-    TCard *RetVal=NULL;
+    TCard *cur=NULL;
       if ( aCards->AllCard( aRightCard->CMast) ) {
-          for (int c=A;c>=7;c--) {
-            if (RetVal) break;
+          for (int c=FACE_ACE;c>=7;c--) {
+            if (cur) break;
             TCard *my;
 //,*leftmax,*leftmin,*rightmax,*rightmin;
             my = aCards->Exist(c,aRightCard->CMast);
@@ -181,32 +167,32 @@ TCard *TGamer::Miser2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) 
               matrixindex  += (*aRightCard < *my) ? 1:0;  matrixindex <<= 1;
               matrixindex  += (*aRightCard > *my) ? 1:0;
               if (matrixindex == 1 || matrixindex == 9 || matrixindex==13||(matrixindex >=4 && matrixindex <=7)) {
-                RetVal = my;
+                cur = my;
               }
             }
           }
-          if (!RetVal) RetVal = aCards->MaxCard(aRightCard->CMast);
+          if (!cur) cur = aCards->MaxCard(aRightCard->CMast);
         } else {
           TCardList *aMaxCardList=new TCardList(20);
           LoadLists(aRightGamer,aLeftGamer,aMaxCardList);
-           RetVal = GetMaxCardWithOutPere();
-             if ( !RetVal ) {
-               RetVal = GetMaxCardPere();  //масть с перехватами (max)
+           cur = GetMaxCardWithOutPere();
+             if ( !cur ) {
+               cur = GetMaxCardPere();  //масть с перехватами (max)
            }
-             if ( !RetVal ) {
-             RetVal = GetMinCardWithOutVz(); // лабуду
+             if ( !cur ) {
+             cur = GetMinCardWithOutVz(); // лабуду
            }
-             if ( !RetVal ) {
-              RetVal = aCards->MaxCard();
+             if ( !cur ) {
+              cur = aCards->MaxCard();
           }
           delete aMaxCardList;
         }
-    return RetVal;
+    return cur;
 }
 //-----------------------------------------------------------------------
 TCard *TGamer::Miser3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) {
 // copy from MyPass3
-  TCard *RetVal=NULL;
+  TCard *cur=NULL;
     /*TCard *MaxCard;*/
     TGamesType tmpGamesType=GamesType;
     TCardList *aMaxCardList=new TCardList(20);
@@ -219,86 +205,86 @@ TCard *TGamer::Miser3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGam
        // постараемсмя пропустить
        if (aLeftCard->CMast == aRightCard ->CMast) {
         if (*aRightCard > *aLeftCard) {
-          RetVal = aCards -> LessThan(aRightCard);
+          cur = aCards -> LessThan(aRightCard);
         } else {
-          RetVal = aCards -> LessThan(aLeftCard);
+          cur = aCards -> LessThan(aLeftCard);
         }
        } else {
-         RetVal = aCards -> LessThan(aLeftCard);
+         cur = aCards -> LessThan(aLeftCard);
        }
-       if ( !RetVal  ) {
-           RetVal = aCards ->MaxCard(aLeftCard->CMast);
+       if ( !cur  ) {
+           cur = aCards ->MaxCard(aLeftCard->CMast);
        }
     } else {
       //  у меня нет масти в которую зашел левый
-       RetVal = GetMaxCardWithOutPere();
-       if ( !RetVal ) {
-               RetVal = GetMaxCardPere();  //масть с перехватами (max)
+       cur = GetMaxCardWithOutPere();
+       if ( !cur ) {
+               cur = GetMaxCardPere();  //масть с перехватами (max)
        }
-       if ( !RetVal ) {
-             RetVal = GetMinCardWithOutVz(); // лабуду
+       if ( !cur ) {
+             cur = GetMinCardWithOutVz(); // лабуду
        }
-       if ( !RetVal ) {
-              RetVal = aCards->MinCard();
+       if ( !cur ) {
+              cur = aCards->MinCard();
        }
 
     }
     GamesType=tmpGamesType;
     delete aMaxCardList;
-  return RetVal;
+  return cur;
 }
 //-----------------------------------------------------------------------
 TCard *TGamer::makemove(TCard *lMove,TCard *rMove,TGamer *aLeftGamer,TGamer *aRightGamer) { //ход
-    TCard *RetVal=NULL;
+    TCard *cur=NULL;
     if (lMove == NULL && rMove == NULL) { // мой заход - первый
-        if ( GamesType == pass || GamesType == vist ) {
+        if ( GamesType == gtPass || GamesType == vist ) {
               // кто-то играет а я как бы вистую
-              RetVal = MyVist1(aLeftGamer,aRightGamer);
+              cur = MyVist1(aLeftGamer,aRightGamer);
         } else  if (GamesType == g86catch) {
-            RetVal = MiserCatch1(aLeftGamer,aRightGamer);
+            cur = MiserCatch1(aLeftGamer,aRightGamer);
           } else  if (GamesType == g86) {
-          RetVal = Miser1(aLeftGamer,aRightGamer);
+          cur = Miser1(aLeftGamer,aRightGamer);
           } else   if (  GamesType == raspass  ) {
-            RetVal = MyPass1(rMove,aLeftGamer,aRightGamer);; // ну типа распасы или мизер
+            cur = MyPass1(rMove,aLeftGamer,aRightGamer);; // ну типа распасы или мизер
         } else {
             // ну типа моя игра
-            RetVal = MyGame1(aLeftGamer,aRightGamer);
+            cur = MyGame1(aLeftGamer,aRightGamer);
         }
 
     }
     if (lMove == NULL && rMove != NULL) { // мой заход - второй
-        if ( GamesType == pass || GamesType == vist ) {
+        if ( GamesType == gtPass || GamesType == vist ) {
                 // кто-то играет а я как бы вистую
-                RetVal = MyVist2(rMove,aLeftGamer,aRightGamer);
+                cur = MyVist2(rMove,aLeftGamer,aRightGamer);
         } else if (GamesType == g86catch) {
-                RetVal = MiserCatch2(rMove,aLeftGamer,aRightGamer);
+                cur = MiserCatch2(rMove,aLeftGamer,aRightGamer);
         } else if (GamesType == g86) {
-              RetVal = Miser2(rMove,aLeftGamer,aRightGamer);
+              cur = Miser2(rMove,aLeftGamer,aRightGamer);
           } else  if ( GamesType == raspass  ) {
-                RetVal = MyPass2(rMove,aLeftGamer,aRightGamer); // ну типа распасы или мизер
+                cur = MyPass2(rMove,aLeftGamer,aRightGamer); // ну типа распасы или мизер
         } else {   // ну типа моя игра
-            RetVal = MyGame2(rMove,aLeftGamer,aRightGamer);
+            cur = MyGame2(rMove,aLeftGamer,aRightGamer);
         }
 
     }
     if (lMove != NULL && rMove != NULL) { // мой заход - 3
-        if ( GamesType == pass || GamesType == vist ) {
+        if ( GamesType == gtPass || GamesType == vist ) {
                 // кто-то играет а я как бы вистую
-           RetVal = MyVist3(lMove,rMove,aLeftGamer,aRightGamer);
+           cur = MyVist3(lMove,rMove,aLeftGamer,aRightGamer);
         } else if (GamesType == g86catch) {
-            RetVal = MiserCatch3(lMove,rMove,aLeftGamer,aRightGamer);
+            cur = MiserCatch3(lMove,rMove,aLeftGamer,aRightGamer);
           } else  if (GamesType == g86) {
-            RetVal = Miser3(lMove,rMove,aLeftGamer,aRightGamer);
+            cur = Miser3(lMove,rMove,aLeftGamer,aRightGamer);
           } else if ( GamesType == raspass ) {
-           RetVal = MyPass3(lMove,rMove,aLeftGamer,aRightGamer);; // ну типа распасы или мизер
+           cur = MyPass3(lMove,rMove,aLeftGamer,aRightGamer);; // ну типа распасы или мизер
         } else {
            // ну типа моя игра
-           RetVal = MyGame3(lMove,rMove,aLeftGamer,aRightGamer);
+           cur = MyGame3(lMove,rMove,aLeftGamer,aRightGamer);
         }
     }
-    aCards    -> Remove(RetVal);
-    aCardsOut -> Insert(RetVal);
-    return RetVal;
+    aCards    -> Remove(cur);
+    aCardsOut -> Insert(cur);
+    return cur;
 }
 //-----------------------------------------------------------------------
 TMastTable TGamer::vzatok(TMast Mast,TCardList *aMaxCardList,int a23) {
@@ -306,7 +292,7 @@ TMastTable TGamer::vzatok(TMast Mast,TCardList *aMaxCardList,int a23) {
    TCard *MyCard,*tmpCard;
    TCardList *MyCardStack     = new TCardList(MAXMASTLEN);
    TCardList *EnemyCardStack  = new TCardList(MAXMASTLEN);
-   for (int c=7;c<=A;c++ ) {
+   for (int c=7;c<=FACE_ACE;c++ ) {
         MyCard = aCards->Exist(c, Mast);
         if ( MyCard ) {
           MyCardStack->Insert(MyCard);
@@ -323,7 +309,7 @@ TMastTable TGamer::vzatok(TMast Mast,TCardList *aMaxCardList,int a23) {
    }
    MastTable.len = aCards->AllCard(Mast);
    MastTable.sum = 0;
-   for (int j=7;j<=A;j++ ) {
+   for (int j=7;j<=FACE_ACE;j++ ) {
     tmpCard = aCards->Exist(j,Mast);
     if (  tmpCard ) {
       MastTable.sum +=  tmpCard -> CName;
@@ -365,33 +351,33 @@ void TGamer::RecountTables( TCardList *aMaxCardList,int a23 ){ // Пересчитывает 
 }
 //-----------------------------------------------------------------------
 TCard *TGamer::MiserCatch1(TGamer *aLeftGamer,TGamer *aRightGamer) {
-  TCard *RetVal=NULL;
+  TCard *cur=NULL;
   TCardList *aMaxCardList=new TCardList(20);
   TCardList *Naparnik;
   TSide Side ;
   if (aRightGamer->GamesType == g86) {
     LoadLists(aRightGamer,aRightGamer,aMaxCardList);
     Naparnik = aLeftGamer -> aCards;
-    Side = right;
+    Side = RightHand;
   } else {
     LoadLists(aLeftGamer,aLeftGamer,aMaxCardList);
     Naparnik = aRightGamer -> aCards;
-    Side = left;
+    Side = LeftHand;
   }
   RecountTables4RasPass(aMaxCardList,1);
-//  if (Side == left) {
+//  if (Side == LeftHand) {
 // 1. Пытаемся всунуть
     for (int m=1;m<=4;m++) {
       TCard *EnemyMin = aMaxCardList -> MinCard(m);
       TCard *NaparnikMin = Naparnik -> MinCard(m);
       TCard *MyMin = aCards -> MinCard(m);
-      if (RetVal)
+      if (cur)
         goto badlabel;
       if (EnemyMin) { //есть такая
         if (MyMin) { // и у меня есть такая
           if (NaparnikMin) { // и у напарника есть такая
             if ( *NaparnikMin < *EnemyMin && *MyMin < *EnemyMin) {
-              RetVal = MyMin;// Всунули
+              cur = MyMin;// Всунули
               goto badlabel;
             }
             if ( *NaparnikMin > *EnemyMin && *MyMin < *EnemyMin) {
@@ -405,7 +391,7 @@ TCard *TGamer::MiserCatch1(TGamer *aLeftGamer,TGamer *aRightGamer) {
                 TCard *MyMax = aCards -> MaxCard(k);
                 if ( MyMax && NaparnikMax && EnemyMax) {
                   if (Naparnik->AllCard(k) < aCards-> AllCard(k) && Naparnik->AllCard(k) < aMaxCardList->AllCard(k) ) {
-                    RetVal = aCards ->LessThan(EnemyMax);
+                    cur = aCards ->LessThan(EnemyMax);
 //                    MyMax; // на этой он должен пронести NaparnikMax
                     if (aRightGamer->GamesType == g86) {
                         aRightGamer -> Pronesti = NaparnikMax;
@@ -419,7 +405,7 @@ TCard *TGamer::MiserCatch1(TGamer *aLeftGamer,TGamer *aRightGamer) {
             }
           } else { //у напорника нет масти
             if (*MyMin < *EnemyMin) {
-              RetVal = MyMin;// Всунули
+              cur = MyMin;// Всунули
               goto badlabel;
             }
           }
@@ -429,39 +415,39 @@ TCard *TGamer::MiserCatch1(TGamer *aLeftGamer,TGamer *aRightGamer) {
 
 
 //    2 отгребаем свое
-    if (!RetVal) RetVal = GetMaxCardWithOutPere();
-    if (Side == left) {
+    if (!cur) cur = GetMaxCardWithOutPere();
+    if (Side == LeftHand) {
       // под мизирящегося надо заходить по другому !!!
     }
 // 3    пытаемс
-    if (!RetVal) RetVal = GetMaxCardWithOutPere();
-    if (!RetVal) RetVal = aCards->MinCard();
-//  } else { //Side == left
+    if (!cur) cur = GetMaxCardWithOutPere();
+    if (!cur) cur = aCards->MinCard();
+//  } else { //Side == LeftHand
 //  }
 badlabel:
 
   aMaxCardList->RemoveAll();
   delete aMaxCardList;
-  return RetVal;
+  return cur;
 }
 //-----------------------------------------------------------------------
 TCard *TGamer::MiserCatch2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) {
-  TCard *RetVal=NULL;
+  TCard *cur=NULL;
   TCardList *aMaxCardList=new TCardList(20);
   TCardList *Naparnik;
   TSide Side ;
   if (aRightGamer->GamesType == g86) {
     LoadLists(aRightGamer,aRightGamer,aMaxCardList);
     Naparnik = aLeftGamer -> aCards;
-    Side = right;
+    Side = RightHand;
   } else {
     LoadLists(aLeftGamer,aLeftGamer,aMaxCardList);
     Naparnik = aRightGamer -> aCards;
-    Side = left;
+    Side = LeftHand;
   }
   RecountTables4RasPass(aMaxCardList,23);
 
-  if (Side == left) { //ход под меня , противник с права
+  if (Side == LeftHand) { //ход под меня , противник с права
       if (aCards->AllCard(aRightCard->CMast)) {
         // у меня есть карты  в данной масти
         TCard *MyMax = aCards->MaxCard(aRightCard->CMast);
@@ -472,33 +458,28 @@ TCard *TGamer::MiserCatch2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGa
           // у противника есть карты в данной масти
           if (*aRightCard < *EnMin) {
             // можно попытаться всунуть
-            RetVal=aCards->LessThan(EnMin);
-            if(!RetVal) RetVal = aCards -> MoreThan(EnMin);
+            cur=aCards->LessThan(EnMin);
+            if(!cur) cur = aCards -> MoreThan(EnMin);
           } else {
-          RetVal= aCards -> MoreThan(EnMin);
+          cur= aCards -> MoreThan(EnMin);
           }
         } else {
-          RetVal = MyMax; // А вот тут надо смотреть кому нужен ход
+          cur = MyMax; // А вот тут надо смотреть кому нужен ход
         }
-
       } else {
-
-
-
-
         // у меня нет карт  в данной масти
         if (Pronesti) {
           //надо пронести карту
           if (aCards->Exist(Pronesti->CName,Pronesti->CMast)) {
-            RetVal = Pronesti;
+            cur = Pronesti;
           } else {
-            RetVal = aCards -> MaxCard(Pronesti->CMast);
-            if (!RetVal)   RetVal = aCards -> MaxCard();
+            cur = aCards -> MaxCard(Pronesti->CMast);
+            if (!cur)   cur = aCards -> MaxCard();
           }
         } else {
           // указания на пронос - нет
-          RetVal = GetMaxCardPere();
-        if (!RetVal) RetVal = aCards -> MaxCard();
+          cur = GetMaxCardPere();
+        if (!cur) cur = aCards -> MaxCard();
         }
       }
   } else { // противник зашел под меня
@@ -510,79 +491,79 @@ TCard *TGamer::MiserCatch2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGa
 //        есть возможность всунуть
         TCard *NapMin = Naparnik->LessThan(aRightCard);
         if (NapMin) {
-          RetVal = aCards->LessThan(aRightCard);
+          cur = aCards->LessThan(aRightCard);
         } else {
-          RetVal = MyMax; // кому передать код ?
+          cur = MyMax; // кому передать код ?
         }
       } else {
-        RetVal = MyMax; // грохать ее самой большой
+        cur = MyMax; // грохать ее самой большой
       }
 
     } else {
       // а у меня нет масти
 
-          RetVal = GetMaxCardPere();
-        if (!RetVal) RetVal = aCards -> MaxCard();
+          cur = GetMaxCardPere();
+        if (!cur) cur = aCards -> MaxCard();
     }
 
   }
   Pronesti = NULL;
-  if (!RetVal)
-    RetVal = aCards -> MinCard();
+  if (!cur)
+    cur = aCards -> MinCard();
 
   aMaxCardList->RemoveAll();
   delete aMaxCardList;
-  return RetVal;
+  return cur;
 
 }
 //-----------------------------------------------------------------------
 TCard *TGamer::MiserCatch3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) {
-  TCard *RetVal=NULL;
+  TCard *cur=NULL;
   TCardList *aMaxCardList=new TCardList(20);
   TCardList *Naparnik;
   TSide Side ;
   if (aRightGamer->GamesType == g86) {
     LoadLists(aRightGamer,aRightGamer,aMaxCardList);
     Naparnik = aLeftGamer -> aCards;
-    Side = right;
+    Side = RightHand;
   } else {
     LoadLists(aLeftGamer,aLeftGamer,aMaxCardList);
     Naparnik = aRightGamer -> aCards;
-    Side = left;
+    Side = LeftHand;
   }
   RecountTables4RasPass(aMaxCardList,23);
 
-  if (Side == left) {
+  if (Side == LeftHand) {
       if (aCards->AllCard(aLeftCard->CMast)) {
         // у меня есть карты  в данной масти
 //        TCard *MyMax = aCards->MaxCard(aLeftCard->CMast);
 //        TCard *MyMin = aCards->MinCard(aLeftCard->CMast);
         if (*aLeftCard < *aRightCard) {
           // напарник уже придавил карту
-          RetVal = aCards -> MaxCard(aLeftCard->CMast);
+          cur = aCards -> MaxCard(aLeftCard->CMast);
 
         } else {
           //есть шанс всунуть
-          RetVal = aCards -> LessThan(aLeftCard);
-          if (!RetVal ) RetVal = aCards -> MaxCard(aLeftCard->CMast);
+          cur = aCards -> LessThan(aLeftCard);
+          if (!cur ) cur = aCards -> MaxCard(aLeftCard->CMast);
         }
       } else {
         // у меня нет карт  в данной масти
         if (Pronesti) {
           //надо пронести карту
           if (aCards->Exist(Pronesti->CName,Pronesti->CMast)) {
-            RetVal = Pronesti;
+            cur = Pronesti;
           } else {
-            RetVal = aCards -> MaxCard(Pronesti->CMast);
-            if (!RetVal) RetVal = aCards -> MaxCard();
+            cur = aCards -> MaxCard(Pronesti->CMast);
+            if (!cur) cur = aCards -> MaxCard();
           }
         } else {
           // указания на пронос - нет
-          RetVal = GetMaxCardPere();
-        if (!RetVal) RetVal = aCards -> MaxCard();
+          cur = GetMaxCardPere();
+        if (!cur) cur = aCards -> MaxCard();
         }
       }
-  } else { // right - my friend
+  } else { // RightHand - my friend
     TCard *MyMax = aCards->MaxCard(aLeftCard->CMast);
     TCard *MyMin = aCards->MinCard(aLeftCard->CMast);
     if (MyMax) {
@@ -590,18 +571,18 @@ TCard *TGamer::MiserCatch3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer
 //        есть возможность всунуть
         TCard *NapMin = Naparnik->LessThan(aLeftCard);
         if (NapMin) {
-          RetVal = aCards->LessThan(aLeftCard);
+          cur = aCards->LessThan(aLeftCard);
         } else {
-          RetVal = MyMax; // кому передать код ?
+          cur = MyMax; // кому передать код ?
         }
       } else {
-        RetVal = MyMax; // грохать ее самой большой
+        cur = MyMax; // грохать ее самой большой
       }
 
     } else {
       // а у меня нет масти
-          RetVal = GetMaxCardPere();
-        if (!RetVal) RetVal = aCards -> MaxCard();
+          cur = GetMaxCardPere();
+        if (!cur) cur = aCards -> MaxCard();
     }
 
   }
@@ -609,11 +590,11 @@ TCard *TGamer::MiserCatch3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer
 
   aMaxCardList->RemoveAll();
   delete aMaxCardList;
-  return RetVal;
+  return cur;
 }
 //-----------------------------------------------------------------------
 TCard *TGamer::MyGame3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) { // моя игра 3 заход - мой
-    TCard *RetVal=NULL;
+    TCard *cur=NULL;
     TCard *MaxCard;
     TGamesType tmpGamesType=GamesType;
     TCardList *aMaxCardList=new TCardList(20);
@@ -625,21 +606,21 @@ TCard *TGamer::MyGame3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGa
        // у меня есть масть  в которую зашел левый
         if ( aLeftCard->CMast == aRightCard->CMast)  {
             // постараемсмя ударить
-            RetVal = aCards -> MoreThan(aLeftCard);
-            if ( !RetVal  ) {
-               RetVal = aCards ->MinCard(aLeftCard->CMast);
+            cur = aCards -> MoreThan(aLeftCard);
+            if ( !cur  ) {
+               cur = aCards ->MinCard(aLeftCard->CMast);
             }
         } else { //aLeftCard->CMast == aRightCard->CMast
           if ( aRightCard->CMast !=mast)  {
             // не бита козырем
 
-            RetVal = aCards -> MoreThan(aLeftCard);
-            if ( !RetVal ) {
-              RetVal = aCards -> MinCard(aLeftCard->CMast);
+            cur = aCards -> MoreThan(aLeftCard);
+            if ( !cur ) {
+              cur = aCards -> MinCard(aLeftCard->CMast);
             }
           } else {
             // бита козырем, мне не надо бить
-            RetVal = aCards -> MinCard(aLeftCard->CMast);
+            cur = aCards -> MinCard(aLeftCard->CMast);
           }
         }
     } else {
@@ -657,32 +638,32 @@ TCard *TGamer::MyGame3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGa
                MaxCard = aRightCard;
            }
        }
-       RetVal = aCards -> MoreThan(MaxCard);
-       if (!RetVal) {
-           RetVal = aCards -> MinCard(mast);
+       cur = aCards -> MoreThan(MaxCard);
+       if (!cur) {
+           cur = aCards -> MinCard(mast);
        }
-       if ( ! RetVal ) {// нет коз.
-           RetVal = GetMinCardWithOutVz();
+       if ( ! cur ) {// нет коз.
+           cur = GetMinCardWithOutVz();
        }
-       if ( ! RetVal ) {
-           RetVal = aCards -> MinCard();
+       if ( ! cur ) {
+           cur = aCards -> MinCard();
        }
     }
     GamesType=tmpGamesType;
     delete aMaxCardList;
-    return RetVal;
+    return cur;
 
 }
 //-----------------------------------------------------------------------
 TCard *TGamer::MyVist3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) { // мой вист или пас 3 заход - мой
-    TCard *RetVal=NULL;
+    TCard *cur=NULL;
     TCard *MaxCard;
     TGamesType tmpGamesType=GamesType;
     TCardList *aMaxCardList=new TCardList(20);
     TGamer *aEnemy,*aFriend;
     int mast;
     // Кто игрок а кто напарник
-    if ( aLeftGamer -> GamesType != pass && aLeftGamer -> GamesType != vist ) {
+    if ( aLeftGamer -> GamesType != gtPass && aLeftGamer -> GamesType != vist ) {
         aEnemy = aLeftGamer;
         aFriend = aRightGamer;
     } else {
@@ -702,24 +683,24 @@ TCard *TGamer::MyVist3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGa
         if ( aLeftCard->CMast == aRightCard->CMast)  {
           if ( *aRightCard > *aLeftCard ) {
             // бить не надо
-            RetVal = aCards->MinCard(aRightCard->CMast);
+            cur = aCards->MinCard(aRightCard->CMast);
           } else {
             // постараемсмя ударить
-            RetVal = aCards -> MoreThan(aLeftCard);
-            if ( !RetVal  ) {
-               RetVal = aCards ->MinCard(aLeftCard->CMast);
+            cur = aCards -> MoreThan(aLeftCard);
+            if ( !cur  ) {
+               cur = aCards ->MinCard(aLeftCard->CMast);
             }
           }
         } else { //aLeftCard->CMast == aRightCard->CMast
           if ( aRightCard->CMast !=mast)  {
             // не бита козырем
-            RetVal = aCards -> MoreThan(aLeftCard);
-            if ( !RetVal ) {
-              RetVal = aCards -> MinCard(aLeftCard->CMast);
+            cur = aCards -> MoreThan(aLeftCard);
+            if ( !cur ) {
+              cur = aCards -> MinCard(aLeftCard->CMast);
             }
           } else {
             // бита козырем, мне не надо бить
-            RetVal = aCards -> MinCard(aLeftCard->CMast);
+            cur = aCards -> MinCard(aLeftCard->CMast);
           }
         }
 
@@ -730,20 +711,20 @@ TCard *TGamer::MyVist3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGa
         if ( aLeftCard->CMast == aRightCard->CMast  )  {
           if ( *aRightCard > *aLeftCard ) {
             // попытаться прибить правого
-            RetVal = aCards->MoreThan(aRightCard);
-            if ( !RetVal ) {
-              RetVal = aCards->MinCard(aRightCard->CMast);
+            cur = aCards->MoreThan(aRightCard);
+            if ( !cur ) {
+              cur = aCards->MinCard(aRightCard->CMast);
             }
           } else {
             // бить не надо
-            RetVal = aCards->MinCard(aRightCard->CMast);
+            cur = aCards->MinCard(aRightCard->CMast);
           }
         } else {
           if ( aRightCard->CMast==mast  ) {
             // лвевый зашел, а правый пригрел козырем
-            RetVal = aCards->MinCard(aLeftCard->CMast);
+            cur = aCards->MinCard(aLeftCard->CMast);
           } else { // Ух ты .... Левый друг зашел а правый пронес ерунду !!!
-            RetVal = aCards->MinCard(aLeftCard->CMast);
+            cur = aCards->MinCard(aLeftCard->CMast);
           }
         }
 
@@ -764,28 +745,28 @@ TCard *TGamer::MyVist3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGa
           RecountTables(aMaxCardList,23);
 
            if (MaxCard == aLeftCard ) { //попытаемся хлопнуть его карту
-               RetVal = aCards -> MoreThan(aLeftCard);
+               cur = aCards -> MoreThan(aLeftCard);
            } else { // Уже наша взятка... скидываем минимальную
-               RetVal = aCards -> MinCard(MaxCard->CMast);
+               cur = aCards -> MinCard(MaxCard->CMast);
            }
        } else { // с лева - напарник
           LoadLists(aRightGamer,aRightGamer,aMaxCardList);
           RecountTables(aMaxCardList,23);
 
            if (MaxCard == aLeftCard ) { // Уже наша взятка... скидываем минимальную
-               RetVal = aCards -> MinCard(MaxCard->CMast);
+               cur = aCards -> MinCard(MaxCard->CMast);
            } else {//попытаемся хлопнуть его карту
-               RetVal = aCards -> MoreThan(aLeftCard);
+               cur = aCards -> MoreThan(aLeftCard);
            }
        }
-       if (!RetVal) {
-           RetVal = aCards -> MinCard(mast);
+       if (!cur) {
+           cur = aCards -> MinCard(mast);
        }
-       if ( ! RetVal ) {// нет коз.
-           RetVal = GetMinCardWithOutVz();
+       if ( ! cur ) {// нет коз.
+           cur = GetMinCardWithOutVz();
        }
-       if ( ! RetVal ) {
-           RetVal = aCards -> MinCard();
+       if ( ! cur ) {
+           cur = aCards -> MinCard();
        }
 
 
@@ -793,19 +774,19 @@ TCard *TGamer::MyVist3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGa
 
     GamesType=tmpGamesType;
     delete aMaxCardList;
-    return RetVal;
+    return cur;
 
 }
 //-----------------------------------------------------------------------
 
 TCard *TGamer::MyVist2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) { // мой вист или пас 2 заход - мой
-    TCard *RetVal=NULL;
+    TCard *cur=NULL;
     TGamesType tmpGamesType=GamesType;
     TCardList *aMaxCardList=new TCardList(20);
     TGamer *aEnemy,*aFriend;
     int mast;
     // Кто игрок а кто напарник
-    if ( aLeftGamer -> GamesType != pass && aLeftGamer -> GamesType != vist ) {
+    if ( aLeftGamer -> GamesType != gtPass && aLeftGamer -> GamesType != vist ) {
         aEnemy = aLeftGamer;
         aFriend = aRightGamer;
     } else {
@@ -819,45 +800,45 @@ TCard *TGamer::MyVist2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer)
         RecountTables(aMaxCardList,23);
         // Ну если он заходил под вистуза с туза
         if ( aRightCard -> CName >= 10 ) {
-            RetVal = aCards -> MinCard(aRightCard -> CMast);
+            cur = aCards -> MinCard(aRightCard -> CMast);
         } else { // может умный и больше заходов у него нет в данную масть а есть козырь
-            RetVal = aCards -> MaxCard(aRightCard -> CMast);
+            cur = aCards -> MaxCard(aRightCard -> CMast);
         }
-        if ( !RetVal ) { // а у меня масти и нет !!!
-            RetVal = aCards -> MaxCard(mast); // прибъем максимальной
+        if ( !cur ) { // а у меня масти и нет !!!
+            cur = aCards -> MaxCard(mast); // прибъем максимальной
         }
-        if ( ! RetVal ) {
-            RetVal = GetMinCardWithOutVz();
+        if ( ! cur ) {
+            cur = GetMinCardWithOutVz();
         }
     } else { // с лева - напарник
         LoadLists(aRightGamer,aRightGamer,aMaxCardList);
         RecountTables(aMaxCardList,23);
-        RetVal = aCards->MoreThan(aRightCard);
-        if (!RetVal) {
-            RetVal = aCards->MinCard(aRightCard->CMast);
+        cur = aCards->MoreThan(aRightCard);
+        if (!cur) {
+            cur = aCards->MinCard(aRightCard->CMast);
         }
-        if (!RetVal) { // Нет масти пробуем козырь
-            RetVal = aCards->MinCard(mast);
+        if (!cur) { // Нет масти пробуем козырь
+            cur = aCards->MinCard(mast);
         }
-        if (!RetVal) { // Нет масти и козыря
-            RetVal = GetMinCardWithOutVz();
+        if (!cur) { // Нет масти и козыря
+            cur = GetMinCardWithOutVz();
         }
     }
     GamesType=tmpGamesType;
     delete aMaxCardList;
-    return RetVal;
+    return cur;
 
 }
 //-----------------------------------------------------------------------
 TCard *TGamer::MyVist1(TGamer *aLeftGamer,TGamer *aRightGamer) {
 // 1 - выбить козыря 2-разиграть масти с перехватами 3-без перехватов 4-???
-    TCard *RetVal=NULL;
+    TCard *cur=NULL;
     TGamesType tmpGamesType=GamesType;
     TCardList *aMaxCardList=new TCardList(20);
     TGamer *aEnemy,*aFriend;
     int mast;
     // Кто игрок а кто напарник
-    if ( aLeftGamer -> GamesType != pass && aLeftGamer -> GamesType != vist ) {
+    if ( aLeftGamer -> GamesType != gtPass && aLeftGamer -> GamesType != vist ) {
         aEnemy = aLeftGamer;
         aFriend = aRightGamer;
     } else {
@@ -875,58 +856,58 @@ TCard *TGamer::MyVist1(TGamer *aLeftGamer,TGamer *aRightGamer) {
             if ( aLeftGamer ->aCards ->AllCard(mast) <=2  ) {
           TCard *m =aCards ->MaxCard(mast);
           if (!m) {
-                RetVal = aCards ->MinCard(aLeftGamer ->aCards ->EmptyMast (mast));
+                cur = aCards ->MinCard(aLeftGamer ->aCards ->EmptyMast (mast));
               } else {
                 if (aLeftGamer ->aCards ->MaxCard(mast)->CName < m->CName) {
-                  RetVal = aCards -> MaxCard(mast);
+                  cur = aCards -> MaxCard(mast);
                 } else {
-                  RetVal = aCards ->MinCard(aLeftGamer ->aCards ->EmptyMast (mast));
+                  cur = aCards ->MinCard(aLeftGamer ->aCards ->EmptyMast (mast));
                 }
               }
             } else {
-                  RetVal = aCards ->MinCard(aLeftGamer ->aCards ->EmptyMast (mast));
+                  cur = aCards ->MinCard(aLeftGamer ->aCards ->EmptyMast (mast));
             }
-        if ( !RetVal) {
-          RetVal = GetMinCardWithOutVz();
+        if ( !cur) {
+          cur = GetMinCardWithOutVz();
         }
 
-/*        if ( aCards -> Exist(A,RetVal->CMast) || aCards -> Exist(K,RetVal->CMast) ) {
-          RetVal = NULL;
-            RetVal = aCards ->MinCard(aMaxCardList ->EmptyMast (0));
+/*        if ( aCards -> Exist(FACE_ACE,cur->CMast) || aCards -> Exist(FACE_KING,cur->CMast) ) {
+          cur = NULL;
+            cur = aCards ->MinCard(aMaxCardList ->EmptyMast (0));
         }*/
 
 
-        if ( !RetVal) {
-            RetVal = GetMaxCardWithOutPere();
+        if ( !cur) {
+            cur = GetMaxCardWithOutPere();
         }
-        if ( !RetVal) {
-            RetVal = aCards -> MinCard(mast);
+        if ( !cur) {
+            cur = aCards -> MinCard(mast);
         }
-        if ( !RetVal) {
-            RetVal = GetMaxCardPere();
+        if ( !cur) {
+            cur = GetMaxCardPere();
         }
     } else { // с лева - напарник
         LoadLists(aRightGamer,aRightGamer,aMaxCardList);
           RecountTables(aMaxCardList,1);
 
-        RetVal = GetMaxCardWithOutPere();
-        if ( !RetVal) {
-            RetVal = GetMaxCardPere();
+        cur = GetMaxCardWithOutPere();
+        if ( !cur) {
+            cur = GetMaxCardPere();
         }
-        if ( !RetVal) {
-            RetVal = aCards -> MaxCard();
+        if ( !cur) {
+            cur = aCards -> MaxCard();
         }
     }
     GamesType=tmpGamesType;
     delete aMaxCardList;
-    return RetVal;
+    return cur;
 }
 
 //-----------------------------------------------------------------------
 TCard *TGamer::MyGame2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) {
     TCardList *aMaxCardList=new TCardList(20);
     TGamesType tmpGamesType=GamesType;
-    TCard *RetVal=NULL;
+    TCard *cur=NULL;
     TCard *MaxLeftCard=NULL;
     int mast = aRightCard -> CMast;
     int koz  = GamesType - (GamesType/10) * 10;
@@ -934,50 +915,50 @@ TCard *TGamer::MyGame2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer)
     LoadLists(aLeftGamer,aRightGamer,aMaxCardList);
     RecountTables(aMaxCardList,23);
 
-    RetVal = aCards -> MaxCard(mast);
-    if ( !RetVal ) { // Нет Масти
+    cur = aCards -> MaxCard(mast);
+    if ( !cur ) { // Нет Масти
         if ( !aLeftGamer -> aCards -> AllCard(mast) ) { // У левого тож нету
             MaxLeftCard = aLeftGamer -> aCards ->MaxCard(koz);
-            RetVal = aCards -> MoreThan(MaxLeftCard); //
-            if (!RetVal) {
-                RetVal = aCards -> LessThan(MaxLeftCard);
+            cur = aCards -> MoreThan(MaxLeftCard); //
+            if (!cur) {
+                cur = aCards -> LessThan(MaxLeftCard);
             }
-            if ( !RetVal ) {
-                RetVal = GetMinCardWithOutVz(); // лабуду
+            if ( !cur ) {
+                cur = GetMinCardWithOutVz(); // лабуду
             }
-            if ( !RetVal ) {
-                 RetVal = aCards->MinCard();
+            if ( !cur ) {
+                 cur = aCards->MinCard();
             }
         } else { // Есть масть у левого
-            RetVal = aCards -> MinCard(koz);
+            cur = aCards -> MinCard(koz);
         }
     } else { // У меня есть масть
         if ( aLeftGamer -> aCards -> AllCard(mast) ) { //У левого есть
             MaxLeftCard = aLeftGamer -> aCards ->MaxCard(mast);
-            RetVal = aCards -> MoreThan(MaxLeftCard);
-            if ( !RetVal ) {
-                RetVal = aCards -> LessThan(MaxLeftCard);
+            cur = aCards -> MoreThan(MaxLeftCard);
+            if ( !cur ) {
+                cur = aCards -> LessThan(MaxLeftCard);
             }
         } else { // У левого нет
             if ( !aLeftGamer -> aCards -> AllCard(koz) ) { // И козыре й нет
-                RetVal = aCards -> MoreThan(aRightCard);
-                if ( !RetVal) {
-                    RetVal = aCards -> MinCard(mast);
+                cur = aCards -> MoreThan(aRightCard);
+                if ( !cur) {
+                    cur = aCards -> MinCard(mast);
                 }
             } else { // есть у левого козыря
-                RetVal = aCards -> MinCard(mast);
+                cur = aCards -> MinCard(mast);
             }
         }
     }
 
     GamesType=tmpGamesType;
     delete aMaxCardList;
-    return RetVal;
+    return cur;
 }
 //-----------------------------------------------------------------------
 TCard *TGamer::MyGame1(TGamer *aLeftGamer,TGamer *aRightGamer) {
 // 1-выбить козыря 2-разиграть масти с перехватами 3-без перехватов 4-???
-    TCard *RetVal=NULL;
+    TCard *cur=NULL;
     TGamesType tmpGamesType=GamesType;
     TCardList *aMaxCardList=new TCardList(20);
     int mast = GamesType - (GamesType/10) * 10;
@@ -985,39 +966,39 @@ TCard *TGamer::MyGame1(TGamer *aLeftGamer,TGamer *aRightGamer) {
     LoadLists(aLeftGamer,aRightGamer,aMaxCardList);
     RecountTables(aMaxCardList,1);
     if ( aLeft->AllCard(mast) || aRight->AllCard(mast) ) { // У противников есть козыря
-        RetVal = aCards->MaxCard(mast);
-        if ( !RetVal ) { // а у меня их нет !!!
-             RetVal = GetMaxCardWithOutPere(); // без пере
+        cur = aCards->MaxCard(mast);
+        if ( !cur ) { // а у меня их нет !!!
+             cur = GetMaxCardWithOutPere(); // без пере
         }
-        if ( !RetVal ) {
-             RetVal = GetMaxCardPere();  //масть с перехватами (max)
+        if ( !cur ) {
+             cur = GetMaxCardPere();  //масть с перехватами (max)
         }
-        if ( !RetVal ) {
-             RetVal = GetMinCardWithOutVz(); // лабуду
+        if ( !cur ) {
+             cur = GetMinCardWithOutVz(); // лабуду
         }
-        if ( !RetVal ) {
-             RetVal = aCards->MaxCard();
+        if ( !cur ) {
+             cur = aCards->MaxCard();
         }
     } else { // а козырьков у них и нету !!!
-        if ( !RetVal ) {
-             RetVal = GetMaxCardPere();  //масть с перехватами (max)
+        if ( !cur ) {
+             cur = GetMaxCardPere();  //масть с перехватами (max)
         }
-        if ( !RetVal ) { // а у меня их нет !!!
-             RetVal = GetMaxCardWithOutPere(); // без пере
+        if ( !cur ) { // а у меня их нет !!!
+             cur = GetMaxCardWithOutPere(); // без пере
         }
-        if ( !RetVal ) {
-             RetVal = GetMinCardWithOutVz(); // лабуду
+        if ( !cur ) {
+             cur = GetMinCardWithOutVz(); // лабуду
         }
-        if ( !RetVal ) {
-            RetVal = aCards->MaxCard(mast);
+        if ( !cur ) {
+            cur = aCards->MaxCard(mast);
         }
-        if ( !RetVal ) {
-             RetVal = aCards->MaxCard();
+        if ( !cur ) {
+             cur = aCards->MaxCard();
         }
     }
     GamesType=tmpGamesType;
     delete aMaxCardList;
-    return RetVal;
+    return cur;
 }
 //-----------------------------------------------------------------------
 TCard *TGamer::GetMaxCardPere(void) {
@@ -1087,7 +1068,7 @@ void TGamer::LoadLists(TGamer *aLeftGamer,TGamer *aRightGamer,TCardList *aMaxCar
 /*    }*/
 // Get Max List only len
 /*    for (int m=1;m<=4;m++) {
-      for (int c=A;c>=7;c-- ) {
+      for (int c=FACE_ACE;c>=7;c-- ) {
        if ( aLeft -> Exist(c,m) || aRight -> Exist(c,m) ) {
            aMaxCardList->Insert(new TCard(c,m));
        }
@@ -1130,7 +1111,7 @@ TGamesType TGamer::makemove4out(void) {
     TGamesType GamesTypeRetVal;
     int i;
     int nMaxMastLen=0;
-    TMast nMaxMast=withoutmast;
+    TMast nMaxMast=SuitNone;
     TMastTable LocalMastTable[5];
     LocalMastTable[0].vzatok=0;
     LocalMastTable[0].perehvatov=0;
@@ -1175,10 +1156,10 @@ TGamesType TGamer::makemove(TGamesType MaxGame,int HaveAVist,int nGamerVist) { /
   if ( HaveAVist != vist && vz >= nGetMinCard4Vist(MaxGame) ) {
      Answer = vist;
   } else {
-     Answer = pass;
+     Answer = gtPass;
   }
-  if ( HaveAVist==pass && vz < nGetMinCard4Vist(MaxGame) ) {
-     Answer = pass;
+  if ( HaveAVist==gtPass && vz < nGetMinCard4Vist(MaxGame) ) {
+     Answer = gtPass;
   }
   if (MaxGame == g61) {
      Answer = vist; //STALINGRAD !!!
@@ -1297,13 +1278,13 @@ TGamesType TGamer::makeout4game(void) {
 }
 //-----------------------------------------------------------------------
 TGamesType TGamer::makemove(TGamesType lMove,TGamesType rMove) { //ход при торговле
-/*  if ( GamesType == pass )  {
-    GamesType=pass;
+/*  if ( GamesType == gtPass )  {
+    GamesType=gtPass;
   } else {*/
-  if ( GamesType != pass )  {
+  if ( GamesType != gtPass )  {
     int i;
     int nMaxMastLen=0;
-    TMast nMaxMast=withoutmast;
+    TMast nMaxMast=SuitNone;
     TMastTable LocalMastTable[5];
     TGamesType MGT = qMax(lMove,rMove);
     LocalMastTable[0].vzatok=0;
@@ -1328,13 +1309,13 @@ TGamesType TGamer::makemove(TGamesType lMove,TGamesType rMove) { //ход при торго
         }
       }
     }
-    //масть и звятки уже посчитали
+    //масть и взятки уже посчитали
     if (MGT <= g75) {
       GamesType = ( TGamesType ) ((LocalMastTable[0].vzatok+1)*10 + nMaxMast );
     } else {
       GamesType = ( TGamesType ) ((LocalMastTable[0].vzatok)*10 + nMaxMast );
     }
-    if ( (rMove==pass || rMove==undefined) && ( lMove==pass || lMove==undefined ) ) {
+    if ( (rMove==gtPass || rMove==undefined) && ( lMove==gtPass || lMove==undefined ) ) {
       if ( LocalMastTable[0].vzatok >= 4 ) {
         GamesType = g61;
       } else {
@@ -1343,16 +1324,16 @@ TGamesType TGamer::makemove(TGamesType lMove,TGamesType rMove) { //ход при торго
           if (Check4Miser()) {
             GamesType = g86;
           } else {
-            GamesType = pass;
+            GamesType = gtPass;
           }
         } else {
-          GamesType = pass;
+          GamesType = gtPass;
         }
       }
     } else if(GamesType >= MGT) {
         GamesType = (TGamesType) NextGame(MGT);
     } else {
-      GamesType = pass;
+      GamesType = gtPass;
     }
 
 /*    if( GamesType >= MGT  ) {
@@ -1360,7 +1341,7 @@ TGamesType TGamer::makemove(TGamesType lMove,TGamesType rMove) { //ход при торго
     } else {
     }*/
     // это то, что мы можем играть максимально
-    /*if ( GamesType > pass  ) {
+    /*if ( GamesType > gtPass  ) {
       if ( rMove < lMove )  {
         if ( lMove <= GamesType ) {
           if ( lMove!=g61 )
@@ -1368,7 +1349,7 @@ TGamesType TGamer::makemove(TGamesType lMove,TGamesType rMove) { //ход при торго
           else
               GamesType = (TGamesType) NextGame(lMove);
         } else {
-          GamesType = pass;
+          GamesType = gtPass;
         }
       } else { // rMove > lMove
         if ( GamesType > rMove ) {
@@ -1379,12 +1360,12 @@ TGamesType TGamer::makemove(TGamesType lMove,TGamesType rMove) { //ход при торго
               GamesType = g61;
              }
         } else {
-          GamesType = pass;
+          GamesType = gtPass;
         }
 
       }
-    } else {     //  GamesType > pass
-      if ( (rMove==pass || rMove==undefined) && ( lMove==pass || lMove==undefined ) ) {
+    } else {     //  GamesType > gtPass
+      if ( (rMove==gtPass || rMove==undefined) && ( lMove==gtPass || lMove==undefined ) ) {
         if ( LocalMastTable[0].vzatok >= 4 ) {
           GamesType = g61;
         } else {
@@ -1393,14 +1374,14 @@ TGamesType TGamer::makemove(TGamesType lMove,TGamesType rMove) { //ход при торго
             if (Check4Miser()) {
               GamesType = g86;
             } else {
-              GamesType = pass;
+              GamesType = gtPass;
             }
           } else {
-            GamesType = pass;
+            GamesType = gtPass;
           }
         }
       } else {
-        GamesType = pass;
+        GamesType = gtPass;
       }
     }*/
   }
@@ -1408,13 +1389,13 @@ TGamesType TGamer::makemove(TGamesType lMove,TGamesType rMove) { //ход при торго
 }
 //-----------------------------------------------------------------------
 int TGamer::Check4Miser( void) {
-  int RetVal = 0;
-  for (int Mast = pica;Mast<=cherva;Mast++) {
-    if ( aCards -> Exist(7,Mast) && ( aCards -> Exist(9,Mast) || aCards -> Exist(8,Mast) ) && ( aCards -> Exist(J,Mast) || aCards -> Exist(10,Mast) )    ){
-        RetVal++;
+  int cur = 0;
+  for (int Mast = SuitSpades;Mast<=SuitHearts;Mast++) {
+    if ( aCards -> Exist(7,Mast) && ( aCards -> Exist(9,Mast) || aCards -> Exist(8,Mast) ) && ( aCards -> Exist(FACE_JACK,Mast) || aCards -> Exist(10,Mast) )    ){
+        cur++;
     }
   }
-  if (RetVal==4)  return 1;
+  if (cur==4)  return 1;
   return 0;
 }
 //-----------------------------------------------------------------------
@@ -1423,7 +1404,7 @@ TMastTable TGamer::vzatok4game(TMast Mast, int a23) {
    TCard *MyCard,*tmpCard;
    TCardList *MyCardStack     = new TCardList(MAXMASTLEN);
    TCardList *EnemyCardStack  = new TCardList(MAXMASTLEN);
-   for (int c=7;c<=A;c++ ) {
+   for (int c=7;c<=FACE_ACE;c++ ) {
     MyCard = aCards->Exist(c, Mast);
     if ( MyCard )
       MyCardStack->Insert(MyCard);
@@ -1440,7 +1421,7 @@ TMastTable TGamer::vzatok4game(TMast Mast, int a23) {
    }
    MastTable.len = aCards->AllCard(Mast);
    MastTable.sum = 0;
-   for (int j=7;j<=A;j++ ) {
+   for (int j=7;j<=FACE_ACE;j++ ) {
     tmpCard = aCards->Exist(j,Mast);
     if (  tmpCard ) {
       MastTable.sum +=  tmpCard -> CName;
@@ -1457,7 +1438,7 @@ TMastTable TGamer::vzatok4pass(TMast Mast,TCardList *aMaxCardList) {
    TCard *MyCard,*tmpCard;
    TCardList *MyCardStack     = new TCardList(MAXMASTLEN);
    TCardList *EnemyCardStack  = new TCardList(MAXMASTLEN);
-   for (int c=7;c<=A;c++ ) {
+   for (int c=7;c<=FACE_ACE;c++ ) {
         MyCard = aCards->Exist(c, Mast);
         if ( MyCard ) {
           MyCardStack->Insert(MyCard);
@@ -1470,7 +1451,7 @@ TMastTable TGamer::vzatok4pass(TMast Mast,TCardList *aMaxCardList) {
    MastTable = Compare2List4Min(MyCardStack,EnemyCardStack);
    MastTable.len = aCards->AllCard(Mast);
    MastTable.sum = 0;
-   for (int j=7;j<=A;j++ ) {
+   for (int j=7;j<=FACE_ACE;j++ ) {
     tmpCard = aCards->Exist(j,Mast);
     if (  tmpCard ) {
       MastTable.sum +=  tmpCard -> CName;
@@ -1615,7 +1596,7 @@ TMastTable TGamer::Compare2List4Max23(TCardList *My,TCardList *Enemy) {
 }
 //-----------------------------------------------------------------------
 TCard *TGamer::MyPass1(TCard *rMove,TGamer *aLeftGamer,TGamer *aRightGamer) {
-  TCard *RetVal=NULL;
+  TCard *cur=NULL;
   TGamesType tmpGamesType=GamesType;
   TCardList *aMaxCardList=new TCardList(20);
   TCardList *aTmpList=new TCardList(MAXMASTLEN);
@@ -1632,23 +1613,23 @@ TCard *TGamer::MyPass1(TCard *rMove,TGamer *aLeftGamer,TGamer *aRightGamer) {
   if ( tmpGamesType == raspass || tmpGamesType == g86 )  { // распасы // мизер
     LoadLists(aLeftGamer,aRightGamer,aMaxCardList); // !!!!!!!!!
     RecountTables4RasPass(aMaxCardList,1);
-     // тема такая : 100 % отбери сво└, если такового нет - мах в минимально длинной масти
-    RetVal = GetMaxCardWithOutPere(); // за искл тех случ коды масти уже нет
-    if ( RetVal ) {
-        if ( aLeftGamer->aCards->AllCard(RetVal->CMast)==0
-             && aRightGamer->aCards->AllCard(RetVal->CMast)==0 ) {
+     // тема такая : 100 % отбери своё, если такового нет - мах в минимально длинной масти
+    cur = GetMaxCardWithOutPere(); // за искл тех случ коды масти уже нет
+    if ( cur ) {
+        if ( aLeftGamer->aCards->AllCard(cur->CMast)==0
+             && aRightGamer->aCards->AllCard(cur->CMast)==0 ) {
 
-          RetVal = NULL;
+          cur = NULL;
         }
     }
-    if ( !RetVal ) {
-         RetVal = GetMaxCardPere();  //масть с перехватами (max)
+    if ( !cur ) {
+         cur = GetMaxCardPere();  //масть с перехватами (max)
     }
-    if ( !RetVal ) {
-       RetVal = GetMinCardWithOutVz(); // лабуду
+    if ( !cur ) {
+       cur = GetMinCardWithOutVz(); // лабуду
     }
-    if ( !RetVal ) {
-        RetVal = aCards->MinCard();
+    if ( !cur ) {
+        cur = aCards->MinCard();
     }
   }
   if ( rMove != NULL )  {
@@ -1660,18 +1641,13 @@ TCard *TGamer::MyPass1(TCard *rMove,TGamer *aLeftGamer,TGamer *aRightGamer) {
   /*
 
   */
-
-
-
-
-
   GamesType=tmpGamesType;
   delete aMaxCardList;
-  return RetVal;
+  return cur;
 }
 //-----------------------------------------------------------------------
 TCard *TGamer::MyPass2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) {
-  TCard *RetVal=NULL;
+  TCard *cur=NULL;
   TGamesType tmpGamesType=GamesType;
   int mast = aRightCard -> CMast;
   TCardList *aMaxCardList=new TCardList(20);
@@ -1679,30 +1655,30 @@ TCard *TGamer::MyPass2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer)
   RecountTables4RasPass(aMaxCardList,1);
 /////////////////////////////////////////////////////////
   if ( tmpGamesType == raspass || tmpGamesType == g86 )  { // распасы // мизер
-    RetVal = aCards -> MaxCard(mast); // !!!!!!!!!!!! здеся обышка
-    if ( !RetVal ) { // Нет Масти
+    cur = aCards -> MaxCard(mast); // !!!!!!!!!!!! здеся обышка
+    if ( !cur ) { // Нет Масти
       // во шара !!! Льем мах в масти где  есть 100 % взятки
-       RetVal = GetMaxCardWithOutPere();
-       if ( !RetVal ) {
-               RetVal = GetMaxCardPere();  //масть с перехватами (max)
+       cur = GetMaxCardWithOutPere();
+       if ( !cur ) {
+               cur = GetMaxCardPere();  //масть с перехватами (max)
        }
-       if ( !RetVal ) {
-             RetVal = GetMinCardWithOutVz(); // лабуду
+       if ( !cur ) {
+             cur = GetMinCardWithOutVz(); // лабуду
        }
-       if ( !RetVal ) {
-              RetVal = aCards->MinCard();
+       if ( !cur ) {
+              cur = aCards->MinCard();
        }
 
     } else { // У меня есть масть
         if ( aLeftGamer -> aCards -> AllCard(mast) ) { //У левого есть
-            RetVal = aCards -> LessThan(aLeftGamer -> aCards ->MaxCard(mast));
-            if ( !RetVal ) {
-                RetVal = aCards -> MaxCard(mast);
+            cur = aCards -> LessThan(aLeftGamer -> aCards ->MaxCard(mast));
+            if ( !cur ) {
+                cur = aCards -> MaxCard(mast);
             }
         } else { // У левого нет
-           RetVal = aCards -> LessThan(aRightCard);
-           if ( !RetVal) {
-               RetVal = aCards -> MaxCard(mast);
+           cur = aCards -> LessThan(aRightCard);
+           if ( !cur) {
+               cur = aCards -> MaxCard(mast);
            }
         }
     }
@@ -1710,11 +1686,11 @@ TCard *TGamer::MyPass2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer)
 /////////////////////////////////////////////////////////
   delete aMaxCardList;
   GamesType=tmpGamesType;
-  return RetVal;
+  return cur;
 }
 //-----------------------------------------------------------------------
 TCard *TGamer::MyPass3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) {
-  TCard *RetVal=NULL;
+  TCard *cur=NULL;
     /*TCard *MaxCard;*/
     TGamesType tmpGamesType=GamesType;
     TCardList *aMaxCardList=new TCardList(20);
@@ -1727,47 +1703,47 @@ TCard *TGamer::MyPass3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGa
        // постараемсмя пропустить
        if (aLeftCard->CMast == aRightCard ->CMast) {
         if (*aRightCard > *aLeftCard) {
-          RetVal = aCards -> LessThan(aRightCard);
+          cur = aCards -> LessThan(aRightCard);
         } else {
-          RetVal = aCards -> LessThan(aLeftCard);
+          cur = aCards -> LessThan(aLeftCard);
         }
        } else {
-         RetVal = aCards -> LessThan(aLeftCard);
+         cur = aCards -> LessThan(aLeftCard);
        }
-       if ( !RetVal  ) {
-           RetVal = aCards ->MaxCard(aLeftCard->CMast);
+       if ( !cur  ) {
+           cur = aCards ->MaxCard(aLeftCard->CMast);
        }
     } else {
       //  у меня нет масти в которую зашел левый
-       RetVal = GetMaxCardWithOutPere();
-       if ( !RetVal ) {
-               RetVal = GetMaxCardPere();  //масть с перехватами (max)
+       cur = GetMaxCardWithOutPere();
+       if ( !cur ) {
+               cur = GetMaxCardPere();  //масть с перехватами (max)
        }
-       if ( !RetVal ) {
-             RetVal = GetMinCardWithOutVz(); // лабуду
+       if ( !cur ) {
+             cur = GetMinCardWithOutVz(); // лабуду
        }
-       if ( !RetVal ) {
-              RetVal = aCards->MinCard();
+       if ( !cur ) {
+              cur = aCards->MinCard();
        }
 
     }
     GamesType=tmpGamesType;
     delete aMaxCardList;
 
-  return RetVal;
+  return cur;
 }
 //-----------------------------------------------------------------------
 void TGamer::makestatfill(void) {
-   TSide lr=left;
+   TSide lr=LeftHand;
    for (int m=1;m<=4;m++) {
-     for (int c=A;c>=7;c-- ) {
+     for (int c=FACE_ACE;c>=7;c-- ) {
       if ( !aCards->Exist(c,m) ) {
-         if (lr==left) {
+         if (lr==LeftHand) {
            aLeft->Insert(new TCard(c,m));
-           lr = right;
+           lr = RightHand;
          } else {
            aRight->Insert(new TCard(c,m));
-           lr = left;
+           lr = LeftHand;
          }
        }
      }
@@ -1776,17 +1752,17 @@ void TGamer::makestatfill(void) {
 //-----------------------------------------------------------------------
 void TGamer::makestatfill(int nCards,int maxmin) {
     int nCounter=0;
-    TSide lr=left;
+    TSide lr=LeftHand;
     if ( maxmin ==1 ) {
        for (int m=1;m<=4;m++) {
-         for (int c=A;c>=7;c-- ) {
+         for (int c=FACE_ACE;c>=7;c-- ) {
           if ( !aCards->Exist(c,m) && !aOut->Exist(c,m) ) {
-             if (lr==left) {
+             if (lr==LeftHand) {
                aLeft->Insert(new TCard(c,m));
-               lr = right;
+               lr = RightHand;
              } else {
                aRight->Insert(new TCard(c,m));
-               lr = left;
+               lr = LeftHand;
                nCounter++;
                if ( nCounter >= nCards ) return;
              }
@@ -1795,14 +1771,14 @@ void TGamer::makestatfill(int nCards,int maxmin) {
        }
     } else {
        for (int m=1;m<=4;m++) {
-         for (int c=7;c<=A;c++ ) {
+         for (int c=7;c<=FACE_ACE;c++ ) {
           if ( !aCards->Exist(c,m) && !aOut->Exist(c,m) ) {
-             if (lr==left) {
+             if (lr==LeftHand) {
                aLeft->Insert(new TCard(c,m));
-               lr = right;
+               lr = RightHand;
              } else {
                aRight->Insert(new TCard(c,m));
-               lr = left;
+               lr = LeftHand;
                nCounter++;
                if ( nCounter >= nCards ) return;
              }
@@ -1811,8 +1787,22 @@ void TGamer::makestatfill(int nCards,int maxmin) {
        }
     }
 }
+
+
+void TGamer::GetBackSnos () {
+  // Vernut snos
+  if (aCardsOut->At(0)) aCards->Insert(aCardsOut->At(0));
+  if (aCardsOut->At(1)) aCards->Insert(aCardsOut->At(1));
+  aCardsOut->RemoveAll();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// game graphics
+///////////////////////////////////////////////////////////////////////////////
 //-------------------------------------------------------------------------
-/*void TGamer::SetViewPort(void) {
+/*
+void TGamer::SetViewPort(void) {
     DeskView->xLen=DeskView->DesktopWidht/2-2*DeskView->xBorder;
     DeskView->yLen=DeskView->DesktopHeight/2-2*DeskView->yBorder;
     Width  = DeskView->xLen;
@@ -1835,139 +1825,146 @@ void TGamer::makestatfill(int nCards,int maxmin) {
 
     }
 
-}*/
-//-------------------------------------------------------------------------
-void TGamer::OnlyMessage (TDeskView *DeskView,int Left,int Top,int Width,int Height) {
-//  DeskView -> ClearBox( Left,Top,Left+Width,/*Top+*/DeskView->yBorder);
-  TGamer::Repaint(DeskView,Left,Top,Width,Height);
-
 }
-//-------------------------------------------------------------------------
-void TGamer::Repaint (TDeskView *_DeskView,int Left,int Top,int Width,int Height) {
-    char *buff = new char [512];
-    char *buff2 = new char [512];
-    TCard *my;
-    int nDx=0 ,j=0;
-      QPixmap *Bitmap1 = new QPixmap(Width,Height);
-      QPainter p(_DeskView ->PaintDevice);
-      TDeskView *DeskView = new TDeskView();
-      (*DeskView) = (*_DeskView);
-      DeskView -> PaintDevice = Bitmap1;
-    if (aCards->aCount)
-        nDx = (DeskView->xLen - DeskView->xBorder*2) / (aCards -> aCount+1);
-    aCards->mySort();
-    DeskView -> ClearBox( 0,0,Width,Height);
-    if (GamesType != undefined ) {
-        buff[0]=0;
-        if ( nGetsCard ) {
-            itoa(nGetsCard,buff,10);
-        }
-        sprintf(buff2," %s %s ",sGameName(GamesType),NikName);
-        strcat (buff,buff2);
-        strcat (buff,Message);
-        //strcat(buff,Message)
-        DeskView->SysSayMessage(buff,0,0);
-    }
-
-//    p.begin();
-    for (int i = 0;i<aCards->aCount ;i++) {
-       my = (TCard *)aCards->At(i);
-       if ( my ) {
-          if ( i+1 == aCards->aCount ) {
-//            DeskView->SysDrawCard(my,Left+j*nDx,Top+DeskView->yBorder,!nCardClosed,0);
-            DeskView->SysDrawCard(my,j*nDx,DeskView->yBorder,!nCardClosed,0);
-          } else {
-//            DeskView->SysDrawCardPartialy(my,Left+j*nDx,Top+DeskView->yBorder,!nCardClosed,0,Left+(j+1)*nDx);
-            DeskView->SysDrawCardPartialy(my,j*nDx,DeskView->yBorder,!nCardClosed,0,(j+1)*nDx);
-          }
-
-       } else {
-          char tmpbuff[512];
-          sprintf(tmpbuff, "%i",i);
-          DeskView -> SysSayMessage(tmpbuff,Left+j*nDx,Top+DeskView->yBorder);
-       }
-       j++;
-    }
-    p.drawPixmap( QPoint(Left,Top) ,*Bitmap1);
-    p.end();
-    delete Bitmap1;
-    delete DeskView;
-    delete buff;
-    delete buff2;
-}
-//--------------------------------------------------------------
-void TGamer::HintCard(int ,int ) {
-}
-//--------------------------------------------------------------
-void TGamer::GetBackSnos(void) {
-
-  // Vernut snos
-  if (aCardsOut->At(0))
-    aCards->Insert(aCardsOut->At(0));
-  if (aCardsOut->At(1))
-    aCards->Insert(aCardsOut->At(1));
-  aCardsOut -> RemoveAll();
-}
-//--------------------------------------------------------------
-//        NETWORK PART
-//--------------------------------------------------------------
-int TGamer::GetNikName(void) {
-/*  char buff[MAXDATASIZE];
-  memset(buff,0,MAXDATASIZE);
-//  printf("\n wait for nikname");
-  read_from_socket(socket,buff,MAXDATASIZE,0);
-  sscanf(buff,"%s",NikName);
 */
+
+
+/*
+void TGamer::OnlyMessage (TDeskView *DeskView, int Left, int Top, int Width, int Height) {
+  //DeskView->ClearBox(Left, Top, Left+Width, / *Top+* /DeskView->yBorder);
+  //TGamer::Repaint(DeskView, Left, Top, Width, Height);
+}
+*/
+
+
+///////////////////////////////////////////////////////////////////////////////
+// at least 28 ints (14 int pairs); return # of used ints; the last int is -1
+// result: ofs, cardNo, ..., -1
+int TGamer::buildHandXOfs (int *dest, int startX, bool opened) {
+  int cnt = 0;
+  TCard *cur = 0, *prev = 0;
+  for (int i = 0; i < aCards->aCount; i++) {
+    TCard *pp = (TCard *)aCards->At(i);
+    if (!pp) continue;
+    prev = cur;
+    cur = pp;
+    if (i) {
+      if (opened) {
+        startX += (prev && prev->CMast != cur->CMast) ? NEW_SUIT_OFFSET : SUIT_OFFSET ;
+      } else startX += CLOSED_CARD_OFFSET;
+    }
+    *dest++ = startX;
+    *dest++ = i;
+    cnt++;
+  }
+  *dest++ = -1;
+  *dest = -1;
+  return cnt;
+}
+
+
+int TGamer::cardAt (int lx, int ly, bool opened) {
+  int ii = -1, ofs[28];
+  int Left = 0, Top = 0, Width;
+  DeskView->xLen = DeskView->DesktopWidht/2-2*DeskView->xBorder;
+  DeskView->yLen = DeskView->DesktopHeight/2-2*DeskView->yBorder;
+  Width = DeskView->xLen;
+  switch (nGamer) {
+    case 1:
+      Left = (DeskView->DesktopWidht-DeskView->xLen)/2;
+      Top = DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight;
+      break;
+    case 2:
+      Left = DeskView->xBorder;
+      Top = DeskView->yBorder;
+      break;
+    case 3:
+      Left = DeskView->DesktopWidht/2+DeskView->xBorder;
+      Top = DeskView->yBorder;
+      break;
+    default: return -1;
+  }
+  // end View Port
+  buildHandXOfs(ofs, Left, opened);
+  for (int f = 0; ofs[f] >= 0; f += 2) {
+    int curX = ofs[f];
+    int x1 = curX, y1 = Top;//+DeskView->yBorder;
+    int x2 = x1+CARDWIDTH, y2 = y1+CARDHEIGHT;
+    if (x1 < lx && lx < x2 && y1 < ly && ly < y2) ii = ofs[f+1];
+  } // end for
+  return ii;
+}
+
+
+void TGamer::Repaint (TDeskView *aDeskView, int Left, int Top, int Width, int Height, bool opened, int selNo) {
+  Q_UNUSED(Width)
+  Q_UNUSED(Height)
+  if (!aDeskView) return;
+  int ofs[28];
+
+  aCards->mySort();
+  buildHandXOfs(ofs, Left, opened);
+  for (int f = 0; ofs[f] >= 0; f += 2) {
+    int x = ofs[f], y = Top;
+    TCard *card = (TCard *)aCards->At(ofs[f+1]);
+    aDeskView->drawCard(card, x, y, !nInvisibleHand, ofs[f+1]==selNo);
+  }
+  if (GamesType != undefined ) {
+    QString msg;
+    if (nGetsCard) {
+      msg += QString::number(nGetsCard);
+      msg += " | ";
+    }
+    msg += sGameName(GamesType);
+    if (!NikName.isEmpty()) {
+      msg += " (";
+      msg += NikName;
+      msg += ")";
+    }
+    aDeskView->drawText(msg, Left+2, Top+CARDHEIGHT+4);
+  }
+}
+
+
+void TGamer::HintCard (int lx, int ly) {
+  Q_UNUSED(lx)
+  Q_UNUSED(ly)
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// game networking
+///////////////////////////////////////////////////////////////////////////////
+int TGamer::GetNikName () {
   return 1;
 }
-//--------------------------------------------------------------
-int TGamer::connecttoserver(char *host,unsigned short port) {
+
+
+int TGamer::connecttoserver (const QString &host, unsigned short port) {
   Q_UNUSED(host)
   Q_UNUSED(port)
-/*  socket = connect_to_socket(host,port);
-  return socket;
-*/
   return 1;
+}
 
-}
-//--------------------------------------------------------------
-int TGamer::connecttodesk(int req) {
+
+int TGamer::connecttodesk (int req) {
   Q_UNUSED(req)
   return 1;
 }
-//--------------------------------------------------------------
-int TGamer::join(int req) {
+
+
+int TGamer::join (int req) {
   Q_UNUSED(req)
   return 1;
 }
-//--------------------------------------------------------------
-void TGamer::NetGetCards(TColoda *Coloda) {
+
+
+void TGamer::NetGetCards (TColoda *Coloda) {
   Q_UNUSED(Coloda)
-/*
-  int i=0,nVal;
-  TCard *Card;
-  char buff[MAXDATASIZE];
-  char *pbuff=buff;
-  memset(buff,0,MAXDATASIZE);
-  read_from_socket(socket,buff,MAXDATASIZE,0);
-//  printf("\n REad from socket %s",buff);
-  while ( sscanf(pbuff,"%i",&nVal) !=EOF  ) {
-//        if (nVal==1000) {
-//          aCards -> Insert( new TCard(10,10) );
-//          aCards -> Insert(Coloda -> Exist(7,1) );
-//        } else {
-          aCards -> Insert(Coloda -> Exist(nVal) );
-//        }
-      pbuff = strchr(pbuff,' ')+1;
-      if (*pbuff=='\n')
-        break;
-  }
-  */
-
 }
-//--------------------------------------------------------------
-int TGamer::SendnPlayerTakeCards(int who) {
+
+
+int TGamer::SendnPlayerTakeCards (int who) {
   Q_UNUSED(who)
   return 0;
 }
-//--------------------------------------------------------------

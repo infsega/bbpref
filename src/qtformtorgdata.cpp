@@ -11,33 +11,6 @@
 #include "qtformtorg.h"
 #include "prfconst.h"
 
-/*
-#include "pics/s101.xpm"
-#include "pics/s102.xpm"
-#include "pics/s103.xpm"
-#include "pics/s104.xpm"
-#include "pics/s105.xpm"
-#include "pics/s61.xpm"
-#include "pics/s62.xpm"
-#include "pics/s63.xpm"
-#include "pics/s64.xpm"
-#include "pics/s65.xpm"
-#include "pics/s71.xpm"
-#include "pics/s72.xpm"
-#include "pics/s73.xpm"
-#include "pics/s74.xpm"
-#include "pics/s75.xpm"
-#include "pics/s81.xpm"
-#include "pics/s82.xpm"
-#include "pics/s83.xpm"
-#include "pics/s84.xpm"
-#include "pics/s85.xpm"
-#include "pics/s91.xpm"
-#include "pics/s92.xpm"
-#include "pics/s93.xpm"
-#include "pics/s94.xpm"
-#include "pics/s95.xpm"
-*/
 
 extern QTFormtorg *Formtorg;
 
@@ -46,180 +19,183 @@ void QTFormtorg::initDialog () {
   this->setMinimumSize(220,230);
   this->setMaximumSize(220,230);
 
-  showbullet= new QPushButton("showbullet", this);
+  showbullet= new QPushButton(this);
   showbullet->setGeometry(110,190,100,27);
   showbullet->setMinimumSize(0,0);
   showbullet->setText("Score");
 
-  bgetback= new QPushButton("bgetback", this);
+  bgetback= new QPushButton(this);
   bgetback->setGeometry(10,190,100,27);
   bgetback->setMinimumSize(0,0);
   bgetback->setText("Get back");
 
-  b61= new QPushButton("g61", this);
+  b61= new QPushButton(this);
   b61->setGeometry(10,10,40,27);
   b61->setMinimumSize(0,0);
-  b61->setText("61");
+  b61->setObjectName("g61");
   b61->setIcon(QIcon(QString(":/pics/s61")));
 
-  b62= new QPushButton("g62", this);
+  b62= new QPushButton(this);
   b62->setGeometry(50,10,40,27);
   b62->setMinimumSize(0,0);
-  b62->setText("62");
+  b62->setObjectName("g62");
   b62->setIcon(QIcon(QString(":/pics/s62")));
 
-  b63= new QPushButton("g63", this);
+  b63= new QPushButton(this);
   b63->setGeometry(90,10,40,27);
   b63->setMinimumSize(0,0);
-  b63->setText("63");
+  b63->setObjectName("g63");
   b63->setIcon(QIcon(QString(":/pics/s63")));
 
-  b64= new QPushButton("g64", this);
+  b64= new QPushButton(this);
   b64->setGeometry(130,10,40,27);
   b64->setMinimumSize(0,0);
-  b64->setText("64");
+  b64->setObjectName("g64");
   b64->setIcon(QIcon(QString(":/pics/s64")));
 
-  b71= new QPushButton("g71", this);
+  b71= new QPushButton(this);
   b71->setGeometry(10,40,40,27);
   b71->setMinimumSize(0,0);
-  b71->setText("71");
+  b71->setObjectName("g71");
   b71->setIcon(QIcon(QString(":/pics/s71")));
 
 
-  b81= new QPushButton("g81", this);
+  b81= new QPushButton(this);
   b81->setGeometry(10,70,40,27);
   b81->setMinimumSize(0,0);
-  b81->setText("81");
+  b81->setObjectName("g81");
   b81->setIcon(QIcon(QString(":/pics/s81")));
 
-  b91= new QPushButton("g91", this);
+  b91= new QPushButton(this);
   b91->setGeometry(10,100,40,27);
   b91->setMinimumSize(0,0);
-  b91->setText("91");
+  b91->setObjectName("g91");
   b91->setIcon(QIcon(QString(":/pics/s91")));
 
-  b101= new QPushButton("g101", this);
+  b101= new QPushButton(this);
   b101->setGeometry(10,130,40,27);
   b101->setMinimumSize(0,0);
-  b101->setText("101");
+  b101->setObjectName("g101");
   b101->setIcon(QIcon(QString(":/pics/s101")));
 
-  b72= new QPushButton("g72", this);
+  b72= new QPushButton(this);
   b72->setGeometry(50,40,40,27);
   b72->setMinimumSize(0,0);
-  b72->setText("72");
+  b72->setObjectName("g72");
   b72->setIcon(QIcon(QString(":/pics/s72")));
 
-  b82= new QPushButton("g82", this);
+  b82= new QPushButton(this);
   b82->setGeometry(50,70,40,27);
   b82->setMinimumSize(0,0);
-  b82->setText("82");
+  b82->setObjectName("g82");
   b82->setIcon(QIcon(QString(":/pics/s82")));
 
-  b92= new QPushButton("g92", this);
+  b92= new QPushButton(this);
   b92->setGeometry(50,100,40,27);
   b92->setMinimumSize(0,0);
-  b92->setText("92");
+  b92->setObjectName("g92");
   b92->setIcon(QIcon(QString(":/pics/s92")));
 
-  b102= new QPushButton("g102", this);
+  b102= new QPushButton(this);
   b102->setGeometry(50,130,40,27);
   b102->setMinimumSize(0,0);
-  b102->setText("102");
+  b102->setObjectName("g102");
   b102->setIcon(QIcon(QString(":/pics/s102")));
 
-  b73= new QPushButton("g73", this);
+  b73= new QPushButton(this);
   b73->setGeometry(90,40,40,27);
   b73->setMinimumSize(0,0);
-  b73->setText("73");
+  b73->setObjectName("g73");
   b73->setIcon(QIcon(QString(":/pics/s73")));
 
-  b83= new QPushButton("g83", this);
+  b83= new QPushButton(this);
   b83->setGeometry(90,70,40,27);
   b83->setMinimumSize(0,0);
-  b83->setText("83");
+  b83->setObjectName("g83");
   b83->setIcon(QIcon(QString(":/pics/s83")));
 
-  b93= new QPushButton("g93", this);
+  b93= new QPushButton(this);
   b93->setGeometry(90,100,40,27);
   b93->setMinimumSize(0,0);
-  b93->setText("93");
+  b93->setObjectName("g93");
   b93->setIcon(QIcon(QString(":/pics/s93")));
 
-  b103= new QPushButton("g103", this);
+  b103= new QPushButton(this);
   b103->setGeometry(90,130,40,27);
   b103->setMinimumSize(0,0);
-  b103->setText("103");
+  b103->setObjectName("g103");
   b103->setIcon(QIcon(QString(":/pics/s103")));
 
-  b74= new QPushButton("g74", this);
+  b74= new QPushButton(this);
   b74->setGeometry(130,40,40,27);
   b74->setMinimumSize(0,0);
-  b74->setText("74");
+  b74->setObjectName("g74");
   b74->setIcon(QIcon(QString(":/pics/s74")));
 
-  b84= new QPushButton("g84", this);
+  b84= new QPushButton(this);
   b84->setGeometry(130,70,40,27);
   b84->setMinimumSize(0,0);
-  b84->setText("84");
+  b84->setObjectName("g84");
   b84->setIcon(QIcon(QString(":/pics/s84")));
 
-  b94= new QPushButton("g94", this);
+  b94= new QPushButton(this);
   b94->setGeometry(130,100,40,27);
   b94->setMinimumSize(0,0);
-  b94->setText("94");
+  b94->setObjectName("g94");
   b94->setIcon(QIcon(QString(":/pics/s94")));
 
-  b104= new QPushButton("g104", this);
+  b104= new QPushButton(this);
   b104->setGeometry(130,130,40,27);
   b104->setMinimumSize(0,0);
-  b104->setText("104");
+  b104->setObjectName("g104");
   b104->setIcon(QIcon(QString(":/pics/s104")));
 
-  bpass= new QPushButton("pass", this);
+  bpass= new QPushButton(this);
   bpass->setGeometry(10,160,70,30);
   bpass->setMinimumSize(0,0);
-  bpass->setText("Pass");
+  bpass->setObjectName("gtPass");
+  bpass->setText("&Pass");
 
-  bvist= new QPushButton("vist", this);
+  bvist= new QPushButton(this);
   bvist->setGeometry(80,160,60,30);
   bvist->setMinimumSize(0,0);
-  bvist->setText("Whist");
+  bvist->setObjectName("vist");
+  bvist->setText("&Whist");
 
-  b86= new QPushButton("g86", this);
+  b86= new QPushButton(this);
   b86->setGeometry(140,160,70,30);
   b86->setMinimumSize(0,0);
-  b86->setText("Miser");
+  b86->setObjectName("g86");
+  b86->setObjectName("&Misere");
 
-  b65= new QPushButton("g65", this);
+  b65= new QPushButton(this);
   b65->setGeometry(170,10,40,27);
   b65->setMinimumSize(0,0);
-  b65->setText("65");
+  b65->setObjectName("g65");
   b65->setIcon(QIcon(QString(":/pics/s65")));
 
-  b75= new QPushButton("g75", this);
+  b75= new QPushButton(this);
   b75->setGeometry(170,40,40,27);
   b75->setMinimumSize(0,0);
-  b75->setText("75");
+  b75->setObjectName("g75");
   b75->setIcon(QIcon(QString(":/pics/s75")));
 
-  b85= new QPushButton("g85", this);
+  b85= new QPushButton(this);
   b85->setGeometry(170,70,40,27);
   b85->setMinimumSize(0,0);
-  b85->setText("85");
+  b85->setObjectName("g85");
   b85->setIcon(QIcon(QString(":/pics/s85")));
 
-  b95= new QPushButton("g95", this);
+  b95= new QPushButton(this);
   b95->setGeometry(170,100,40,27);
   b95->setMinimumSize(0,0);
-  b95->setText("95");
+  b95->setObjectName("g95");
   b95->setIcon(QIcon(QString(":/pics/s95")));
 
-  b105= new QPushButton("g105", this);
+  b105= new QPushButton(this);
   b105->setGeometry(170,130,40,27);
-  b105->setMinimumSize(0,0);
-  b105->setText("105");
+  b105->setMinimumSize(0, 0);
+  b105->setObjectName("g105");
   b105->setIcon(QIcon(QString(":/pics/s105")));
 
   connect( b61, SIGNAL(clicked()),this, SLOT(slotPushButtonClick61( )) );

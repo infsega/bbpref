@@ -137,7 +137,7 @@ void  TCardList::mySort(void) {
   for  ( int i=0;i<aLimit;i++ )
     anewitems[i]= NULL;
   for ( m=1;m<=3;m=m+2) {
-    for (int c=A;c>=7;c--) {
+    for (int c=FACE_ACE;c>=7;c--) {
       if ( (c1 = Exist(c,m))!=NULL ) {
         anewitems[j++] = c1;
 //        items[IndexOf(c1)] = NULL;
@@ -146,7 +146,7 @@ void  TCardList::mySort(void) {
   }
 
   for (m=2;m<=4;m=m+2) {
-    for (int c=A;c>=7;c--) {
+    for (int c=FACE_ACE;c>=7;c--) {
       if ( (c1 = Exist(c,m))!=NULL ) {
         anewitems[j++] = c1;
 //        items[IndexOf(c1)] = NULL;
@@ -163,7 +163,7 @@ void  TCardList::mySort(void) {
   for  ( int i=0;i<aLimit;i++ )
     anewitems[i]= NULL;
   for (int m=1;m<=4;m++) {
-    for (int c=7;c<=A;c++) {
+    for (int c=7;c<=FACE_ACE;c++) {
       if ( (c1 = Exist(c,m))!=NULL ) {
         anewitems[j++] = c1;
 //        items[IndexOf(c1)] = NULL;
@@ -175,8 +175,8 @@ void  TCardList::mySort(void) {
 }
 //----------------------------------------------------------------------
 TCard * TCardList::MoreThan( int _CName, int _CMast ) {
-  if ( _CName==A ) return NULL;
-  for(int i=_CName;i<=A;i++) {
+  if ( _CName==FACE_ACE ) return NULL;
+  for(int i=_CName;i<=FACE_ACE;i++) {
     if(Exist(i,_CMast )) {
        return Exist(i,_CMast );
     }
@@ -196,8 +196,8 @@ TCard * TCardList::LessThan( int _CName, int _CMast ) {
 //----------------------------------------------------------------------
 TCard * TCardList::MoreThan( TCard *Card ) {
   if ( Card ) {
-      if ( Card->CName==A ) return NULL;
-      for(int i=Card->CName;i<=A;i++) {
+      if ( Card->CName==FACE_ACE ) return NULL;
+      for(int i=Card->CName;i<=FACE_ACE;i++) {
         if(Exist(i,Card->CMast )) {
            return Exist(i,Card->CMast );
         }
@@ -221,7 +221,7 @@ TCard * TCardList::LessThan( TCard *Card ) { //первая меньше чем переданная
 //----------------------------------------------------------------------
 int TCardList::EmptyMast(int _CMast) {
   for ( int i = 1;i<=4;i++ ) {
-    if ( i==_CMast ) break;
+    if ( i==_CMast ) continue; //k8:bug? break;
     if ( ! AllCard(_CMast) ) return i;
   }
   return 0;

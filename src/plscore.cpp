@@ -105,7 +105,7 @@ int TPlScore::AddRecords( TGamesType aGamerType,TGamesType aMyType, int nGamerVz
   pnCurrent = (int *) NaKogo -> LastItem();
 
     //-------------------------------------------------------------------------
-  if ( aMyType == pass && aGamerType != g86 )  {
+  if ( aMyType == gtPass && aGamerType != g86 )  {
     if ( !globvist && nGameCard-nGamerVz > 0)  {   // разигрывающий  - недобрал
         nScore = nGamePrice*((nGameCard-nGamerVz)+nMyVz) + (pnCurrent==NULL ? 0: *pnCurrent);
     }

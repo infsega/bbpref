@@ -16,33 +16,34 @@
 
 
 class TDeskView {
+public:
+  TDeskView ();
+  ~TDeskView ();
 
-  public :
+  void mySleep (int seconds);
+
+  void ClearScreen ();
+  void ClearBox (int x1, int y1, int x2, int y2);
+  void drawCard (TCard *card, int x, int y, bool opened, bool hilight);
+  void drawText (const QString &str, int x, int y, QRgb textColor=qRgb(255,255,255), QRgb outlineColor=qRgb(0,0,0));
+  void MessageBox (const QString &text, const QString &caption);
+  void ShowBlankPaper (int nBuletScore);
+  void showPlayerScore (int i, const QString &sb, const QString &sm, const QString &slv, const QString &srv, const QString &tv);
+  //----------------------------- for THuman gamer
+  TGamesType makemove (TGamesType lMove,TGamesType rMove);
+  void StatusBar (const QString &text);
+  void drawRotatedText (QPainter &p, int x, int y, float angle, const QString &text);
+
+public:
   int Event;
-  TDeskView();
-
-  QPaintDevice *PaintDevice;
+  QPixmap *mDeskBmp;
 
   int nSecondStartWait;
-  int DesktopWidht,DesktopHeight;
-  int CardWidht,CardHeight;
-  int xBorder,yBorder;
+  int DesktopWidht, DesktopHeight;
+  int CardWidht, CardHeight;
+  int xBorder, yBorder;
   int xLen,yLen;
-  int xDelta,yDelta;
-  void SysDrawCard(TCard *,int x,int y,int visible,int border);
-  void SysDrawCardPartialy(TCard *,int x,int y,int visible,int border,int x2);
-  void SysSayMessage(char *,int x,int y);
-  void ClearScreen(void);
-  void ClearBox(int,int,int,int);
-  void mySleep(int seconds);
-  void MessageBox(const char *,const char *);
-  void ShowBlankPaper(int nBuletScore);
-  void ShowGamerScore(int i,char *sb,char *sm,char *slv,char *srv,char *tv);
-  //----------------------------- for THuman gamer
-  TGamesType makemove(TGamesType lMove,TGamesType rMove);
-  void StatusBar(const char *);
-  void drawRotatedText(QPainter *p,int x,int y,float angle,char *text);
-
+  int xDelta, yDelta;
 };
 
 

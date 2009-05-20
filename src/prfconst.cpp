@@ -16,7 +16,7 @@ TGameName GameName[] = {
   {raspass,"PassOut"},
   {undefined,"-----"},
   {vist,"Whist"},
-  {pass,"Pass"},
+  {gtPass,"Pass"},
   {g61,"6 of spades"},
   {g62,"6 of clubs"},
   {g63,"6 of diamonds"},
@@ -64,7 +64,7 @@ int NextGame(TGamesType GamesType) {
   if (GamesType == g105 )  {
     return GamesType;
   }
-  if (GamesType == pass )  {
+  if (GamesType == gtPass )  {
       return g61;
   }
   if ( GamesType != undefined )  {
@@ -73,14 +73,14 @@ int NextGame(TGamesType GamesType) {
       mast++;
 
     } else {
-      mast = pica;
+      mast = SuitSpades;
       vz ++;
     }
     return vz*10+mast;
   } else {
       return g61;
   }
-  return pass;
+  return gtPass;
 }
 //--------------------------------------------------------------------------
 
@@ -139,7 +139,7 @@ TGamesType GamesTypeByName (const QString &s) {
   if (strcmpQ("raspass",s)) return raspass;
   if (strcmpQ("vist",s)) return vist;
   if (strcmpQ("undefined",s)) return undefined;
-  if (strcmpQ("pass",s)) return pass;
+  if (strcmpQ("gtPass",s)) return gtPass;
   if (strcmpQ("g61",s)) return g61;
   if (strcmpQ("g62",s)) return g62;
   if (strcmpQ("g63",s)) return g63;
