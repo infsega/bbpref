@@ -15,189 +15,59 @@
 extern QTFormtorg *Formtorg;
 
 void QTFormtorg::initDialog () {
-  this->resize(220,230);
-  this->setMinimumSize(220,230);
-  this->setMaximumSize(220,230);
+  this->resize(220, 230);
+  this->setMinimumSize(220, 230);
+  this->setMaximumSize(220, 230);
 
-  showbullet= new QPushButton(this);
-  showbullet->setGeometry(110,190,100,27);
-  showbullet->setMinimumSize(0,0);
-  showbullet->setText("Score");
+  for (int suit = 1; suit <= 4; suit++) {
+    int y = 30*suit-20;
+    for (int face = 6; face <= 10; face++) {
+      int x = (face-6)*40+10;
+      QString iName, oName;
+      iName.sprintf(":/pics/bids/s%i%i.png", face, suit);
+      oName.sprintf("g%i%i", face, suit);
+      QPushButton *b = new QPushButton(this);
+      b->setObjectName(oName);
+      b->setGeometry(x, y, 40, 27);
+      b->setMinimumSize(40, 27);
+      b->setIconSize(QSize(40, 27));
+      b->setIcon(QIcon(iName));
+      // hack! hack!
+      char slotName[128];
+      sprintf(slotName, "1slotPushButtonClick%i%i()", face, suit);
+      connect(b, SIGNAL(clicked()), this, slotName);
+    }
+  }
 
-  bgetback= new QPushButton(this);
-  bgetback->setGeometry(10,190,100,27);
-  bgetback->setMinimumSize(0,0);
-  bgetback->setText("Get back");
-
-  b61= new QPushButton(this);
-  b61->setGeometry(10,10,40,27);
-  b61->setMinimumSize(0,0);
-  b61->setObjectName("g61");
-  b61->setIcon(QIcon(QString(":/pics/s61")));
-
-  b62= new QPushButton(this);
-  b62->setGeometry(50,10,40,27);
-  b62->setMinimumSize(0,0);
-  b62->setObjectName("g62");
-  b62->setIcon(QIcon(QString(":/pics/s62")));
-
-  b63= new QPushButton(this);
-  b63->setGeometry(90,10,40,27);
-  b63->setMinimumSize(0,0);
-  b63->setObjectName("g63");
-  b63->setIcon(QIcon(QString(":/pics/s63")));
-
-  b64= new QPushButton(this);
-  b64->setGeometry(130,10,40,27);
-  b64->setMinimumSize(0,0);
-  b64->setObjectName("g64");
-  b64->setIcon(QIcon(QString(":/pics/s64")));
-
-  b71= new QPushButton(this);
-  b71->setGeometry(10,40,40,27);
-  b71->setMinimumSize(0,0);
-  b71->setObjectName("g71");
-  b71->setIcon(QIcon(QString(":/pics/s71")));
-
-
-  b81= new QPushButton(this);
-  b81->setGeometry(10,70,40,27);
-  b81->setMinimumSize(0,0);
-  b81->setObjectName("g81");
-  b81->setIcon(QIcon(QString(":/pics/s81")));
-
-  b91= new QPushButton(this);
-  b91->setGeometry(10,100,40,27);
-  b91->setMinimumSize(0,0);
-  b91->setObjectName("g91");
-  b91->setIcon(QIcon(QString(":/pics/s91")));
-
-  b101= new QPushButton(this);
-  b101->setGeometry(10,130,40,27);
-  b101->setMinimumSize(0,0);
-  b101->setObjectName("g101");
-  b101->setIcon(QIcon(QString(":/pics/s101")));
-
-  b72= new QPushButton(this);
-  b72->setGeometry(50,40,40,27);
-  b72->setMinimumSize(0,0);
-  b72->setObjectName("g72");
-  b72->setIcon(QIcon(QString(":/pics/s72")));
-
-  b82= new QPushButton(this);
-  b82->setGeometry(50,70,40,27);
-  b82->setMinimumSize(0,0);
-  b82->setObjectName("g82");
-  b82->setIcon(QIcon(QString(":/pics/s82")));
-
-  b92= new QPushButton(this);
-  b92->setGeometry(50,100,40,27);
-  b92->setMinimumSize(0,0);
-  b92->setObjectName("g92");
-  b92->setIcon(QIcon(QString(":/pics/s92")));
-
-  b102= new QPushButton(this);
-  b102->setGeometry(50,130,40,27);
-  b102->setMinimumSize(0,0);
-  b102->setObjectName("g102");
-  b102->setIcon(QIcon(QString(":/pics/s102")));
-
-  b73= new QPushButton(this);
-  b73->setGeometry(90,40,40,27);
-  b73->setMinimumSize(0,0);
-  b73->setObjectName("g73");
-  b73->setIcon(QIcon(QString(":/pics/s73")));
-
-  b83= new QPushButton(this);
-  b83->setGeometry(90,70,40,27);
-  b83->setMinimumSize(0,0);
-  b83->setObjectName("g83");
-  b83->setIcon(QIcon(QString(":/pics/s83")));
-
-  b93= new QPushButton(this);
-  b93->setGeometry(90,100,40,27);
-  b93->setMinimumSize(0,0);
-  b93->setObjectName("g93");
-  b93->setIcon(QIcon(QString(":/pics/s93")));
-
-  b103= new QPushButton(this);
-  b103->setGeometry(90,130,40,27);
-  b103->setMinimumSize(0,0);
-  b103->setObjectName("g103");
-  b103->setIcon(QIcon(QString(":/pics/s103")));
-
-  b74= new QPushButton(this);
-  b74->setGeometry(130,40,40,27);
-  b74->setMinimumSize(0,0);
-  b74->setObjectName("g74");
-  b74->setIcon(QIcon(QString(":/pics/s74")));
-
-  b84= new QPushButton(this);
-  b84->setGeometry(130,70,40,27);
-  b84->setMinimumSize(0,0);
-  b84->setObjectName("g84");
-  b84->setIcon(QIcon(QString(":/pics/s84")));
-
-  b94= new QPushButton(this);
-  b94->setGeometry(130,100,40,27);
-  b94->setMinimumSize(0,0);
-  b94->setObjectName("g94");
-  b94->setIcon(QIcon(QString(":/pics/s94")));
-
-  b104= new QPushButton(this);
-  b104->setGeometry(130,130,40,27);
-  b104->setMinimumSize(0,0);
-  b104->setObjectName("g104");
-  b104->setIcon(QIcon(QString(":/pics/s104")));
-
-  bpass= new QPushButton(this);
+  bpass = new QPushButton(this);
   bpass->setGeometry(10,160,70,30);
   bpass->setMinimumSize(0,0);
-  bpass->setObjectName("gtPass");
+  bpass->setObjectName("pass");
   bpass->setText("&Pass");
 
-  bvist= new QPushButton(this);
+  bvist = new QPushButton(this);
   bvist->setGeometry(80,160,60,30);
   bvist->setMinimumSize(0,0);
   bvist->setObjectName("vist");
   bvist->setText("&Whist");
 
-  b86= new QPushButton(this);
-  b86->setGeometry(140,160,70,30);
+  b86 = new QPushButton(this);
+  b86->setGeometry(140, 160, 70, 30);
   b86->setMinimumSize(0,0);
   b86->setObjectName("g86");
-  b86->setObjectName("&Misere");
+  b86->setText("&Misere");
 
-  b65= new QPushButton(this);
-  b65->setGeometry(170,10,40,27);
-  b65->setMinimumSize(0,0);
-  b65->setObjectName("g65");
-  b65->setIcon(QIcon(QString(":/pics/s65")));
+  showbullet = new QPushButton(this);
+  showbullet->setGeometry(110, 190, 100, 27);
+  showbullet->setMinimumSize(0, 0);
+  showbullet->setText("&Score");
 
-  b75= new QPushButton(this);
-  b75->setGeometry(170,40,40,27);
-  b75->setMinimumSize(0,0);
-  b75->setObjectName("g75");
-  b75->setIcon(QIcon(QString(":/pics/s75")));
+  bgetback = new QPushButton(this);
+  bgetback->setGeometry(10, 190, 100, 27);
+  bgetback->setMinimumSize(0, 0);
+  bgetback->setText("Get &back");
 
-  b85= new QPushButton(this);
-  b85->setGeometry(170,70,40,27);
-  b85->setMinimumSize(0,0);
-  b85->setObjectName("g85");
-  b85->setIcon(QIcon(QString(":/pics/s85")));
-
-  b95= new QPushButton(this);
-  b95->setGeometry(170,100,40,27);
-  b95->setMinimumSize(0,0);
-  b95->setObjectName("g95");
-  b95->setIcon(QIcon(QString(":/pics/s95")));
-
-  b105= new QPushButton(this);
-  b105->setGeometry(170,130,40,27);
-  b105->setMinimumSize(0, 0);
-  b105->setObjectName("g105");
-  b105->setIcon(QIcon(QString(":/pics/s105")));
-
+/*
   connect( b61, SIGNAL(clicked()),this, SLOT(slotPushButtonClick61( )) );
   connect( b62, SIGNAL(clicked()),this, SLOT(slotPushButtonClick62( )) );
   connect( b63, SIGNAL(clicked()),this, SLOT(slotPushButtonClick63( )) );
@@ -215,7 +85,6 @@ void QTFormtorg::initDialog () {
   connect( b83, SIGNAL(clicked()),this, SLOT(slotPushButtonClick83( )) );
   connect( b84, SIGNAL(clicked()),this, SLOT(slotPushButtonClick84( )) );
   connect( b85, SIGNAL(clicked()),this, SLOT(slotPushButtonClick85( )) );
-  connect( b86, SIGNAL(clicked()),this, SLOT(slotPushButtonClick86( )) );
 
   connect( b91, SIGNAL(clicked()),this, SLOT(slotPushButtonClick91( )) );
   connect( b92, SIGNAL(clicked()),this, SLOT(slotPushButtonClick92( )) );
@@ -227,10 +96,12 @@ void QTFormtorg::initDialog () {
   connect( b102, SIGNAL(clicked()),this, SLOT(slotPushButtonClick102( )) );
   connect( b103, SIGNAL(clicked()),this, SLOT(slotPushButtonClick103( )) );
   connect( b104, SIGNAL(clicked()),this, SLOT(slotPushButtonClick104( )) );
-  connect( b105, SIGNAL(clicked()),this, SLOT(slotPushButtonClick105( )) );
+  connect( b105, SIGNAL(clicked()),this, SLOT(slotPushButtonClick105()));
+*/
 
-  connect( bpass, SIGNAL(clicked()),this, SLOT(slotPushButtonClickPass( )) );
-  connect( bvist, SIGNAL(clicked()),this, SLOT(slotPushButtonClickVist( )) );
-  connect( bgetback, SIGNAL(clicked()),this, SLOT(slotGetBackSnos( )) );
-  connect( showbullet, SIGNAL(clicked()),this, SLOT(slotShowBullet( )) );
+  connect(b86, SIGNAL(clicked()), this, SLOT(slotPushButtonClick86()));
+  connect(bpass, SIGNAL(clicked()), this, SLOT(slotPushButtonClickPass()));
+  connect(bvist, SIGNAL(clicked()), this, SLOT(slotPushButtonClickVist()));
+  connect(bgetback, SIGNAL(clicked()), this, SLOT(slotGetBackSnos()));
+  connect(showbullet, SIGNAL(clicked()), this, SLOT(slotShowBullet()));
 }

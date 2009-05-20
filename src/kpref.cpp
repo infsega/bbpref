@@ -32,7 +32,7 @@ char *documentation; //see bottom this file
 Kpref *kpref;
 
 
-Kpref::Kpref() {
+Kpref::Kpref () {
   //!!!setTitle("OpenPref");
   initMenuBar();
   nflAleradyPainting = nAllReadyHinting = WaitingForMouseUp = 0;
@@ -42,21 +42,25 @@ Kpref::Kpref() {
 }
 
 
-void Kpref::init() {
+void Kpref::init () {
   StatusBar1 = new QStatusBar(this);
-  DeskView = new TDeskView();
-  DeskView->DesktopWidht = width();
-  DeskView->DesktopHeight = height();
+  DeskView = new TDeskView(width(), height());
   DeskTop = new TDeskTop(DeskView);
   connect(DeskTop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
 }
 
 
-Kpref::~Kpref() {
+Kpref::~Kpref () {
   delete StatusBar1;
-  delete Formtorg;
+  //!delete Formtorg;
   delete DeskView;
   delete DeskTop;
+}
+
+
+void Kpref::adjustDesk () {
+  if (DeskView) DeskView->ClearScreen();
+  repaint();
 }
 
 
@@ -161,15 +165,13 @@ void Kpref::slotNewSingleGame () {
   if (DeskTop) {
     delete DeskTop;
     delete DeskView;
-    DeskView = new TDeskView();
+    DeskView = new TDeskView(width(), height());
     DeskTop = new TDeskTop();
     DeskTop->DeskView = DeskView;
     nBuletScore = 10; //k8:!!!
     g61stalingrad = true; //k8:!!!
     g10vist = false; //k8:!!!
     globvist = true; //k8:!!!
-    DeskView->DesktopHeight = height();
-    DeskView->DesktopWidht = width();
     connect(DeskTop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
     //DeskView->ClearScreen();
   }

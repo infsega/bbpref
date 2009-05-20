@@ -139,7 +139,7 @@ TGamesType GamesTypeByName (const QString &s) {
   if (strcmpQ("raspass",s)) return raspass;
   if (strcmpQ("vist",s)) return vist;
   if (strcmpQ("undefined",s)) return undefined;
-  if (strcmpQ("gtPass",s)) return gtPass;
+  if (strcmpQ("pass",s)) return gtPass;
   if (strcmpQ("g61",s)) return g61;
   if (strcmpQ("g62",s)) return g62;
   if (strcmpQ("g63",s)) return g63;

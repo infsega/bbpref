@@ -46,9 +46,11 @@ public:
   ~Kpref();
   void init();
   void initMenuBar();
-  QPainter *p;
+  //QPainter *p;
   //pthread_t thread;
   //int flthread;
+
+  void adjustDesk ();
 
 public slots:
   void forceRepaint ();

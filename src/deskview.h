@@ -17,7 +17,7 @@
 
 class TDeskView {
 public:
-  TDeskView ();
+  TDeskView (int aW, int aH);
   ~TDeskView ();
 
   void mySleep (int seconds);

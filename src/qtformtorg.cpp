@@ -82,7 +82,7 @@ void QTFormtorg::DisableLessThan (TGamesType GamesType) {
   foreach (QWidget *widget, wList) {
     QPushButton *b = dynamic_cast<QPushButton *>(widget);
     if (!b) continue;
-    if (GamesTypeByName(b->text()) < GamesType) b->setEnabled(false);
+    if (GamesTypeByName(b->objectName()) < GamesType) b->setEnabled(false);
   }
 }
 
@@ -92,7 +92,7 @@ void QTFormtorg::DisalbeGames (TGamesType GamesType) {
   foreach (QWidget *widget, wList) {
     QPushButton *b = dynamic_cast<QPushButton *>(widget);
     if (!b) continue;
-    if (GamesTypeByName(b->text()) == GamesType) b->setEnabled(false);
+    if (GamesTypeByName(b->objectName()) == GamesType) b->setEnabled(false);
   }
 }
 
@@ -102,7 +102,7 @@ void QTFormtorg::EnableGames (TGamesType GamesType) {
   foreach (QWidget *widget, wList) {
     QPushButton *b = dynamic_cast<QPushButton *>(widget);
     if (!b) continue;
-    if (GamesTypeByName(b->text()) == GamesType) b->setEnabled(true);
+    if (GamesTypeByName(b->objectName()) == GamesType) b->setEnabled(true);
   }
 }
 

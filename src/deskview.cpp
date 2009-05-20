@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include <QDebug>
+
 #include <QApplication>
 #include <QString>
 #include <QMainWindow>
@@ -28,14 +30,20 @@ static bool cardsLoaded = false;
 
 
 bool loadCards () {
+  //qDebug() << SLOT(slotPushButtonClick95());
   if (cardsLoaded) return true;
   for (int face = 7; face <= 14; face++) {
     for (int suit = 1; suit <= 4; suit++) {
       char fname[64];
       sprintf(fname, ":/pics/%i%i.png", face, suit);
       QString fn(fname);
+/*
       QFile fl(fn);
-      if (!fl.exists()) return false;
+      if (!fl.exists()) {
+        qDebug() << "no file:" << fn;
+        return false;
+      }
+*/
       QImage *im = new QImage(fn);
       sprintf(fname, "%i%i", face, suit);
       QString f2(fname);
@@ -56,15 +64,21 @@ bool loadCards () {
   }
   {
   QString fn(":/pics/cards/1000.png");
+/*
   QFile fl(fn);
-  if (!fl.exists()) return false;
+  if (!fl.exists()) {
+    return false;
+  }
+*/
   QImage *im = new QImage(fn);
   cardI["1000"] = im;
   }
   {
   QString fn(":/pics/cards/empty.png");
+/*
   QFile fl(fn);
   if (!fl.exists()) return false;
+*/
   QImage *im = new QImage(fn);
   cardI["empty"] = im;
   }
@@ -80,13 +94,20 @@ static QImage *GetXpmByNameI (const char *name) {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-TDeskView::TDeskView () {
+TDeskView::TDeskView (int aW, int aH) : mDeskBmp(0) {
   Event = 0;
   CardWidht = CARDWIDTH;
   CardHeight = CARDHEIGHT;
   xBorder = 20;
   yBorder = 20;
   yBorder = 40;
+  DesktopWidht = aW;
+  DesktopHeight = aH;
+  //mDeskBmp = new QPixmap(DesktopWidht, DesktopHeight);
+  if (!cardsLoaded) {
+    if (!loadCards()) abort();
+  }
+  ClearScreen();
 }
 
 
@@ -98,21 +119,24 @@ TDeskView::~TDeskView () {
 void TDeskView::mySleep (int seconds) {
   time_t tStart = time(NULL);
   Event = 0;
-  QTimer *timer = new QTimer();
-  //connect( timer, SIGNAL(timeout()),SLOT(PQApplication -> mainWidget () -> slotEndSleep()) );
-  timer->start(PEVENTMILLISECOND);
+  QTimer *timer = 0;
+  if (seconds > 0) {
+    timer = new QTimer();
+    //connect(timer, SIGNAL(timeout()), SLOT(PQApplication->mainWidget()->slotEndSleep()));
+    timer->start(seconds*1000);
+  }
   while (!Event) {
     PQApplication->processEvents();
-    if (seconds) {
+    if (seconds > 0) {
       if (difftime(time(NULL), tStart) >= seconds) Event = 1;
     }
   }
-  delete timer;
+  if (timer) delete timer;
 }
 
 
 void TDeskView::ClearScreen () {
-  if (!mDeskBmp || mDeskBmp->width() != DesktopWidht || mDeskBmp->height() != DesktopHeight) {
+  if (!mDeskBmp || (mDeskBmp->width() != DesktopWidht || mDeskBmp->height() != DesktopHeight)) {
     if (mDeskBmp) delete mDeskBmp;
     mDeskBmp = new QPixmap(DesktopWidht, DesktopHeight);
   }
@@ -268,6 +292,6 @@ void TDeskView::drawRotatedText (QPainter &p, int x, int y, float angle, const Q
 TGamesType TDeskView::makemove (TGamesType lMove, TGamesType rMove) {
   Q_UNUSED(lMove)
   Q_UNUSED(rMove)
-  Formtorg->exec();
+  if (!Formtorg->exec()) qApp->quit();
   return Formtorg->_GamesType;
 }

@@ -71,34 +71,10 @@ public:
 protected:
   void initDialog ();
   //Generated area. DO NOT EDIT!!!(begin)
-  QPushButton *b61;
-  QPushButton *b62;
-  QPushButton *b63;
-  QPushButton *b64;
-  QPushButton *b71;
-  QPushButton *b81;
-  QPushButton *b91;
-  QPushButton *b101;
-  QPushButton *b72;
-  QPushButton *b82;
-  QPushButton *b92;
-  QPushButton *b102;
-  QPushButton *b73;
-  QPushButton *b83;
-  QPushButton *b93;
-  QPushButton *b103;
-  QPushButton *b74;
-  QPushButton *b84;
-  QPushButton *b94;
-  QPushButton *b104;
+
+  QPushButton *b86;
   QPushButton *bpass;
   QPushButton *bvist;
-  QPushButton *b86;
-  QPushButton *b65;
-  QPushButton *b75;
-  QPushButton *b85;
-  QPushButton *b95;
-  QPushButton *b105;
   //Generated area. DO NOT EDIT!!!(end)
 
 public:
