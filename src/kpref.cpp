@@ -43,9 +43,11 @@ Kpref *kpref;
 Kpref::Kpref() {
   //!!!setTitle("OpenPref");
   //setBackgroundColor(Qt::darkGreen);
+/*
   QPalette pal(palette());
   pal.setColor(QPalette::Background, Qt::darkGreen);
   setPalette(pal);
+*/
   initMenuBar();
   nflAleradyPainting = nAllReadyHinting = WaitingForMouseUp = 0;
   DeskView = NULL;
