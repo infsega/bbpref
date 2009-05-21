@@ -94,8 +94,8 @@ Card *HumanPlayer::makemove (Card *lMove, Card *rMove, Player *aLeftGamer, Playe
     }
     if (!Validator || !RetVal) continue;
     // пропускаем ход через правила
-    if (!((Validator->CMast == RetVal->CMast) ||
-        (!aCards->MinCard(Validator->CMast) && (RetVal->CMast == koz || ((!aCards->MinCard(koz)))))
+    if (!((Validator->suit() == RetVal->suit()) ||
+        (!aCards->MinCard(Validator->suit()) && (RetVal->suit() == koz || ((!aCards->MinCard(koz)))))
        )) RetVal = NULL;
   }
   clearCardArea();

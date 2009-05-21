@@ -1,43 +1,72 @@
-#include <QVector>
-
 #include "card.h"
 
 
-//---------------------------------------------------------------------------
-void Card::SetCard( int _CName, int _CMast )
-{
-        CName=_CName;
-        CMast=_CMast;
-
-}
-//---------------------------------------------------------------------------
-Card::~Card() {
+Card::Card (int aFace, int aSuit) {
+  mFace = aFace;
+  mSuit = aSuit;
+  validate();
 }
 
-//---------------------------------------------------------------------------
-Card::Card( int _CName, int _CMast ) {
-        CName=_CName;
-        CMast=_CMast;
+
+Card::Card (int aPacked) {
+  if (aPacked < 61) {
+    mFace = mSuit = 0;
+    mValid = false;
+  } else {
+    mFace = aPacked/10;
+    mSuit = aPacked%10;
+    validate();
+  }
 }
-//---------------------------------------------------------------------------
-int operator > (Card &c1,Card &c2) {
-          if (c1.CMast == c2.CMast && c1.CName > c2.CName) return 1;
-          //if (c1.CMast == c2.CMast && c1.CName < c2.CName) return -1;
-          return 0;
-         };
-//---------------------------------------------------------------------------
-int operator < (Card &c1,Card &c2) {
-          if (c1.CMast == c2.CMast && c1.CName < c2.CName) return 1;
-          //if (c1.CMast == c2.CMast && c1.CName > c2.CName) return -1;
-          return 0;
-         };
 
 
-/*
-int Card2Int(void *vCard) {
-        Card *card = (Card*) vCard;
-        if (card)
-                return card -> CName*10 + card -> CMast;
-        return -1;
+Card::~Card () {
 }
-*/
+
+
+void Card::validate () {
+  mValid = (mFace >= 7 && mFace <= 14 && mSuit >= 1 && mSuit <= 4);
+}
+
+
+int Card::pack () const {
+  if (!mValid) return 0;
+  return mFace*10+mSuit;
+}
+
+
+int Card::compareWith (const Card &c1) const {
+  int r = mSuit-c1.mSuit;
+  if (!r) r = mFace-c1.mFace;
+  return r;
+}
+
+
+int operator > (const Card &c0, const Card &c1) {
+  return (c0.compareWith(c1) > 0) ? 1 : 0;
+}
+
+
+int operator < (const Card &c0, const Card &c1) {
+  return (c0.compareWith(c1) < 0) ? 1 : 0;
+}
+
+
+int operator >= (const Card &c0, const Card &c1) {
+  return (c0.compareWith(c1) >= 0) ? 1 : 0;
+}
+
+
+int operator <= (const Card &c0, const Card &c1) {
+  return (c0.compareWith(c1) <= 0) ? 1 : 0;
+}
+
+
+int operator == (const Card &c0, const Card &c1) {
+  return (c0.compareWith(c1) == 0) ? 1 : 0;
+}
+
+
+int operator != (const Card &c0, const Card &c1) {
+  return (c0.compareWith(c1) != 0) ? 1 : 0;
+}

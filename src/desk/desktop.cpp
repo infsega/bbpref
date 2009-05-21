@@ -548,7 +548,7 @@ void PrefDesktop::RunGame () {
         Card *tmp4show;
         Card *ptmp4rpass;
         tmp4show = (Card *)Coloda->At(29+i);
-        ptmp4rpass = new Card(1, tmp4show->CMast);
+        ptmp4rpass = new Card(1, tmp4show->suit());
         CardOnDesk[0] = tmp4show;
         //drawInGameCard(0, CardOnDesk[0]);
         Repaint();
@@ -681,11 +681,11 @@ int PrefDesktop::playerWithMaxPool () {
 int PrefDesktop::nPlayerTakeCards (Card *p1, Card *p2, Card *p3, int koz) {
   Card *Max = p1;
   int nRelVal = 1;
-  if ((Max->CMast == p2->CMast && Max->CName < p2->CName) || (Max->CMast != koz && p2->CMast == koz)) {
+  if ((Max->suit() == p2->suit() && Max->face() < p2->face()) || (Max->suit() != koz && p2->suit() == koz)) {
     Max = p2;
     nRelVal = 2;
   }
-  if ((Max->CMast == p3->CMast && Max->CName < p3->CName) || (Max->CMast != koz && p3->CMast == koz)) {
+  if ((Max->suit() == p3->suit() && Max->face() < p3->face()) || (Max->suit() != koz && p3->suit() == koz)) {
     Max = p3;
     nRelVal = 3;
   }

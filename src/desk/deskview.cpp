@@ -314,8 +314,8 @@ void TDeskView::drawCard (Card *card, int x, int y, bool opened, bool hilight) {
 
   strcpy(cCardName, opened?"empty":"1000");
   //opened = true;
-  if (opened && card->CName >= 7 && card->CName <= FACE_ACE && card->CMast >= 1 && card->CMast <= 4) {
-    sprintf(cCardName, "%s%i%i", hilight?"q":"", card->CName, card->CMast);
+  if (opened && card->face() >= 7 && card->face() <= FACE_ACE && card->suit() >= 1 && card->suit() <= 4) {
+    sprintf(cCardName, "%s%i%i", hilight?"q":"", card->face(), card->suit());
     //if (hilight) fprintf(stderr, "SELECTED! [%s]\n", cCardName);
   }
   QImage *bmp = GetXpmByNameI(cCardName);

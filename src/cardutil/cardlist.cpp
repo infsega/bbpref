@@ -17,16 +17,16 @@ CardList::~CardList () {
 
 //----------------------------------------------------------------------
 Card * CardList::Exist( int PackedName ) {
-  int CName = PackedName/10,CMast;
-  CMast = PackedName - CName*10;
-  return Exist(CName,CMast);
+  int face = PackedName/10,suit;
+  suit = PackedName - face*10;
+  return Exist(face,suit);
 }
 //----------------------------------------------------------------------
 Card * CardList::Exist( int _CName, int _CMast ) {
   Card *card=NULL;
   for (int i = 0; i < aLimit; i++) {
         card = (Card *) At(i);
-        if ( card && (card -> CName == _CName && card -> CMast== _CMast))
+        if ( card && (card -> face() == _CName && card -> suit()== _CMast))
              return card;
   }
   return NULL;
@@ -42,7 +42,7 @@ Card * CardList::MinCard( void ) {
         first = !first;
         tmp1 = tmp2;
       } else {
-        if (tmp1->CName > tmp2->CName)
+        if (tmp1->face() > tmp2->face())
           tmp1= tmp2;
       }
       }
@@ -61,7 +61,7 @@ Card * CardList::MaxCard( void ) {
             first = !first;
             tmp1 = tmp2;
          } else {
-           if (tmp1->CName > tmp2->CName)
+           if (tmp1->face() > tmp2->face())
           tmp1= tmp2;
          }
       }
@@ -75,12 +75,12 @@ Card * CardList::MinCard( int _CMast ) {
   char first=1;
   for (int i = 0; i < aLimit; i++) {
       tmp2 = (Card *)this -> items[i];
-      if (tmp2!=NULL && tmp2->CMast==_CMast) {
+      if (tmp2!=NULL && tmp2->suit()==_CMast) {
         if (first) {
           first = !first;
           tmp1 = tmp2;
         } else {
-          if (tmp1->CName > tmp2->CName)
+          if (tmp1->face() > tmp2->face())
             tmp1= tmp2;
         }
       }
@@ -94,12 +94,12 @@ Card * CardList::MaxCard( int _CMast ) {
   char first=1;
   for (int i = 0; i < aLimit; i++) {
     tmp2 = (Card *)this->items[i];
-    if (tmp2!=NULL && tmp2->CMast==_CMast) {
+    if (tmp2!=NULL && tmp2->suit()==_CMast) {
       if (first) {
         first = !first;
         tmp1 = tmp2;
       } else {
-        if (tmp1->CName < tmp2->CName)
+        if (tmp1->face() < tmp2->face())
           tmp1= tmp2;
       }
      }
@@ -112,7 +112,7 @@ int CardList::AllCard( int _CMast ) {
   int j=0;
   for (int i = 0; i < aLimit; i++) {
       Card *card = (Card *) this->items[i];
-      if (card && card->CMast==_CMast) {
+      if (card && card->suit()==_CMast) {
         j++;
       }
   }
@@ -148,8 +148,8 @@ void CardList::mySort () {
       Card *cf, *cc;
       cf = (Card *)items[f];
       cc = (Card *)items[c];
-      int r = (cf->CMast)-(cc->CMast);
-      if (!r) r = (cc->CName)-(cf->CName);
+      int r = (cf->suit())-(cc->suit());
+      if (!r) r = (cc->face())-(cf->face());
       if (r > 0) {
         // swap
         void *t = items[f];
@@ -226,10 +226,10 @@ Card * CardList::LessThan( int _CName, int _CMast ) {
 //----------------------------------------------------------------------
 Card * CardList::MoreThan( Card *card ) {
   if ( card ) {
-      if ( card->CName==FACE_ACE ) return NULL;
-      for(int i=card->CName;i<=FACE_ACE;i++) {
-        if(Exist(i,card->CMast )) {
-           return Exist(i,card->CMast );
+      if ( card->face()==FACE_ACE ) return NULL;
+      for(int i=card->face();i<=FACE_ACE;i++) {
+        if(Exist(i,card->suit() )) {
+           return Exist(i,card->suit() );
         }
       }
   }
@@ -239,10 +239,10 @@ Card * CardList::MoreThan( Card *card ) {
 //----------------------------------------------------------------------
 Card * CardList::LessThan( Card *card ) { //первая меньше чем переданная
   if ( card ) {
-      if (card-> CName==7 ) return NULL;
-      for(int i=card-> CName;i>=7;i--) {
-        if(Exist(i,card-> CMast )) {
-           return Exist(i,card->CMast );
+      if (card-> face()==7 ) return NULL;
+      for(int i=card-> face();i>=7;i--) {
+        if(Exist(i,card-> suit() )) {
+           return Exist(i,card->suit() );
         }
       }
   }
@@ -278,7 +278,7 @@ void CardList::AssignMast(Tclist *_oldlist,eSuit Mast) { // Assign only selected
   Card *card;
   for ( int i = 0;i < _oldlist -> aLimit;i++ )  {
     card =(Card* ) _oldlist ->At(i);
-    if ( card && card -> CMast==Mast)  {
+    if ( card && card -> suit()==Mast)  {
         Insert(card);
     }
   }
