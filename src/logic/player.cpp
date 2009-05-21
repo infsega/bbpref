@@ -9,7 +9,7 @@
 
 Player::Player (int _nGamer) {
   mPlayerNo = _nGamer;
-  aScore = new TPlScore();
+  aScore = new ScoreBoard();
   aCards = new CardList(12); // мои
   aLeft = new CardList(10);  // противника слева (предполагаемый или открытые)
   aRight = new CardList(10); // справа (предполагаемый или открытые)
@@ -24,7 +24,7 @@ Player::Player (int _nGamer) {
 
 Player::Player (int _nGamer, TDeskView *aDeskView) {
   mPlayerNo = _nGamer;
-  aScore = new TPlScore();
+  aScore = new ScoreBoard();
   aCards = new CardList(12);
   aLeft = new CardList(10);
   aRight = new CardList(10);

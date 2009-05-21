@@ -6,10 +6,10 @@
 #include "prfconst.h"
 
 
-class TPlScore {
+class ScoreBoard {
 public:
-  TPlScore ();
-  ~TPlScore ();
+  ScoreBoard ();
+  ~ScoreBoard ();
 
   int recordScores (eGameBid aGamerType, eGameBid aMyType, int nGamerVz, int nMyVz, int nGamer, int myNumber, int nqVist);
 

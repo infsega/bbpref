@@ -14,7 +14,7 @@ class Player {
 public:
   TDeskView *DeskView;
 
-  TPlScore  *aScore;
+  ScoreBoard *aScore;
   CardList *aCards; // мои
   CardList *aLeft;  // Противника с лева (предполагаемый или открытые)
   CardList *aRight; // С права (предполагаемый или открытые)

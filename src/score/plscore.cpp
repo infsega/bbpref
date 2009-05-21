@@ -14,7 +14,7 @@ static QString intList2Str (const QIntList &list) {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-TPlScore::TPlScore () {
+ScoreBoard::ScoreBoard () {
   mPool << 0;
   mMountain << 0;
   mLeftWhists << 0;
@@ -23,11 +23,11 @@ TPlScore::TPlScore () {
 }
 
 
-TPlScore::~TPlScore () {
+ScoreBoard::~ScoreBoard () {
 }
 
 
-int TPlScore::poolAdd (int delta) {
+int ScoreBoard::poolAdd (int delta) {
   int score = pool();
   int ns = score+delta;
   if (ns <= optMaxPool) {
@@ -40,7 +40,7 @@ int TPlScore::poolAdd (int delta) {
 }
 
 
-void TPlScore::mountainDown (int delta) {
+void ScoreBoard::mountainDown (int delta) {
   int score = mountain()-delta;
   if (score >= 0) {
     mMountain << score;
@@ -53,13 +53,13 @@ void TPlScore::mountainDown (int delta) {
 }
 
 
-void TPlScore::mountainUp (int delta) {
+void ScoreBoard::mountainUp (int delta) {
   int score = mountain();
   mMountain << score+delta;
 }
 
 
-void TPlScore::whistsAdd (int index, int myNumber, int delta) {
+void ScoreBoard::whistsAdd (int index, int myNumber, int delta) {
   QIntList *dList;
   int score;
   dList = ((myNumber%3)+1 == index) ? &mLeftWhists : &mRightWhists;
@@ -69,7 +69,7 @@ void TPlScore::whistsAdd (int index, int myNumber, int delta) {
 }
 
 
-int TPlScore::recordScores (
+int ScoreBoard::recordScores (
   eGameBid aGamerType,
   eGameBid aMyType,
   int nGamerVz, //разыгрывающего
@@ -170,7 +170,7 @@ int TPlScore::recordScores (
 }
 
 
-QString TPlScore::poolStr () const { return intList2Str(mPool); }
-QString TPlScore::mountainStr () const { return intList2Str(mMountain); }
-QString TPlScore::leftWhistsStr () const { return intList2Str(mLeftWhists); }
-QString TPlScore::rightWhistsStr () const { return intList2Str(mRightWhists); }
+QString ScoreBoard::poolStr () const { return intList2Str(mPool); }
+QString ScoreBoard::mountainStr () const { return intList2Str(mMountain); }
+QString ScoreBoard::leftWhistsStr () const { return intList2Str(mLeftWhists); }
+QString ScoreBoard::rightWhistsStr () const { return intList2Str(mRightWhists); }
