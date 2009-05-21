@@ -21,9 +21,9 @@ public:
   void RunGame ();
   void Repaint (int left, int right, int top, int bottom);
   void Repaint ();
-  void Repaint (int nGamer); // Call Repaint for i Gamers
-  //void OnlyMessage (int nGamer);
-  void ShowCard (int nGamer, TCard *Card);
+  void Repaint (int mPlayerNo); // Call Repaint for i Gamers
+  //void OnlyMessage (int mPlayerNo);
+  void ShowCard (int mPlayerNo, TCard *Card);
   int nPlayerTakeCards (TCard *p1, TCard *p2, TCard *p3, int koz);
   void ShowPaper ();
   void RepaintCardOnDesk ();

@@ -14,10 +14,10 @@ int main (int argc, char *argv[]) {
   formBid = new FormBid();
   formBid->hide();
   kpref->init();
-  kpref->showMaximized();
+  //kpref->showMaximized();
   //!!!kpref-> resize(QApplication::desktop()->width()-30, QApplication::desktop()->height()-100);
-  //kpref->show();
-  kpref->adjustDesk();
+  //kpref->adjustDesk();
+  kpref->show();
   res = a.exec();
   delete formBid;
   return res;

@@ -36,7 +36,7 @@ bool loadCards () {
     for (int suit = 1; suit <= 4; suit++) {
       QString fname, resname;
       resname.sprintf("%i%i", face, suit);
-      fname.sprintf(":/pics/%i%i.png", face, suit);
+      fname.sprintf(":/pics/cards/%i%i.png", face, suit);
       cardI[resname] = new QImage(fname);
       // build highlighted image
       QImage *im = new QImage(fname);
@@ -106,8 +106,8 @@ void TDeskView::mySleep (int seconds) {
     //connect(timer, SIGNAL(timeout()), SLOT(PQApplication->mainWidget()->slotEndSleep()));
     timer->start(seconds*1000);
   }
+  emitRepaint();
   while (!Event) {
-    emitRepaint();
     qApp->processEvents();
     qApp->sendPostedEvents();
     qApp->flush();
@@ -153,14 +153,21 @@ void TDeskView::drawCard (TCard *card, int x, int y, bool opened, bool hilight) 
   }
 
   strcpy(cCardName, opened?"empty":"1000");
+  //opened = true;
   if (opened && card->CName >= 7 && card->CName <= FACE_ACE && card->CMast >= 1 && card->CMast <= 4) {
     sprintf(cCardName, "%s%i%i", hilight?"q":"", card->CName, card->CMast);
+    //if (hilight) fprintf(stderr, "SELECTED! [%s]\n", cCardName);
   }
   QImage *bmp = GetXpmByNameI(cCardName);
   if (!bmp) {
-    ClearBox(x, y, x+CARDWIDTH, y+CARDHEIGHT);
-    return;
+    //fprintf(stderr, "not found: [%s]\n", cCardName);
+    bmp = GetXpmByNameI("empty");
+    if (!bmp) {
+      ClearBox(x, y, x+CARDWIDTH, y+CARDHEIGHT);
+      return;
+    }
   }
+  //fprintf(stderr, "found: [%s]\n", cCardName);
   QPainter p(mDeskBmp);
   p.drawImage(x, y, *bmp);
   p.end();

@@ -1,3 +1,5 @@
+#include <QDebug>
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -16,11 +18,17 @@
 #include "human.h"
 
 
-HumanPlayer::HumanPlayer(int _nGamer) : Player(_nGamer) {
+HumanPlayer::HumanPlayer (int _nGamer) : Player(_nGamer) {
 }
 
 
-HumanPlayer::HumanPlayer(int _nGamer,TDeskView *_DeskView) : Player(_nGamer, _DeskView) {
+HumanPlayer::HumanPlayer (int _nGamer,TDeskView *_DeskView) : Player(_nGamer, _DeskView) {
+}
+
+
+void HumanPlayer::clear () {
+  Player::clear();
+  nInvisibleHand = false;
 }
 
 
@@ -64,20 +72,25 @@ TCard *HumanPlayer::makemove (TCard *lMove, TCard *rMove, Player *aLeftGamer, Pl
   Q_UNUSED(aRightGamer)
 
   TCard *RetVal = 0;
+  X = Y = 0;
   WaitForMouse = 1;
-  RepaintSimple(true);
+  RepaintSimple();
   while (!RetVal) {
-    int cNo = cardAt(X, Y);
+    if (DeskView) DeskView->mySleep(0); // just a little pause
+    int cNo = cardAt(X, Y, !nInvisibleHand);
     if (cNo == -1) {
-      RepaintSimple(true);
-      if (DeskView) DeskView->mySleep(0); // just a little pause
+      X = Y = 0;
+      //RepaintSimple();
+      continue;
     }
+    //qDebug() << "selected:" << cNo << "X:" << X << "Y:" << Y;
     TCard *Validator;
     int koz = nGetKoz();
     Validator = RetVal = (TCard *)aCards->At(cNo);
     if (lMove || rMove) {
       Validator = lMove ? lMove : rMove;
     }
+    if (!Validator || !RetVal) continue;
     // пропускаем ход через правила
     if (!((Validator->CMast == RetVal->CMast) ||
         (!aCards->MinCard(Validator->CMast) && (RetVal->CMast == koz || ((!aCards->MinCard(koz)))))
@@ -87,7 +100,7 @@ TCard *HumanPlayer::makemove (TCard *lMove, TCard *rMove, Player *aLeftGamer, Pl
   aCardsOut->Insert(RetVal);
   X = Y = 0;
   WaitForMouse = 0;
-  RepaintSimple(true);
+  RepaintSimple();
   return RetVal;
 }
 
@@ -156,14 +169,16 @@ tGameBid HumanPlayer::makemove (tGameBid MaxGame, int HaveAVist, int nGamerVist)
 
 
 void HumanPlayer::HintCard (int lx, int ly) {
+  //qDebug() << "lx:" << lx << "ly:" << ly;
   if (!WaitForMouse) {
     // not in "card selection" mode
     if (oldii == -1) return; // nothing selected --> nothing to redraw
     oldii = -1;
   } else {
-    int cNo = cardAt(lx, ly);
+    int cNo = cardAt(lx, ly, !nInvisibleHand);
     if (cNo == oldii) return; // same selected --> nothing to redraw
+    //qDebug() << "oldii:" << oldii << "cNo:" << cNo;
     oldii = cNo;
   }
-  RepaintSimple(true);
+  RepaintSimple();
 }

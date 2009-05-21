@@ -15,7 +15,7 @@
 
 
 Player::Player (int _nGamer) {
-  nGamer = _nGamer;
+  mPlayerNo = _nGamer;
   aScore = new TPlScore();
   aCards = new TCardList(12); // мои
   aLeft = new TCardList(10);  // противника слева (предполагаемый или открытые)
@@ -30,7 +30,7 @@ Player::Player (int _nGamer) {
 
 
 Player::Player (int _nGamer, TDeskView *aDeskView) {
-  nGamer = _nGamer;
+  mPlayerNo = _nGamer;
   aScore = new TPlScore();
   aCards = new TCardList(12);
   aLeft = new TCardList(10);
@@ -76,7 +76,7 @@ void Player::clear () {
     MastTable[i].vzatok = 0;
     MastTable[i].perehvatov = 0;
   }
-  nInvisibleHand = (nGamer != 1);
+  nInvisibleHand = (mPlayerNo != 1);
   Pronesti = NULL;
 }
 
@@ -1789,32 +1789,46 @@ int Player::buildHandXOfs (int *dest, int startX, bool opened) {
   int cnt = 0, oldXX = startX, *oDest = dest;
   TCard *cur = 0, *prev = 0;
 
-  if (nGamer == 3) startX = 0;
+  if (mPlayerNo == 3) startX = 0;
   // normal
+  startX -= opened ? SUIT_OFFSET : CLOSED_CARD_OFFSET ;
   for (int i = 0; i < aCards->aCount; i++) {
     TCard *pp = (TCard *)aCards->At(i);
     if (!pp) continue;
     prev = cur;
     cur = pp;
-    if (i) {
-      if (opened) {
-        startX += (prev && prev->CMast != cur->CMast) ? NEW_SUIT_OFFSET : SUIT_OFFSET ;
-      } else startX += CLOSED_CARD_OFFSET;
-    }
+    if (opened) {
+      startX += (prev && prev->CMast != cur->CMast) ? NEW_SUIT_OFFSET : SUIT_OFFSET ;
+    } else startX += CLOSED_CARD_OFFSET;
     *dest++ = startX;
     *dest++ = i;
     cnt++;
+    if (cnt > 12) abort();
   }
   *dest++ = -1;
   *dest = -1;
 
-  if (nGamer == 3 && cnt) {
+  if (mPlayerNo == 3 && cnt) {
     // righttop
     startX = oldXX-(oDest[(cnt-1)*2]+CARDWIDTH+4);
     for (int f = 0; f < cnt; f++) oDest[f*2] += startX;
   }
 
   return cnt;
+}
+
+
+int Player::cardAt (int lx, int ly, bool opened) {
+  int res = -1, ofs[28];
+  int left, top;
+  getLeftTop(mPlayerNo, &left, &top);
+  buildHandXOfs(ofs, left, opened);
+  for (int f = 0; ofs[f] >= 0; f += 2) {
+    int x1 = ofs[f], y1 = top;//+DeskView->yBorder;
+    int x2 = x1+CARDWIDTH, y2 = y1+CARDHEIGHT;
+    if (x1 < lx && lx < x2 && y1 < ly && ly < y2) res = ofs[f+1];
+  }
+  return res;
 }
 
 
@@ -1843,36 +1857,46 @@ void Player::getLeftTop (int playerNo, int *left, int *top) {
   }
 }
 
-int Player::cardAt (int lx, int ly, bool opened) {
-  int ii = -1, ofs[28];
-  int left, top;
-  getLeftTop(nGamer, &left, &top);
-  buildHandXOfs(ofs, left, opened);
-  for (int f = 0; ofs[f] >= 0; f += 2) {
-    int curX = ofs[f];
-    int x1 = curX, y1 = top;//+DeskView->yBorder;
-    int x2 = x1+CARDWIDTH, y2 = y1+CARDHEIGHT;
-    if (x1 < lx && lx < x2 && y1 < ly && ly < y2) ii = ofs[f+1];
-  } // end for
-  return ii;
-}
 
-
-void Player::Repaint (TDeskView *aDeskView, int Left, int Top, int Width, int Height, bool opened, int selNo) {
-  Q_UNUSED(Width)
-  Q_UNUSED(Height)
+void Player::Repaint (TDeskView *aDeskView, int Left, int Top, int selNo) {
   int ofs[28];
 
   if (!aDeskView) return;
   aCards->mySort();
-  buildHandXOfs(ofs, Left, opened);
+
+  switch (mPlayerNo) {
+    case 1: // player (bottom)
+      aDeskView->ClearBox(0, Top, aDeskView->DesktopWidht, CARDHEIGHT+FONTSIZE+14);
+      break;
+    case 2: // ai (left top)
+      aDeskView->ClearBox(0, Top, aDeskView->DesktopWidht/2, CARDHEIGHT+FONTSIZE+14);
+      break;
+    case 3: // ai (right top)
+      aDeskView->ClearBox(aDeskView->DesktopWidht/2, Top, aDeskView->DesktopWidht/2, CARDHEIGHT+FONTSIZE+14);
+      break;
+    default: ;
+  }
+
+  int cnt = buildHandXOfs(ofs, Left, !nInvisibleHand);
+  //int wdt = CARDWIDTH;
+  if (cnt) {
+    Left = ofs[0];
+    //wdt = (ofs[cnt*2-2]+CARDWIDTH)-Left;
+  }
+  //wdt = 520;
+  //aDeskView->ClearBox(Left, Top, wdt, CARDHEIGHT+4);
   for (int f = 0; ofs[f] >= 0; f += 2) {
     int x = ofs[f], y = Top;
     TCard *card = (TCard *)aCards->At(ofs[f+1]);
     aDeskView->drawCard(card, x, y, !nInvisibleHand, ofs[f+1]==selNo);
+    //wdt = ofs[f]+CARDWIDTH;
+    //if (!nInvisibleHand) fprintf(stderr, "%i(%i) ", ofs[f+1], selNo);
   }
+  //if (!nInvisibleHand) fprintf(stderr, "\n");
 
   QString msg;
+  int textX = Left, textY = Top+CARDHEIGHT+4;
+  //aDeskView->ClearBox(textX, textY, wdt, FONTSIZE+14);
   if (GamesType != undefined) {
     if (nGetsCard) {
       msg += QString::number(nGetsCard);
@@ -1886,16 +1910,20 @@ void Player::Repaint (TDeskView *aDeskView, int Left, int Top, int Width, int He
     }
   }
   if (msg.isEmpty()) msg = "...";
-  if (!msg.isEmpty()) aDeskView->drawText(msg, ofs[0]>=0 ? ofs[0] : Left, Top+CARDHEIGHT+4);
+  msg += " ";
+  if (!nInvisibleHand) msg += "OPEN "; else msg += "closed ";
+  msg += QString::number(selNo);
+  if (!msg.isEmpty()) aDeskView->drawText(msg, textX, textY);
 
   aDeskView->emitRepaint();
 }
 
 
-void Player::RepaintSimple (bool opened) {
+void Player::RepaintSimple () {
   int left, top;
-  getLeftTop(nGamer, &left, &top);
-  Repaint(DeskView, left, top, opened, oldii);
+  getLeftTop(mPlayerNo, &left, &top);
+  //if (!nInvisibleHand) fprintf(stderr, "SIMPLE: %i\n", oldii);
+  Repaint(DeskView, left, top, oldii);
 }
 
 

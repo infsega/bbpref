@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QDesktopWidget>
 #include <QMouseEvent>
 #include <QMainWindow>
 
@@ -19,9 +20,20 @@ Kpref::Kpref () {
   //!!!setTitle("OpenPref");
   initMenuBar();
   nflAleradyPainting = nAllReadyHinting = WaitingForMouseUp = 0;
-  DeskView = NULL;
-  DeskTop = NULL;
+  DeskView = 0;
+  DeskTop = 0;
   setMouseTracking(true);
+
+  QDesktopWidget *desk = QApplication::desktop();
+  QRect dims(desk->availableGeometry(this));
+  int w = dims.width()-60;
+  w = 528*2;
+  int h = dims.height()-120;
+  h = 800;
+  int x = dims.left()+(dims.width()-w)/2;
+  int y = dims.top()+(dims.height()-h)/2;
+  move(x, y);
+  resize(w, h);
 }
 
 

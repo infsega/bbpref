@@ -19,7 +19,9 @@ public:
   TCard *makemove (TCard *lMove, TCard *rMove, Player *aLeftGamer, Player *aRightGamer); //ход
   tGameBid makemove (tGameBid lMove, tGameBid rMove); //ход при торговле
   tGameBid makemove (tGameBid MaxGame, int HaveAVist, int nGamerVist); // после получения игроком прикупа - пасс или вист
-  void HintCard (int lx, int ly);
+
+  virtual void HintCard (int lx, int ly);
+  virtual void clear ();
 };
 
 

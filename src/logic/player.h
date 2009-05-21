@@ -29,7 +29,7 @@ public:
   TMast Mast;
   tGameBid GamesType;
   TSide Enemy;
-  int nGamer;         // мой номер
+  int mPlayerNo;         // мой номер
 
   Player (int _nGamer);
   Player (int _nGamer, TDeskView *aDeskView);
@@ -62,15 +62,16 @@ public:
   virtual tGameBid makemove (tGameBid MaxGame,int HaveAVist,int nGamerVist); // после получения игроком прикупа - пасс или вист
   virtual tGameBid makeout4game (void);
   virtual tGameBid makeout4miser (void);
-  virtual void HintCard (int, int);
+
+  virtual void HintCard (int lx, int ly);
   virtual void GetBackSnos ();
 
   virtual void AddCard (TCard *aCard); // получить сданную карту
   virtual void AddCard (int _CName, int _CMast); // получить сданную карту
 
-  void clear ();
-  void Repaint (TDeskView *aDeskView, int Left, int Top, int Width, int Height, bool opened=false, int selNo=-1);
-  void RepaintSimple (bool opened);
+  virtual void clear ();
+  void Repaint (TDeskView *aDeskView, int Left, int Top, int selNo=-1);
+  void RepaintSimple ();
   //void OnlyMessage (TDeskView *,int,int,int,int);
 
 private:

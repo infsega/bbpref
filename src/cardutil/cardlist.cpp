@@ -128,8 +128,37 @@ int TCardList::AllCard( void) {
   }
   return j;
 }
-//----------------------------------------------------------------------
-void  TCardList::mySort(void) {
+
+
+void TCardList::mySort () {
+  void **newi = new void *[aLimit];
+  // count, copy and compress
+  int cnt = 0;
+  // copy
+  for (int f = 0; f < aLimit; f++) {
+    if (items[f]) newi[cnt++] = items[f];
+  }
+  // clear
+  for (int f = cnt; f < aLimit; f++) newi[f] = 0;
+  delete items;
+  items = newi; aCount = cnt;
+  // bubble sort
+  for (int f = 0; f < cnt; f++) {
+    for (int c = cnt-1; c > f; c--) {
+      TCard *cf, *cc;
+      cf = (TCard *)items[f];
+      cc = (TCard *)items[c];
+      int r = (cf->CMast)-(cc->CMast);
+      if (!r) r = (cc->CName)-(cf->CName);
+      if (r > 0) {
+        // swap
+        void *t = items[f];
+        items[f] = items[c];
+        items[c] = t;
+      }
+    }
+  }
+/*
   int j=0;
   int m;
   TCard *c1=NULL;
@@ -140,7 +169,7 @@ void  TCardList::mySort(void) {
     for (int c=FACE_ACE;c>=7;c--) {
       if ( (c1 = Exist(c,m))!=NULL ) {
         anewitems[j++] = c1;
-//        items[IndexOf(c1)] = NULL;
+        //items[IndexOf(c1)] = NULL;
       }
     }
   }
@@ -149,14 +178,14 @@ void  TCardList::mySort(void) {
     for (int c=FACE_ACE;c>=7;c--) {
       if ( (c1 = Exist(c,m))!=NULL ) {
         anewitems[j++] = c1;
-//        items[IndexOf(c1)] = NULL;
+        //items[IndexOf(c1)] = NULL;
       }
     }
   }
 
   delete items;
   items = anewitems;
-
+*/
 /*  int j=0;
   TCard *c1=NULL;
   void **anewitems = new void *[aLimit];
@@ -173,7 +202,8 @@ void  TCardList::mySort(void) {
   delete items;
   items = anewitems;*/
 }
-//----------------------------------------------------------------------
+
+
 TCard * TCardList::MoreThan( int _CName, int _CMast ) {
   if ( _CName==FACE_ACE ) return NULL;
   for(int i=_CName;i<=FACE_ACE;i++) {

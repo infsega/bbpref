@@ -1,6 +1,17 @@
 <!DOCTYPE RCC><RCC version="1.0">
   <qresource>
-    <file>pics/cards/1000.png</file>
+    <file>pics/cards/71.png</file>
+    <file>pics/cards/72.png</file>
+    <file>pics/cards/73.png</file>
+    <file>pics/cards/74.png</file>
+    <file>pics/cards/81.png</file>
+    <file>pics/cards/82.png</file>
+    <file>pics/cards/83.png</file>
+    <file>pics/cards/84.png</file>
+    <file>pics/cards/91.png</file>
+    <file>pics/cards/92.png</file>
+    <file>pics/cards/93.png</file>
+    <file>pics/cards/94.png</file>
     <file>pics/cards/101.png</file>
     <file>pics/cards/102.png</file>
     <file>pics/cards/103.png</file>
@@ -21,24 +32,16 @@
     <file>pics/cards/142.png</file>
     <file>pics/cards/143.png</file>
     <file>pics/cards/144.png</file>
-    <file>pics/cards/71.png</file>
-    <file>pics/cards/72.png</file>
-    <file>pics/cards/73.png</file>
-    <file>pics/cards/74.png</file>
-    <file>pics/cards/81.png</file>
-    <file>pics/cards/82.png</file>
-    <file>pics/cards/83.png</file>
-    <file>pics/cards/84.png</file>
-    <file>pics/cards/91.png</file>
-    <file>pics/cards/92.png</file>
-    <file>pics/cards/93.png</file>
-    <file>pics/cards/94.png</file>
+
+    <file>pics/cards/1000.png</file>
     <file>pics/cards/empty.png</file>
+
     <file>pics/filenew.png</file>
     <file>pics/fileopen.png</file>
     <file>pics/filesave.png</file>
     <file>pics/newgame.png</file>
     <file>pics/paper.png</file>
+
     <file>pics/bids/s101.png</file>
     <file>pics/bids/s102.png</file>
     <file>pics/bids/s103.png</file>

@@ -210,7 +210,7 @@ TCard *TDeskTop::ControlingMakemove (TCard *lMove, TCard *rMove) {
   Player *Now = GetGamerByNum(nCurrentMove.nValue);
 
   if ((GetGamerByNum(1)->GamesType == vist || GetGamerByNum(1)->GamesType == g86catch) &&
-      Now->nGamer != 1 && (Now->GamesType == gtPass || Now->GamesType == g86catch)) {
+      Now->mPlayerNo != 1 && (Now->GamesType == gtPass || Now->GamesType == g86catch)) {
     HumanPlayer *NewHuman = new HumanPlayer(nCurrentMove.nValue, DeskView);
     GamerAssign(NewHuman, Now);
     Gamers->AtPut(nCurrentMove.nValue, NewHuman);
@@ -219,7 +219,7 @@ TCard *TDeskTop::ControlingMakemove (TCard *lMove, TCard *rMove) {
     Gamers->AtPut(nCurrentMove.nValue, Now);
     NewHuman->clear();
     delete NewHuman;
-  } else if (Now->nGamer == 1 && Now->GamesType == gtPass) {
+  } else if (Now->mPlayerNo == 1 && Now->GamesType == gtPass) {
     Player *NewHuman = new Player(nCurrentMove.nValue, DeskView);
     GamerAssign(NewHuman, Now);
     Gamers->AtPut(nCurrentMove.nValue, NewHuman);
@@ -332,7 +332,7 @@ void TDeskTop::RunGame () {
           tmpg->AddCard((TCard *)Coloda->At(30));
           tmpg->AddCard((TCard *)Coloda->At(31));
           CardOnDesk[2] = CardOnDesk[3] = NULL;
-          nGamernumber = tmpg->nGamer;
+          nGamernumber = tmpg->mPlayerNo;
           //DeskView->ClearScreen();
           Repaint();
           emitRepaint();
@@ -348,11 +348,11 @@ void TDeskTop::RunGame () {
             tmpg->nInvisibleHand = 0;
             Repaint();
             emitRepaint();
-            if (tmpg->nGamer !=1) DeskView->MessageBox("Try to remember the cards", "Message");
+            if (tmpg->mPlayerNo !=1) DeskView->MessageBox("Try to remember the cards", "Message");
             // ждать до события
             //DeskView->mySleep(0);
             tmpg->nInvisibleHand = nVisibleState;
-            nCurrentMove.nValue = tmpg->nGamer;
+            nCurrentMove.nValue = tmpg->mPlayerNo;
             GamesType[0] = CurrentGame = tmpg->makeout4miser();
             nCurrentMove.nValue = tempint;
           }
@@ -556,11 +556,11 @@ int TDeskTop::GetGamerWithMaxBullet(void) {
 }
 //-------------------------------------------------------------
 /*
-void TDeskTop::OnlyMessage (int  nGamer) {
-  Player *tmpg = GetGamerByNum(nGamer);
+void TDeskTop::OnlyMessage (int  mPlayerNo) {
+  Player *tmpg = GetGamerByNum(mPlayerNo);
   if (tmpg) {
     tmpg->DeskView = DeskView;
-    switch (nGamer) {
+    switch (mPlayerNo) {
       case 1: 
         tmpg->OnlyMessage(DeskView, (DeskView->DesktopWidht-DeskView->xLen)/2, DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight, DeskView->xLen, DeskView->yLen);
         break;
@@ -578,16 +578,16 @@ void TDeskTop::OnlyMessage (int  nGamer) {
 */
 
 
-void TDeskTop::Repaint (int nGamer) {
-  Player *tmpg = GetGamerByNum(nGamer);
+void TDeskTop::Repaint (int mPlayerNo) {
+  Player *tmpg = GetGamerByNum(mPlayerNo);
   if (!tmpg) return;
   tmpg->DeskView = DeskView;
-  tmpg->RepaintSimple(!(tmpg->nInvisibleHand));
+  tmpg->RepaintSimple();
 /*
-  Player *tmpg = GetGamerByNum(nGamer);
+  Player *tmpg = GetGamerByNum(mPlayerNo);
   if (!tmpg) return;
   tmpg->DeskView = DeskView;
-  switch (nGamer) {
+  switch (mPlayerNo) {
     case 1:
       tmpg->Repaint(DeskView, (DeskView->DesktopWidht-DeskView->xLen)/2,
         DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight, DeskView->xLen,DeskView->yLen);
@@ -671,10 +671,10 @@ int TDeskTop::nPlayerTakeCards (TCard *p1, TCard *p2, TCard *p3, int koz) {
 
 
 // draw ingame card (the card that is in game, not in hand)
-void TDeskTop::ShowCard (int nGamer, TCard *card) {
+void TDeskTop::ShowCard (int mPlayerNo, TCard *card) {
   int w = DeskView->DesktopWidht/2, h = DeskView->DesktopHeight/2;
   int x = w, y = h;
-  switch (nGamer) {
+  switch (mPlayerNo) {
     case 0:
       x -= CARDWIDTH*2+8;
       y -= CARDHEIGHT/2;
