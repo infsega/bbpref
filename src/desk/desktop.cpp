@@ -237,7 +237,7 @@ void TDeskTop::getPMsgXY (int plr, int *x, int *y) {
   switch (plr) {
     case 1:
       *x = -666;
-      *y = -(DeskView->yBorder+CARDHEIGHT+40);
+      *y = -(DeskView->yBorder+CARDHEIGHT+50);
       break;
     case 2:
       *x = 30;
@@ -311,7 +311,7 @@ void TDeskTop::RunGame () {
     GamersCounter = nCurrentStart;
     switch (nCurrentStart.nValue) {
       case 1:
-        iMoveX = DeskView->DesktopWidth/2-140;
+        iMoveX = DeskView->DesktopWidth/2-15;
         iMoveY = DeskView->DesktopHeight-DeskView->yBorder-CARDHEIGHT-40;
         break;
       case 2:
