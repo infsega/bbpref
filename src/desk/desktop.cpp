@@ -45,7 +45,7 @@ const char *AUTOSAVENAME=".kprefautosave.prf";
 //-------------------------------------------------------------
 void TDeskTop::InternalConstruct(void) {
   CardOnDesk[0] = CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = FirstCard=SecondCard=TherdCard=NULL;
-  Coloda = new TColoda(CARDINCOLODA);
+  Coloda = new Deck(CARDINCOLODA);
   Gamers = new Tclist(4); // 1...3
 
   nCurrentStart.nValue=nCurrentMove.nValue=2;
@@ -256,7 +256,7 @@ void TDeskTop::RunGame () {
     GamesType[3] = GamesType[2] = GamesType[1] = GamesType[0] = undefined;
     CardOnDesk[0] = CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = FirstCard = SecondCard = TherdCard = 0;
     delete Coloda;
-    Coloda = new TColoda(CARDINCOLODA);
+    Coloda = new Deck(CARDINCOLODA);
     Coloda->shuffle();
     GetGamerByNum(1)->clear();
     GetGamerByNum(2)->clear();
@@ -527,7 +527,7 @@ LabelRecordOnPaper:
     // если сетевая игра -  передаем на сервер результаты круга  и кто след. заходит
 
     // после игры - перевернуть карты и показать их
-    TCardList *tmplist[3];
+    CardList *tmplist[3];
     for (int f = 1; f <= 3; f++) {
       Player *plr = GetGamerByNum(f);
       tmplist[f] = 0;

@@ -4,7 +4,7 @@
 #include "prfconst.h"
 #include "card.h"
 #include "cardlist.h"
-#include "coloda.h"
+#include "deck.h"
 #include "ncounter.h"
 #include "plscore.h"
 #include "deskview.h"
@@ -15,14 +15,14 @@ public:
   TDeskView *DeskView;
 
   TPlScore  *aScore;
-  TCardList *aCards; // мои
-  TCardList *aLeft;  // Противника с лева (предполагаемый или открытые)
-  TCardList *aRight; // С права (предполагаемый или открытые)
+  CardList *aCards; // мои
+  CardList *aLeft;  // Противника с лева (предполагаемый или открытые)
+  CardList *aRight; // С права (предполагаемый или открытые)
 
-  TCardList *aOut;   // Снос (мой или предполагаемый)
-  TCardList *aCardsOut; // во взятках мои
-  TCardList *aLeftOut;  // во взятках Противника с лева (предполагаемый или открытые)
-  TCardList *aRightOut; // во взятках С права (предполагаемый или открытые)
+  CardList *aOut;   // Снос (мой или предполагаемый)
+  CardList *aCardsOut; // во взятках мои
+  CardList *aLeftOut;  // во взятках Противника с лева (предполагаемый или открытые)
+  CardList *aRightOut; // во взятках С права (предполагаемый или открытые)
   TMastTable MastTable[5];
 
   int nGetsCard;
@@ -74,27 +74,27 @@ private:
   void makestatfill(void);
   void makestatfill(int nCards,int maxmin);
   TMastTable vzatok4game(TMast ,int a23);
-  TMastTable vzatok(TMast,TCardList *,int a23);
-  TMastTable vzatok4pass(TMast,TCardList *);
+  TMastTable vzatok(TMast,CardList *,int a23);
+  TMastTable vzatok4pass(TMast,CardList *);
 
 public:
   // Два списка
-  TMastTable Compare2List4Max(TCardList *My,TCardList *Enemy); // Для максимального результата на 1 руке
-  TMastTable Compare2List4Max23(TCardList *My,TCardList *Enemy); // Для максимального результата на 2 и 3 руке
-  TMastTable Compare2List4Min(TCardList *My,TCardList *Enemy); // Для мин результата
+  TMastTable Compare2List4Max(CardList *My,CardList *Enemy); // Для максимального результата на 1 руке
+  TMastTable Compare2List4Max23(CardList *My,CardList *Enemy); // Для максимального результата на 2 и 3 руке
+  TMastTable Compare2List4Min(CardList *My,CardList *Enemy); // Для мин результата
 
 private:
   // Три списка
-  //TMastTable Compare3List4Max(TCardList *My,TCardList *Left,TCardList *Right); // Для максимального результата
-  //TMastTable Compare3List4Min(TCardList *My,TCardList *Left,TCardList *Right); // Для мин результата
+  //TMastTable Compare3List4Max(CardList *My,CardList *Left,CardList *Right); // Для максимального результата
+  //TMastTable Compare3List4Min(CardList *My,CardList *Left,CardList *Right); // Для мин результата
   Card *GetMaxCardPere(void);
   Card *GetMaxCardWithOutPere(void);
   Card *GetMinCardWithOutVz(void);
 
-  void RecountTables(TCardList *aMaxCardList,int a23); // Пересчитывает таблицу         TMastTable MastTable[5];
-  void RecountTables4RasPass(TCardList *aMaxCardList,int a23); // Пересчитывает таблицу дли распасов или мизера
+  void RecountTables(CardList *aMaxCardList,int a23); // Пересчитывает таблицу         TMastTable MastTable[5];
+  void RecountTables4RasPass(CardList *aMaxCardList,int a23); // Пересчитывает таблицу дли распасов или мизера
 
-  void LoadLists(Player *aLeftGamer,Player *aRightGamer,TCardList *aMaxCardList); // Набор списков
+  void LoadLists(Player *aLeftGamer,Player *aRightGamer,CardList *aMaxCardList); // Набор списков
   Card *MiserCatch1(Player *aLeftGamer,Player *aRightGamer);
   Card *Miser1(Player *aLeftGamer,Player *aRightGamer);
   Card *MyGame1(Player *aLeftGamer,Player *aRightGamer); // моя игра 1 заход - мой

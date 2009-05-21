@@ -3,11 +3,11 @@
 #include <QtCore>
 
 #include "card.h"
-#include "coloda.h"
+#include "deck.h"
 #include "prfconst.h"
 
 
-TColoda::TColoda (int _Limit) : TCardList(_Limit) {
+Deck::Deck (int _Limit) : CardList(_Limit) {
   for (int m = 1; m <= 4; m++) {
     for (int k = 7; k <= FACE_ACE; k++) {
       Card *nc = new Card(k, m);
@@ -17,7 +17,7 @@ TColoda::TColoda (int _Limit) : TCardList(_Limit) {
 }
 
 
-void TColoda::shuffle () {
+void Deck::shuffle () {
 /*
    int i;
    time_t t;

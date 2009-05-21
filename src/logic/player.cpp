@@ -4,26 +4,19 @@
 #include <QPixmap>
 #include <QPainter>
 
-#include "prfconst.h"
-#include "deskview.h"
 #include "player.h"
-#include "card.h"
-#include "cardlist.h"
-#include "coloda.h"
-#include "ncounter.h"
-#include "plscore.h"
 
 
 Player::Player (int _nGamer) {
   mPlayerNo = _nGamer;
   aScore = new TPlScore();
-  aCards = new TCardList(12); // мои
-  aLeft = new TCardList(10);  // противника слева (предполагаемый или открытые)
-  aRight = new TCardList(10); // справа (предполагаемый или открытые)
-  aOut = new TCardList(2);   // снос (мой или предполагаемый)
-  aCardsOut = new TCardList(12); // во взятках мои
-  aLeftOut = new TCardList(12);  // во взятках противника слева (предполагаемый или открытые)
-  aRightOut = new TCardList(12); // во взятках справа (предполагаемый или открытые)
+  aCards = new CardList(12); // мои
+  aLeft = new CardList(10);  // противника слева (предполагаемый или открытые)
+  aRight = new CardList(10); // справа (предполагаемый или открытые)
+  aOut = new CardList(2);   // снос (мой или предполагаемый)
+  aCardsOut = new CardList(12); // во взятках мои
+  aLeftOut = new CardList(12);  // во взятках противника слева (предполагаемый или открытые)
+  aRightOut = new CardList(12); // во взятках справа (предполагаемый или открытые)
   NikName = QString();
   clear();
 }
@@ -32,13 +25,13 @@ Player::Player (int _nGamer) {
 Player::Player (int _nGamer, TDeskView *aDeskView) {
   mPlayerNo = _nGamer;
   aScore = new TPlScore();
-  aCards = new TCardList(12);
-  aLeft = new TCardList(10);
-  aRight = new TCardList(10);
-  aOut = new TCardList(2);
-  aCardsOut = new TCardList(12);
-  aLeftOut = new TCardList(12);
-  aRightOut = new TCardList(12);
+  aCards = new CardList(12);
+  aLeft = new CardList(10);
+  aRight = new CardList(10);
+  aOut = new CardList(2);
+  aCardsOut = new CardList(12);
+  aLeftOut = new CardList(12);
+  aRightOut = new CardList(12);
   DeskView = aDeskView;
   NikName = QString();
   clear();
@@ -153,7 +146,7 @@ Card *Player::Miser2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
           }
           if (!cur) cur = aCards->MaxCard(aRightCard->CMast);
         } else {
-          TCardList *aMaxCardList=new TCardList(20);
+          CardList *aMaxCardList=new CardList(20);
           LoadLists(aRightGamer,aLeftGamer,aMaxCardList);
            cur = GetMaxCardWithOutPere();
              if ( !cur ) {
@@ -175,7 +168,7 @@ Card *Player::Miser3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player 
   Card *cur=NULL;
     /*Card *MaxCard;*/
     tGameBid tmpGamesType=GamesType;
-    TCardList *aMaxCardList=new TCardList(20);
+    CardList *aMaxCardList=new CardList(20);
 //    int mast = GamesType - (GamesType/10) * 10;
     // набираем списки
     LoadLists(aLeftGamer,aRightGamer,aMaxCardList);
@@ -267,11 +260,11 @@ Card *Player::makemove(Card *lMove,Card *rMove,Player *aLeftGamer,Player *aRight
     return cur;
 }
 //-----------------------------------------------------------------------
-TMastTable Player::vzatok(TMast Mast,TCardList *aMaxCardList,int a23) {
+TMastTable Player::vzatok(TMast Mast,CardList *aMaxCardList,int a23) {
    TMastTable MastTable;
    Card *MyCard,*tmpCard;
-   TCardList *MyCardStack     = new TCardList(MAXMASTLEN);
-   TCardList *EnemyCardStack  = new TCardList(MAXMASTLEN);
+   CardList *MyCardStack     = new CardList(MAXMASTLEN);
+   CardList *EnemyCardStack  = new CardList(MAXMASTLEN);
    for (int c=7;c<=FACE_ACE;c++ ) {
         MyCard = aCards->Exist(c, Mast);
         if ( MyCard ) {
@@ -302,7 +295,7 @@ TMastTable Player::vzatok(TMast Mast,TCardList *aMaxCardList,int a23) {
    return MastTable;
 }
 //-----------------------------------------------------------------------
-void Player::RecountTables4RasPass(TCardList *aMaxCardList,int a23) { // Пересчитывает таблицу дли распасов или мизера
+void Player::RecountTables4RasPass(CardList *aMaxCardList,int a23) { // Пересчитывает таблицу дли распасов или мизера
   Q_UNUSED(a23)
     int i;
     MastTable[0].vzatok=0;
@@ -317,7 +310,7 @@ void Player::RecountTables4RasPass(TCardList *aMaxCardList,int a23) { // Пересчи
 
 }
 //-----------------------------------------------------------------------
-void Player::RecountTables( TCardList *aMaxCardList,int a23 ){ // Пересчитывает таблицу         TMastTable MastTable[5];
+void Player::RecountTables( CardList *aMaxCardList,int a23 ){ // Пересчитывает таблицу         TMastTable MastTable[5];
     int i;
     MastTable[0].vzatok=0;
     MastTable[0].perehvatov=0;
@@ -332,8 +325,8 @@ void Player::RecountTables( TCardList *aMaxCardList,int a23 ){ // Пересчитывает 
 //-----------------------------------------------------------------------
 Card *Player::MiserCatch1(Player *aLeftGamer,Player *aRightGamer) {
   Card *cur=NULL;
-  TCardList *aMaxCardList=new TCardList(20);
-  TCardList *Naparnik;
+  CardList *aMaxCardList=new CardList(20);
+  CardList *Naparnik;
   TSide Side ;
   if (aRightGamer->GamesType == g86) {
     LoadLists(aRightGamer,aRightGamer,aMaxCardList);
@@ -413,8 +406,8 @@ badlabel:
 //-----------------------------------------------------------------------
 Card *Player::MiserCatch2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
   Card *cur=NULL;
-  TCardList *aMaxCardList=new TCardList(20);
-  TCardList *Naparnik;
+  CardList *aMaxCardList=new CardList(20);
+  CardList *Naparnik;
   TSide Side ;
   if (aRightGamer->GamesType == g86) {
     LoadLists(aRightGamer,aRightGamer,aMaxCardList);
@@ -499,8 +492,8 @@ Card *Player::MiserCatch2(Card *aRightCard,Player *aLeftGamer,Player *aRightGame
 //-----------------------------------------------------------------------
 Card *Player::MiserCatch3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
   Card *cur=NULL;
-  TCardList *aMaxCardList=new TCardList(20);
-  TCardList *Naparnik;
+  CardList *aMaxCardList=new CardList(20);
+  CardList *Naparnik;
   TSide Side ;
   if (aRightGamer->GamesType == g86) {
     LoadLists(aRightGamer,aRightGamer,aMaxCardList);
@@ -577,7 +570,7 @@ Card *Player::MyGame3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
     Card *cur=NULL;
     Card *MaxCard;
     tGameBid tmpGamesType=GamesType;
-    TCardList *aMaxCardList=new TCardList(20);
+    CardList *aMaxCardList=new CardList(20);
     int mast = GamesType - (GamesType/10) * 10;
     // набираем списки
     LoadLists(aLeftGamer,aRightGamer,aMaxCardList);
@@ -639,7 +632,7 @@ Card *Player::MyVist3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
     Card *cur=NULL;
     Card *MaxCard;
     tGameBid tmpGamesType=GamesType;
-    TCardList *aMaxCardList=new TCardList(20);
+    CardList *aMaxCardList=new CardList(20);
     Player *aEnemy,*aFriend;
     int mast;
     // Кто игрок а кто напарник
@@ -762,7 +755,7 @@ Card *Player::MyVist3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
 Card *Player::MyVist2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) { // мой вист или пас 2 заход - мой
     Card *cur=NULL;
     tGameBid tmpGamesType=GamesType;
-    TCardList *aMaxCardList=new TCardList(20);
+    CardList *aMaxCardList=new CardList(20);
     Player *aEnemy,*aFriend;
     int mast;
     // Кто игрок а кто напарник
@@ -814,7 +807,7 @@ Card *Player::MyVist1(Player *aLeftGamer,Player *aRightGamer) {
 // 1 - выбить козыря 2-разиграть масти с перехватами 3-без перехватов 4-???
     Card *cur=NULL;
     tGameBid tmpGamesType=GamesType;
-    TCardList *aMaxCardList=new TCardList(20);
+    CardList *aMaxCardList=new CardList(20);
     Player *aEnemy,*aFriend;
     int mast;
     // Кто игрок а кто напарник
@@ -885,7 +878,7 @@ Card *Player::MyVist1(Player *aLeftGamer,Player *aRightGamer) {
 
 //-----------------------------------------------------------------------
 Card *Player::MyGame2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
-    TCardList *aMaxCardList=new TCardList(20);
+    CardList *aMaxCardList=new CardList(20);
     tGameBid tmpGamesType=GamesType;
     Card *cur=NULL;
     Card *MaxLeftCard=NULL;
@@ -940,7 +933,7 @@ Card *Player::MyGame1(Player *aLeftGamer,Player *aRightGamer) {
 // 1-выбить козыря 2-разиграть масти с перехватами 3-без перехватов 4-???
     Card *cur=NULL;
     tGameBid tmpGamesType=GamesType;
-    TCardList *aMaxCardList=new TCardList(20);
+    CardList *aMaxCardList=new CardList(20);
     int mast = GamesType - (GamesType/10) * 10;
     // набираем списки
     LoadLists(aLeftGamer,aRightGamer,aMaxCardList);
@@ -1027,7 +1020,7 @@ Card *Player::GetMinCardWithOutVz(void) {
 //    return NULL;
 }
 //-----------------------------------------------------------------------
-void Player::LoadLists(Player *aLeftGamer,Player *aRightGamer,TCardList *aMaxCardList) {
+void Player::LoadLists(Player *aLeftGamer,Player *aRightGamer,CardList *aMaxCardList) {
 /*    int nLeftVisible = aLeftGamer->nCardsVisible,nRightVisible = aRightGamer->nCardsVisible;
     int nCards = aCards->AllCard();       */
     aLeft->RemoveAll();
@@ -1385,8 +1378,8 @@ int Player::Check4Miser ( ) {
 TMastTable Player::vzatok4game (TMast Mast, int a23) {
    TMastTable MastTable;
    Card *MyCard,*tmpCard;
-   TCardList *MyCardStack     = new TCardList(MAXMASTLEN);
-   TCardList *EnemyCardStack  = new TCardList(MAXMASTLEN);
+   CardList *MyCardStack     = new CardList(MAXMASTLEN);
+   CardList *EnemyCardStack  = new CardList(MAXMASTLEN);
    for (int c=7;c<=FACE_ACE;c++ ) {
     MyCard = aCards->Exist(c, Mast);
     if ( MyCard )
@@ -1416,11 +1409,11 @@ TMastTable Player::vzatok4game (TMast Mast, int a23) {
    return MastTable;
 }
 //-----------------------------------------------------------------------
-TMastTable Player::vzatok4pass(TMast Mast,TCardList *aMaxCardList) {
+TMastTable Player::vzatok4pass(TMast Mast,CardList *aMaxCardList) {
    TMastTable MastTable;
    Card *MyCard,*tmpCard;
-   TCardList *MyCardStack     = new TCardList(MAXMASTLEN);
-   TCardList *EnemyCardStack  = new TCardList(MAXMASTLEN);
+   CardList *MyCardStack     = new CardList(MAXMASTLEN);
+   CardList *EnemyCardStack  = new CardList(MAXMASTLEN);
    for (int c=7;c<=FACE_ACE;c++ ) {
         MyCard = aCards->Exist(c, Mast);
         if ( MyCard ) {
@@ -1449,7 +1442,7 @@ TMastTable Player::vzatok4pass(TMast Mast,TCardList *aMaxCardList) {
 }
 
 //-----------------------------------------------------------------------
-TMastTable Player::Compare2List4Min(TCardList *My,TCardList *Enemy) { // Для мин результата
+TMastTable Player::Compare2List4Min(CardList *My,CardList *Enemy) { // Для мин результата
   TMastTable MastTable;
   MastTable.vzatok=0;
   MastTable.perehvatov=0;
@@ -1490,7 +1483,7 @@ TMastTable Player::Compare2List4Min(TCardList *My,TCardList *Enemy) { // Для мин
   return MastTable;
 }
 //-----------------------------------------------------------------------
-TMastTable Player::Compare2List4Max(TCardList *My,TCardList *Enemy) {
+TMastTable Player::Compare2List4Max(CardList *My,CardList *Enemy) {
   TMastTable MastTable;
   MastTable.vzatok=0;
 
@@ -1540,7 +1533,7 @@ TMastTable Player::Compare2List4Max(TCardList *My,TCardList *Enemy) {
   return MastTable;
 }
 //-----------------------------------------------------------------------
-TMastTable Player::Compare2List4Max23(TCardList *My,TCardList *Enemy) {
+TMastTable Player::Compare2List4Max23(CardList *My,CardList *Enemy) {
   TMastTable MastTable;
   MastTable.vzatok=0;
   MastTable.perehvatov=0;
@@ -1581,12 +1574,12 @@ TMastTable Player::Compare2List4Max23(TCardList *My,TCardList *Enemy) {
 Card *Player::MyPass1(Card *rMove,Player *aLeftGamer,Player *aRightGamer) {
   Card *cur=NULL;
   tGameBid tmpGamesType=GamesType;
-  TCardList *aMaxCardList=new TCardList(20);
-  TCardList *aTmpList=new TCardList(MAXMASTLEN);
-  TCardList *aStackStore=NULL;
+  CardList *aMaxCardList=new CardList(20);
+  CardList *aTmpList=new CardList(MAXMASTLEN);
+  CardList *aStackStore=NULL;
 
   if ( rMove != NULL )  {
-    aTmpList=new TCardList(MAXMASTLEN);
+    aTmpList=new CardList(MAXMASTLEN);
     aTmpList->AssignMast(aCards,(TMast)rMove->CMast);
     aStackStore = aCards;
     aCards = aTmpList;
@@ -1633,7 +1626,7 @@ Card *Player::MyPass2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
   Card *cur=NULL;
   tGameBid tmpGamesType=GamesType;
   int mast = aRightCard->CMast;
-  TCardList *aMaxCardList=new TCardList(20);
+  CardList *aMaxCardList=new CardList(20);
   LoadLists(aLeftGamer,aRightGamer,aMaxCardList);
   RecountTables4RasPass(aMaxCardList,1);
 /////////////////////////////////////////////////////////
@@ -1676,7 +1669,7 @@ Card *Player::MyPass3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
   Card *cur=NULL;
     /*Card *MaxCard;*/
     tGameBid tmpGamesType=GamesType;
-    TCardList *aMaxCardList=new TCardList(20);
+    CardList *aMaxCardList=new CardList(20);
 //    int mast = GamesType - (GamesType/10) * 10;
     // набираем списки
     LoadLists(aLeftGamer,aRightGamer,aMaxCardList);

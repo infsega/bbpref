@@ -6,9 +6,9 @@
 #include "cardlist.h"
 
 
-class  TColoda : public TCardList {
+class  Deck : public CardList {
 public:
-  TColoda (int _Limit);
+  Deck (int _Limit);
   void shuffle ();
 };
 

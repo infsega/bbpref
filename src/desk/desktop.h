@@ -5,7 +5,7 @@
 
 #include "card.h"
 #include "ctlist.h"
-#include "coloda.h"
+#include "deck.h"
 #include "player.h"
 
 
@@ -44,7 +44,7 @@ signals:
 
 public:
   TDeskView *DeskView;
-  TColoda *Coloda;
+  Deck *Coloda;
   Tclist  *Gamers;
   Tncounter nCurrentStart,nCurrentMove;
   Card *FirstCard,*SecondCard,*TherdCard;

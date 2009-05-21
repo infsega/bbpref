@@ -4,9 +4,9 @@ INCLUDEPATH += $$PWD
 HEADERS += \
   $$PWD/card.h \
   $$PWD/cardlist.h \
-  $$PWD/coloda.h
+  $$PWD/deck.h
 
 SOURCES += \
   $$PWD/card.cpp \
   $$PWD/cardlist.cpp \
-  $$PWD/coloda.cpp
+  $$PWD/deck.cpp

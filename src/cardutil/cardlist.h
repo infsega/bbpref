@@ -14,11 +14,11 @@ typedef struct {
 } TMParam;
 //масть длинна взятки
 
-class  TCardList : public Tclist {
+class  CardList : public Tclist {
     public:
-        TCardList(int _Limit);
-        ~TCardList ();
-//        ~TCardList();
+        CardList(int _Limit);
+        ~CardList ();
+//        ~CardList();
         void   mySort(void);
         Card * Exist( int _CName, int _CMast );
         Card * Exist( int PackedName );
