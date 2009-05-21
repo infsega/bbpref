@@ -13,33 +13,31 @@
 #include "ncounter.h"
 #include "plscore.h"
 
-//#include "netconst.h"
 
-
-Player::Player(int _nGamer) {
+Player::Player (int _nGamer) {
   nGamer = _nGamer;
   aScore = new TPlScore();
   aCards = new TCardList(12); // мои
-  aLeft  = new TCardList(10);  // Противника с лева (предполагаемый или открытые)
-  aRight = new TCardList(10); // С права (предполагаемый или открытые)
-  aOut   = new TCardList(2);   // Снос (мой или предполагаемый)
+  aLeft = new TCardList(10);  // противника слева (предполагаемый или открытые)
+  aRight = new TCardList(10); // справа (предполагаемый или открытые)
+  aOut = new TCardList(2);   // снос (мой или предполагаемый)
   aCardsOut = new TCardList(12); // во взятках мои
-  aLeftOut  = new TCardList(12);  // во взятках Противника с лева (предполагаемый или открытые)
-  aRightOut = new TCardList(12); // во взятках С права (предполагаемый или открытые)
+  aLeftOut = new TCardList(12);  // во взятках противника слева (предполагаемый или открытые)
+  aRightOut = new TCardList(12); // во взятках справа (предполагаемый или открытые)
   NikName = QString();
   clear();
 }
 
 
-Player::Player(int _nGamer,TDeskView *aDeskView) {
+Player::Player (int _nGamer, TDeskView *aDeskView) {
   nGamer = _nGamer;
   aScore = new TPlScore();
   aCards = new TCardList(12);
-  aLeft  = new TCardList(10);
+  aLeft = new TCardList(10);
   aRight = new TCardList(10);
-  aOut   = new TCardList(2);
+  aOut = new TCardList(2);
   aCardsOut = new TCardList(12);
-  aLeftOut  = new TCardList(12);
+  aLeftOut = new TCardList(12);
   aRightOut = new TCardList(12);
   DeskView = aDeskView;
   NikName = QString();
@@ -47,7 +45,7 @@ Player::Player(int _nGamer,TDeskView *aDeskView) {
 }
 
 
-Player::~Player() {
+Player::~Player () {
   delete aCards;
   delete aLeft;
   delete aRight;
@@ -1782,44 +1780,9 @@ void Player::GetBackSnos () {
 ///////////////////////////////////////////////////////////////////////////////
 // game graphics
 ///////////////////////////////////////////////////////////////////////////////
-//-------------------------------------------------------------------------
-/*
-void Player::SetViewPort(void) {
-    DeskView->xLen=DeskView->DesktopWidht/2-2*DeskView->xBorder;
-    DeskView->yLen=DeskView->DesktopHeight/2-2*DeskView->yBorder;
-    Width  = DeskView->xLen;
-    switch (nGamer) {
-      case 1: {
-        Left   = (DeskView->DesktopWidht-DeskView->xLen)/2;
-        Top    = DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight;
-        break;
-      }
-      case 2: {
-        Left   = DeskView->xBorder;
-        Top    = DeskView->yBorder;
-        break;
-      }
-      case 3: {
-        Left   = DeskView->DesktopWidht/2+DeskView->xBorder;
-        Top    = DeskView->yBorder;
-        break;
-      }
-
-    }
-
-}
-*/
-
-
-/*
-void Player::OnlyMessage (TDeskView *DeskView, int Left, int Top, int Width, int Height) {
-  //DeskView->ClearBox(Left, Top, Left+Width, / *Top+* /DeskView->yBorder);
-  //Player::Repaint(DeskView, Left, Top, Width, Height);
-}
-*/
-
 
 ///////////////////////////////////////////////////////////////////////////////
+// build array with cards offsets and indicies
 // at least 28 ints (14 int pairs); return # of used ints; the last int is -1
 // result: ofs, cardNo, ..., -1
 int Player::buildHandXOfs (int *dest, int startX, bool opened) {
@@ -1884,29 +1847,6 @@ int Player::cardAt (int lx, int ly, bool opened) {
   int ii = -1, ofs[28];
   int left, top;
   getLeftTop(nGamer, &left, &top);
-/*
-  DeskView->xLen = DeskView->DesktopWidht/2-2*DeskView->xBorder;
-  DeskView->yLen = DeskView->DesktopHeight/2-2*DeskView->yBorder;
-  Width = DeskView->xLen;
-*/
-/*
-  switch (nGamer) {
-    case 1:
-      Left = (DeskView->DesktopWidht-(DeskView->DesktopWidht/2-2*DeskView->xBorder))/2;
-      Top = DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight;
-      break;
-    case 2:
-      Left = DeskView->xBorder;
-      Top = DeskView->yBorder;
-      break;
-    case 3:
-      Left = DeskView->DesktopWidht/2+DeskView->xBorder;
-      Top = DeskView->yBorder;
-      break;
-    default: return -1;
-  }
-*/
-  // end View Port
   buildHandXOfs(ofs, left, opened);
   for (int f = 0; ofs[f] >= 0; f += 2) {
     int curX = ofs[f];
@@ -1921,9 +1861,9 @@ int Player::cardAt (int lx, int ly, bool opened) {
 void Player::Repaint (TDeskView *aDeskView, int Left, int Top, int Width, int Height, bool opened, int selNo) {
   Q_UNUSED(Width)
   Q_UNUSED(Height)
-  if (!aDeskView) return;
   int ofs[28];
 
+  if (!aDeskView) return;
   aCards->mySort();
   buildHandXOfs(ofs, Left, opened);
   for (int f = 0; ofs[f] >= 0; f += 2) {
@@ -1931,8 +1871,9 @@ void Player::Repaint (TDeskView *aDeskView, int Left, int Top, int Width, int He
     TCard *card = (TCard *)aCards->At(ofs[f+1]);
     aDeskView->drawCard(card, x, y, !nInvisibleHand, ofs[f+1]==selNo);
   }
+
+  QString msg;
   if (GamesType != undefined) {
-    QString msg;
     if (nGetsCard) {
       msg += QString::number(nGetsCard);
       msg += " | ";
@@ -1943,8 +1884,11 @@ void Player::Repaint (TDeskView *aDeskView, int Left, int Top, int Width, int He
       msg += NikName;
       msg += ")";
     }
-    aDeskView->drawText(msg, ofs[0]>=0 ? ofs[0] : Left, Top+CARDHEIGHT+4);
   }
+  if (msg.isEmpty()) msg = "...";
+  if (!msg.isEmpty()) aDeskView->drawText(msg, ofs[0]>=0 ? ofs[0] : Left, Top+CARDHEIGHT+4);
+
+  aDeskView->emitRepaint();
 }
 
 

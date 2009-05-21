@@ -31,56 +31,33 @@ static bool cardsLoaded = false;
 bool loadCards () {
   //qDebug() << SLOT(slotPushButtonClick95());
   if (cardsLoaded) return true;
+  // load cards from resources
   for (int face = 7; face <= 14; face++) {
     for (int suit = 1; suit <= 4; suit++) {
-      char fname[64];
-      sprintf(fname, ":/pics/%i%i.png", face, suit);
-      QString fn(fname);
-/*
-      QFile fl(fn);
-      if (!fl.exists()) {
-        qDebug() << "no file:" << fn;
-        return false;
-      }
-*/
-      QImage *im = new QImage(fn);
-      sprintf(fname, "%i%i", face, suit);
-      QString f2(fname);
-      cardI[f2] = im;
-      sprintf(fname, "q%i%i", face, suit);
-      QString f3(fname);
-      im = new QImage(fn);
-      for (int x = 0; x < im->width(); x++) {
-        for (int y = 0; y < im->height(); y++) {
+      QString fname, resname;
+      resname.sprintf("%i%i", face, suit);
+      fname.sprintf(":/pics/%i%i.png", face, suit);
+      cardI[resname] = new QImage(fname);
+      // build highlighted image
+      QImage *im = new QImage(fname);
+      // change white to yellow
+      for (int y = im->height()-1; y >= 0; y--) {
+        for (int x = im->width()-1; x >= 0; x--) {
           QRgb p = im->pixel(x, y);
           if (qRed(p) == 255 && qGreen(p) == 255 && qBlue(p) == 255) {
+            // white
             im->setPixel(x, y, qRgb(255, 255, 0));
           }
         }
-      }
-      cardI[f3] = im;
+      } // done changing loop
+      resname.sprintf("q%i%i", face, suit);
+      cardI[resname] = im;
     }
   }
-  {
-  QString fn(":/pics/cards/1000.png");
-/*
-  QFile fl(fn);
-  if (!fl.exists()) {
-    return false;
-  }
-*/
-  QImage *im = new QImage(fn);
-  cardI["1000"] = im;
-  }
-  {
-  QString fn(":/pics/cards/empty.png");
-/*
-  QFile fl(fn);
-  if (!fl.exists()) return false;
-*/
-  QImage *im = new QImage(fn);
-  cardI["empty"] = im;
-  }
+  // load cardback
+  cardI["1000"] = new QImage(QString(":/pics/cards/1000.png"));
+  cardI["empty"] = new QImage(QString(":/pics/cards/empty.png"));
+  // done
   cardsLoaded = true;
   return true;
 }
@@ -138,6 +115,7 @@ void TDeskView::mySleep (int seconds) {
       if (difftime(time(NULL), tStart) >= seconds) Event = 1;
     }
     usleep(10000); //1000000
+    if (seconds == 0) break;
   }
   if (timer) delete timer;
   emitRepaint();
