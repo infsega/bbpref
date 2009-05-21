@@ -1835,11 +1835,9 @@ int Player::cardAt (int lx, int ly, bool opened) {
 void Player::getLeftTop (int playerNo, int *left, int *top) {
   *left = 0; *top = 0;
   if (!DeskView) return;
-  //int ofs[28], cnt;
   switch (playerNo) {
     case 1:
       *left = (DeskView->DesktopWidht-(DeskView->DesktopWidht/2-2*DeskView->xBorder))/2;
-      //*top = DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight;
       *top = DeskView->DesktopHeight-(DeskView->yBorder)-DeskView->CardHeight-FONTSIZE-10;
       break;
     case 2:
@@ -1847,13 +1845,8 @@ void Player::getLeftTop (int playerNo, int *left, int *top) {
       *top = DeskView->yBorder+20;
       break;
     case 3:
-      //*left = DeskView->DesktopWidht/2+DeskView->xBorder;
       *left = DeskView->DesktopWidht-DeskView->xBorder;
       *top = DeskView->yBorder+20;
-/*
-      cnt = buildHandXOfs(ofs, *left, true);
-      if (cnt) *left = ofs[0]; else *left -= CARDWIDTH+4;
-*/
       break;
     default: ;
   }
@@ -1865,43 +1858,20 @@ void Player::RepaintAt (TDeskView *aDeskView, int Left, int Top, int selNo) {
   TDeskView *oDesk = DeskView;
 
   if (!aDeskView) return;
-  aCards->mySort();
   DeskView = aDeskView;
-/*
-  switch (mPlayerNo) {
-    case 1: // player (bottom)
-      aDeskView->ClearBox(0, Top, aDeskView->DesktopWidht, CARDHEIGHT+FONTSIZE+14);
-      break;
-    case 2: // ai (left top)
-      aDeskView->ClearBox(0, Top, aDeskView->DesktopWidht/2, CARDHEIGHT+FONTSIZE+14);
-      break;
-    case 3: // ai (right top)
-      aDeskView->ClearBox(aDeskView->DesktopWidht/2, Top, aDeskView->DesktopWidht/2, CARDHEIGHT+FONTSIZE+14);
-      break;
-    default: ;
-  }
-*/
+
+  aCards->mySort();
 
   int cnt = buildHandXOfs(ofs, Left, !nInvisibleHand);
-  //int wdt = CARDWIDTH;
-  if (cnt) {
-    Left = ofs[0];
-    //wdt = (ofs[cnt*2-2]+CARDWIDTH)-Left;
-  }
-  //wdt = 520;
-  //aDeskView->ClearBox(Left, Top, wdt, CARDHEIGHT+4);
+  if (cnt) Left = ofs[0];
   for (int f = 0; ofs[f] >= 0; f += 2) {
     int x = ofs[f], y = Top;
     TCard *card = (TCard *)aCards->At(ofs[f+1]);
     aDeskView->drawCard(card, x, y, !nInvisibleHand, ofs[f+1]==selNo);
-    //wdt = ofs[f]+CARDWIDTH;
-    //if (!nInvisibleHand) fprintf(stderr, "%i(%i) ", ofs[f+1], selNo);
   }
-  //if (!nInvisibleHand) fprintf(stderr, "\n");
 
   QString msg;
   int textX = Left, textY = Top+CARDHEIGHT+4;
-  //aDeskView->ClearBox(textX, textY, wdt, FONTSIZE+14);
   if (GamesType != undefined) {
     if (nGetsCard) {
       msg += QString::number(nGetsCard);
@@ -1931,7 +1901,6 @@ void Player::Repaint () {
   int left, top;
   if (!DeskView) return;
   getLeftTop(mPlayerNo, &left, &top);
-  //if (!nInvisibleHand) fprintf(stderr, "SIMPLE: %i\n", oldii);
   RepaintAt(DeskView, left, top, oldii);
 }
 

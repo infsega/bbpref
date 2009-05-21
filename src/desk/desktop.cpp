@@ -66,12 +66,14 @@ void TDeskTop::InternalConstruct(void) {
 
 
 TDeskTop::TDeskTop (TDeskView *_DeskView) : QObject(0) {
+  mPlayingRound = false;
   InternalConstruct();
   DeskView = _DeskView;
 }
 
 
 TDeskTop::TDeskTop () : QObject(0) {
+  mPlayingRound = false;
   InternalConstruct();
 }
 
@@ -202,7 +204,7 @@ TCard *TDeskTop::PipeMakemove (TCard *lMove, TCard *rMove) {
 }
 
 
-// ежели  номер не 1 и игра пас или ( ловля мизера и игрок не сетевой),
+// ежели номер не 1 и игра пас или (ловля мизера и игрок не сетевой),
 // то пораждаем нового HumanPlayer с номером текущего
 // ежели номер 1 и игра пас и не сетевая игра то порождаем Player
 TCard *TDeskTop::ControlingMakemove (TCard *lMove, TCard *rMove) {
@@ -246,6 +248,7 @@ void TDeskTop::RunGame () {
   while (!(GetGamerByNum(1)->aScore->nGetBull() >= nBuletScore &&
            GetGamerByNum(2)->aScore->nGetBull() >= nBuletScore &&
            GetGamerByNum(3)->aScore->nGetBull() >= nBuletScore)) {
+    mPlayingRound = false;
     Tncounter GamersCounter(1, 1, 3);
     int nPl;
     int nGamernumber = 0; // номер заказавшего игру
@@ -312,19 +315,22 @@ void TDeskTop::RunGame () {
       if (GamesType[0] < GamesType[i]) GamesType[0] = GamesType[i];
     }
 
+    mPlayerActive = 0;
+    mPlayingRound = true;
     if (GamesType[0] != gtPass) {
       // не расспасы
       // узнаем кто назначил максимальную игру
       for (int i = 1; i <= 3; i++) {
         Player *tmpg = GetGamerByNum(i);
         if (tmpg->GamesType == GamesType[0]) {
+          mPlayerActive = i;
           nPassCounter = 0;
           Tncounter tmpGamersCounter(1, 3);
           Player *PassOrVistGamers;
           int PassOrVist = 0, nPassOrVist = 0;
           CardOnDesk[2] = (TCard *)Coloda->At(30);
           CardOnDesk[3] = (TCard *)Coloda->At(31);
-          sprintf(ProtocolBuff,"Get cards %i %i for %i game", Card2Int(CardOnDesk[2]), Card2Int(CardOnDesk[3]), GamesType[0]);
+          sprintf(ProtocolBuff, "Get cards %i %i for %i game", Card2Int(CardOnDesk[2]), Card2Int(CardOnDesk[3]), GamesType[0]);
           WriteProtocol(ProtocolBuff);
           Repaint();
           //emitRepaint();
@@ -363,7 +369,7 @@ void TDeskTop::RunGame () {
           //emitRepaint();
           // пас или вист
           ++tmpGamersCounter;
-          PassOrVistGamers=GetGamerByNum(tmpGamersCounter.nValue);
+          PassOrVistGamers = GetGamerByNum(tmpGamersCounter.nValue);
           PassOrVistGamers->GamesType = undefined;
           Repaint();
           //emitRepaint();
@@ -413,15 +419,17 @@ void TDeskTop::RunGame () {
       } // узнаем кто назначил максимальную игру
     }  else {
       // раскручиваем распас
+      mPlayerActive = 0;
       GamesType[0] = CurrentGame = raspass;
       GetGamerByNum(1)->GamesType = raspass;
       GetGamerByNum(2)->GamesType = raspass;
       GetGamerByNum(3)->GamesType = raspass;
-      Repaint();
+      //Repaint();
       //emitRepaint();
     }
     // партия (10 ходов)
     nCurrentMove = nCurrentStart;
+    //mPlayingRound = true;
     for (int i = 1; i <= 10; i++) {
       Player *tmpg;
       CardOnDesk[0] = CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = FirstCard = SecondCard = TherdCard = NULL;
@@ -473,8 +481,9 @@ void TDeskTop::RunGame () {
     }
     //DeskView->mySleep(2);
 LabelRecordOnPaper:
+    mPlayingRound = false;
     // партия закончена
-    Repaint();
+    //Repaint();
     //emitRepaint();
     ++nCurrentStart;
     // записи по сдаче
@@ -526,8 +535,10 @@ LabelRecordOnPaper:
       plr->nInvisibleHand = false;
     }
     nflShowPaper = 1;
+    mPlayingRound = true;
     Repaint();
     DeskView->mySleep(-1);
+    mPlayingRound = false;
     if (nPassCounter != 2) {
       // была партия
       for (int f = 1; f <= 3; f++) {
@@ -537,22 +548,6 @@ LabelRecordOnPaper:
         plr->aCards = tmplist[f];
       }
     }
-/*
-    // показать пулю
-      filename = new char[FILENAME_MAX];
-      strcpy(filename,getenv("HOME"));
-      strcat(filename,"/");
-      strcat(filename,AUTOSAVENAME);
-      SaveGame(filename);
-      delete filename;
-*/
-/*
-    nflShowPaper = 1;
-    ShowPaper();
-    DeskView->mySleep(4);
-    nflShowPaper = 0;
-    DeskView->ClearScreen();
-*/
   } // конец пули
   nflShowPaper = 1;
   ShowPaper();
@@ -753,6 +748,16 @@ void TDeskTop::Repaint () {
   // repaint in-game cards
   for (int f = 0; f <= 3; f++) {
     if (CardOnDesk[f]) drawInGameCard(f, CardOnDesk[f]);
+  }
+  // draw bidboard
+  if (mPlayingRound) {
+    Player *plr1 = GetGamerByNum(1);
+    Player *plr2 = GetGamerByNum(2);
+    Player *plr3 = GetGamerByNum(3);
+    if (plr1 && plr2 && plr3) {
+      DeskView->drawBidsBmp(mPlayerActive, plr1->nGetsCard, plr2->nGetsCard, plr3->nGetsCard, CurrentGame);
+      //DeskView->drawBidsBmp(int plrAct, int p0t, int p1t, int p2t, tGameBid game) {
+    }
   }
   // repaint scoreboard
   if (nflShowPaper) ShowPaper();

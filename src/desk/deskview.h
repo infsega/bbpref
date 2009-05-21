@@ -35,6 +35,16 @@ public:
   void StatusBar (const QString &text);
   void drawRotatedText (QPainter &p, int x, int y, float angle, const QString &text);
 
+  void drawPKeyBmp (bool show);
+  /* game:
+   *  <0: none
+   *  =0: misere
+   * suit:
+   *  =0: nt
+   * plrAct: 0-3
+   */
+  void drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, tGameBid game);
+
   void emitRepaint ();
 
 signals:
@@ -43,6 +53,9 @@ signals:
 public:
   int Event;
   QPixmap *mDeskBmp;
+  QImage *mBidBmp;
+  QImage *mKeyBmp[2];
+  QImage *mDigitsBmp;
 
   int nSecondStartWait;
   int DesktopWidht, DesktopHeight;
@@ -50,6 +63,14 @@ public:
   int xBorder, yBorder;
   //int xLen,yLen;
   int xDelta, yDelta;
+
+private:
+  void drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy);
+  void drawNumber (int x0, int y0, int n, bool red);
+  void drawGameBid (tGameBid game);
+
+private:
+  int bidBmpX, bidBmpY;
 };
 
 

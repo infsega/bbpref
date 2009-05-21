@@ -64,6 +64,10 @@ private:
   void GamerAssign (Player *, Player *);
 
   void drawInGameCard (int mPlayerNo, TCard *Card);
+
+private:
+  bool mPlayingRound;
+  int mPlayerActive; // кто играет (если не распасы и mPlayingRound=true)
 };
 
 

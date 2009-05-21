@@ -42,6 +42,11 @@
     <file>pics/newgame.png</file>
     <file>pics/paper.png</file>
 
+    <file>pics/bidinfo.png</file>
+    <file>pics/presskey.png</file>
+
+    <file>pics/digits/digits.png</file>
+
     <file>pics/bids/s101.png</file>
     <file>pics/bids/s102.png</file>
     <file>pics/bids/s103.png</file>

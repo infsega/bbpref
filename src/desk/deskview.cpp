@@ -25,12 +25,27 @@
 
 
 static QHash<QString, QImage *> cardI;
+static QImage *bidIcons[106]; // wasted!
 static bool cardsLoaded = false;
 
 
-bool loadCards () {
+// change white to yellow
+static void yellowize (QImage *im, QRgb newColor=qRgb(255, 255, 0)) {
+  for (int y = im->height()-1; y >= 0; y--) {
+    for (int x = im->width()-1; x >= 0; x--) {
+      QRgb p = im->pixel(x, y);
+      if (qRed(p) == 255 && qGreen(p) == 255 && qBlue(p) == 255) {
+        im->setPixel(x, y, newColor);
+      }
+    }
+  }
+}
+
+
+static bool loadCards () {
   //qDebug() << SLOT(slotPushButtonClick95());
   if (cardsLoaded) return true;
+  for (int f = 0; f < 106; f++) bidIcons[f] = 0;
   // load cards from resources
   for (int face = 7; face <= 14; face++) {
     for (int suit = 1; suit <= 4; suit++) {
@@ -40,16 +55,7 @@ bool loadCards () {
       cardI[resname] = new QImage(fname);
       // build highlighted image
       QImage *im = new QImage(fname);
-      // change white to yellow
-      for (int y = im->height()-1; y >= 0; y--) {
-        for (int x = im->width()-1; x >= 0; x--) {
-          QRgb p = im->pixel(x, y);
-          if (qRed(p) == 255 && qGreen(p) == 255 && qBlue(p) == 255) {
-            // white
-            im->setPixel(x, y, qRgb(255, 255, 0));
-          }
-        }
-      } // done changing loop
+      yellowize(im);
       resname.sprintf("q%i%i", face, suit);
       cardI[resname] = im;
     }
@@ -57,6 +63,14 @@ bool loadCards () {
   // load cardback
   cardI["1000"] = new QImage(QString(":/pics/cards/1000.png"));
   cardI["empty"] = new QImage(QString(":/pics/cards/empty.png"));
+  // load bid icons
+  for (int f = 6; f <= 10; f++) {
+    for (int s = 1; s <= 5; s++) {
+      QString fname;
+      fname.sprintf(":/pics/bids/s%i%i.png", f, s);
+      bidIcons[f*10+s] = new QImage(fname);
+    }
+  }
   // done
   cardsLoaded = true;
   return true;
@@ -71,6 +85,16 @@ static QImage *GetXpmByNameI (const char *name) {
 
 ///////////////////////////////////////////////////////////////////////////////
 TDeskView::TDeskView (int aW, int aH) : mDeskBmp(0) {
+  mDigitsBmp = new QImage(QString(":/pics/digits/digits.png"));
+  mBidBmp = new QImage(QString(":/pics/bidinfo.png"));
+  mKeyBmp[0] = new QImage(QString(":/pics/presskey.png"));
+  mKeyBmp[1] = new QImage(QString(":/pics/presskey.png"));
+  yellowize(mKeyBmp[1], qRgb(127, 127, 127));
+
+  if (!cardsLoaded) {
+    if (!loadCards()) abort();
+  }
+
   Event = 0;
   CardWidht = CARDWIDTH;
   CardHeight = CARDHEIGHT;
@@ -79,20 +103,135 @@ TDeskView::TDeskView (int aW, int aH) : mDeskBmp(0) {
   DesktopWidht = aW;
   DesktopHeight = aH;
   //mDeskBmp = new QPixmap(DesktopWidht, DesktopHeight);
-  if (!cardsLoaded) {
-    if (!loadCards()) abort();
-  }
   ClearScreen();
 }
 
 
 TDeskView::~TDeskView () {
   if (mDeskBmp) delete mDeskBmp;
+  delete mKeyBmp[0];
+  delete mKeyBmp[1];
+  delete mBidBmp;
+  delete mDigitsBmp;
 }
 
 
 void TDeskView::emitRepaint () {
   emit deskChanged();
+}
+
+
+void TDeskView::drawPKeyBmp (bool show) {
+  if (!mDeskBmp) return;
+  time_t tt = time(NULL);
+  int phase = tt%2;
+  QImage *i = mKeyBmp[phase];
+  if (show) {
+    QPainter p(mDeskBmp);
+    p.drawImage(4, DesktopHeight-(i->height()+8), *i);
+    p.end();
+  } else {
+    ClearBox(4, DesktopHeight-(i->height()+8), i->width(), i->height());
+  }
+}
+
+
+void TDeskView::drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy) {
+  QRect tgt(x0, y0, 8, 14);
+  QRect src(cx, cy, 8, 14);
+  p.drawImage(tgt, *mDigitsBmp, src);
+}
+
+
+void TDeskView::drawNumber (int x0, int y0, int n, bool red) {
+  if (!mDeskBmp || n < 0 || n > 1024) return;
+  char buf[12], *pd;
+  sprintf(buf, "%i", n);
+  pd = buf;
+  QPainter p(mDeskBmp);
+  while (*pd) {
+    int d = (*pd++)-'0';
+    int px = d*8, py = red?14:0;
+    if (red) drawBmpChar(p, x0+1, y0+1, px, 0);
+    drawBmpChar(p, x0, y0, px, py);
+    x0 += 8;
+  }
+  p.end();
+}
+
+
+static int numWidth (int n) {
+  if (n < 0 || n > 1024) return 0;
+  char buf[16];
+  sprintf(buf, "%i", n);
+  return strlen(buf)*8;
+}
+
+
+void TDeskView::drawGameBid (tGameBid game) {
+  if (!mDeskBmp) return;
+  if (game != raspass && (game < 61 || game > 105)) return; // unknown game
+  QPainter p(mDeskBmp);
+  int x, y;
+  QImage *i;
+  switch (game) {
+    case raspass:
+      drawBmpChar(p, bidBmpX+44-4, bidBmpY+34-7, 80, 0);
+      break;
+    case g86: // misere
+      drawBmpChar(p, bidBmpX+44-4, bidBmpY+34-7, 80, 14);
+      break;
+    default:
+      i = bidIcons[(int)game];
+      if (i) {
+        x = 44-(i->width()/2);
+        y = 34-(i->height()/2);
+        p.drawImage(bidBmpX+x, bidBmpY+y, *i);
+      }
+      break;
+  }
+  p.end();
+}
+
+
+/* game:
+ *  <0: none
+ *  =0: misere
+ * suit:
+ *  =0: nt
+ * plrAct: 0-3
+ */
+void TDeskView::drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, tGameBid game) {
+  if (!mDeskBmp) return;
+  QImage *i = mBidBmp;
+  bidBmpX = DesktopWidht-(i->width()+8);
+  bidBmpY = DesktopHeight-(i->height()+8);
+  QPainter p(mDeskBmp);
+  p.drawImage(bidBmpX, bidBmpY, *i);
+  p.end();
+/*
+ * p0t: 10,6 (left top)
+ * p1t: 77,6 (right top)
+ * p2t: 44,50 (bottom center)
+ * bid: 44,34 (center)
+*/
+  // human
+  if (p0t >= 0) {
+    int wdt = numWidth(p0t);
+    int x = 44-(wdt/2);
+    drawNumber(bidBmpX+x, bidBmpY+50, p0t, plrAct==1);
+  }
+  // left-top ai
+  if (p1t >= 0) {
+    drawNumber(bidBmpX+10, bidBmpY+6, p1t, plrAct==2);
+  }
+  // right-top ai
+  if (p2t >= 0) {
+    int wdt = numWidth(p2t);
+    int x = 77-wdt;
+    drawNumber(bidBmpX+x, bidBmpY+6, p2t, plrAct==3);
+  }
+  drawGameBid(game);
 }
 
 
@@ -105,6 +244,7 @@ void TDeskView::mySleep (int seconds) {
     //connect(timer, SIGNAL(timeout()), SLOT(PQApplication->mainWidget()->slotEndSleep()));
     timer->start(seconds*1000);
   }
+  drawPKeyBmp(seconds < 0);
   emitRepaint();
   while (!Event) {
     qApp->processEvents();
@@ -115,8 +255,13 @@ void TDeskView::mySleep (int seconds) {
     }
     usleep(10000); //1000000
     if (seconds == 0) break;
+    if (seconds < 0) {
+      drawPKeyBmp(true);
+      emitRepaint();
+    }
   }
   if (timer) delete timer;
+  drawPKeyBmp(false);
   emitRepaint();
 }
 
