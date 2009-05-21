@@ -194,8 +194,8 @@ void TDeskView::drawGameBid (eGameBid game) {
     default:
       i = bidIcons[(int)game];
       if (i) {
-        x = 44-(i->width()/2);
-        y = 34-(i->height()/2);
+        x = 44-(i->width()/2)+3;
+        y = 34-(i->height()/2)-1;
         p.drawImage(bidBmpX+x, bidBmpY+y, *i);
       }
       break;

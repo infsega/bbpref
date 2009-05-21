@@ -9,32 +9,15 @@
 
 Player::Player (int _nGamer) {
   mPlayerNo = _nGamer;
-  aScore = new ScoreBoard();
-  aCards = new CardList(12); // мои
-  aLeft = new CardList(10);  // противника слева (предполагаемый или открытые)
-  aRight = new CardList(10); // справа (предполагаемый или открытые)
-  aOut = new CardList(2);   // снос (мой или предполагаемый)
-  aCardsOut = new CardList(12); // во взятках мои
-  aLeftOut = new CardList(12);  // во взятках противника слева (предполагаемый или открытые)
-  aRightOut = new CardList(12); // во взятках справа (предполагаемый или открытые)
-  NikName = QString();
-  clear();
+  DeskView = 0;
+  internalInit();
 }
 
 
 Player::Player (int _nGamer, TDeskView *aDeskView) {
   mPlayerNo = _nGamer;
-  aScore = new ScoreBoard();
-  aCards = new CardList(12);
-  aLeft = new CardList(10);
-  aRight = new CardList(10);
-  aOut = new CardList(2);
-  aCardsOut = new CardList(12);
-  aLeftOut = new CardList(12);
-  aRightOut = new CardList(12);
   DeskView = aDeskView;
-  NikName = QString();
-  clear();
+  internalInit();
 }
 
 
@@ -50,15 +33,29 @@ Player::~Player () {
 }
 
 
+void Player::internalInit () {
+  aScore = new ScoreBoard;
+  aCards = new CardList; // мои
+  aLeft = new CardList;  // противника слева (предполагаемый или открытые)
+  aRight = new CardList; // справа (предполагаемый или открытые)
+  aOut = new CardList;   // снос (мой или предполагаемый)
+  aCardsOut = new CardList; // во взятках мои
+  aLeftOut = new CardList;  // во взятках противника слева (предполагаемый или открытые)
+  aRightOut = new CardList; // во взятках справа (предполагаемый или открытые)
+  NikName = QString();
+  clear();
+}
+
+
 void Player::clear () {
   flMiser = 0;
-  aCards->RemoveAll();
-  aLeft->RemoveAll();
-  aRight->RemoveAll();
-  aOut->RemoveAll();
-  aCardsOut->RemoveAll();
-  aLeftOut->RemoveAll();
-  aRightOut->RemoveAll();
+  aCards->clear();
+  aLeft->clear();
+  aRight->clear();
+  aOut->clear();
+  aCardsOut->clear();
+  aLeftOut->clear();
+  aRightOut->clear();
   Mast = SuitNone;
   GamesType = undefined;
   Enemy = NoHand;
@@ -75,12 +72,12 @@ void Player::clear () {
 
 
 void Player::AddCard (Card *aCard) {
-  aCards->Insert(aCard);
+  aCards->append(aCard);
 }
 
 
 void Player::AddCard (int _CName, int _CMast) {
-  aCards->Insert(new Card (_CName,_CMast));
+  aCards->append(new Card (_CName,_CMast));
 }
 
 
@@ -89,10 +86,10 @@ void Player::AddCard (int _CName, int _CMast) {
 ///////////////////////////////////////////////////////////////////////////////
 Card *Player::Miser1(Player *aLeftGamer,Player *aRightGamer) {
     Card *cur=NULL;
-    if (aCards->AllCard()==10) {  // first move первый выход в 8..туз если она одна
+    if (aCards->count()==10) {  // first move первый выход в 8..туз если она одна
         for (int m=1;m<=4;m++) {
-          if (aCards->AllCard(m)==1) {
-            cur = aCards->MinCard(m);
+          if (aCards->cardsInSuit(m)==1) {
+            cur = aCards->minInSuit(m);
             break;
           }
         }
@@ -104,13 +101,13 @@ Card *Player::Miser1(Player *aLeftGamer,Player *aRightGamer) {
             if (cur) break;
             Card *my;
             //,*leftmax,*leftmin,*rightmax,*rightmin;
-            my = aCards->Exist(c,m);
+            my = aCards->exists(c,m);
             if (my) {
               int matrixindex=0;
-              matrixindex  += aLeftGamer->aCards->LessThan(my) ? 1:0;     matrixindex <<= 1;
-              matrixindex  += aLeftGamer->aCards->MoreThan(my) ? 1:0;   matrixindex <<= 1;
-              matrixindex  += aRightGamer->aCards->LessThan(my) ? 1:0;  matrixindex <<= 1;
-              matrixindex  += aRightGamer->aCards->MoreThan(my) ? 1:0;
+              matrixindex  += aLeftGamer->aCards->lesserInSuit(my) ? 1:0;     matrixindex <<= 1;
+              matrixindex  += aLeftGamer->aCards->greaterInSuit(my) ? 1:0;   matrixindex <<= 1;
+              matrixindex  += aRightGamer->aCards->lesserInSuit(my) ? 1:0;  matrixindex <<= 1;
+              matrixindex  += aRightGamer->aCards->greaterInSuit(my) ? 1:0;
               if (matrixindex == 1 || matrixindex == 9 || matrixindex==13||(matrixindex >=4 && matrixindex <=7)) {
                 cur = my;
               }
@@ -118,25 +115,25 @@ Card *Player::Miser1(Player *aLeftGamer,Player *aRightGamer) {
           }
         }
     }
-    if (!cur) cur = aCards->MinCard(1);
-    if (!cur) cur = aCards->MinCard(2);
-    if (!cur) cur = aCards->MinCard(3);
-    if (!cur) cur = aCards->MinCard(4);
+    if (!cur) cur = aCards->minInSuit(1);
+    if (!cur) cur = aCards->minInSuit(2);
+    if (!cur) cur = aCards->minInSuit(3);
+    if (!cur) cur = aCards->minInSuit(4);
     return cur;
 }
 //-----------------------------------------------------------------------
 Card *Player::Miser2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
     Card *cur=NULL;
-      if ( aCards->AllCard( aRightCard->suit()) ) {
+      if ( aCards->cardsInSuit( aRightCard->suit()) ) {
           for (int c=FACE_ACE;c>=7;c--) {
             if (cur) break;
             Card *my;
 //,*leftmax,*leftmin,*rightmax,*rightmin;
-            my = aCards->Exist(c,aRightCard->suit());
+            my = aCards->exists(c,aRightCard->suit());
             if (my) {
               int matrixindex=0;
-              matrixindex  += aLeftGamer->aCards->LessThan(my) ? 1:0;   matrixindex <<= 1;
-              matrixindex  += aLeftGamer->aCards->MoreThan(my) ? 1:0;   matrixindex <<= 1;
+              matrixindex  += aLeftGamer->aCards->lesserInSuit(my) ? 1:0;   matrixindex <<= 1;
+              matrixindex  += aLeftGamer->aCards->greaterInSuit(my) ? 1:0;   matrixindex <<= 1;
               matrixindex  += (*aRightCard < *my) ? 1:0;  matrixindex <<= 1;
               matrixindex  += (*aRightCard > *my) ? 1:0;
               if (matrixindex == 1 || matrixindex == 9 || matrixindex==13||(matrixindex >=4 && matrixindex <=7)) {
@@ -144,9 +141,9 @@ Card *Player::Miser2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
               }
             }
           }
-          if (!cur) cur = aCards->MaxCard(aRightCard->suit());
+          if (!cur) cur = aCards->maxInSuit(aRightCard->suit());
         } else {
-          CardList *aMaxCardList=new CardList(20);
+          CardList *aMaxCardList=new CardList;
           LoadLists(aRightGamer,aLeftGamer,aMaxCardList);
            cur = GetMaxCardWithOutPere();
              if ( !cur ) {
@@ -156,7 +153,7 @@ Card *Player::Miser2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
              cur = GetMinCardWithOutVz(); // лабуду
            }
              if ( !cur ) {
-              cur = aCards->MaxCard();
+              cur = aCards->maxCard();
           }
           delete aMaxCardList;
         }
@@ -166,27 +163,27 @@ Card *Player::Miser2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
 Card *Player::Miser3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
 // copy from MyPass3
   Card *cur=NULL;
-    /*Card *MaxCard;*/
+    /*Card *maxInSuit;*/
     eGameBid tmpGamesType=GamesType;
-    CardList *aMaxCardList=new CardList(20);
+    CardList *aMaxCardList=new CardList;
 //    int mast = GamesType - (GamesType/10) * 10;
     // набираем списки
     LoadLists(aLeftGamer,aRightGamer,aMaxCardList);
     RecountTables4RasPass(aMaxCardList,23);
-    if ( aCards->AllCard(aLeftCard->suit()) )  {
+    if ( aCards->cardsInSuit(aLeftCard->suit()) )  {
        // у меня есть масть  в которую зашел левый
        // постараемсмя пропустить
        if (aLeftCard->suit() == aRightCard->suit()) {
         if (*aRightCard > *aLeftCard) {
-          cur = aCards->LessThan(aRightCard);
+          cur = aCards->lesserInSuit(aRightCard);
         } else {
-          cur = aCards->LessThan(aLeftCard);
+          cur = aCards->lesserInSuit(aLeftCard);
         }
        } else {
-         cur = aCards->LessThan(aLeftCard);
+         cur = aCards->lesserInSuit(aLeftCard);
        }
        if ( !cur  ) {
-           cur = aCards->MaxCard(aLeftCard->suit());
+           cur = aCards->maxInSuit(aLeftCard->suit());
        }
     } else {
       //  у меня нет масти в которую зашел левый
@@ -198,7 +195,7 @@ Card *Player::Miser3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player 
              cur = GetMinCardWithOutVz(); // лабуду
        }
        if ( !cur ) {
-              cur = aCards->MinCard();
+              cur = aCards->minCard();
        }
 
     }
@@ -255,24 +252,24 @@ Card *Player::makemove(Card *lMove,Card *rMove,Player *aLeftGamer,Player *aRight
            cur = MyGame3(lMove,rMove,aLeftGamer,aRightGamer);
         }
     }
-    aCards->Remove(cur);
-    aCardsOut->Insert(cur);
+    aCards->remove(cur);
+    aCardsOut->append(cur);
     return cur;
 }
 //-----------------------------------------------------------------------
 tSuitProbs Player::vzatok(eSuit Mast,CardList *aMaxCardList,int a23) {
    tSuitProbs MastTable;
    Card *MyCard,*tmpCard;
-   CardList *MyCardStack     = new CardList(MAXMASTLEN);
-   CardList *EnemyCardStack  = new CardList(MAXMASTLEN);
+   CardList *MyCardStack     = new CardList;
+   CardList *EnemyCardStack  = new CardList;
    for (int c=7;c<=FACE_ACE;c++ ) {
-        MyCard = aCards->Exist(c, Mast);
+        MyCard = aCards->exists(c, Mast);
         if ( MyCard ) {
-          MyCardStack->Insert(MyCard);
+          MyCardStack->append(MyCard);
         }
-        MyCard = aMaxCardList->Exist(c, Mast);
+        MyCard = aMaxCardList->exists(c, Mast);
         if ( MyCard ) {
-          EnemyCardStack->Insert(MyCard);
+          EnemyCardStack->append(MyCard);
         }
    }
    if (a23 != 23) {
@@ -280,16 +277,16 @@ tSuitProbs Player::vzatok(eSuit Mast,CardList *aMaxCardList,int a23) {
    } else {
        MastTable = Compare2List4Max23(MyCardStack,EnemyCardStack);
    }
-   MastTable.len = aCards->AllCard(Mast);
+   MastTable.len = aCards->cardsInSuit(Mast);
    MastTable.sum = 0;
    for (int j=7;j<=FACE_ACE;j++ ) {
-    tmpCard = aCards->Exist(j,Mast);
+    tmpCard = aCards->exists(j,Mast);
     if (  tmpCard ) {
       MastTable.sum +=  tmpCard->face();
     }
    }
-   MyCardStack->RemoveAll();
-   EnemyCardStack->RemoveAll();
+   MyCardStack->clear();
+   EnemyCardStack->clear();
    delete MyCardStack;
    delete EnemyCardStack;
    return MastTable;
@@ -325,7 +322,7 @@ void Player::RecountTables( CardList *aMaxCardList,int a23 ){ // Пересчитывает т
 //-----------------------------------------------------------------------
 Card *Player::MiserCatch1(Player *aLeftGamer,Player *aRightGamer) {
   Card *cur=NULL;
-  CardList *aMaxCardList=new CardList(20);
+  CardList *aMaxCardList=new CardList;
   CardList *Naparnik;
   eHand Side ;
   if (aRightGamer->GamesType == g86) {
@@ -341,9 +338,9 @@ Card *Player::MiserCatch1(Player *aLeftGamer,Player *aRightGamer) {
 //  if (Side == LeftHand) {
 // 1. Пытаемся всунуть
     for (int m=1;m<=4;m++) {
-      Card *EnemyMin = aMaxCardList->MinCard(m);
-      Card *NaparnikMin = Naparnik->MinCard(m);
-      Card *MyMin = aCards->MinCard(m);
+      Card *EnemyMin = aMaxCardList->minInSuit(m);
+      Card *NaparnikMin = Naparnik->minInSuit(m);
+      Card *MyMin = aCards->minInSuit(m);
       if (cur)
         goto badlabel;
       if (EnemyMin) { //есть такая
@@ -357,14 +354,14 @@ Card *Player::MiserCatch1(Player *aLeftGamer,Player *aRightGamer) {
               // надо н-ти такую масть по которой он может пронести а
               // но должен вернутся ко мне
               for (int k=1;k<=4;k++)  {
-                if (k==m || aMaxCardList->AllCard(k)==0)
+                if (k==m || aMaxCardList->cardsInSuit(k)==0)
                   continue;
-                Card *EnemyMax = aMaxCardList->MaxCard(k);
-                Card *NaparnikMax = Naparnik->MaxCard(k);
-                Card *MyMax = aCards->MaxCard(k);
+                Card *EnemyMax = aMaxCardList->maxInSuit(k);
+                Card *NaparnikMax = Naparnik->maxInSuit(k);
+                Card *MyMax = aCards->maxInSuit(k);
                 if ( MyMax && NaparnikMax && EnemyMax) {
-                  if (Naparnik->AllCard(k) < aCards->AllCard(k) && Naparnik->AllCard(k) < aMaxCardList->AllCard(k) ) {
-                    cur = aCards->LessThan(EnemyMax);
+                  if (Naparnik->cardsInSuit(k) < aCards->cardsInSuit(k) && Naparnik->cardsInSuit(k) < aMaxCardList->cardsInSuit(k) ) {
+                    cur = aCards->lesserInSuit(EnemyMax);
 //                    MyMax; // на этой он должен пронести NaparnikMax
                     if (aRightGamer->GamesType == g86) {
                         aRightGamer->Pronesti = NaparnikMax;
@@ -394,19 +391,19 @@ Card *Player::MiserCatch1(Player *aLeftGamer,Player *aRightGamer) {
     }
 // 3    пытаемс
     if (!cur) cur = GetMaxCardWithOutPere();
-    if (!cur) cur = aCards->MinCard();
+    if (!cur) cur = aCards->minCard();
 //  } else { //Side == LeftHand
 //  }
 badlabel:
 
-  aMaxCardList->RemoveAll();
+  aMaxCardList->clear();
   delete aMaxCardList;
   return cur;
 }
 //-----------------------------------------------------------------------
 Card *Player::MiserCatch2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
   Card *cur=NULL;
-  CardList *aMaxCardList=new CardList(20);
+  CardList *aMaxCardList=new CardList;
   CardList *Naparnik;
   eHand Side ;
   if (aRightGamer->GamesType == g86) {
@@ -421,20 +418,20 @@ Card *Player::MiserCatch2(Card *aRightCard,Player *aLeftGamer,Player *aRightGame
   RecountTables4RasPass(aMaxCardList,23);
 
   if (Side == LeftHand) { //ход под меня , противник с права
-      if (aCards->AllCard(aRightCard->suit())) {
+      if (aCards->cardsInSuit(aRightCard->suit())) {
         // у меня есть карты  в данной масти
-        Card *MyMax = aCards->MaxCard(aRightCard->suit());
-        //Card *MyMin = aCards->MinCard(aRightCard->suit());
-        //Card *EnMax = aMaxCardList->MaxCard(aRightCard->suit());
-        Card *EnMin = aMaxCardList->MinCard(aRightCard->suit());
+        Card *MyMax = aCards->maxInSuit(aRightCard->suit());
+        //Card *MyMin = aCards->minInSuit(aRightCard->suit());
+        //Card *EnMax = aMaxCardList->maxInSuit(aRightCard->suit());
+        Card *EnMin = aMaxCardList->minInSuit(aRightCard->suit());
         if (EnMin) {
           // у противника есть карты в данной масти
           if (*aRightCard < *EnMin) {
             // можно попытаться всунуть
-            cur=aCards->LessThan(EnMin);
-            if(!cur) cur = aCards->MoreThan(EnMin);
+            cur=aCards->lesserInSuit(EnMin);
+            if(!cur) cur = aCards->greaterInSuit(EnMin);
           } else {
-          cur= aCards->MoreThan(EnMin);
+          cur= aCards->greaterInSuit(EnMin);
           }
         } else {
           cur = MyMax; // А вот тут надо смотреть кому нужен ход
@@ -443,28 +440,28 @@ Card *Player::MiserCatch2(Card *aRightCard,Player *aLeftGamer,Player *aRightGame
         // у меня нет карт  в данной масти
         if (Pronesti) {
           //надо пронести карту
-          if (aCards->Exist(Pronesti->face(),Pronesti->suit())) {
+          if (aCards->exists(Pronesti->face(),Pronesti->suit())) {
             cur = Pronesti;
           } else {
-            cur = aCards->MaxCard(Pronesti->suit());
-            if (!cur)   cur = aCards->MaxCard();
+            cur = aCards->maxInSuit(Pronesti->suit());
+            if (!cur)   cur = aCards->maxCard();
           }
         } else {
           // указания на пронос - нет
           cur = GetMaxCardPere();
-        if (!cur) cur = aCards->MaxCard();
+        if (!cur) cur = aCards->maxCard();
         }
       }
   } else { // противник зашел под меня
-    Card *MyMax = aCards->MaxCard(aRightCard->suit());
-    Card *MyMin = aCards->MinCard(aRightCard->suit());
+    Card *MyMax = aCards->maxInSuit(aRightCard->suit());
+    Card *MyMin = aCards->minInSuit(aRightCard->suit());
     if (MyMax) {
 
       if ( *MyMin < *aRightCard) {
 //        есть возможность всунуть
-        Card *NapMin = Naparnik->LessThan(aRightCard);
+        Card *NapMin = Naparnik->lesserInSuit(aRightCard);
         if (NapMin) {
-          cur = aCards->LessThan(aRightCard);
+          cur = aCards->lesserInSuit(aRightCard);
         } else {
           cur = MyMax; // кому передать код ?
         }
@@ -476,15 +473,15 @@ Card *Player::MiserCatch2(Card *aRightCard,Player *aLeftGamer,Player *aRightGame
       // а у меня нет масти
 
           cur = GetMaxCardPere();
-        if (!cur) cur = aCards->MaxCard();
+        if (!cur) cur = aCards->maxCard();
     }
 
   }
   Pronesti = NULL;
   if (!cur)
-    cur = aCards->MinCard();
+    cur = aCards->minCard();
 
-  aMaxCardList->RemoveAll();
+  aMaxCardList->clear();
   delete aMaxCardList;
   return cur;
 
@@ -492,7 +489,7 @@ Card *Player::MiserCatch2(Card *aRightCard,Player *aLeftGamer,Player *aRightGame
 //-----------------------------------------------------------------------
 Card *Player::MiserCatch3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
   Card *cur=NULL;
-  CardList *aMaxCardList=new CardList(20);
+  CardList *aMaxCardList=new CardList;
   CardList *Naparnik;
   eHand Side ;
   if (aRightGamer->GamesType == g86) {
@@ -507,44 +504,44 @@ Card *Player::MiserCatch3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Pl
   RecountTables4RasPass(aMaxCardList,23);
 
   if (Side == LeftHand) {
-      if (aCards->AllCard(aLeftCard->suit())) {
+      if (aCards->cardsInSuit(aLeftCard->suit())) {
         // у меня есть карты  в данной масти
-//        Card *MyMax = aCards->MaxCard(aLeftCard->suit());
-//        Card *MyMin = aCards->MinCard(aLeftCard->suit());
+//        Card *MyMax = aCards->maxInSuit(aLeftCard->suit());
+//        Card *MyMin = aCards->minInSuit(aLeftCard->suit());
         if (*aLeftCard < *aRightCard) {
           // напарник уже придавил карту
-          cur = aCards->MaxCard(aLeftCard->suit());
+          cur = aCards->maxInSuit(aLeftCard->suit());
 
         } else {
           //есть шанс всунуть
-          cur = aCards->LessThan(aLeftCard);
-          if (!cur ) cur = aCards->MaxCard(aLeftCard->suit());
+          cur = aCards->lesserInSuit(aLeftCard);
+          if (!cur ) cur = aCards->maxInSuit(aLeftCard->suit());
         }
       } else {
         // у меня нет карт  в данной масти
         if (Pronesti) {
           //надо пронести карту
-          if (aCards->Exist(Pronesti->face(),Pronesti->suit())) {
+          if (aCards->exists(Pronesti->face(),Pronesti->suit())) {
             cur = Pronesti;
           } else {
-            cur = aCards->MaxCard(Pronesti->suit());
-            if (!cur) cur = aCards->MaxCard();
+            cur = aCards->maxInSuit(Pronesti->suit());
+            if (!cur) cur = aCards->maxCard();
           }
         } else {
           // указания на пронос - нет
           cur = GetMaxCardPere();
-        if (!cur) cur = aCards->MaxCard();
+        if (!cur) cur = aCards->maxCard();
         }
       }
   } else { // RightHand - my friend
-    Card *MyMax = aCards->MaxCard(aLeftCard->suit());
-    Card *MyMin = aCards->MinCard(aLeftCard->suit());
+    Card *MyMax = aCards->maxInSuit(aLeftCard->suit());
+    Card *MyMin = aCards->minInSuit(aLeftCard->suit());
     if (MyMax) {
       if ( *MyMin < *aLeftCard) {
 //        есть возможность всунуть
-        Card *NapMin = Naparnik->LessThan(aLeftCard);
+        Card *NapMin = Naparnik->lesserInSuit(aLeftCard);
         if (NapMin) {
-          cur = aCards->LessThan(aLeftCard);
+          cur = aCards->lesserInSuit(aLeftCard);
         } else {
           cur = MyMax; // кому передать код ?
         }
@@ -555,71 +552,71 @@ Card *Player::MiserCatch3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Pl
     } else {
       // а у меня нет масти
           cur = GetMaxCardPere();
-        if (!cur) cur = aCards->MaxCard();
+        if (!cur) cur = aCards->maxCard();
     }
 
   }
   Pronesti = NULL;
 
-  aMaxCardList->RemoveAll();
+  aMaxCardList->clear();
   delete aMaxCardList;
   return cur;
 }
 //-----------------------------------------------------------------------
 Card *Player::MyGame3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) { // моя игра 3 заход - мой
     Card *cur=NULL;
-    Card *MaxCard;
+    Card *maxInSuit;
     eGameBid tmpGamesType=GamesType;
-    CardList *aMaxCardList=new CardList(20);
+    CardList *aMaxCardList=new CardList;
     int mast = GamesType - (GamesType/10) * 10;
     // набираем списки
     LoadLists(aLeftGamer,aRightGamer,aMaxCardList);
     RecountTables(aMaxCardList,23);
-    if ( aCards->AllCard(aLeftCard->suit()) )  {
+    if ( aCards->cardsInSuit(aLeftCard->suit()) )  {
        // у меня есть масть  в которую зашел левый
         if ( aLeftCard->suit() == aRightCard->suit())  {
             // постараемсмя ударить
-            cur = aCards->MoreThan(aLeftCard);
+            cur = aCards->greaterInSuit(aLeftCard);
             if ( !cur  ) {
-               cur = aCards->MinCard(aLeftCard->suit());
+               cur = aCards->minInSuit(aLeftCard->suit());
             }
         } else { //aLeftCard->suit() == aRightCard->suit()
           if ( aRightCard->suit() !=mast)  {
             // не бита козырем
 
-            cur = aCards->MoreThan(aLeftCard);
+            cur = aCards->greaterInSuit(aLeftCard);
             if ( !cur ) {
-              cur = aCards->MinCard(aLeftCard->suit());
+              cur = aCards->minInSuit(aLeftCard->suit());
             }
           } else {
             // бита козырем, мне не надо бить
-            cur = aCards->MinCard(aLeftCard->suit());
+            cur = aCards->minInSuit(aLeftCard->suit());
           }
         }
     } else {
       //  у меня нет масти в которую зашел левый
        if (aLeftCard->suit()==aRightCard->suit()) {
            if ( *aLeftCard > *aRightCard ) {
-               MaxCard = aLeftCard;
+               maxInSuit = aLeftCard;
            } else {
-               MaxCard = aLeftCard;
+               maxInSuit = aLeftCard;
            }
        } else {
            if ( aLeftCard->suit() != mast && aRightCard->suit() != mast) {
-               MaxCard = aLeftCard;
+               maxInSuit = aLeftCard;
            } else {
-               MaxCard = aRightCard;
+               maxInSuit = aRightCard;
            }
        }
-       cur = aCards->MoreThan(MaxCard);
+       cur = aCards->greaterInSuit(maxInSuit);
        if (!cur) {
-           cur = aCards->MinCard(mast);
+           cur = aCards->minInSuit(mast);
        }
        if ( ! cur ) {// нет коз.
            cur = GetMinCardWithOutVz();
        }
        if ( ! cur ) {
-           cur = aCards->MinCard();
+           cur = aCards->minCard();
        }
     }
     GamesType=tmpGamesType;
@@ -630,9 +627,9 @@ Card *Player::MyGame3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
 //-----------------------------------------------------------------------
 Card *Player::MyVist3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) { // мой вист или пас 3 заход - мой
     Card *cur=NULL;
-    Card *MaxCard;
+    Card *maxInSuit;
     eGameBid tmpGamesType=GamesType;
-    CardList *aMaxCardList=new CardList(20);
+    CardList *aMaxCardList=new CardList;
     Player *aEnemy,*aFriend;
     int mast;
     // Кто игрок а кто напарник
@@ -647,7 +644,7 @@ Card *Player::MyVist3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
     // набираем списки
 //    LoadLists(aLeftGamer,aRightGamer,aMaxCardList);
 //    RecountTables(aMaxCardList,23);
-    if ( aCards->AllCard(aLeftCard->suit()) )  {
+    if ( aCards->cardsInSuit(aLeftCard->suit()) )  {
        // у меня есть масть  в которую зашел левый
       if ( aEnemy == aLeftGamer ) { // левый - врыжина
         LoadLists(aLeftGamer,aLeftGamer,aMaxCardList);
@@ -656,24 +653,24 @@ Card *Player::MyVist3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
         if ( aLeftCard->suit() == aRightCard->suit())  {
           if ( *aRightCard > *aLeftCard ) {
             // бить не надо
-            cur = aCards->MinCard(aRightCard->suit());
+            cur = aCards->minInSuit(aRightCard->suit());
           } else {
             // постараемсмя ударить
-            cur = aCards->MoreThan(aLeftCard);
+            cur = aCards->greaterInSuit(aLeftCard);
             if ( !cur  ) {
-               cur = aCards->MinCard(aLeftCard->suit());
+               cur = aCards->minInSuit(aLeftCard->suit());
             }
           }
         } else { //aLeftCard->suit() == aRightCard->suit()
           if ( aRightCard->suit() !=mast)  {
             // не бита козырем
-            cur = aCards->MoreThan(aLeftCard);
+            cur = aCards->greaterInSuit(aLeftCard);
             if ( !cur ) {
-              cur = aCards->MinCard(aLeftCard->suit());
+              cur = aCards->minInSuit(aLeftCard->suit());
             }
           } else {
             // бита козырем, мне не надо бить
-            cur = aCards->MinCard(aLeftCard->suit());
+            cur = aCards->minInSuit(aLeftCard->suit());
           }
         }
 
@@ -684,20 +681,20 @@ Card *Player::MyVist3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
         if ( aLeftCard->suit() == aRightCard->suit()  )  {
           if ( *aRightCard > *aLeftCard ) {
             // попытаться прибить правого
-            cur = aCards->MoreThan(aRightCard);
+            cur = aCards->greaterInSuit(aRightCard);
             if ( !cur ) {
-              cur = aCards->MinCard(aRightCard->suit());
+              cur = aCards->minInSuit(aRightCard->suit());
             }
           } else {
             // бить не надо
-            cur = aCards->MinCard(aRightCard->suit());
+            cur = aCards->minInSuit(aRightCard->suit());
           }
         } else {
           if ( aRightCard->suit()==mast  ) {
             // лвевый зашел, а правый пригрел козырем
-            cur = aCards->MinCard(aLeftCard->suit());
+            cur = aCards->minInSuit(aLeftCard->suit());
           } else { // Ух ты .... Левый друг зашел а правый пронес ерунду !!!
-            cur = aCards->MinCard(aLeftCard->suit());
+            cur = aCards->minInSuit(aLeftCard->suit());
           }
         }
 
@@ -705,11 +702,11 @@ Card *Player::MyVist3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
     } else {
       //  у меня нет масти в которую зашел левый
        if (aLeftCard->suit()==aRightCard->suit()) {
-           if ( *aLeftCard > *aRightCard ) {   MaxCard = aLeftCard;
-           } else { MaxCard = aLeftCard; }
+           if ( *aLeftCard > *aRightCard ) {   maxInSuit = aLeftCard;
+           } else { maxInSuit = aLeftCard; }
        } else {
-           if ( aLeftCard->suit() != mast && aRightCard->suit() != mast) {               MaxCard = aLeftCard;
-           } else { MaxCard = aRightCard;
+           if ( aLeftCard->suit() != mast && aRightCard->suit() != mast) {               maxInSuit = aLeftCard;
+           } else { maxInSuit = aRightCard;
            }
        }
        if ( aEnemy == aLeftGamer ) { // С лева игрок
@@ -717,29 +714,29 @@ Card *Player::MyVist3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
 
           RecountTables(aMaxCardList,23);
 
-           if (MaxCard == aLeftCard ) { //попытаемся хлопнуть его карту
-               cur = aCards->MoreThan(aLeftCard);
+           if (maxInSuit == aLeftCard ) { //попытаемся хлопнуть его карту
+               cur = aCards->greaterInSuit(aLeftCard);
            } else { // Уже наша взятка... скидываем минимальную
-               cur = aCards->MinCard(MaxCard->suit());
+               cur = aCards->minInSuit(maxInSuit->suit());
            }
        } else { // с лева - напарник
           LoadLists(aRightGamer,aRightGamer,aMaxCardList);
           RecountTables(aMaxCardList,23);
 
-           if (MaxCard == aLeftCard ) { // Уже наша взятка... скидываем минимальную
-               cur = aCards->MinCard(MaxCard->suit());
+           if (maxInSuit == aLeftCard ) { // Уже наша взятка... скидываем минимальную
+               cur = aCards->minInSuit(maxInSuit->suit());
            } else {//попытаемся хлопнуть его карту
-               cur = aCards->MoreThan(aLeftCard);
+               cur = aCards->greaterInSuit(aLeftCard);
            }
        }
        if (!cur) {
-           cur = aCards->MinCard(mast);
+           cur = aCards->minInSuit(mast);
        }
        if ( ! cur ) {// нет коз.
            cur = GetMinCardWithOutVz();
        }
        if ( ! cur ) {
-           cur = aCards->MinCard();
+           cur = aCards->minCard();
        }
 
 
@@ -755,7 +752,7 @@ Card *Player::MyVist3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
 Card *Player::MyVist2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) { // мой вист или пас 2 заход - мой
     Card *cur=NULL;
     eGameBid tmpGamesType=GamesType;
-    CardList *aMaxCardList=new CardList(20);
+    CardList *aMaxCardList=new CardList;
     Player *aEnemy,*aFriend;
     int mast;
     // Кто игрок а кто напарник
@@ -773,12 +770,12 @@ Card *Player::MyVist2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
         RecountTables(aMaxCardList,23);
         // Ну если он заходил под вистуза с туза
         if ( aRightCard->face() >= 10 ) {
-            cur = aCards->MinCard(aRightCard->suit());
+            cur = aCards->minInSuit(aRightCard->suit());
         } else { // может умный и больше заходов у него нет в данную масть а есть козырь
-            cur = aCards->MaxCard(aRightCard->suit());
+            cur = aCards->maxInSuit(aRightCard->suit());
         }
         if ( !cur ) { // а у меня масти и нет !!!
-            cur = aCards->MaxCard(mast); // прибъем максимальной
+            cur = aCards->maxInSuit(mast); // прибъем максимальной
         }
         if ( ! cur ) {
             cur = GetMinCardWithOutVz();
@@ -786,12 +783,12 @@ Card *Player::MyVist2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
     } else { // с лева - напарник
         LoadLists(aRightGamer,aRightGamer,aMaxCardList);
         RecountTables(aMaxCardList,23);
-        cur = aCards->MoreThan(aRightCard);
+        cur = aCards->greaterInSuit(aRightCard);
         if (!cur) {
-            cur = aCards->MinCard(aRightCard->suit());
+            cur = aCards->minInSuit(aRightCard->suit());
         }
         if (!cur) { // Нет масти пробуем козырь
-            cur = aCards->MinCard(mast);
+            cur = aCards->minInSuit(mast);
         }
         if (!cur) { // Нет масти и козыря
             cur = GetMinCardWithOutVz();
@@ -807,7 +804,7 @@ Card *Player::MyVist1(Player *aLeftGamer,Player *aRightGamer) {
 // 1 - выбить козыря 2-разиграть масти с перехватами 3-без перехватов 4-???
     Card *cur=NULL;
     eGameBid tmpGamesType=GamesType;
-    CardList *aMaxCardList=new CardList(20);
+    CardList *aMaxCardList=new CardList;
     Player *aEnemy,*aFriend;
     int mast;
     // Кто игрок а кто напарник
@@ -826,27 +823,27 @@ Card *Player::MyVist1(Player *aLeftGamer,Player *aRightGamer) {
     if ( aEnemy == aLeftGamer ) { // С лева игрок
           LoadLists(aLeftGamer,aLeftGamer,aMaxCardList);
             RecountTables(aMaxCardList,1);
-            if ( aLeftGamer->aCards->AllCard(mast) <=2  ) {
-          Card *m =aCards->MaxCard(mast);
+            if ( aLeftGamer->aCards->cardsInSuit(mast) <=2  ) {
+          Card *m =aCards->maxInSuit(mast);
           if (!m) {
-                cur = aCards->MinCard(aLeftGamer->aCards->EmptyMast (mast));
+                cur = aCards->minInSuit(aLeftGamer->aCards->emptySuit (mast));
               } else {
-                if (aLeftGamer->aCards->MaxCard(mast)->face() < m->face()) {
-                  cur = aCards->MaxCard(mast);
+                if (aLeftGamer->aCards->maxInSuit(mast)->face() < m->face()) {
+                  cur = aCards->maxInSuit(mast);
                 } else {
-                  cur = aCards->MinCard(aLeftGamer->aCards->EmptyMast (mast));
+                  cur = aCards->minInSuit(aLeftGamer->aCards->emptySuit (mast));
                 }
               }
             } else {
-                  cur = aCards->MinCard(aLeftGamer->aCards->EmptyMast (mast));
+                  cur = aCards->minInSuit(aLeftGamer->aCards->emptySuit (mast));
             }
         if ( !cur) {
           cur = GetMinCardWithOutVz();
         }
 
-/*        if ( aCards->Exist(FACE_ACE,cur->suit()) || aCards->Exist(FACE_KING,cur->suit()) ) {
+/*        if ( aCards->exists(FACE_ACE,cur->suit()) || aCards->exists(FACE_KING,cur->suit()) ) {
           cur = NULL;
-            cur = aCards->MinCard(aMaxCardList->EmptyMast (0));
+            cur = aCards->minInSuit(aMaxCardList->emptySuit (0));
         }*/
 
 
@@ -854,7 +851,7 @@ Card *Player::MyVist1(Player *aLeftGamer,Player *aRightGamer) {
             cur = GetMaxCardWithOutPere();
         }
         if ( !cur) {
-            cur = aCards->MinCard(mast);
+            cur = aCards->minInSuit(mast);
         }
         if ( !cur) {
             cur = GetMaxCardPere();
@@ -868,7 +865,7 @@ Card *Player::MyVist1(Player *aLeftGamer,Player *aRightGamer) {
             cur = GetMaxCardPere();
         }
         if ( !cur) {
-            cur = aCards->MaxCard();
+            cur = aCards->maxCard();
         }
     }
     GamesType=tmpGamesType;
@@ -878,7 +875,7 @@ Card *Player::MyVist1(Player *aLeftGamer,Player *aRightGamer) {
 
 //-----------------------------------------------------------------------
 Card *Player::MyGame2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
-    CardList *aMaxCardList=new CardList(20);
+    CardList *aMaxCardList=new CardList;
     eGameBid tmpGamesType=GamesType;
     Card *cur=NULL;
     Card *MaxLeftCard=NULL;
@@ -888,38 +885,38 @@ Card *Player::MyGame2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
     LoadLists(aLeftGamer,aRightGamer,aMaxCardList);
     RecountTables(aMaxCardList,23);
 
-    cur = aCards->MaxCard(mast);
+    cur = aCards->maxInSuit(mast);
     if ( !cur ) { // Нет Масти
-        if ( !aLeftGamer->aCards->AllCard(mast) ) { // У левого тож нету
-            MaxLeftCard = aLeftGamer->aCards->MaxCard(koz);
-            cur = aCards->MoreThan(MaxLeftCard); //
+        if ( !aLeftGamer->aCards->cardsInSuit(mast) ) { // У левого тож нету
+            MaxLeftCard = aLeftGamer->aCards->maxInSuit(koz);
+            cur = aCards->greaterInSuit(MaxLeftCard); //
             if (!cur) {
-                cur = aCards->LessThan(MaxLeftCard);
+                cur = aCards->lesserInSuit(MaxLeftCard);
             }
             if ( !cur ) {
                 cur = GetMinCardWithOutVz(); // лабуду
             }
             if ( !cur ) {
-                 cur = aCards->MinCard();
+                 cur = aCards->minCard();
             }
         } else { // Есть масть у левого
-            cur = aCards->MinCard(koz);
+            cur = aCards->minInSuit(koz);
         }
     } else { // У меня есть масть
-        if ( aLeftGamer->aCards->AllCard(mast) ) { //У левого есть
-            MaxLeftCard = aLeftGamer->aCards->MaxCard(mast);
-            cur = aCards->MoreThan(MaxLeftCard);
+        if ( aLeftGamer->aCards->cardsInSuit(mast) ) { //У левого есть
+            MaxLeftCard = aLeftGamer->aCards->maxInSuit(mast);
+            cur = aCards->greaterInSuit(MaxLeftCard);
             if ( !cur ) {
-                cur = aCards->LessThan(MaxLeftCard);
+                cur = aCards->lesserInSuit(MaxLeftCard);
             }
         } else { // У левого нет
-            if ( !aLeftGamer->aCards->AllCard(koz) ) { // И козыре й нет
-                cur = aCards->MoreThan(aRightCard);
+            if ( !aLeftGamer->aCards->cardsInSuit(koz) ) { // И козыре й нет
+                cur = aCards->greaterInSuit(aRightCard);
                 if ( !cur) {
-                    cur = aCards->MinCard(mast);
+                    cur = aCards->minInSuit(mast);
                 }
             } else { // есть у левого козыря
-                cur = aCards->MinCard(mast);
+                cur = aCards->minInSuit(mast);
             }
         }
     }
@@ -933,13 +930,13 @@ Card *Player::MyGame1(Player *aLeftGamer,Player *aRightGamer) {
 // 1-выбить козыря 2-разиграть масти с перехватами 3-без перехватов 4-???
     Card *cur=NULL;
     eGameBid tmpGamesType=GamesType;
-    CardList *aMaxCardList=new CardList(20);
+    CardList *aMaxCardList=new CardList;
     int mast = GamesType - (GamesType/10) * 10;
     // набираем списки
     LoadLists(aLeftGamer,aRightGamer,aMaxCardList);
     RecountTables(aMaxCardList,1);
-    if ( aLeft->AllCard(mast) || aRight->AllCard(mast) ) { // У противников есть козыря
-        cur = aCards->MaxCard(mast);
+    if ( aLeft->cardsInSuit(mast) || aRight->cardsInSuit(mast) ) { // У противников есть козыря
+        cur = aCards->maxInSuit(mast);
         if ( !cur ) { // а у меня их нет !!!
              cur = GetMaxCardWithOutPere(); // без пере
         }
@@ -950,7 +947,7 @@ Card *Player::MyGame1(Player *aLeftGamer,Player *aRightGamer) {
              cur = GetMinCardWithOutVz(); // лабуду
         }
         if ( !cur ) {
-             cur = aCards->MaxCard();
+             cur = aCards->maxCard();
         }
     } else { // а козырьков у них и нету !!!
         if ( !cur ) {
@@ -963,10 +960,10 @@ Card *Player::MyGame1(Player *aLeftGamer,Player *aRightGamer) {
              cur = GetMinCardWithOutVz(); // лабуду
         }
         if ( !cur ) {
-            cur = aCards->MaxCard(mast);
+            cur = aCards->maxInSuit(mast);
         }
         if ( !cur ) {
-             cur = aCards->MaxCard();
+             cur = aCards->maxCard();
         }
     }
     GamesType=tmpGamesType;
@@ -985,7 +982,7 @@ Card *Player::GetMaxCardPere(void) {
         }
     }
 
-    if (index) return aCards->MaxCard(index);
+    if (index) return aCards->maxInSuit(index);
     return NULL;
 }
 //-----------------------------------------------------------------------
@@ -998,7 +995,7 @@ Card *Player::GetMaxCardWithOutPere(void) {
             pere = MastTable[i].perehvatov;
         }
     }
-    if (index) return aCards->MaxCard(index);
+    if (index) return aCards->maxInSuit(index);
     return NULL;
 }
 //-----------------------------------------------------------------------
@@ -1014,17 +1011,17 @@ Card *Player::GetMinCardWithOutVz(void) {
         }
     }
     if (index && index <=4)
-        return aCards->MinCard(index);
+        return aCards->minInSuit(index);
       else
-        return aCards->MinCard();
+        return aCards->minCard();
 //    return NULL;
 }
 //-----------------------------------------------------------------------
 void Player::LoadLists(Player *aLeftGamer,Player *aRightGamer,CardList *aMaxCardList) {
 /*    int nLeftVisible = aLeftGamer->nCardsVisible,nRightVisible = aRightGamer->nCardsVisible;
-    int nCards = aCards->AllCard();       */
-    aLeft->RemoveAll();
-    aRight->RemoveAll();
+    int nCards = aCards->count();       */
+    aLeft->clear();
+    aRight->clear();
 /*    // !!!!!!!!!!!!!!!!!!!!!!!!! необходимо учитывать, что во взятках
     if ( !nLeftVisible && !nRightVisible ) {
         makestatfill(nCards,1); // ,1- for max list 2- for minlist
@@ -1036,48 +1033,48 @@ void Player::LoadLists(Player *aLeftGamer,Player *aRightGamer,CardList *aMaxCard
         makestatfill(nCards,1); // ,1- for max list 2- for minlist
     }
     if ( nLeftVisible && nRightVisible ) {*/
-        aLeft->Assign(aLeftGamer->aCards);
-        aRight->Assign(aRightGamer->aCards);
+        aLeft->shallowCopy(aLeftGamer->aCards);
+        aRight->shallowCopy(aRightGamer->aCards);
 /*    }*/
 // Get Max List only len
 /*    for (int m=1;m<=4;m++) {
       for (int c=FACE_ACE;c>=7;c-- ) {
-       if ( aLeft->Exist(c,m) || aRight->Exist(c,m) ) {
-           aMaxCardList->Insert(new Card(c,m));
+       if ( aLeft->exists(c,m) || aRight->exists(c,m) ) {
+           aMaxCardList->append(new Card(c,m));
        }
       }
     }*/
     for (int m=1;m<=4;m++) {
           Card *LeftMax,*RightMax,*Max=NULL;
-          while ( aLeft->AllCard(m) || aRight->AllCard(m)) {
-            LeftMax = aLeft->MaxCard(m);
-            RightMax=aRight->MaxCard(m);
+          while ( aLeft->cardsInSuit(m) || aRight->cardsInSuit(m)) {
+            LeftMax = aLeft->maxInSuit(m);
+            RightMax=aRight->maxInSuit(m);
             if (LeftMax == NULL && RightMax== NULL) {
               Max=NULL;
             } else if (LeftMax == NULL && RightMax!= NULL) {
               Max = RightMax;
-              aRight->Remove(Max);
+              aRight->remove(Max);
             } else if (LeftMax != NULL && RightMax== NULL) {
               Max = LeftMax ;
-              aLeft->Remove(Max);
+              aLeft->remove(Max);
             } else if  ( *LeftMax > *RightMax ) {
               Max = LeftMax;
-              aLeft->Remove(LeftMax);
-              aRight->Remove(RightMax);
+              aLeft->remove(LeftMax);
+              aRight->remove(RightMax);
             } else {
               Max = RightMax;
-              aLeft->Remove(LeftMax);
-              aRight->Remove(RightMax);
+              aLeft->remove(LeftMax);
+              aRight->remove(RightMax);
             }
           }
           if (Max !=NULL) {
-            aMaxCardList->Insert(new Card(Max->face(),Max->suit()));
+            aMaxCardList->append(new Card(Max->face(),Max->suit()));
           }
     }
-    aLeft->RemoveAll();
-    aRight->RemoveAll();
-    aLeft->Assign(aLeftGamer->aCards);
-    aRight->Assign(aRightGamer->aCards);
+    aLeft->clear();
+    aRight->clear();
+    aLeft->shallowCopy(aLeftGamer->aCards);
+    aRight->shallowCopy(aRightGamer->aCards);
 }
 //-----------------------------------------------------------------------
 eGameBid Player::makemove4out(void) {
@@ -1099,14 +1096,14 @@ eGameBid Player::makemove4out(void) {
     }
 
     for (i=1; i<=4; i++) { // предполагаемый козырь - самая длинная масть
-      if( aCards->AllCard(i) > nMaxMastLen ) {
-        nMaxMastLen = aCards->AllCard(i);
+      if( aCards->cardsInSuit(i) > nMaxMastLen ) {
+        nMaxMastLen = aCards->cardsInSuit(i);
         nMaxMast = (eSuit) i;
       }
     }
 
     for (i=1; i<=4; i++) {
-      if(aCards->AllCard(i) == nMaxMastLen && nMaxMast != i ) { // есть максимально длинные масти
+      if(aCards->cardsInSuit(i) == nMaxMastLen && nMaxMast != i ) { // есть максимально длинные масти
        if ( LocalMastTable[i].sum  > LocalMastTable[nMaxMast].sum  )  {
          nMaxMast = (eSuit) i;
         }
@@ -1150,15 +1147,15 @@ eGameBid Player::makeout4miser(void) {
   Card *RealFirstCardOut,*RealSecondCardOut;
   eGameBid  Hight = g105,  tmpHight = g105;
   for ( int i=0;i<12;i++ ) {
-    tmpFirstCardOut = (Card*) aCards->At(i);
-    aCards->AtRemove(i);
+    tmpFirstCardOut = (Card*) aCards->at(i);
+    aCards->removeAt(i);
     //for ( int j=0;j<12;j++ )  {
     for (int j=i+1; j<12; j++) { // patch from Rasskazov K. (kostik450@mail.ru)
       if ( j!=i ) {
-        tmpSecondCardOut = (Card*) aCards->At(j);
-        aCards->AtRemove(j);
+        tmpSecondCardOut = (Card*) aCards->at(j);
+        aCards->removeAt(j);
         Player *tmpGamer = new Player(99);
-        tmpGamer->aCards->Assign(aCards);
+        tmpGamer->aCards->shallowCopy(aCards);
         tmpGamer->aCards->mySort();
         tmpHight = tmpGamer->makemove4out();
         if ( (tmpHight < Hight )
@@ -1167,26 +1164,26 @@ eGameBid Player::makeout4miser(void) {
           FirstCardOut = tmpFirstCardOut;
           SecondCardOut = tmpSecondCardOut;
         }
-        tmpGamer->aCards->RemoveAll();
+        tmpGamer->aCards->clear();
         delete tmpGamer;
-        aCards->AtPut(j,tmpSecondCardOut);
+        aCards->putAt(j,tmpSecondCardOut);
       }
     }
-    aCards->AtPut(i,tmpFirstCardOut);
+    aCards->putAt(i,tmpFirstCardOut);
   }
 
-  RealFirstCardOut     = aCards->MaxCard(FirstCardOut->suit());
-  aCards->Remove(RealFirstCardOut);
-  aOut->Insert(RealFirstCardOut);
+  RealFirstCardOut     = aCards->maxInSuit(FirstCardOut->suit());
+  aCards->remove(RealFirstCardOut);
+  aOut->append(RealFirstCardOut);
   if (SecondCardOut->suit() != FirstCardOut->suit()) {
-    RealSecondCardOut = aCards->MaxCard(SecondCardOut->suit());
+    RealSecondCardOut = aCards->maxInSuit(SecondCardOut->suit());
    } else {
-    RealSecondCardOut = aCards->MoreThan(FirstCardOut);
+    RealSecondCardOut = aCards->greaterInSuit(FirstCardOut);
     if ( !RealSecondCardOut )
-      RealSecondCardOut = aCards->MaxCard(); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 Bad algoritm
+      RealSecondCardOut = aCards->maxCard(); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 Bad algoritm
    }
-  aCards->Remove(RealSecondCardOut);
-  aOut->Insert(RealSecondCardOut);
+  aCards->remove(RealSecondCardOut);
+  aOut->append(RealSecondCardOut);
   aCards->mySort();
   return g86;
 }
@@ -1199,14 +1196,14 @@ eGameBid Player::makeout4game () {
   eGameBid Hight = zerogame, tmpHight = zerogame;
 
   for (int i = 0; i < 12; i++) {
-    tmpFirstCardOut = (Card *)aCards->At(i);
-    aCards->AtRemove(i);
+    tmpFirstCardOut = aCards->at(i);
+    aCards->removeAt(i);
     for (int j = 0; j < 12; j++)  {
       if (j != i) {
-        tmpSecondCardOut = (Card *)aCards->At(j);
-        aCards->AtRemove(j);
+        tmpSecondCardOut = aCards->at(j);
+        aCards->removeAt(j);
         Player *tmpGamer = new Player(99);
-        tmpGamer->aCards->Assign(aCards);
+        tmpGamer->aCards->shallowCopy(aCards);
         tmpGamer->aCards->mySort();
         tmpHight = tmpGamer->makemove4out();
         if ((tmpHight > Hight) ||
@@ -1215,26 +1212,26 @@ eGameBid Player::makeout4game () {
           FirstCardOut = tmpFirstCardOut;
           SecondCardOut = tmpSecondCardOut;
         }
-        tmpGamer->aCards->RemoveAll();
+        tmpGamer->aCards->clear();
         delete tmpGamer;
-        aCards->AtPut(j, tmpSecondCardOut);
+        aCards->putAt(j, tmpSecondCardOut);
       }
     }
-    aCards->AtPut(i,tmpFirstCardOut);
+    aCards->putAt(i, tmpFirstCardOut);
   }
 
-  RealFirstCardOut = aCards->MinCard(FirstCardOut->suit());
-  aCards->Remove(RealFirstCardOut);
-  aOut->Insert(RealFirstCardOut);
+  RealFirstCardOut = aCards->minInSuit(FirstCardOut->suit());
+  aCards->remove(RealFirstCardOut);
+  aOut->append(RealFirstCardOut);
   if (SecondCardOut->suit() != FirstCardOut->suit()) {
-    RealSecondCardOut = aCards->MinCard(SecondCardOut->suit());
+    RealSecondCardOut = aCards->minInSuit(SecondCardOut->suit());
   } else {
-    RealSecondCardOut = aCards->MoreThan(FirstCardOut);
+    RealSecondCardOut = aCards->greaterInSuit(FirstCardOut);
     if (!RealSecondCardOut)
-      RealSecondCardOut = aCards->MinCard(); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 Bad algoritm
+      RealSecondCardOut = aCards->minCard(); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 Bad algoritm
   }
-  aCards->Remove(RealSecondCardOut);
-  aOut->Insert(RealSecondCardOut);
+  aCards->remove(RealSecondCardOut);
+  aOut->append(RealSecondCardOut);
   aCards->mySort();
   //Hight = makemove(undefined,undefined);
   Hight = makemove4out();
@@ -1277,13 +1274,13 @@ eGameBid Player::makemove (eGameBid lMove, eGameBid rMove) {
     }
     // предполагаемый козырь - самая длинная масть
     for (i = 1; i <= 4; i++) {
-      if (aCards->AllCard(i) > nMaxMastLen) {
-        nMaxMastLen = aCards->AllCard(i);
+      if (aCards->cardsInSuit(i) > nMaxMastLen) {
+        nMaxMastLen = aCards->cardsInSuit(i);
         nMaxMast = (eSuit)i;
       }
     }
     for (i = 1; i <= 4; i++) {
-      if (aCards->AllCard(i) == nMaxMastLen && nMaxMast != i) {
+      if (aCards->cardsInSuit(i) == nMaxMastLen && nMaxMast != i) {
         // есть максимально длинные масти
         if (LocalMastTable[i].sum > LocalMastTable[nMaxMast].sum) nMaxMast = (eSuit)i;
       }
@@ -1365,8 +1362,8 @@ eGameBid Player::makemove (eGameBid lMove, eGameBid rMove) {
 int Player::Check4Miser ( ) {
   int cur = 0;
   for (int Mast = SuitSpades; Mast <= SuitHearts; Mast++) {
-    if (aCards->Exist(7, Mast) && (aCards->Exist(9, Mast) || aCards->Exist(8, Mast)) &&
-        (aCards->Exist(FACE_JACK, Mast) || aCards->Exist(10, Mast))) {
+    if (aCards->exists(7, Mast) && (aCards->exists(9, Mast) || aCards->exists(8, Mast)) &&
+        (aCards->exists(FACE_JACK, Mast) || aCards->exists(10, Mast))) {
       cur++;
     }
   }
@@ -1378,32 +1375,32 @@ int Player::Check4Miser ( ) {
 tSuitProbs Player::vzatok4game (eSuit Mast, int a23) {
    tSuitProbs MastTable;
    Card *MyCard,*tmpCard;
-   CardList *MyCardStack     = new CardList(MAXMASTLEN);
-   CardList *EnemyCardStack  = new CardList(MAXMASTLEN);
+   CardList *MyCardStack     = new CardList;
+   CardList *EnemyCardStack  = new CardList;
    for (int c=7;c<=FACE_ACE;c++ ) {
-    MyCard = aCards->Exist(c, Mast);
+    MyCard = aCards->exists(c, Mast);
     if ( MyCard )
-      MyCardStack->Insert(MyCard);
+      MyCardStack->append(MyCard);
     else
-      EnemyCardStack->Insert(new Card(c, Mast));
+      EnemyCardStack->append(new Card(c, Mast));
    }
-   if ( MyCardStack->AllCard() >=4 && MyCardStack->AllCard() <=5 )    {
-      EnemyCardStack->Free(EnemyCardStack->MinCard());
+   if ( MyCardStack->count() >=4 && MyCardStack->count() <=5 )    {
+      EnemyCardStack->free(EnemyCardStack->minCard());
    }
    if ( a23 == 23 ) {
        MastTable = Compare2List4Max23(MyCardStack,EnemyCardStack);
    } else {
        MastTable = Compare2List4Max(MyCardStack,EnemyCardStack);
    }
-   MastTable.len = aCards->AllCard(Mast);
+   MastTable.len = aCards->cardsInSuit(Mast);
    MastTable.sum = 0;
    for (int j=7;j<=FACE_ACE;j++ ) {
-    tmpCard = aCards->Exist(j,Mast);
+    tmpCard = aCards->exists(j,Mast);
     if (  tmpCard ) {
       MastTable.sum +=  tmpCard->face();
     }
    }
-   MyCardStack->RemoveAll();
+   MyCardStack->clear();
    delete MyCardStack;
    delete EnemyCardStack;
    return MastTable;
@@ -1412,29 +1409,29 @@ tSuitProbs Player::vzatok4game (eSuit Mast, int a23) {
 tSuitProbs Player::vzatok4pass(eSuit Mast,CardList *aMaxCardList) {
    tSuitProbs MastTable;
    Card *MyCard,*tmpCard;
-   CardList *MyCardStack     = new CardList(MAXMASTLEN);
-   CardList *EnemyCardStack  = new CardList(MAXMASTLEN);
+   CardList *MyCardStack     = new CardList;
+   CardList *EnemyCardStack  = new CardList;
    for (int c=7;c<=FACE_ACE;c++ ) {
-        MyCard = aCards->Exist(c, Mast);
+        MyCard = aCards->exists(c, Mast);
         if ( MyCard ) {
-          MyCardStack->Insert(MyCard);
+          MyCardStack->append(MyCard);
         }
-        MyCard = aMaxCardList->Exist(c, Mast);
+        MyCard = aMaxCardList->exists(c, Mast);
         if ( MyCard ) {
-          EnemyCardStack->Insert(MyCard);
+          EnemyCardStack->append(MyCard);
         }
    }
    MastTable = Compare2List4Min(MyCardStack,EnemyCardStack);
-   MastTable.len = aCards->AllCard(Mast);
+   MastTable.len = aCards->cardsInSuit(Mast);
    MastTable.sum = 0;
    for (int j=7;j<=FACE_ACE;j++ ) {
-    tmpCard = aCards->Exist(j,Mast);
+    tmpCard = aCards->exists(j,Mast);
     if (  tmpCard ) {
       MastTable.sum +=  tmpCard->face();
     }
    }
-   MyCardStack->RemoveAll();
-   EnemyCardStack->RemoveAll();
+   MyCardStack->clear();
+   EnemyCardStack->clear();
    delete MyCardStack;
    delete EnemyCardStack;
    return MastTable;
@@ -1449,19 +1446,19 @@ tSuitProbs Player::Compare2List4Min(CardList *My,CardList *Enemy) { // Для мин р
   int nMaxLen;
   Card *MyCardMin,*EnemyCardMax,*EnemyCardMin;
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//  Enemy->Free(Enemy->MinCard());
-  My->AllCard()>Enemy->AllCard() ? nMaxLen = My->AllCard() : nMaxLen = Enemy->AllCard();
+//  Enemy->free(Enemy->minCard());
+  My->count()>Enemy->count() ? nMaxLen = My->count() : nMaxLen = Enemy->count();
   for ( int i=1; i<=nMaxLen; i++ )  {
-    MyCardMin = My->MinCard();
-    EnemyCardMax = Enemy->MaxCard();
+    MyCardMin = My->minCard();
+    EnemyCardMax = Enemy->maxCard();
     if ( MyCardMin ) {
-      EnemyCardMin = Enemy->LessThan(MyCardMin);
+      EnemyCardMin = Enemy->lesserInSuit(MyCardMin);
       if (!EnemyCardMin) {
-          EnemyCardMin = Enemy->MinCard();
+          EnemyCardMin = Enemy->minCard();
       }
 
     } else {
-//      EnemyCardMin = Enemy->MinCard();
+//      EnemyCardMin = Enemy->minCard();
       break;
     }
     if ( !EnemyCardMax && !EnemyCardMin)  {
@@ -1469,15 +1466,15 @@ tSuitProbs Player::Compare2List4Min(CardList *My,CardList *Enemy) { // Для мин р
     }
     if ( *MyCardMin > *EnemyCardMin ) {
       // викидываем мою  его младшую
-      My->Remove(MyCardMin);
-//      Enemy->Free(EnemyCardMin);
-      Enemy->Remove(EnemyCardMin);
+      My->remove(MyCardMin);
+//      Enemy->free(EnemyCardMin);
+      Enemy->remove(EnemyCardMin);
 
       MastTable.vzatok++;
     } else {
-      My->Remove(MyCardMin);
-//      Enemy->Free(EnemyCardMax);
-      Enemy->Remove(EnemyCardMax);
+      My->remove(MyCardMin);
+//      Enemy->free(EnemyCardMax);
+      Enemy->remove(EnemyCardMax);
     }
   }
   return MastTable;
@@ -1490,33 +1487,33 @@ tSuitProbs Player::Compare2List4Max(CardList *My,CardList *Enemy) {
   MastTable.perehvatov=0;
   int nMaxLen,nIget=1;
   Card *MyCardMax=0,*EnemyCardMax=0,*EnemyCardMin=0;
-  My->AllCard()>Enemy->AllCard() ? nMaxLen = My->AllCard() : nMaxLen = Enemy->AllCard();
+  My->count()>Enemy->count() ? nMaxLen = My->count() : nMaxLen = Enemy->count();
   for ( int i=1; i<=nMaxLen; i++ )  {
-    MyCardMax = My->MaxCard();
+    MyCardMax = My->maxCard();
     if ( MyCardMax ) {
-      EnemyCardMax = Enemy->MoreThan(MyCardMax);
+      EnemyCardMax = Enemy->greaterInSuit(MyCardMax);
       if (!EnemyCardMax) {
-        EnemyCardMax = Enemy->MinCard();
+        EnemyCardMax = Enemy->minCard();
       }
     } else {
-      EnemyCardMax = Enemy->MaxCard();
+      EnemyCardMax = Enemy->maxCard();
     }
-    EnemyCardMin = Enemy->MinCard();
+    EnemyCardMin = Enemy->minCard();
     if ( !MyCardMax )  {
       break;
     }
     if ( !EnemyCardMax && !EnemyCardMin)  {
       // остаток - мои взятки
-      for ( int j =1; j<=My->AllCard();j++ ) {
+      for ( int j =1; j<=My->count();j++ ) {
         MastTable.vzatok++;
       }
       break;
     }
     if ( *MyCardMax > *EnemyCardMax ) {
       // викидываем мою старшую, его младшую
-      My->Remove(MyCardMax);
-//      Enemy->Free(EnemyCardMin);
-  Enemy->Remove(EnemyCardMin);
+      My->remove(MyCardMax);
+//      Enemy->free(EnemyCardMin);
+  Enemy->remove(EnemyCardMin);
       MastTable.vzatok++;
       if ( !nIget )  {
         MastTable.perehvatov++;
@@ -1524,9 +1521,9 @@ tSuitProbs Player::Compare2List4Max(CardList *My,CardList *Enemy) {
 
       nIget = 1;
     } else {
-      My->Remove(MyCardMax);
-//      Enemy->Free(EnemyCardMax);
-      Enemy->Remove(EnemyCardMax);
+      My->remove(MyCardMax);
+//      Enemy->free(EnemyCardMax);
+      Enemy->remove(EnemyCardMax);
       nIget = 0;
     }
   }
@@ -1539,32 +1536,32 @@ tSuitProbs Player::Compare2List4Max23(CardList *My,CardList *Enemy) {
   MastTable.perehvatov=0;
   int nMaxLen,nIget=1;
   Card *MyCardMax,*EnemyCardMax;
-  My->AllCard()>Enemy->AllCard() ? nMaxLen = My->AllCard() : nMaxLen = Enemy->AllCard();
+  My->count()>Enemy->count() ? nMaxLen = My->count() : nMaxLen = Enemy->count();
   for ( int i=1; i<=nMaxLen; i++ )  {
-    EnemyCardMax = Enemy->MaxCard();
+    EnemyCardMax = Enemy->maxCard();
     if (EnemyCardMax) {// Пытаемся н-ти больше чеm у него
-      MyCardMax = My->MoreThan(EnemyCardMax);
+      MyCardMax = My->greaterInSuit(EnemyCardMax);
       if ( ! MyCardMax ) {  // Нет у меня больше чем у него
-        MyCardMax = My->MinCard();
+        MyCardMax = My->minCard();
         if (!MyCardMax ) {  // и меньше тож нет
           break ;
         } else {  // Меньше чем у него
-          My->Remove(MyCardMax);
-          Enemy->Remove(EnemyCardMax);
+          My->remove(MyCardMax);
+          Enemy->remove(EnemyCardMax);
           nIget = 0;
         }
       } else {  // Есть больше чем у него
-        My->Remove(MyCardMax);
-        Enemy->Remove(EnemyCardMax);
+        My->remove(MyCardMax);
+        Enemy->remove(EnemyCardMax);
         MastTable.vzatok++;
         if (! nIget) MastTable.perehvatov++;
         nIget = 1;
       }
     } else {  // У него нет карт в данной масти ! остаток - мои взятки
-      if ( ! Enemy->AllCard() ) {
-        for ( int j =1; j<=My->AllCard();j++ ) MastTable.vzatok++;
+      if ( ! Enemy->count() ) {
+        for ( int j =1; j<=My->count();j++ ) MastTable.vzatok++;
       }
-//25.07.2000 for ( int j =1; j<=My->AllCard();j++ ) MastTable.vzatok++;
+//25.07.2000 for ( int j =1; j<=My->count();j++ ) MastTable.vzatok++;
       break;
     }
   }
@@ -1574,13 +1571,13 @@ tSuitProbs Player::Compare2List4Max23(CardList *My,CardList *Enemy) {
 Card *Player::MyPass1(Card *rMove,Player *aLeftGamer,Player *aRightGamer) {
   Card *cur=NULL;
   eGameBid tmpGamesType=GamesType;
-  CardList *aMaxCardList=new CardList(20);
-  CardList *aTmpList=new CardList(MAXMASTLEN);
+  CardList *aMaxCardList=new CardList;
+  CardList *aTmpList=new CardList;
   CardList *aStackStore=NULL;
 
   if ( rMove != NULL )  {
-    aTmpList=new CardList(MAXMASTLEN);
-    aTmpList->AssignMast(aCards,(eSuit)rMove->suit());
+    aTmpList=new CardList;
+    aTmpList->copySuit(aCards, (eSuit)rMove->suit());
     aStackStore = aCards;
     aCards = aTmpList;
 //    LoadLists(aLeftGamer,aRightGamer,aMaxCardList); // !!!!!!!!!
@@ -1592,8 +1589,8 @@ Card *Player::MyPass1(Card *rMove,Player *aLeftGamer,Player *aRightGamer) {
      // тема такая : 100 % отбери своё, если такового нет - мах в минимально длинной масти
     cur = GetMaxCardWithOutPere(); // за искл тех случ коды масти уже нет
     if ( cur ) {
-        if ( aLeftGamer->aCards->AllCard(cur->suit())==0
-             && aRightGamer->aCards->AllCard(cur->suit())==0 ) {
+        if ( aLeftGamer->aCards->cardsInSuit(cur->suit())==0
+             && aRightGamer->aCards->cardsInSuit(cur->suit())==0 ) {
 
           cur = NULL;
         }
@@ -1605,12 +1602,12 @@ Card *Player::MyPass1(Card *rMove,Player *aLeftGamer,Player *aRightGamer) {
        cur = GetMinCardWithOutVz(); // лабуду
     }
     if ( !cur ) {
-        cur = aCards->MinCard();
+        cur = aCards->minCard();
     }
   }
   if ( rMove != NULL )  {
     aCards=aStackStore;
-    aTmpList->RemoveAll();
+    aTmpList->clear();
     delete aTmpList;
 
   }
@@ -1626,12 +1623,12 @@ Card *Player::MyPass2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
   Card *cur=NULL;
   eGameBid tmpGamesType=GamesType;
   int mast = aRightCard->suit();
-  CardList *aMaxCardList=new CardList(20);
+  CardList *aMaxCardList=new CardList;
   LoadLists(aLeftGamer,aRightGamer,aMaxCardList);
   RecountTables4RasPass(aMaxCardList,1);
 /////////////////////////////////////////////////////////
   if ( tmpGamesType == raspass || tmpGamesType == g86 )  { // распасы // мизер
-    cur = aCards->MaxCard(mast); // !!!!!!!!!!!! здеся обышка
+    cur = aCards->maxInSuit(mast); // !!!!!!!!!!!! здеся обышка
     if ( !cur ) { // Нет Масти
       // во шара !!! Льем мах в масти где  есть 100 % взятки
        cur = GetMaxCardWithOutPere();
@@ -1642,19 +1639,19 @@ Card *Player::MyPass2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
              cur = GetMinCardWithOutVz(); // лабуду
        }
        if ( !cur ) {
-              cur = aCards->MinCard();
+              cur = aCards->minCard();
        }
 
     } else { // У меня есть масть
-        if ( aLeftGamer->aCards->AllCard(mast) ) { //У левого есть
-            cur = aCards->LessThan(aLeftGamer->aCards->MaxCard(mast));
+        if ( aLeftGamer->aCards->cardsInSuit(mast) ) { //У левого есть
+            cur = aCards->lesserInSuit(aLeftGamer->aCards->maxInSuit(mast));
             if ( !cur ) {
-                cur = aCards->MaxCard(mast);
+                cur = aCards->maxInSuit(mast);
             }
         } else { // У левого нет
-           cur = aCards->LessThan(aRightCard);
+           cur = aCards->lesserInSuit(aRightCard);
            if ( !cur) {
-               cur = aCards->MaxCard(mast);
+               cur = aCards->maxInSuit(mast);
            }
         }
     }
@@ -1667,27 +1664,27 @@ Card *Player::MyPass2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
 //-----------------------------------------------------------------------
 Card *Player::MyPass3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
   Card *cur=NULL;
-    /*Card *MaxCard;*/
+    /*Card *maxInSuit;*/
     eGameBid tmpGamesType=GamesType;
-    CardList *aMaxCardList=new CardList(20);
+    CardList *aMaxCardList=new CardList;
 //    int mast = GamesType - (GamesType/10) * 10;
     // набираем списки
     LoadLists(aLeftGamer,aRightGamer,aMaxCardList);
     RecountTables4RasPass(aMaxCardList,23);
-    if ( aCards->AllCard(aLeftCard->suit()) )  {
+    if ( aCards->cardsInSuit(aLeftCard->suit()) )  {
        // у меня есть масть  в которую зашел левый
        // постараемсмя пропустить
        if (aLeftCard->suit() == aRightCard->suit()) {
         if (*aRightCard > *aLeftCard) {
-          cur = aCards->LessThan(aRightCard);
+          cur = aCards->lesserInSuit(aRightCard);
         } else {
-          cur = aCards->LessThan(aLeftCard);
+          cur = aCards->lesserInSuit(aLeftCard);
         }
        } else {
-         cur = aCards->LessThan(aLeftCard);
+         cur = aCards->lesserInSuit(aLeftCard);
        }
        if ( !cur  ) {
-           cur = aCards->MaxCard(aLeftCard->suit());
+           cur = aCards->maxInSuit(aLeftCard->suit());
        }
     } else {
       //  у меня нет масти в которую зашел левый
@@ -1699,7 +1696,7 @@ Card *Player::MyPass3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
              cur = GetMinCardWithOutVz(); // лабуду
        }
        if ( !cur ) {
-              cur = aCards->MinCard();
+              cur = aCards->minCard();
        }
 
     }
@@ -1713,12 +1710,12 @@ void Player::makestatfill(void) {
    eHand lr=LeftHand;
    for (int m=1;m<=4;m++) {
      for (int c=FACE_ACE;c>=7;c-- ) {
-      if ( !aCards->Exist(c,m) ) {
+      if ( !aCards->exists(c,m) ) {
          if (lr==LeftHand) {
-           aLeft->Insert(new Card(c,m));
+           aLeft->append(new Card(c,m));
            lr = RightHand;
          } else {
-           aRight->Insert(new Card(c,m));
+           aRight->append(new Card(c,m));
            lr = LeftHand;
          }
        }
@@ -1732,12 +1729,12 @@ void Player::makestatfill(int nCards,int maxmin) {
     if ( maxmin ==1 ) {
        for (int m=1;m<=4;m++) {
          for (int c=FACE_ACE;c>=7;c-- ) {
-          if ( !aCards->Exist(c,m) && !aOut->Exist(c,m) ) {
+          if ( !aCards->exists(c,m) && !aOut->exists(c,m) ) {
              if (lr==LeftHand) {
-               aLeft->Insert(new Card(c,m));
+               aLeft->append(new Card(c,m));
                lr = RightHand;
              } else {
-               aRight->Insert(new Card(c,m));
+               aRight->append(new Card(c,m));
                lr = LeftHand;
                nCounter++;
                if ( nCounter >= nCards ) return;
@@ -1748,12 +1745,12 @@ void Player::makestatfill(int nCards,int maxmin) {
     } else {
        for (int m=1;m<=4;m++) {
          for (int c=7;c<=FACE_ACE;c++ ) {
-          if ( !aCards->Exist(c,m) && !aOut->Exist(c,m) ) {
+          if ( !aCards->exists(c,m) && !aOut->exists(c,m) ) {
              if (lr==LeftHand) {
-               aLeft->Insert(new Card(c,m));
+               aLeft->append(new Card(c,m));
                lr = RightHand;
              } else {
-               aRight->Insert(new Card(c,m));
+               aRight->append(new Card(c,m));
                lr = LeftHand;
                nCounter++;
                if ( nCounter >= nCards ) return;
@@ -1767,9 +1764,9 @@ void Player::makestatfill(int nCards,int maxmin) {
 
 void Player::GetBackSnos () {
   // Vernut snos
-  if (aCardsOut->At(0)) aCards->Insert(aCardsOut->At(0));
-  if (aCardsOut->At(1)) aCards->Insert(aCardsOut->At(1));
-  aCardsOut->RemoveAll();
+  if (aCardsOut->at(0)) aCards->append(aCardsOut->at(0));
+  if (aCardsOut->at(1)) aCards->append(aCardsOut->at(1));
+  aCardsOut->clear();
 }
 
 
@@ -1788,8 +1785,8 @@ int Player::buildHandXOfs (int *dest, int startX, bool opened) {
   if (mPlayerNo == 3) startX = 0;
   // normal
   startX -= opened ? SUIT_OFFSET : CLOSED_CARD_OFFSET ;
-  for (int i = 0; i < aCards->aCount; i++) {
-    Card *pp = (Card *)aCards->At(i);
+  for (int i = 0; i < aCards->size(); i++) {
+    Card *pp = (Card *)aCards->at(i);
     if (!pp) continue;
     prev = cur;
     cur = pp;
@@ -1862,7 +1859,7 @@ void Player::RepaintAt (TDeskView *aDeskView, int Left, int Top, int selNo) {
   if (cnt) Left = ofs[0];
   for (int f = 0; ofs[f] >= 0; f += 2) {
     int x = ofs[f], y = Top;
-    Card *card = (Card *)aCards->At(ofs[f+1]);
+    Card *card = (Card *)aCards->at(ofs[f+1]);
     aDeskView->drawCard(card, x, y, !nInvisibleHand, ofs[f+1]==selNo);
   }
 /*

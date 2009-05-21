@@ -6,9 +6,14 @@
 #include "cardlist.h"
 
 
-class  Deck : public CardList {
+// deck is owns the cards
+class Deck : public CardList {
 public:
-  Deck (int _Limit);
+  Deck ();
+
+  virtual void shallowCopy (CardList *) { abort(); }
+
+  virtual void clear ();
   void shuffle ();
 };
 

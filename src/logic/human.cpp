@@ -88,20 +88,20 @@ Card *HumanPlayer::makemove (Card *lMove, Card *rMove, Player *aLeftGamer, Playe
     //qDebug() << "selected:" << cNo << "X:" << X << "Y:" << Y;
     Card *Validator;
     int koz = trumpSuit();
-    Validator = RetVal = (Card *)aCards->At(cNo);
+    Validator = RetVal = (Card *)aCards->at(cNo);
     if (lMove || rMove) {
       Validator = lMove ? lMove : rMove;
     }
     if (!Validator || !RetVal) continue;
     // пропускаем ход через правила
     if (!((Validator->suit() == RetVal->suit()) ||
-        (!aCards->MinCard(Validator->suit()) && (RetVal->suit() == koz || ((!aCards->MinCard(koz)))))
+        (!aCards->minInSuit(Validator->suit()) && (RetVal->suit() == koz || ((!aCards->minInSuit(koz)))))
        )) RetVal = NULL;
   }
   clearCardArea();
   oldii = -1;
-  aCards->Remove(RetVal);
-  aCardsOut->Insert(RetVal);
+  aCards->remove(RetVal);
+  aCardsOut->append(RetVal);
   X = Y = 0;
   WaitForMouse = 0;
   Repaint();

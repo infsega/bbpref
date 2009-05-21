@@ -1,6 +1,8 @@
 #ifndef CARD_H
 #define CARD_H
 
+#include <QList>
+
 
 const int FACE_JACK  = 11;
 const int FACE_QUEEN = 12;
@@ -36,6 +38,9 @@ private:
   int mSuit; //от 1 до 4
   bool mValid;
 };
+
+
+typedef QList<Card *> QCardList;
 
 
 #endif

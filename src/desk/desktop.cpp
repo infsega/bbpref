@@ -23,8 +23,8 @@ typedef struct {
 
 
 void PrefDesktop::InternalConstruct () {
-  CardOnDesk[0] = CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = FirstCard=SecondCard=TherdCard=NULL;
-  Coloda = new Deck(CARDINCOLODA);
+  CardOnDesk[0] = CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = FirstCard = SecondCard = TherdCard=NULL;
+  deck = new Deck;
 
   qsrand(time(NULL));
   nCurrentStart.nValue=nCurrentMove.nValue=(qrand()%3)+1;
@@ -61,7 +61,7 @@ PrefDesktop::PrefDesktop () : QObject(0) {
 
 PrefDesktop::~PrefDesktop () {
   CloseProtocol();
-  delete Coloda;
+  delete deck;
   foreach (Player *p, mPlayers) if (p) delete p;
   mPlayers.clear();
 }
@@ -163,13 +163,13 @@ Player *PrefDesktop::InsertGamer (Player *Gamer) {
 
 
 void PrefDesktop::GamerAssign (Player *newgamer,Player *oldgamer) {
-  newgamer->aCards->Assign(oldgamer->aCards);
-  newgamer->aLeft->Assign(oldgamer->aLeft);
-  newgamer->aRight->Assign(oldgamer->aRight);
-  newgamer->aOut->Assign(oldgamer->aOut);
-  newgamer->aCardsOut->Assign(oldgamer->aCardsOut);
-  newgamer->aLeftOut->Assign(oldgamer->aLeftOut);
-  newgamer->aRightOut->Assign(oldgamer->aRightOut);
+  newgamer->aCards->shallowCopy(oldgamer->aCards);
+  newgamer->aLeft->shallowCopy(oldgamer->aLeft);
+  newgamer->aRight->shallowCopy(oldgamer->aRight);
+  newgamer->aOut->shallowCopy(oldgamer->aOut);
+  newgamer->aCardsOut->shallowCopy(oldgamer->aCardsOut);
+  newgamer->aLeftOut->shallowCopy(oldgamer->aLeftOut);
+  newgamer->aRightOut->shallowCopy(oldgamer->aRightOut);
   newgamer->nGetsCard = oldgamer->nGetsCard;
   newgamer->Mast = oldgamer->Mast;
   newgamer->GamesType = oldgamer->GamesType;
@@ -277,9 +277,9 @@ void PrefDesktop::RunGame () {
     int nPassCounter = 0; // кол-во спасовавших
     GamesType[3] = GamesType[2] = GamesType[1] = GamesType[0] = undefined;
     CardOnDesk[0] = CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = FirstCard = SecondCard = TherdCard = 0;
-    delete Coloda;
-    Coloda = new Deck(CARDINCOLODA);
-    Coloda->shuffle();
+    delete deck;
+    deck = new Deck;
+    deck->shuffle();
     player(1)->clear();
     player(2)->clear();
     player(3)->clear();
@@ -288,8 +288,8 @@ void PrefDesktop::RunGame () {
     // сдали карты
     for (int i = 0; i < CARDINCOLODA-2; i++) {
       Player *tmpGamer = player(GamersCounter.nValue);
-      if (!(Coloda->At(i))) DeskView->MessageBox("Card = NULL", "Error!!!");
-      tmpGamer->AddCard((Card *)Coloda->At(i));
+      if (!(deck->at(i))) DeskView->MessageBox("Card = NULL", "Error!!!");
+      tmpGamer->AddCard(deck->at(i));
       ++GamersCounter;
     }
     //emitRepaint();
@@ -358,8 +358,8 @@ void PrefDesktop::RunGame () {
           Tncounter tmpGamersCounter(1, 3);
           Player *PassOrVistGamers;
           int PassOrVist = 0, nPassOrVist = 0;
-          CardOnDesk[2] = (Card *)Coloda->At(30);
-          CardOnDesk[3] = (Card *)Coloda->At(31);
+          CardOnDesk[2] = deck->at(30);
+          CardOnDesk[3] = deck->at(31);
           //!.!sprintf(ProtocolBuff, "Get cards %i %i for %i game", Card2Int(CardOnDesk[2]), Card2Int(CardOnDesk[3]), GamesType[0]);
           //!.!WriteProtocol(ProtocolBuff);
           // извращение с CurrentGame -- для того, чтобы показало игру на bidboard
@@ -369,8 +369,8 @@ void PrefDesktop::RunGame () {
           DeskView->mySleep(-1);
           //!CurrentGame = oc; // вернём CurrentGame на место -- на всякий случай
           // запихиваем ему прикуп
-          tmpg->AddCard((Card *)Coloda->At(30));
-          tmpg->AddCard((Card *)Coloda->At(31));
+          tmpg->AddCard(deck->at(30));
+          tmpg->AddCard(deck->at(31));
           CardOnDesk[2] = CardOnDesk[3] = NULL;
           nGamernumber = tmpg->mPlayerNo;
           //DeskView->ClearScreen();
@@ -547,7 +547,7 @@ void PrefDesktop::RunGame () {
       if (CurrentGame == raspass && (i == 1 || i == 2)) {
         Card *tmp4show;
         Card *ptmp4rpass;
-        tmp4show = (Card *)Coloda->At(29+i);
+        tmp4show = deck->at(29+i);
         ptmp4rpass = new Card(1, tmp4show->suit());
         CardOnDesk[0] = tmp4show;
         //drawInGameCard(0, CardOnDesk[0]);

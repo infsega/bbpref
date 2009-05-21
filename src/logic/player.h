@@ -84,6 +84,8 @@ public:
   tSuitProbs Compare2List4Min(CardList *My,CardList *Enemy); // Для мин результата
 
 private:
+  void internalInit ();
+
   // Три списка
   //tSuitProbs Compare3List4Max(CardList *My,CardList *Left,CardList *Right); // Для максимального результата
   //tSuitProbs Compare3List4Min(CardList *My,CardList *Left,CardList *Right); // Для мин результата

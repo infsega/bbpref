@@ -1,286 +1,197 @@
 #include "cardlist.h"
-#include "card.h"
 
-//----------------------------------------------------------------------
-CardList::CardList(int _Limit) : Tclist(_Limit) {
 
+CardList::CardList () {
 }
 
 
 CardList::~CardList () {
-  for (int f = aLimit-1; f >= 0; f--) {
-    Card *item = (Card *)items[f];
-    if (item) delete item;
+  clear();
+}
+
+
+void CardList::clear () {
+  mList.clear();
+}
+
+
+void CardList::removeNulls () {
+  // remove null items
+  QMutableListIterator<Card *> i(mList);
+  while (i.hasNext()) {
+    Card *c = i.next();
+    if (!c) i.remove();
   }
 }
 
 
-//----------------------------------------------------------------------
-Card * CardList::Exist( int PackedName ) {
-  int face = PackedName/10,suit;
-  suit = PackedName - face*10;
-  return Exist(face,suit);
+Card *CardList::exists (int aPacked) const {
+  Card c(aPacked);
+  return exists(c);
 }
-//----------------------------------------------------------------------
-Card * CardList::Exist( int _CName, int _CMast ) {
-  Card *card=NULL;
-  for (int i = 0; i < aLimit; i++) {
-        card = (Card *) At(i);
-        if ( card && (card -> face() == _CName && card -> suit()== _CMast))
-             return card;
-  }
-  return NULL;
+
+
+Card *CardList::exists (int aFace, int aSuit) const {
+  Card c(aFace, aSuit);
+  return exists(c);
 }
-//----------------------------------------------------------------------
-Card * CardList::MinCard( void ) {
-  Card *tmp1=NULL,*tmp2=NULL;
-  char first=1;
-  for (int i = 0; i < aLimit; i++) {
-      tmp2 = (Card *)this -> items[i];
-      if (tmp2) {
-      if (first) {
-        first = !first;
-        tmp1 = tmp2;
-      } else {
-        if (tmp1->face() > tmp2->face())
-          tmp1= tmp2;
-      }
-      }
+
+
+Card *CardList::exists (const Card &cc) const {
+  foreach (Card *c, mList) {
+    if (!c) continue;
+    if (cc == *c) return c;
   }
-  if (!first)   return tmp1;
-  return NULL;
+  return 0;
 }
-//----------------------------------------------------------------------
-Card * CardList::MaxCard( void ) {
-  Card *tmp1=NULL,*tmp2=NULL;
-  char first=1;
-  for (int i = 0; i < aLimit; i++) {
-      tmp2 = (Card *)this -> items[i];
-      if (tmp2) {
-         if (first) {
-            first = !first;
-            tmp1 = tmp2;
-         } else {
-           if (tmp1->face() > tmp2->face())
-          tmp1= tmp2;
-         }
-      }
-  }
-  if (!first)   return tmp1;
-  return NULL;
+
+
+Card *CardList::minCard () const {
+  return minInSuit(-1);
 }
-//----------------------------------------------------------------------
-Card * CardList::MinCard( int _CMast ) {
-  Card *tmp1=NULL,*tmp2=NULL;
-  char first=1;
-  for (int i = 0; i < aLimit; i++) {
-      tmp2 = (Card *)this -> items[i];
-      if (tmp2!=NULL && tmp2->suit()==_CMast) {
-        if (first) {
-          first = !first;
-          tmp1 = tmp2;
-        } else {
-          if (tmp1->face() > tmp2->face())
-            tmp1= tmp2;
-        }
-      }
-  }
-  if (!first)   return tmp1;
-  return NULL;
+
+
+Card *CardList::maxCard () const {
+  return maxInSuit(-1);
 }
-//----------------------------------------------------------------------
-Card * CardList::MaxCard( int _CMast ) {
-  Card *tmp1=NULL,*tmp2=NULL;
-  char first=1;
-  for (int i = 0; i < aLimit; i++) {
-    tmp2 = (Card *)this->items[i];
-    if (tmp2!=NULL && tmp2->suit()==_CMast) {
-      if (first) {
-        first = !first;
-        tmp1 = tmp2;
-      } else {
-        if (tmp1->face() < tmp2->face())
-          tmp1= tmp2;
-      }
-     }
+
+
+Card *CardList::minInSuit (int aSuit) const {
+  Card *res = 0;
+  foreach (Card *c, mList) {
+    if (!c) continue;
+    if (aSuit > 0 && c->suit() != aSuit) continue;
+    if (!res || res->face() > c->face()) res = c;
   }
-  if (!first)   return tmp1;
-  return NULL;
+  return res;
 }
-//----------------------------------------------------------------------
-int CardList::AllCard( int _CMast ) {
-  int j=0;
-  for (int i = 0; i < aLimit; i++) {
-      Card *card = (Card *) this->items[i];
-      if (card && card->suit()==_CMast) {
-        j++;
-      }
+
+
+Card * CardList::maxInSuit (int aSuit) const {
+  Card *res = 0;
+  foreach (Card *c, mList) {
+    if (!c) continue;
+    if (aSuit > 0 && c->suit() != aSuit) continue;
+    if (!res || res->face() < c->face()) res = c;
   }
-  return j;
+  return res;
 }
-//----------------------------------------------------------------------
-int CardList::AllCard( void) {
-  int j=0;
-  for (int i = 0; i < aLimit; i++) {
-      Card *card = (Card *) this->items[i];
-      if ( card )
-        j++;
-  }
-  return j;
+
+
+int CardList::cardsInSuit (int aSuit) const {
+  int res = 0;
+  foreach (Card *c, mList) if (c && c->suit() == aSuit) res++;
+  return res;
+}
+
+
+int CardList::count () const {
+  int res = 0;
+  foreach (Card *c, mList) if (c) res++;
+  return res;
 }
 
 
 void CardList::mySort () {
-  void **newi = new void *[aLimit];
-  // count, copy and compress
-  int cnt = 0;
-  // copy
-  for (int f = 0; f < aLimit; f++) {
-    if (items[f]) newi[cnt++] = items[f];
-  }
-  // clear
-  for (int f = cnt; f < aLimit; f++) newi[f] = 0;
-  delete items;
-  items = newi; aCount = cnt;
+  //removeNulls();
+  int cnt = mList.size();
   // bubble sort
   for (int f = 0; f < cnt; f++) {
     for (int c = cnt-1; c > f; c--) {
-      Card *cf, *cc;
-      cf = (Card *)items[f];
-      cc = (Card *)items[c];
-      int r = (cf->suit())-(cc->suit());
-      if (!r) r = (cc->face())-(cf->face());
-      if (r > 0) {
-        // swap
-        void *t = items[f];
-        items[f] = items[c];
-        items[c] = t;
+      Card *cf = mList[f], *cc = mList[c];
+      if (cf || cc) {
+        int r = 0;
+        if (cf && cc) {
+          r = (cf->suit())-(cc->suit());
+          if (!r) r = (cc->face())-(cf->face());
+        } else if (!cf) r = 1; // so nulls will go down
+        if (r > 0) mList.swap(f, c);
+      } else {
+        // both empty
       }
     }
   }
-/*
-  int j=0;
-  int m;
-  Card *c1=NULL;
-  void **anewitems = new void *[aLimit];
-  for  ( int i=0;i<aLimit;i++ )
-    anewitems[i]= NULL;
-  for ( m=1;m<=3;m=m+2) {
-    for (int c=FACE_ACE;c>=7;c--) {
-      if ( (c1 = Exist(c,m))!=NULL ) {
-        anewitems[j++] = c1;
-        //items[IndexOf(c1)] = NULL;
-      }
-    }
-  }
-
-  for (m=2;m<=4;m=m+2) {
-    for (int c=FACE_ACE;c>=7;c--) {
-      if ( (c1 = Exist(c,m))!=NULL ) {
-        anewitems[j++] = c1;
-        //items[IndexOf(c1)] = NULL;
-      }
-    }
-  }
-
-  delete items;
-  items = anewitems;
-*/
-/*  int j=0;
-  Card *c1=NULL;
-  void **anewitems = new void *[aLimit];
-  for  ( int i=0;i<aLimit;i++ )
-    anewitems[i]= NULL;
-  for (int m=1;m<=4;m++) {
-    for (int c=7;c<=FACE_ACE;c++) {
-      if ( (c1 = Exist(c,m))!=NULL ) {
-        anewitems[j++] = c1;
-//        items[IndexOf(c1)] = NULL;
-      }
-    }
-  }
-  delete items;
-  items = anewitems;*/
 }
 
 
-Card * CardList::MoreThan( int _CName, int _CMast ) {
-  if ( _CName==FACE_ACE ) return NULL;
-  for(int i=_CName;i<=FACE_ACE;i++) {
-    if(Exist(i,_CMast )) {
-       return Exist(i,_CMast );
-    }
-  }
-  return NULL;
-}
-//----------------------------------------------------------------------
-Card * CardList::LessThan( int _CName, int _CMast ) {
-  if ( _CName==7 ) return NULL;
-  for(int i=_CName;i>=7;i--) {
-    if(Exist(i,_CMast )) {
-       return Exist(i,_CMast );
-    }
-  }
-  return NULL;
-}
-//----------------------------------------------------------------------
-Card * CardList::MoreThan( Card *card ) {
-  if ( card ) {
-      if ( card->face()==FACE_ACE ) return NULL;
-      for(int i=card->face();i<=FACE_ACE;i++) {
-        if(Exist(i,card->suit() )) {
-           return Exist(i,card->suit() );
-        }
-      }
-  }
-
-  return NULL;
-}
-//----------------------------------------------------------------------
-Card * CardList::LessThan( Card *card ) { //первая меньше чем переданная
-  if ( card ) {
-      if (card-> face()==7 ) return NULL;
-      for(int i=card-> face();i>=7;i--) {
-        if(Exist(i,card-> suit() )) {
-           return Exist(i,card->suit() );
-        }
-      }
-  }
-  return NULL;
-}
-//----------------------------------------------------------------------
-int CardList::EmptyMast(int _CMast) {
-  for ( int i = 1;i<=4;i++ ) {
-    if ( i==_CMast ) continue; //k8:bug? break;
-    if ( ! AllCard(_CMast) ) return i;
+Card *CardList::greaterInSuit (int aFace, int aSuit) const {
+  if (aFace >= FACE_ACE) return 0;
+  if (aFace < 7) aFace = 7;
+  while (aFace <= FACE_ACE) {
+    Card *found = exists(aFace, aSuit);
+    if (found) return found;
+    aFace++;
   }
   return 0;
 }
-//----------------------------------------------------------------------
-Card * CardList::FirstCard(void) {
-  return (Card *)FirstItem();
 
+
+Card *CardList::greaterInSuit (Card *card) const {
+  if (!card) return 0;
+  return greaterInSuit(card->face(), card->suit());
 }
-//----------------------------------------------------------------------
-Card * CardList::LastCard(void) {
-  return (Card *)LastItem();
+
+
+Card *CardList::lesserInSuit (int aFace, int aSuit) const {
+  if (aFace <= 7) return 0;
+  if (aFace > FACE_ACE) aFace = FACE_ACE;
+  while (aFace <= 7) {
+    Card *found = exists(aFace, aSuit);
+    if (found) return found;
+    aFace--;
+  }
+  return 0;
 }
-//----------------------------------------------------------------------
-Card * CardList::NextCard(void *PTCard) {
-  return (Card *) NextItem( IndexOf(PTCard) );
+
+
+//первая меньше чем переданная
+Card *CardList::lesserInSuit (Card *card) const {
+  if (!card) return 0;
+  return lesserInSuit(card->face(), card->suit());
 }
-//----------------------------------------------------------------------
-Card * CardList::NextCard(int _nIndex) {
-  return (Card *) NextItem(_nIndex);
+
+
+bool CardList::hasSuit (int aSuit) const {
+  foreach (Card *c, mList) {
+    if (c && c->suit() == aSuit) return true;
+  }
+  return false;
 }
-//----------------------------------------------------------------------
-void CardList::AssignMast(Tclist *_oldlist,eSuit Mast) { // Assign only selected mast from oldlist
+
+
+int CardList::emptySuit (int aSuit) const {
+  for (int f = 1; f <= 4; f++) {
+    if (f == aSuit) continue; //k8:bug? break;
+    if (!hasSuit(aSuit)) return f;
+  }
+  return 0;
+}
+
+
+void CardList::copySuit (const CardList *src, eSuit aSuit) {
+  // remove existing cards
+  QMutableListIterator<Card *> i(mList);
+  while (i.hasNext()) {
+    Card *c = i.next();
+    if (c->suit() == (int)aSuit) i.remove();
+  }
+  // copy cards
+  foreach (Card *c, src->mList) {
+    if (c && c->suit() == (int)aSuit) mList << c;
+  }
+/*
   Card *card;
-  for ( int i = 0;i < _oldlist -> aLimit;i++ )  {
-    card =(Card* ) _oldlist ->At(i);
+  for ( int f = 0;f < _oldlist -> aLimit;f++ )  {
+    card =(Card* ) _oldlist ->At(f);
     if ( card && card -> suit()==Mast)  {
-        Insert(card);
+        append(card);
     }
   }
+*/
 }
-//----------------------------------------------------------------------
+
+
+void CardList::shallowCopy (CardList *list) {
+  clear();
+  foreach (Card *c, list->mList) mList << c;
+}

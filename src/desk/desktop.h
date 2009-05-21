@@ -45,7 +45,7 @@ signals:
 
 public:
   TDeskView *DeskView;
-  Deck *Coloda;
+  Deck *deck;
   QList<Player *> mPlayers;
   Tncounter nCurrentStart,nCurrentMove;
   Card *FirstCard,*SecondCard,*TherdCard;

@@ -3,44 +3,74 @@
 #define CARDLIST_H
 
 #include "prfconst.h"
-#include "ctlist.h"
 #include "card.h"
 
 
-typedef struct {
-  int m;
-  int l;
-  int v;
-} TMParam;
-//масть длинна взятки
+// doesn't own the cards
+class CardList {
+public:
+  CardList ();
+  ~CardList ();
 
-class  CardList : public Tclist {
-    public:
-        CardList(int _Limit);
-        ~CardList ();
-//        ~CardList();
-        void   mySort(void);
-        Card * Exist( int _CName, int _CMast );
-        Card * Exist( int PackedName );
-        Card * MinCard( int _CMast );
-        Card * MaxCard( int _CMast );
-        Card * MinCard( void );
-        Card * MaxCard( void );
-        Card * MoreThan( int _CName, int _CMast ); //первая больше чем переданная
-        Card * LessThan( int _CName, int _CMast ); //первая меньше чем переданная
-        Card * MoreThan( Card *card ); //первая больше чем переданная
-        Card * LessThan( Card *card ); //первая меньше чем переданная
-        Card * FirstCard(void);
-        Card * LastCard(void);
-        Card * NextCard(void *);
-        Card * NextCard(int _nIndex);
-        void AssignMast(Tclist *_oldlist,eSuit Mast); // Assign only selected mast from oldlist
+  virtual void clear ();
 
+  void mySort ();
+  Card *exists (int aFace, int aSuit) const;
+  Card *exists (int aPacked) const;
+  Card *exists (const Card &cc) const;
 
-        int AllCard( int _CMast );
-        int AllCard(void);
-        int EmptyMast(int _CMast);                        //возврат масти (за исключение данной) в которой нет карт
+  Card *minInSuit (int aSuit) const;
+  Card *maxInSuit (int aSuit) const;
+  Card *minCard () const;
+  Card *maxCard () const;
 
+  bool hasSuit (int aSuit) const;
+
+  Card *greaterInSuit (int aFace, int aSuit) const; //первая больше чем переданная
+  Card *lesserInSuit (int aFace, int aSuit) const; //первая меньше чем переданная
+  Card *greaterInSuit (Card *card) const; //первая больше чем переданная
+  Card *lesserInSuit (Card *card) const; //первая меньше чем переданная
+
+  void copySuit (const CardList *src, eSuit aSuit); // copy only selected suit
+
+  int cardsInSuit (int aSuit) const;
+  int count () const;
+  int emptySuit (int aSuit) const; //возврат масти (за исключение данной) в которой нет карт
+
+  inline Card *at (int idx) const {
+    if (idx < 0 || idx >= mList.size()) return 0;
+    return mList[idx];
+  }
+  inline void putAt (int idx, Card *c) {
+    if (idx < 0) return;
+    while (idx >= mList.size()) mList.append(0);
+    mList[idx] = c;
+  }
+  inline void removeAt (int idx) { if (idx >= 0 && idx < mList.size()) mList[idx] = 0; }
+  inline void remove (Card *c) { removeAt(mList.indexOf(c)); }
+  inline int append (Card *c) {
+    int idx = mList.indexOf(0);
+    if (idx < 0) {
+      idx = mList.size();
+      mList << c;
+    } else mList[idx] = c;
+    return idx;
+  }
+  inline void free (Card *c) {
+    int idx = mList.indexOf(c);
+    if (idx >= 0) {
+      mList[idx] = 0;
+      delete c;
+    }
+  }
+  inline int size () const { return mList.size(); }
+  virtual void shallowCopy (CardList *list);
+
+protected:
+  void removeNulls ();
+
+protected:
+  QCardList mList;
 };
 
 
