@@ -170,9 +170,9 @@ tGameBid GamesTypeByName (const QString &s) {
 }
 //----------------------------------------------------------------------
 int Card2Int(void *vCard) {
-        TCard *Card = (TCard*) vCard;
-        if (Card)
-                return Card -> CName*10 + Card -> CMast;
+        Card *card = (Card*) vCard;
+        if (card)
+                return card -> CName*10 + card -> CMast;
         return -1;
 }
 //----------------------------------------------------------------------

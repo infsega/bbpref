@@ -10,7 +10,7 @@
 TColoda::TColoda (int _Limit) : TCardList(_Limit) {
   for (int m = 1; m <= 4; m++) {
     for (int k = 7; k <= FACE_ACE; k++) {
-      TCard *nc = new TCard(k, m);
+      Card *nc = new Card(k, m);
       Insert(nc);
     }
   }

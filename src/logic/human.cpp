@@ -41,12 +41,6 @@ tGameBid HumanPlayer::makemove (tGameBid lMove, tGameBid rMove) {
   if (qMax(lMove, rMove) != gtPass) formBid->DisableLessThan(qMax(lMove, rMove));
   if (GamesType != undefined) formBid->disableGames(g86);
   formBid->disableGames(vist);
-  if (lMove == g61 && rMove == gtPass) {
-    // сталинград
-    formBid->disableGames(gtPass);
-  } else {
-    formBid->EnableGames(gtPass);
-  }
   formBid->showbullet->setEnabled(TRUE);
   formBid->bgetback->setEnabled(FALSE);
 
@@ -64,7 +58,6 @@ tGameBid HumanPlayer::makemove (tGameBid lMove, tGameBid rMove) {
       kpref->slotShowScore();
     }
   } while (tmpGamesType <= 1);
-  formBid->EnableGames(gtPass); // возвернём сталинградское
   GamesType = tmpGamesType;
   WaitForMouse = 0;
   formBid->EnableAll();
@@ -73,11 +66,11 @@ tGameBid HumanPlayer::makemove (tGameBid lMove, tGameBid rMove) {
 
 
 //ход
-TCard *HumanPlayer::makemove (TCard *lMove, TCard *rMove, Player *aLeftGamer, Player *aRightGamer) {
+Card *HumanPlayer::makemove (Card *lMove, Card *rMove, Player *aLeftGamer, Player *aRightGamer) {
   Q_UNUSED(aLeftGamer)
   Q_UNUSED(aRightGamer)
 
-  TCard *RetVal = 0;
+  Card *RetVal = 0;
   X = Y = 0;
   WaitForMouse = 1;
   Repaint();
@@ -90,9 +83,9 @@ TCard *HumanPlayer::makemove (TCard *lMove, TCard *rMove, Player *aLeftGamer, Pl
       continue;
     }
     //qDebug() << "selected:" << cNo << "X:" << X << "Y:" << Y;
-    TCard *Validator;
+    Card *Validator;
     int koz = nGetKoz();
-    Validator = RetVal = (TCard *)aCards->At(cNo);
+    Validator = RetVal = (Card *)aCards->At(cNo);
     if (lMove || rMove) {
       Validator = lMove ? lMove : rMove;
     }
@@ -166,6 +159,9 @@ tGameBid HumanPlayer::makemove (tGameBid MaxGame, int HaveAVist, int nGamerVist)
   if (MaxGame == g86) {
     GamesType = g86catch;
   } else {
+    // сталинград?
+    if (g61stalingrad && MaxGame == g61) formBid->disableGames(gtPass);
+    else formBid->EnableGames(gtPass);
     formBid->DisalbeAll();
     formBid->EnableGames(gtPass);
     formBid->EnableGames(vist);

@@ -9,34 +9,34 @@ TCardList::TCardList(int _Limit) : Tclist(_Limit) {
 
 TCardList::~TCardList () {
   for (int f = aLimit-1; f >= 0; f--) {
-    TCard *item = (TCard *)items[f];
+    Card *item = (Card *)items[f];
     if (item) delete item;
   }
 }
 
 
 //----------------------------------------------------------------------
-TCard * TCardList::Exist( int PackedName ) {
+Card * TCardList::Exist( int PackedName ) {
   int CName = PackedName/10,CMast;
   CMast = PackedName - CName*10;
   return Exist(CName,CMast);
 }
 //----------------------------------------------------------------------
-TCard * TCardList::Exist( int _CName, int _CMast ) {
-  TCard *Card=NULL;
+Card * TCardList::Exist( int _CName, int _CMast ) {
+  Card *card=NULL;
   for (int i = 0; i < aLimit; i++) {
-        Card = (TCard *) At(i);
-        if ( Card && (Card -> CName == _CName && Card -> CMast== _CMast))
-             return Card;
+        card = (Card *) At(i);
+        if ( card && (card -> CName == _CName && card -> CMast== _CMast))
+             return card;
   }
   return NULL;
 }
 //----------------------------------------------------------------------
-TCard * TCardList::MinCard( void ) {
-  TCard *tmp1=NULL,*tmp2=NULL;
+Card * TCardList::MinCard( void ) {
+  Card *tmp1=NULL,*tmp2=NULL;
   char first=1;
   for (int i = 0; i < aLimit; i++) {
-      tmp2 = (TCard *)this -> items[i];
+      tmp2 = (Card *)this -> items[i];
       if (tmp2) {
       if (first) {
         first = !first;
@@ -51,11 +51,11 @@ TCard * TCardList::MinCard( void ) {
   return NULL;
 }
 //----------------------------------------------------------------------
-TCard * TCardList::MaxCard( void ) {
-  TCard *tmp1=NULL,*tmp2=NULL;
+Card * TCardList::MaxCard( void ) {
+  Card *tmp1=NULL,*tmp2=NULL;
   char first=1;
   for (int i = 0; i < aLimit; i++) {
-      tmp2 = (TCard *)this -> items[i];
+      tmp2 = (Card *)this -> items[i];
       if (tmp2) {
          if (first) {
             first = !first;
@@ -70,11 +70,11 @@ TCard * TCardList::MaxCard( void ) {
   return NULL;
 }
 //----------------------------------------------------------------------
-TCard * TCardList::MinCard( int _CMast ) {
-  TCard *tmp1=NULL,*tmp2=NULL;
+Card * TCardList::MinCard( int _CMast ) {
+  Card *tmp1=NULL,*tmp2=NULL;
   char first=1;
   for (int i = 0; i < aLimit; i++) {
-      tmp2 = (TCard *)this -> items[i];
+      tmp2 = (Card *)this -> items[i];
       if (tmp2!=NULL && tmp2->CMast==_CMast) {
         if (first) {
           first = !first;
@@ -89,11 +89,11 @@ TCard * TCardList::MinCard( int _CMast ) {
   return NULL;
 }
 //----------------------------------------------------------------------
-TCard * TCardList::MaxCard( int _CMast ) {
-  TCard *tmp1=NULL,*tmp2=NULL;
+Card * TCardList::MaxCard( int _CMast ) {
+  Card *tmp1=NULL,*tmp2=NULL;
   char first=1;
   for (int i = 0; i < aLimit; i++) {
-    tmp2 = (TCard *)this->items[i];
+    tmp2 = (Card *)this->items[i];
     if (tmp2!=NULL && tmp2->CMast==_CMast) {
       if (first) {
         first = !first;
@@ -111,8 +111,8 @@ TCard * TCardList::MaxCard( int _CMast ) {
 int TCardList::AllCard( int _CMast ) {
   int j=0;
   for (int i = 0; i < aLimit; i++) {
-      TCard *Card = (TCard *) this->items[i];
-      if (Card && Card->CMast==_CMast) {
+      Card *card = (Card *) this->items[i];
+      if (card && card->CMast==_CMast) {
         j++;
       }
   }
@@ -122,8 +122,8 @@ int TCardList::AllCard( int _CMast ) {
 int TCardList::AllCard( void) {
   int j=0;
   for (int i = 0; i < aLimit; i++) {
-      TCard *Card = (TCard *) this->items[i];
-      if ( Card )
+      Card *card = (Card *) this->items[i];
+      if ( card )
         j++;
   }
   return j;
@@ -145,9 +145,9 @@ void TCardList::mySort () {
   // bubble sort
   for (int f = 0; f < cnt; f++) {
     for (int c = cnt-1; c > f; c--) {
-      TCard *cf, *cc;
-      cf = (TCard *)items[f];
-      cc = (TCard *)items[c];
+      Card *cf, *cc;
+      cf = (Card *)items[f];
+      cc = (Card *)items[c];
       int r = (cf->CMast)-(cc->CMast);
       if (!r) r = (cc->CName)-(cf->CName);
       if (r > 0) {
@@ -161,7 +161,7 @@ void TCardList::mySort () {
 /*
   int j=0;
   int m;
-  TCard *c1=NULL;
+  Card *c1=NULL;
   void **anewitems = new void *[aLimit];
   for  ( int i=0;i<aLimit;i++ )
     anewitems[i]= NULL;
@@ -187,7 +187,7 @@ void TCardList::mySort () {
   items = anewitems;
 */
 /*  int j=0;
-  TCard *c1=NULL;
+  Card *c1=NULL;
   void **anewitems = new void *[aLimit];
   for  ( int i=0;i<aLimit;i++ )
     anewitems[i]= NULL;
@@ -204,7 +204,7 @@ void TCardList::mySort () {
 }
 
 
-TCard * TCardList::MoreThan( int _CName, int _CMast ) {
+Card * TCardList::MoreThan( int _CName, int _CMast ) {
   if ( _CName==FACE_ACE ) return NULL;
   for(int i=_CName;i<=FACE_ACE;i++) {
     if(Exist(i,_CMast )) {
@@ -214,7 +214,7 @@ TCard * TCardList::MoreThan( int _CName, int _CMast ) {
   return NULL;
 }
 //----------------------------------------------------------------------
-TCard * TCardList::LessThan( int _CName, int _CMast ) {
+Card * TCardList::LessThan( int _CName, int _CMast ) {
   if ( _CName==7 ) return NULL;
   for(int i=_CName;i>=7;i--) {
     if(Exist(i,_CMast )) {
@@ -224,12 +224,12 @@ TCard * TCardList::LessThan( int _CName, int _CMast ) {
   return NULL;
 }
 //----------------------------------------------------------------------
-TCard * TCardList::MoreThan( TCard *Card ) {
-  if ( Card ) {
-      if ( Card->CName==FACE_ACE ) return NULL;
-      for(int i=Card->CName;i<=FACE_ACE;i++) {
-        if(Exist(i,Card->CMast )) {
-           return Exist(i,Card->CMast );
+Card * TCardList::MoreThan( Card *card ) {
+  if ( card ) {
+      if ( card->CName==FACE_ACE ) return NULL;
+      for(int i=card->CName;i<=FACE_ACE;i++) {
+        if(Exist(i,card->CMast )) {
+           return Exist(i,card->CMast );
         }
       }
   }
@@ -237,12 +237,12 @@ TCard * TCardList::MoreThan( TCard *Card ) {
   return NULL;
 }
 //----------------------------------------------------------------------
-TCard * TCardList::LessThan( TCard *Card ) { //первая меньше чем переданная
-  if ( Card ) {
-      if (Card-> CName==7 ) return NULL;
-      for(int i=Card-> CName;i>=7;i--) {
-        if(Exist(i,Card-> CMast )) {
-           return Exist(i,Card->CMast );
+Card * TCardList::LessThan( Card *card ) { //первая меньше чем переданная
+  if ( card ) {
+      if (card-> CName==7 ) return NULL;
+      for(int i=card-> CName;i>=7;i--) {
+        if(Exist(i,card-> CMast )) {
+           return Exist(i,card->CMast );
         }
       }
   }
@@ -257,29 +257,29 @@ int TCardList::EmptyMast(int _CMast) {
   return 0;
 }
 //----------------------------------------------------------------------
-TCard * TCardList::FirstCard(void) {
-  return (TCard *)FirstItem();
+Card * TCardList::FirstCard(void) {
+  return (Card *)FirstItem();
 
 }
 //----------------------------------------------------------------------
-TCard * TCardList::LastCard(void) {
-  return (TCard *)LastItem();
+Card * TCardList::LastCard(void) {
+  return (Card *)LastItem();
 }
 //----------------------------------------------------------------------
-TCard * TCardList::NextCard(void *PTCard) {
-  return (TCard *) NextItem( IndexOf(PTCard) );
+Card * TCardList::NextCard(void *PTCard) {
+  return (Card *) NextItem( IndexOf(PTCard) );
 }
 //----------------------------------------------------------------------
-TCard * TCardList::NextCard(int _nIndex) {
-  return (TCard *) NextItem(_nIndex);
+Card * TCardList::NextCard(int _nIndex) {
+  return (Card *) NextItem(_nIndex);
 }
 //----------------------------------------------------------------------
 void TCardList::AssignMast(Tclist *_oldlist,TMast Mast) { // Assign only selected mast from oldlist
-  TCard *Card;
+  Card *card;
   for ( int i = 0;i < _oldlist -> aLimit;i++ )  {
-    Card =(TCard* ) _oldlist ->At(i);
-    if ( Card && Card -> CMast==Mast)  {
-        Insert(Card);
+    card =(Card* ) _oldlist ->At(i);
+    if ( card && card -> CMast==Mast)  {
+        Insert(card);
     }
   }
 }

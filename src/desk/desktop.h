@@ -20,7 +20,7 @@ public:
   Player *InsertGamer (Player *);
   void RunGame ();
   void Repaint ();
-  int nPlayerTakeCards (TCard *p1, TCard *p2, TCard *p3, int koz);
+  int nPlayerTakeCards (Card *p1, Card *p2, Card *p3, int koz);
   void ShowPaper ();
   int SaveGame (const QString &name);
   int LoadGame (const QString &name);
@@ -47,8 +47,8 @@ public:
   TColoda *Coloda;
   Tclist  *Gamers;
   Tncounter nCurrentStart,nCurrentMove;
-  TCard *FirstCard,*SecondCard,*TherdCard;
-  TCard *CardOnDesk[4];
+  Card *FirstCard,*SecondCard,*TherdCard;
+  Card *CardOnDesk[4];
 
   //int nBuletScore;
   int nflShowPaper;
@@ -59,11 +59,11 @@ private:
   //void replace (char *, char, char);
   Player *GetGamerByNum (int);
   int GetGamerWithMaxBullet (); // exept closed gamers
-  TCard *ControlingMakemove (TCard *, TCard *);
-  TCard *PipeMakemove (TCard *lMove, TCard *rMove);
+  Card *ControlingMakemove (Card *, Card *);
+  Card *PipeMakemove (Card *lMove, Card *rMove);
   void GamerAssign (Player *, Player *);
 
-  void drawInGameCard (int mPlayerNo, TCard *Card);
+  void drawInGameCard (int mPlayerNo, Card *card);
 
 private:
   bool mPlayingRound;

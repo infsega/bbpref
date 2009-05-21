@@ -8,16 +8,16 @@
 #define FACE_ACE    14
 
 //---------------------------------------------------------------------------
-class TCard {
+class Card {
 public:
         int CName;      //от 7,8,9,10,11j,12q,13k,14a
         int CMast;      //от 1 до 4
 //        char MyVz;      // Должна быть взтка
         void SetCard( int _CName, int _CMast ); // Имя карты. масть
-        TCard( int _CName, int _CMast );
-        ~TCard();
-        friend int operator > (TCard &,TCard &);
-        friend int operator < (TCard &,TCard &);
+        Card( int _CName, int _CMast );
+        ~Card();
+        friend int operator > (Card &,Card &);
+        friend int operator < (Card &,Card &);
 
 };
 

@@ -285,7 +285,7 @@ void TDeskView::ClearBox (int x1, int y1, int x2, int y2) {
 }
 
 
-void TDeskView::drawCard (TCard *card, int x, int y, bool opened, bool hilight) {
+void TDeskView::drawCard (Card *card, int x, int y, bool opened, bool hilight) {
   char cCardName[16];
 
   if (!mDeskBmp) return;

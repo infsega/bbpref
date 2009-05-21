@@ -16,7 +16,7 @@ public:
   HumanPlayer (int _nGamer, TDeskView *_DeskView);
   tGameBid makeout4game (); // после сноса чего играем
   tGameBid makeout4miser ();
-  TCard *makemove (TCard *lMove, TCard *rMove, Player *aLeftGamer, Player *aRightGamer); //ход
+  Card *makemove (Card *lMove, Card *rMove, Player *aLeftGamer, Player *aRightGamer); //ход
   tGameBid makemove (tGameBid lMove, tGameBid rMove); //ход при торговле
   tGameBid makemove (tGameBid MaxGame, int HaveAVist, int nGamerVist); // после получения игроком прикупа - пасс или вист
 

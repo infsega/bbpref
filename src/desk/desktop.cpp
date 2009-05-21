@@ -198,7 +198,7 @@ void TDeskTop::GamerAssign (Player *newgamer,Player *oldgamer) {
 }
 
 
-TCard *TDeskTop::PipeMakemove (TCard *lMove, TCard *rMove) {
+Card *TDeskTop::PipeMakemove (Card *lMove, Card *rMove) {
   return (GetGamerByNum(nCurrentMove.nValue))->
     makemove(lMove, rMove, GetGamerByNum(NextGamer(nCurrentMove)), GetGamerByNum(PrevGamer(nCurrentMove)));
 }
@@ -207,8 +207,8 @@ TCard *TDeskTop::PipeMakemove (TCard *lMove, TCard *rMove) {
 // ежели номер не 1 и игра пас или (ловля мизера и игрок не сетевой),
 // то пораждаем нового HumanPlayer с номером текущего
 // ежели номер 1 и игра пас и не сетевая игра то порождаем Player
-TCard *TDeskTop::ControlingMakemove (TCard *lMove, TCard *rMove) {
-  TCard *RetVal = NULL;
+Card *TDeskTop::ControlingMakemove (Card *lMove, Card *rMove) {
+  Card *RetVal = NULL;
   Player *Now = GetGamerByNum(nCurrentMove.nValue);
 
   if ((GetGamerByNum(1)->GamesType == vist || GetGamerByNum(1)->GamesType == g86catch) &&
@@ -240,7 +240,7 @@ TCard *TDeskTop::ControlingMakemove (TCard *lMove, TCard *rMove) {
 void TDeskTop::RunGame () {
   tGameBid GamesType[4];
   //char *filename;
-  //TCard *FirstCard, *SecondCard, *TherdCard;
+  //Card *FirstCard, *SecondCard, *TherdCard;
   int npasscounter;
   //DeskView->ClearScreen();
   if (flProtocol) OpenProtocol();
@@ -266,8 +266,8 @@ void TDeskTop::RunGame () {
     // сдали карты
     for (int i = 0; i < CARDINCOLODA-2; i++) {
       Player *tmpGamer = GetGamerByNum(GamersCounter.nValue);
-      if (!(Coloda->At(i))) DeskView->MessageBox("TCard = NULL", "Error!!!");
-      tmpGamer->AddCard((TCard *)Coloda->At(i));
+      if (!(Coloda->At(i))) DeskView->MessageBox("Card = NULL", "Error!!!");
+      tmpGamer->AddCard((Card *)Coloda->At(i));
       ++GamersCounter;
     }
     Repaint();
@@ -325,19 +325,24 @@ void TDeskTop::RunGame () {
         if (tmpg->GamesType == GamesType[0]) {
           mPlayerActive = i;
           nPassCounter = 0;
+          // показываем прикуп
           Tncounter tmpGamersCounter(1, 3);
           Player *PassOrVistGamers;
           int PassOrVist = 0, nPassOrVist = 0;
-          CardOnDesk[2] = (TCard *)Coloda->At(30);
-          CardOnDesk[3] = (TCard *)Coloda->At(31);
+          CardOnDesk[2] = (Card *)Coloda->At(30);
+          CardOnDesk[3] = (Card *)Coloda->At(31);
           sprintf(ProtocolBuff, "Get cards %i %i for %i game", Card2Int(CardOnDesk[2]), Card2Int(CardOnDesk[3]), GamesType[0]);
           WriteProtocol(ProtocolBuff);
+          // извращение с CurrentGame -- для того, чтобы показало игру на bidboard
+          //!tGameBid oc = CurrentGame;
+          CurrentGame = GamesType[0];
           Repaint();
           //emitRepaint();
           DeskView->mySleep(-1);
+          //!CurrentGame = oc; // вернём CurrentGame на место -- на всякий случай
           // запихиваем ему прикуп
-          tmpg->AddCard((TCard *)Coloda->At(30));
-          tmpg->AddCard((TCard *)Coloda->At(31));
+          tmpg->AddCard((Card *)Coloda->At(30));
+          tmpg->AddCard((Card *)Coloda->At(31));
           CardOnDesk[2] = CardOnDesk[3] = NULL;
           nGamernumber = tmpg->mPlayerNo;
           //DeskView->ClearScreen();
@@ -435,10 +440,10 @@ void TDeskTop::RunGame () {
       CardOnDesk[0] = CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = FirstCard = SecondCard = TherdCard = NULL;
       if (CurrentGame == raspass && (i >= 1 && i <= 3)) nCurrentMove = nCurrentStart;
       if (CurrentGame == raspass && (i == 1 || i == 2)) {
-        TCard *tmp4show;
-        TCard *ptmp4rpass;
-        tmp4show = (TCard *)Coloda->At(29+i);
-        ptmp4rpass = new TCard(1, tmp4show->CMast);
+        Card *tmp4show;
+        Card *ptmp4rpass;
+        tmp4show = (Card *)Coloda->At(29+i);
+        ptmp4rpass = new Card(1, tmp4show->CMast);
         CardOnDesk[0] = tmp4show;
         //drawInGameCard(0, CardOnDesk[0]);
         Repaint();
@@ -568,8 +573,8 @@ int TDeskTop::GetGamerWithMaxBullet(void) {
 }
 
 
-int TDeskTop::nPlayerTakeCards (TCard *p1, TCard *p2, TCard *p3, int koz) {
-  TCard *Max = p1;
+int TDeskTop::nPlayerTakeCards (Card *p1, Card *p2, Card *p3, int koz) {
+  Card *Max = p1;
   int nRelVal = 1;
   if ((Max->CMast == p2->CMast && Max->CName < p2->CName) || (Max->CMast != koz && p2->CMast == koz)) {
     Max = p2;
@@ -694,7 +699,7 @@ int TDeskTop::SaveGame (const QString &name)  {
 
 
 // draw ingame card (the card that is in game, not in hand)
-void TDeskTop::drawInGameCard (int mPlayerNo, TCard *card) {
+void TDeskTop::drawInGameCard (int mPlayerNo, Card *card) {
   if (!card) return;
   int w = DeskView->DesktopWidht/2, h = DeskView->DesktopHeight/2;
   int x = w, y = h;

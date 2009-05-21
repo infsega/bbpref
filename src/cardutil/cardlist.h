@@ -20,20 +20,20 @@ class  TCardList : public Tclist {
         ~TCardList ();
 //        ~TCardList();
         void   mySort(void);
-        TCard * Exist( int _CName, int _CMast );
-        TCard * Exist( int PackedName );
-        TCard * MinCard( int _CMast );
-        TCard * MaxCard( int _CMast );
-        TCard * MinCard( void );
-        TCard * MaxCard( void );
-        TCard * MoreThan( int _CName, int _CMast ); //первая больше чем переданная
-        TCard * LessThan( int _CName, int _CMast ); //первая меньше чем переданная
-        TCard * MoreThan( TCard *Card ); //первая больше чем переданная
-        TCard * LessThan( TCard *Card ); //первая меньше чем переданная
-        TCard * FirstCard(void);
-        TCard * LastCard(void);
-        TCard * NextCard(void *);
-        TCard * NextCard(int _nIndex);
+        Card * Exist( int _CName, int _CMast );
+        Card * Exist( int PackedName );
+        Card * MinCard( int _CMast );
+        Card * MaxCard( int _CMast );
+        Card * MinCard( void );
+        Card * MaxCard( void );
+        Card * MoreThan( int _CName, int _CMast ); //первая больше чем переданная
+        Card * LessThan( int _CName, int _CMast ); //первая меньше чем переданная
+        Card * MoreThan( Card *card ); //первая больше чем переданная
+        Card * LessThan( Card *card ); //первая меньше чем переданная
+        Card * FirstCard(void);
+        Card * LastCard(void);
+        Card * NextCard(void *);
+        Card * NextCard(int _nIndex);
         void AssignMast(Tclist *_oldlist,TMast Mast); // Assign only selected mast from oldlist
 
 
