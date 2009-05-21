@@ -9,7 +9,7 @@ class TPlScore {
 public:
    TPlScore ();
    ~TPlScore ();
-   int AddRecords (tGameBid aGamerType, tGameBid aMyType, int nGamerVz, int nMyVz, int nGamer, int myNumber, int nqVist);
+   int AddRecords (eGameBid aGamerType, eGameBid aMyType, int nGamerVz, int nMyVz, int nGamer, int myNumber, int nqVist);
    Tclist *Bullet;
    Tclist *Mountan;
    Tclist *LeftVists;

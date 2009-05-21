@@ -32,8 +32,8 @@ void FormBid::showEvent (QShowEvent *event) {
 void FormBid::slotPushButtonClick86 () { _GamesType = g86; accept(); }
 void FormBid::slotPushButtonClickPass () { _GamesType = gtPass; accept(); }
 void FormBid::slotPushButtonClickVist () { _GamesType = vist; accept(); }
-void FormBid::slotGetBackSnos () { _GamesType = (tGameBid)0; reject(); }
-void FormBid::slotShowBullet () { _GamesType = (tGameBid)1; reject(); }
+void FormBid::slotGetBackSnos () { _GamesType = (eGameBid)0; reject(); }
+void FormBid::slotShowBullet () { _GamesType = (eGameBid)1; reject(); }
 
 
 void FormBid::onBidClick () {
@@ -78,26 +78,26 @@ void FormBid::DisalbeAll (void) {
 }
 
 
-void FormBid::DisableLessThan (tGameBid GamesType) {
+void FormBid::DisableLessThan (eGameBid GamesType) {
   QList<QPushButton *> wList(buttonList());
   foreach (QPushButton *b, wList) {
-    if (GamesTypeByName(b->objectName()) < GamesType) b->setEnabled(false);
+    if (gameName2Type(b->objectName()) < GamesType) b->setEnabled(false);
   }
 }
 
 
-void FormBid::disableGames (tGameBid GamesType) {
+void FormBid::disableGames (eGameBid GamesType) {
   QList<QPushButton *> wList(buttonList());
   foreach (QPushButton *b, wList) {
-    if (GamesTypeByName(b->objectName()) == GamesType) b->setEnabled(false);
+    if (gameName2Type(b->objectName()) == GamesType) b->setEnabled(false);
   }
 }
 
 
-void FormBid::EnableGames (tGameBid GamesType) {
+void FormBid::EnableGames (eGameBid GamesType) {
   QList<QPushButton *> wList(buttonList());
   foreach (QPushButton *b, wList) {
-    if (GamesTypeByName(b->objectName()) == GamesType) b->setEnabled(true);
+    if (gameName2Type(b->objectName()) == GamesType) b->setEnabled(true);
   }
 }
 
@@ -112,7 +112,7 @@ void FormBid::initDialog () {
     for (int suit = 1; suit <= 5; suit++) {
       int x = (suit-1)*40+10;
       int bid = face*10+suit;
-      QBidButton *b = new QBidButton((tGameBid)bid, x, y, this);
+      QBidButton *b = new QBidButton((eGameBid)bid, x, y, this);
       connect(b, SIGNAL(clicked()), this, SLOT(onBidClick()));
     }
   }

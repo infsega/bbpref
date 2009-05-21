@@ -238,7 +238,7 @@ Card *TDeskTop::ControlingMakemove (Card *lMove, Card *rMove) {
 
 
 void TDeskTop::RunGame () {
-  tGameBid GamesType[4];
+  eGameBid GamesType[4];
   //char *filename;
   //Card *FirstCard, *SecondCard, *TherdCard;
   int npasscounter;
@@ -331,10 +331,10 @@ void TDeskTop::RunGame () {
           int PassOrVist = 0, nPassOrVist = 0;
           CardOnDesk[2] = (Card *)Coloda->At(30);
           CardOnDesk[3] = (Card *)Coloda->At(31);
-          sprintf(ProtocolBuff, "Get cards %i %i for %i game", Card2Int(CardOnDesk[2]), Card2Int(CardOnDesk[3]), GamesType[0]);
-          WriteProtocol(ProtocolBuff);
+          //!.!sprintf(ProtocolBuff, "Get cards %i %i for %i game", Card2Int(CardOnDesk[2]), Card2Int(CardOnDesk[3]), GamesType[0]);
+          //!.!WriteProtocol(ProtocolBuff);
           // извращение с CurrentGame -- для того, чтобы показало игру на bidboard
-          //!tGameBid oc = CurrentGame;
+          //!eGameBid oc = CurrentGame;
           CurrentGame = GamesType[0];
           Repaint();
           //emitRepaint();
@@ -401,8 +401,8 @@ void TDeskTop::RunGame () {
           DeskView->mySleep(1);
           if (nPassCounter == 2) {
             // двое спасовали :)
-            tmpg->nGetsCard = nGetGameCard(tmpg->GamesType);
-            sprintf(ProtocolBuff,"Two gamers said 'pass'");
+            tmpg->nGetsCard = gameTricks(tmpg->GamesType);
+            sprintf(ProtocolBuff, "Two gamers said 'pass'");
             WriteProtocol(ProtocolBuff);
             goto LabelRecordOnPaper;
           } else {
@@ -453,22 +453,22 @@ void TDeskTop::RunGame () {
       } else {
         CardOnDesk[nCurrentMove.nValue] = FirstCard = ControlingMakemove(0, 0);
       }
-      sprintf(ProtocolBuff, "First card:%i", Card2Int(FirstCard));
-      WriteProtocol(ProtocolBuff);
+      //!.!sprintf(ProtocolBuff, "First card:%i", Card2Int(FirstCard));
+      //!.!WriteProtocol(ProtocolBuff);
       Repaint();
       //emitRepaint();
       //!!!drawInGameCard(nCurrentMove.nValue, FirstCard);
       ++nCurrentMove;
       CardOnDesk[nCurrentMove.nValue] = SecondCard = ControlingMakemove(0, FirstCard);
-      sprintf(ProtocolBuff, "Second card:%i", Card2Int(SecondCard));
-      WriteProtocol(ProtocolBuff);
+      //!.!sprintf(ProtocolBuff, "Second card:%i", Card2Int(SecondCard));
+      //!.!WriteProtocol(ProtocolBuff);
       //Repaint(nCurrentMove.nValue);
       Repaint();
       //!!!drawInGameCard(nCurrentMove.nValue,SecondCard);
       ++nCurrentMove;
       CardOnDesk[nCurrentMove.nValue] = TherdCard = ControlingMakemove(FirstCard, SecondCard);
-      sprintf(ProtocolBuff,"Therd card :%i",Card2Int(TherdCard));
-      WriteProtocol(ProtocolBuff);
+      //!.!sprintf(ProtocolBuff,"Therd card :%i",Card2Int(TherdCard));
+      //!.!WriteProtocol(ProtocolBuff);
       //Repaint(nCurrentMove.nValue);
       Repaint();
       //!!!drawInGameCard(nCurrentMove.nValue,TherdCard);
@@ -761,7 +761,7 @@ void TDeskTop::Repaint () {
     Player *plr3 = GetGamerByNum(3);
     if (plr1 && plr2 && plr3) {
       DeskView->drawBidsBmp(mPlayerActive, plr1->nGetsCard, plr2->nGetsCard, plr3->nGetsCard, CurrentGame);
-      //DeskView->drawBidsBmp(int plrAct, int p0t, int p1t, int p2t, tGameBid game) {
+      //DeskView->drawBidsBmp(int plrAct, int p0t, int p1t, int p2t, eGameBid game) {
     }
   }
   // repaint scoreboard

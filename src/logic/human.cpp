@@ -33,8 +33,8 @@ void HumanPlayer::clear () {
 
 
 //ход при торговле
-tGameBid HumanPlayer::makemove (tGameBid lMove, tGameBid rMove) {
-  tGameBid tmpGamesType;
+eGameBid HumanPlayer::makemove (eGameBid lMove, eGameBid rMove) {
+  eGameBid tmpGamesType;
   WaitForMouse = 1;
 
   formBid->EnableAll();
@@ -84,7 +84,7 @@ Card *HumanPlayer::makemove (Card *lMove, Card *rMove, Player *aLeftGamer, Playe
     }
     //qDebug() << "selected:" << cNo << "X:" << X << "Y:" << Y;
     Card *Validator;
-    int koz = nGetKoz();
+    int koz = trumpSuit();
     Validator = RetVal = (Card *)aCards->At(cNo);
     if (lMove || rMove) {
       Validator = lMove ? lMove : rMove;
@@ -107,7 +107,7 @@ Card *HumanPlayer::makemove (Card *lMove, Card *rMove, Player *aLeftGamer, Playe
 
 
 // после сноса чего играем
-tGameBid HumanPlayer::makeout4miser () {
+eGameBid HumanPlayer::makeout4miser () {
   WaitForMouse = 1;
   makemove(0, 0, 0, 0);
   DeskView->mySleep(1);
@@ -118,9 +118,9 @@ tGameBid HumanPlayer::makeout4miser () {
 
 
 // после сноса чего играем
-tGameBid HumanPlayer::makeout4game () {
+eGameBid HumanPlayer::makeout4game () {
   WaitForMouse = 1;
-  tGameBid tmpGamesType;
+  eGameBid tmpGamesType;
   X = Y = 0;
   makemove(0, 0, 0, 0);
   DeskView->mySleep(1);
@@ -153,7 +153,7 @@ tGameBid HumanPlayer::makeout4game () {
 }
 
 
-tGameBid HumanPlayer::makemove (tGameBid MaxGame, int HaveAVist, int nGamerVist) {
+eGameBid HumanPlayer::makemove (eGameBid MaxGame, int HaveAVist, int nGamerVist) {
   Q_UNUSED(HaveAVist)
   Q_UNUSED(nGamerVist)
   if (MaxGame == g86) {

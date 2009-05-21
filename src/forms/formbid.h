@@ -19,9 +19,9 @@ public:
 
   void EnableAll (void);
   void DisalbeAll (void);
-  void DisableLessThan (tGameBid);
-  void disableGames (tGameBid);
-  void EnableGames (tGameBid);
+  void DisableLessThan (eGameBid);
+  void disableGames (eGameBid);
+  void EnableGames (eGameBid);
 
 public slots:
   void onBidClick (); // universal handler
@@ -39,7 +39,7 @@ protected:
   void showEvent (QShowEvent *event);
 
 public:
-  tGameBid _GamesType;
+  eGameBid _GamesType;
   QPushButton *bgetback;
   QPushButton *showbullet;
 

@@ -168,7 +168,7 @@ static int numWidth (int n) {
 }
 
 
-void TDeskView::drawGameBid (tGameBid game) {
+void TDeskView::drawGameBid (eGameBid game) {
   if (!mDeskBmp) return;
   if (game != raspass && (game < 61 || game > 105)) return; // unknown game
   QPainter p(mDeskBmp);
@@ -201,7 +201,7 @@ void TDeskView::drawGameBid (tGameBid game) {
  *  =0: nt
  * plrAct: 0-3
  */
-void TDeskView::drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, tGameBid game) {
+void TDeskView::drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game) {
   if (!mDeskBmp) return;
   QImage *i = mBidBmp;
   bidBmpX = DesktopWidht-(i->width()+8);
@@ -429,7 +429,7 @@ void TDeskView::drawRotatedText (QPainter &p, int x, int y, float angle, const Q
 }
 
 
-tGameBid TDeskView::makemove (tGameBid lMove, tGameBid rMove) {
+eGameBid TDeskView::makemove (eGameBid lMove, eGameBid rMove) {
   Q_UNUSED(lMove)
   Q_UNUSED(rMove)
   if (!formBid->exec()) qApp->quit();

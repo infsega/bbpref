@@ -11,7 +11,7 @@ int main (int argc, char *argv[]) {
   //a.setFont (QFont("helvetica", FONTSIZE));
   kpref = new Kpref();
   //!!!qApp->setMainWidget(kpref);
-  formBid = new FormBid();
+  formBid = new FormBid(kpref);
   formBid->hide();
   kpref->init();
   //kpref->showMaximized();
@@ -19,6 +19,6 @@ int main (int argc, char *argv[]) {
   //kpref->adjustDesk();
   kpref->show();
   res = a.exec();
-  delete formBid;
+  //delete formBid;
   return res;
 }

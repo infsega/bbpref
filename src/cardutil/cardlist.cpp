@@ -274,7 +274,7 @@ Card * CardList::NextCard(int _nIndex) {
   return (Card *) NextItem(_nIndex);
 }
 //----------------------------------------------------------------------
-void CardList::AssignMast(Tclist *_oldlist,TMast Mast) { // Assign only selected mast from oldlist
+void CardList::AssignMast(Tclist *_oldlist,eSuit Mast) { // Assign only selected mast from oldlist
   Card *card;
   for ( int i = 0;i < _oldlist -> aLimit;i++ )  {
     card =(Card* ) _oldlist ->At(i);

@@ -14,11 +14,11 @@ class HumanPlayer : public Player {
 public:
   HumanPlayer (int _nGamer);
   HumanPlayer (int _nGamer, TDeskView *_DeskView);
-  tGameBid makeout4game (); // после сноса чего играем
-  tGameBid makeout4miser ();
+  eGameBid makeout4game (); // после сноса чего играем
+  eGameBid makeout4miser ();
   Card *makemove (Card *lMove, Card *rMove, Player *aLeftGamer, Player *aRightGamer); //ход
-  tGameBid makemove (tGameBid lMove, tGameBid rMove); //ход при торговле
-  tGameBid makemove (tGameBid MaxGame, int HaveAVist, int nGamerVist); // после получения игроком прикупа - пасс или вист
+  eGameBid makemove (eGameBid lMove, eGameBid rMove); //ход при торговле
+  eGameBid makemove (eGameBid MaxGame, int HaveAVist, int nGamerVist); // после получения игроком прикупа - пасс или вист
 
   virtual void HintCard (int lx, int ly);
   virtual void clear ();

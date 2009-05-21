@@ -31,7 +31,7 @@ public:
   void ShowBlankPaper (int nBuletScore);
   void showPlayerScore (int i, const QString &sb, const QString &sm, const QString &slv, const QString &srv, const QString &tv);
   //----------------------------- for human player
-  tGameBid makemove (tGameBid lMove, tGameBid rMove);
+  eGameBid makemove (eGameBid lMove, eGameBid rMove);
   void StatusBar (const QString &text);
   void drawRotatedText (QPainter &p, int x, int y, float angle, const QString &text);
 
@@ -43,7 +43,7 @@ public:
    *  =0: nt
    * plrAct: 0-3
    */
-  void drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, tGameBid game);
+  void drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game);
 
   void emitRepaint ();
 
@@ -67,7 +67,7 @@ public:
 private:
   void drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy);
   void drawNumber (int x0, int y0, int n, bool red);
-  void drawGameBid (tGameBid game);
+  void drawGameBid (eGameBid game);
 
 private:
   int bidBmpX, bidBmpY;

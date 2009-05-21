@@ -11,13 +11,13 @@ class QBidButton : public QPushButton {
  Q_OBJECT
 
 public:
-  QBidButton (tGameBid aBid, int x, int y, QWidget *parent=0);
+  QBidButton (eGameBid aBid, int x, int y, QWidget *parent=0);
   ~QBidButton ();
 
-  inline tGameBid bid () const { return mBid; }
+  inline eGameBid bid () const { return mBid; }
 
 protected:
-  tGameBid mBid;
+  eGameBid mBid;
 };
 
 

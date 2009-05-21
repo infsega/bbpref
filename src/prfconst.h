@@ -5,12 +5,6 @@
 
 
 /*
-#define itoa(i,c,r) sprintf(c,"%i",i)
-#define min(a,b) (((a)<(b))?(a):(b))
-#define max(a,b) (((a)>(b))?(a):(b))
-*/
-
-/*
 #define CARDWIDTH    71
 #define CARDHEIGHT   96
 */
@@ -19,24 +13,24 @@
 
 #define FONTSIZE 10
 
-#define SUIT_OFFSET      22
-#define NEW_SUIT_OFFSET  ((CARDWIDTH)+8)
+#define SUIT_OFFSET         22
+#define NEW_SUIT_OFFSET     ((CARDWIDTH)+8)
 #define CLOSED_CARD_OFFSET  ((CARDWIDTH)*2/3)
 
-#define PEVENTMILLISECOND 50
+//#define PEVENTMILLISECOND 50
 #define CARDINCOLODA 32
 #define MAXMASTLEN   8
 
 #define MAXGAMELEN   1024
 
 
-enum TSide {
+enum eHand {
   LeftHand=0,
   RightHand,
   NoHand
 };
 
-enum TMast {
+enum eSuit {
   SuitSpades=1,
   SuitClubs,
   SuitDiamonds,
@@ -44,7 +38,7 @@ enum TMast {
   SuitNone,
 };
 
-enum tGameBid {
+enum eGameBid {
   zerogame=0,
   g86catch=56,
   raspass=57,
@@ -58,28 +52,30 @@ enum tGameBid {
   g101=101,g102,g103,g104,g105
 };// g86 - miser
 
-typedef struct {
-  int   vzatok;
-  int   perehvatov;
-  int   len;
-  int   sum;
-}  TMastTable;
-//-----------------------------------------------------------------------------
-extern int g61stalingrad;
-extern int g10vist;
-extern int globvist;
-extern int nBuletScore;
-extern tGameBid CurrentGame;
 
-//-----------------------------------------------------------------------------
-int  NextGame(tGameBid);
-const char *sGameName(tGameBid);
-int nGetKoz(void);
-int nGetGameCard(tGameBid gType);
-int nGetVistCard(tGameBid gType);
-int nGetMinCard4Vist(tGameBid gType);
-int nGetGamePrice(tGameBid gType);
-tGameBid GamesTypeByName(const QString &s);
-int Card2Int(void *);
+typedef struct {
+  int vzatok;
+  int perehvatov;
+  int len;
+  int sum;
+} tSuitProbs;
+
+
+extern bool g61stalingrad;
+extern bool g10vist;
+extern bool globvist;
+extern int nBuletScore;
+extern eGameBid CurrentGame;
+
+
+int succBid (eGameBid game);
+const char *sGameName (eGameBid game);
+int trumpSuit ();
+int gameTricks (eGameBid gType);
+int gameWhists (eGameBid gType);
+int gameWhistsMin (eGameBid gType);
+int gamePoolPrice (eGameBid gType);
+eGameBid gameName2Type (const QString &s);
+
 
 #endif

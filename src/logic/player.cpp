@@ -167,7 +167,7 @@ Card *Player::Miser3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player 
 // copy from MyPass3
   Card *cur=NULL;
     /*Card *MaxCard;*/
-    tGameBid tmpGamesType=GamesType;
+    eGameBid tmpGamesType=GamesType;
     CardList *aMaxCardList=new CardList(20);
 //    int mast = GamesType - (GamesType/10) * 10;
     // набираем списки
@@ -260,8 +260,8 @@ Card *Player::makemove(Card *lMove,Card *rMove,Player *aLeftGamer,Player *aRight
     return cur;
 }
 //-----------------------------------------------------------------------
-TMastTable Player::vzatok(TMast Mast,CardList *aMaxCardList,int a23) {
-   TMastTable MastTable;
+tSuitProbs Player::vzatok(eSuit Mast,CardList *aMaxCardList,int a23) {
+   tSuitProbs MastTable;
    Card *MyCard,*tmpCard;
    CardList *MyCardStack     = new CardList(MAXMASTLEN);
    CardList *EnemyCardStack  = new CardList(MAXMASTLEN);
@@ -302,7 +302,7 @@ void Player::RecountTables4RasPass(CardList *aMaxCardList,int a23) { // Пересчит
     MastTable[0].perehvatov=0;
     MastTable[0].sum=0;
     for (i=1; i<=4; i++ )  {
-      MastTable[i] = vzatok4pass( (TMast) i,aMaxCardList );
+      MastTable[i] = vzatok4pass( (eSuit) i,aMaxCardList );
       MastTable[0].vzatok += MastTable[i].vzatok ;
       MastTable[0].perehvatov += MastTable[i].perehvatov ;
       MastTable[0].sum += MastTable[i].sum;
@@ -310,13 +310,13 @@ void Player::RecountTables4RasPass(CardList *aMaxCardList,int a23) { // Пересчит
 
 }
 //-----------------------------------------------------------------------
-void Player::RecountTables( CardList *aMaxCardList,int a23 ){ // Пересчитывает таблицу         TMastTable MastTable[5];
+void Player::RecountTables( CardList *aMaxCardList,int a23 ){ // Пересчитывает таблицу         tSuitProbs MastTable[5];
     int i;
     MastTable[0].vzatok=0;
     MastTable[0].perehvatov=0;
     MastTable[0].sum=0;
     for (i=1; i<=4; i++ )  {
-      MastTable[i] = vzatok ( (TMast) i,aMaxCardList, a23 );
+      MastTable[i] = vzatok ( (eSuit) i,aMaxCardList, a23 );
       MastTable[0].vzatok += MastTable[i].vzatok ;
       MastTable[0].perehvatov += MastTable[i].perehvatov ;
       MastTable[0].sum += MastTable[i].sum;
@@ -327,7 +327,7 @@ Card *Player::MiserCatch1(Player *aLeftGamer,Player *aRightGamer) {
   Card *cur=NULL;
   CardList *aMaxCardList=new CardList(20);
   CardList *Naparnik;
-  TSide Side ;
+  eHand Side ;
   if (aRightGamer->GamesType == g86) {
     LoadLists(aRightGamer,aRightGamer,aMaxCardList);
     Naparnik = aLeftGamer->aCards;
@@ -408,7 +408,7 @@ Card *Player::MiserCatch2(Card *aRightCard,Player *aLeftGamer,Player *aRightGame
   Card *cur=NULL;
   CardList *aMaxCardList=new CardList(20);
   CardList *Naparnik;
-  TSide Side ;
+  eHand Side ;
   if (aRightGamer->GamesType == g86) {
     LoadLists(aRightGamer,aRightGamer,aMaxCardList);
     Naparnik = aLeftGamer->aCards;
@@ -494,7 +494,7 @@ Card *Player::MiserCatch3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Pl
   Card *cur=NULL;
   CardList *aMaxCardList=new CardList(20);
   CardList *Naparnik;
-  TSide Side ;
+  eHand Side ;
   if (aRightGamer->GamesType == g86) {
     LoadLists(aRightGamer,aRightGamer,aMaxCardList);
     Naparnik = aLeftGamer->aCards;
@@ -569,7 +569,7 @@ Card *Player::MiserCatch3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Pl
 Card *Player::MyGame3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) { // моя игра 3 заход - мой
     Card *cur=NULL;
     Card *MaxCard;
-    tGameBid tmpGamesType=GamesType;
+    eGameBid tmpGamesType=GamesType;
     CardList *aMaxCardList=new CardList(20);
     int mast = GamesType - (GamesType/10) * 10;
     // набираем списки
@@ -631,7 +631,7 @@ Card *Player::MyGame3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
 Card *Player::MyVist3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) { // мой вист или пас 3 заход - мой
     Card *cur=NULL;
     Card *MaxCard;
-    tGameBid tmpGamesType=GamesType;
+    eGameBid tmpGamesType=GamesType;
     CardList *aMaxCardList=new CardList(20);
     Player *aEnemy,*aFriend;
     int mast;
@@ -754,7 +754,7 @@ Card *Player::MyVist3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
 
 Card *Player::MyVist2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) { // мой вист или пас 2 заход - мой
     Card *cur=NULL;
-    tGameBid tmpGamesType=GamesType;
+    eGameBid tmpGamesType=GamesType;
     CardList *aMaxCardList=new CardList(20);
     Player *aEnemy,*aFriend;
     int mast;
@@ -806,7 +806,7 @@ Card *Player::MyVist2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
 Card *Player::MyVist1(Player *aLeftGamer,Player *aRightGamer) {
 // 1 - выбить козыря 2-разиграть масти с перехватами 3-без перехватов 4-???
     Card *cur=NULL;
-    tGameBid tmpGamesType=GamesType;
+    eGameBid tmpGamesType=GamesType;
     CardList *aMaxCardList=new CardList(20);
     Player *aEnemy,*aFriend;
     int mast;
@@ -879,7 +879,7 @@ Card *Player::MyVist1(Player *aLeftGamer,Player *aRightGamer) {
 //-----------------------------------------------------------------------
 Card *Player::MyGame2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
     CardList *aMaxCardList=new CardList(20);
-    tGameBid tmpGamesType=GamesType;
+    eGameBid tmpGamesType=GamesType;
     Card *cur=NULL;
     Card *MaxLeftCard=NULL;
     int mast = aRightCard->CMast;
@@ -932,7 +932,7 @@ Card *Player::MyGame2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
 Card *Player::MyGame1(Player *aLeftGamer,Player *aRightGamer) {
 // 1-выбить козыря 2-разиграть масти с перехватами 3-без перехватов 4-???
     Card *cur=NULL;
-    tGameBid tmpGamesType=GamesType;
+    eGameBid tmpGamesType=GamesType;
     CardList *aMaxCardList=new CardList(20);
     int mast = GamesType - (GamesType/10) * 10;
     // набираем списки
@@ -1080,19 +1080,19 @@ void Player::LoadLists(Player *aLeftGamer,Player *aRightGamer,CardList *aMaxCard
     aRight->Assign(aRightGamer->aCards);
 }
 //-----------------------------------------------------------------------
-tGameBid Player::makemove4out(void) {
-    tGameBid GamesTypeRetVal;
+eGameBid Player::makemove4out(void) {
+    eGameBid GamesTypeRetVal;
     int i;
     int nMaxMastLen=0;
-    TMast nMaxMast=SuitNone;
-    TMastTable LocalMastTable[5];
+    eSuit nMaxMast=SuitNone;
+    tSuitProbs LocalMastTable[5];
     LocalMastTable[0].vzatok=0;
     LocalMastTable[0].perehvatov=0;
     LocalMastTable[0].sum=0;
 
 
     for (i=1; i<=4; i++ )  {
-      LocalMastTable[i] = vzatok4game( (TMast) i,1  );
+      LocalMastTable[i] = vzatok4game( (eSuit) i,1  );
       LocalMastTable[0].vzatok += LocalMastTable[i].vzatok ;
       LocalMastTable[0].perehvatov +=LocalMastTable[i].perehvatov ;
       LocalMastTable[0].sum += LocalMastTable[i].sum;
@@ -1101,40 +1101,40 @@ tGameBid Player::makemove4out(void) {
     for (i=1; i<=4; i++) { // предполагаемый козырь - самая длинная масть
       if( aCards->AllCard(i) > nMaxMastLen ) {
         nMaxMastLen = aCards->AllCard(i);
-        nMaxMast = (TMast) i;
+        nMaxMast = (eSuit) i;
       }
     }
 
     for (i=1; i<=4; i++) {
       if(aCards->AllCard(i) == nMaxMastLen && nMaxMast != i ) { // есть максимально длинные масти
        if ( LocalMastTable[i].sum  > LocalMastTable[nMaxMast].sum  )  {
-         nMaxMast = (TMast) i;
+         nMaxMast = (eSuit) i;
         }
       }
     }
 
     //масть и звятки уже посчитали
-    GamesTypeRetVal = ( tGameBid ) (LocalMastTable[0].vzatok*10 + nMaxMast );
+    GamesTypeRetVal = ( eGameBid ) (LocalMastTable[0].vzatok*10 + nMaxMast );
     // это то, что мы можем играть максимально
     return GamesTypeRetVal;
 
 }
 //-----------------------------------------------------------------------
-tGameBid Player::makemove(tGameBid MaxGame,int HaveAVist,int nGamerVist) { // после получения игроком прикупа - пасс или вист
+eGameBid Player::makemove(eGameBid MaxGame,int HaveAVist,int nGamerVist) { // после получения игроком прикупа - пасс или вист
   Q_UNUSED(nGamerVist)
-  tGameBid Answer;
-  tGameBid MyMaxGame = makemove4out();
+  eGameBid Answer;
+  eGameBid MyMaxGame = makemove4out();
 
   int vz = MyMaxGame / 10;
-  if ( HaveAVist != vist && vz >= nGetMinCard4Vist(MaxGame) ) {
+  if ( HaveAVist != vist && vz >= gameWhistsMin(MaxGame) ) {
      Answer = vist;
   } else {
      Answer = gtPass;
   }
-  if ( HaveAVist==gtPass && vz < nGetMinCard4Vist(MaxGame) ) {
+  if ( HaveAVist==gtPass && vz < gameWhistsMin(MaxGame) ) {
      Answer = gtPass;
   }
-  if (MaxGame == g61) {
+  if (g61stalingrad && MaxGame == g61) {
      Answer = vist; //STALINGRAD !!!
   }
   if (MaxGame == g86) { // miser
@@ -1144,11 +1144,11 @@ tGameBid Player::makemove(tGameBid MaxGame,int HaveAVist,int nGamerVist) { // по
   return Answer;
 }
 //-----------------------------------------------------------------------
-tGameBid Player::makeout4miser(void) {
+eGameBid Player::makeout4miser(void) {
   Card *FirstCardOut=NULL,*SecondCardOut=NULL;
   Card *tmpFirstCardOut,*tmpSecondCardOut;
   Card *RealFirstCardOut,*RealSecondCardOut;
-  tGameBid  Hight = g105,  tmpHight = g105;
+  eGameBid  Hight = g105,  tmpHight = g105;
   for ( int i=0;i<12;i++ ) {
     tmpFirstCardOut = (Card*) aCards->At(i);
     aCards->AtRemove(i);
@@ -1192,11 +1192,11 @@ tGameBid Player::makeout4miser(void) {
 }
 
 
-tGameBid Player::makeout4game () {
+eGameBid Player::makeout4game () {
   Card *FirstCardOut = NULL, *SecondCardOut = NULL;
   Card *tmpFirstCardOut, *tmpSecondCardOut;
   Card *RealFirstCardOut, *RealSecondCardOut;
-  tGameBid Hight = zerogame, tmpHight = zerogame;
+  eGameBid Hight = zerogame, tmpHight = zerogame;
 
   for (int i = 0; i < 12; i++) {
     tmpFirstCardOut = (Card *)aCards->At(i);
@@ -1243,7 +1243,7 @@ tGameBid Player::makeout4game () {
     int tmpvz = Hight/10, tmpmast = Hight-tmpvz*10;
     while (tmpHight < GamesType)  {
       tmpvz++;
-      tmpHight = (tGameBid)(tmpvz*10+tmpmast);
+      tmpHight = (eGameBid)(tmpvz*10+tmpmast);
     }
     GamesType = tmpHight;
   } else {
@@ -1254,7 +1254,7 @@ tGameBid Player::makeout4game () {
 
 
 //ход при торговле
-tGameBid Player::makemove (tGameBid lMove, tGameBid rMove) {
+eGameBid Player::makemove (eGameBid lMove, eGameBid rMove) {
 /*
   if ( GamesType == gtPass )  {
     GamesType=gtPass;
@@ -1263,14 +1263,14 @@ tGameBid Player::makemove (tGameBid lMove, tGameBid rMove) {
   if (GamesType != gtPass)  {
     int i;
     int nMaxMastLen = 0;
-    TMast nMaxMast = SuitNone;
-    TMastTable LocalMastTable[5];
-    tGameBid MGT = qMax(lMove,rMove);
+    eSuit nMaxMast = SuitNone;
+    tSuitProbs LocalMastTable[5];
+    eGameBid MGT = qMax(lMove,rMove);
     LocalMastTable[0].vzatok=0;
     LocalMastTable[0].perehvatov=0;
     LocalMastTable[0].sum = 0;
     for (i = 1; i <= 4; i++)  {
-      LocalMastTable[i] = vzatok4game((TMast)i, 1);
+      LocalMastTable[i] = vzatok4game((eSuit)i, 1);
       LocalMastTable[0].vzatok += LocalMastTable[i].vzatok;
       LocalMastTable[0].perehvatov +=LocalMastTable[i].perehvatov;
       LocalMastTable[0].sum += LocalMastTable[i].sum;
@@ -1279,20 +1279,20 @@ tGameBid Player::makemove (tGameBid lMove, tGameBid rMove) {
     for (i = 1; i <= 4; i++) {
       if (aCards->AllCard(i) > nMaxMastLen) {
         nMaxMastLen = aCards->AllCard(i);
-        nMaxMast = (TMast)i;
+        nMaxMast = (eSuit)i;
       }
     }
     for (i = 1; i <= 4; i++) {
       if (aCards->AllCard(i) == nMaxMastLen && nMaxMast != i) {
         // есть максимально длинные масти
-        if (LocalMastTable[i].sum > LocalMastTable[nMaxMast].sum) nMaxMast = (TMast)i;
+        if (LocalMastTable[i].sum > LocalMastTable[nMaxMast].sum) nMaxMast = (eSuit)i;
       }
     }
     // масть и взятки уже посчитали
     if (MGT <= g75) {
-      GamesType = (tGameBid)((LocalMastTable[0].vzatok+1)*10+nMaxMast);
+      GamesType = (eGameBid)((LocalMastTable[0].vzatok+1)*10+nMaxMast);
     } else {
-      GamesType = (tGameBid)((LocalMastTable[0].vzatok)*10+nMaxMast);
+      GamesType = (eGameBid)((LocalMastTable[0].vzatok)*10+nMaxMast);
     }
     if ((rMove == gtPass || rMove == undefined) && (lMove == gtPass || lMove == undefined)) {
       if (LocalMastTable[0].vzatok >= 4) {
@@ -1304,13 +1304,13 @@ tGameBid Player::makemove (tGameBid lMove, tGameBid rMove) {
         } else GamesType = gtPass;
       }
     } else if (GamesType >= MGT) {
-      GamesType = (tGameBid)NextGame(MGT);
+      GamesType = (eGameBid)succBid(MGT);
     } else {
       GamesType = gtPass;
     }
 /*
     if( GamesType >= MGT  ) {
-        GamesType = (tGameBid) NextGame(MGT);
+        GamesType = (eGameBid) succBid(MGT);
     } else {
     }*/
     // это то, что мы можем играть максимально
@@ -1320,7 +1320,7 @@ tGameBid Player::makemove (tGameBid lMove, tGameBid rMove) {
           if ( lMove!=g61 )
               GamesType = lMove; // say here
           else
-              GamesType = (tGameBid) NextGame(lMove);
+              GamesType = (eGameBid) succBid(lMove);
         } else {
           GamesType = gtPass;
         }
@@ -1328,7 +1328,7 @@ tGameBid Player::makemove (tGameBid lMove, tGameBid rMove) {
         if ( GamesType > rMove ) {
 //          asm int 3;
             if (rMove!=undefined) {
-              GamesType = (tGameBid) NextGame(rMove);
+              GamesType = (eGameBid) succBid(rMove);
              } else {
               GamesType = g61;
              }
@@ -1375,8 +1375,8 @@ int Player::Check4Miser ( ) {
 }
 
 
-TMastTable Player::vzatok4game (TMast Mast, int a23) {
-   TMastTable MastTable;
+tSuitProbs Player::vzatok4game (eSuit Mast, int a23) {
+   tSuitProbs MastTable;
    Card *MyCard,*tmpCard;
    CardList *MyCardStack     = new CardList(MAXMASTLEN);
    CardList *EnemyCardStack  = new CardList(MAXMASTLEN);
@@ -1409,8 +1409,8 @@ TMastTable Player::vzatok4game (TMast Mast, int a23) {
    return MastTable;
 }
 //-----------------------------------------------------------------------
-TMastTable Player::vzatok4pass(TMast Mast,CardList *aMaxCardList) {
-   TMastTable MastTable;
+tSuitProbs Player::vzatok4pass(eSuit Mast,CardList *aMaxCardList) {
+   tSuitProbs MastTable;
    Card *MyCard,*tmpCard;
    CardList *MyCardStack     = new CardList(MAXMASTLEN);
    CardList *EnemyCardStack  = new CardList(MAXMASTLEN);
@@ -1442,8 +1442,8 @@ TMastTable Player::vzatok4pass(TMast Mast,CardList *aMaxCardList) {
 }
 
 //-----------------------------------------------------------------------
-TMastTable Player::Compare2List4Min(CardList *My,CardList *Enemy) { // Для мин результата
-  TMastTable MastTable;
+tSuitProbs Player::Compare2List4Min(CardList *My,CardList *Enemy) { // Для мин результата
+  tSuitProbs MastTable;
   MastTable.vzatok=0;
   MastTable.perehvatov=0;
   int nMaxLen;
@@ -1483,8 +1483,8 @@ TMastTable Player::Compare2List4Min(CardList *My,CardList *Enemy) { // Для мин р
   return MastTable;
 }
 //-----------------------------------------------------------------------
-TMastTable Player::Compare2List4Max(CardList *My,CardList *Enemy) {
-  TMastTable MastTable;
+tSuitProbs Player::Compare2List4Max(CardList *My,CardList *Enemy) {
+  tSuitProbs MastTable;
   MastTable.vzatok=0;
 
   MastTable.perehvatov=0;
@@ -1533,8 +1533,8 @@ TMastTable Player::Compare2List4Max(CardList *My,CardList *Enemy) {
   return MastTable;
 }
 //-----------------------------------------------------------------------
-TMastTable Player::Compare2List4Max23(CardList *My,CardList *Enemy) {
-  TMastTable MastTable;
+tSuitProbs Player::Compare2List4Max23(CardList *My,CardList *Enemy) {
+  tSuitProbs MastTable;
   MastTable.vzatok=0;
   MastTable.perehvatov=0;
   int nMaxLen,nIget=1;
@@ -1573,14 +1573,14 @@ TMastTable Player::Compare2List4Max23(CardList *My,CardList *Enemy) {
 //-----------------------------------------------------------------------
 Card *Player::MyPass1(Card *rMove,Player *aLeftGamer,Player *aRightGamer) {
   Card *cur=NULL;
-  tGameBid tmpGamesType=GamesType;
+  eGameBid tmpGamesType=GamesType;
   CardList *aMaxCardList=new CardList(20);
   CardList *aTmpList=new CardList(MAXMASTLEN);
   CardList *aStackStore=NULL;
 
   if ( rMove != NULL )  {
     aTmpList=new CardList(MAXMASTLEN);
-    aTmpList->AssignMast(aCards,(TMast)rMove->CMast);
+    aTmpList->AssignMast(aCards,(eSuit)rMove->CMast);
     aStackStore = aCards;
     aCards = aTmpList;
 //    LoadLists(aLeftGamer,aRightGamer,aMaxCardList); // !!!!!!!!!
@@ -1624,7 +1624,7 @@ Card *Player::MyPass1(Card *rMove,Player *aLeftGamer,Player *aRightGamer) {
 //-----------------------------------------------------------------------
 Card *Player::MyPass2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
   Card *cur=NULL;
-  tGameBid tmpGamesType=GamesType;
+  eGameBid tmpGamesType=GamesType;
   int mast = aRightCard->CMast;
   CardList *aMaxCardList=new CardList(20);
   LoadLists(aLeftGamer,aRightGamer,aMaxCardList);
@@ -1668,7 +1668,7 @@ Card *Player::MyPass2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
 Card *Player::MyPass3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
   Card *cur=NULL;
     /*Card *MaxCard;*/
-    tGameBid tmpGamesType=GamesType;
+    eGameBid tmpGamesType=GamesType;
     CardList *aMaxCardList=new CardList(20);
 //    int mast = GamesType - (GamesType/10) * 10;
     // набираем списки
@@ -1710,7 +1710,7 @@ Card *Player::MyPass3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
 }
 //-----------------------------------------------------------------------
 void Player::makestatfill(void) {
-   TSide lr=LeftHand;
+   eHand lr=LeftHand;
    for (int m=1;m<=4;m++) {
      for (int c=FACE_ACE;c>=7;c-- ) {
       if ( !aCards->Exist(c,m) ) {
@@ -1728,7 +1728,7 @@ void Player::makestatfill(void) {
 //-----------------------------------------------------------------------
 void Player::makestatfill(int nCards,int maxmin) {
     int nCounter=0;
-    TSide lr=LeftHand;
+    eHand lr=LeftHand;
     if ( maxmin ==1 ) {
        for (int m=1;m<=4;m++) {
          for (int c=FACE_ACE;c>=7;c-- ) {

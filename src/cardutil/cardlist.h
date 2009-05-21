@@ -34,7 +34,7 @@ class  CardList : public Tclist {
         Card * LastCard(void);
         Card * NextCard(void *);
         Card * NextCard(int _nIndex);
-        void AssignMast(Tclist *_oldlist,TMast Mast); // Assign only selected mast from oldlist
+        void AssignMast(Tclist *_oldlist,eSuit Mast); // Assign only selected mast from oldlist
 
 
         int AllCard( int _CMast );

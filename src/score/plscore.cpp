@@ -59,10 +59,10 @@ void TPlScore::AddVist(int index,int myNumber,int Skolko) {
   NaKogo -> Insert(new int (nScore));
 }
 //-------------------------------------------------------------------
-int TPlScore::AddRecords( tGameBid aGamerType,tGameBid aMyType, int nGamerVz/*разигрывающего*/,int nMyVz/*чиcтых моих*/, int nGamer,int myNumber,int nqVist/*кол-во вистующих*/) {
-  int nGamePrice = nGetGamePrice(aGamerType);  // цена игры
-  int nGameCard=nGetGameCard(aGamerType); // взяток должно быть при  данной игре
-  int nVistCard=nGetVistCard(aGamerType); // минимальное кол во взяток вистующих на 2 их
+int TPlScore::AddRecords( eGameBid aGamerType,eGameBid aMyType, int nGamerVz/*разигрывающего*/,int nMyVz/*чиcтых моих*/, int nGamer,int myNumber,int nqVist/*кол-во вистующих*/) {
+  int nGamePrice = gamePoolPrice(aGamerType);  // цена игры
+  int nGameCard=gameTricks(aGamerType); // взяток должно быть при  данной игре
+  int nVistCard=gameWhists(aGamerType); // минимальное кол во взяток вистующих на 2 их
   int nScore=0,*pnCurrent=NULL;
   Tclist *NaKogo;
   if ( aMyType >=g61 && aMyType != g86 ) {

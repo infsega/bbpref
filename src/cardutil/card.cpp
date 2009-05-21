@@ -31,3 +31,13 @@ int operator < (Card &c1,Card &c2) {
           //if (c1.CMast == c2.CMast && c1.CName > c2.CName) return -1;
           return 0;
          };
+
+
+/*
+int Card2Int(void *vCard) {
+        Card *card = (Card*) vCard;
+        if (card)
+                return card -> CName*10 + card -> CMast;
+        return -1;
+}
+*/
