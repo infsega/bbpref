@@ -8,7 +8,6 @@
 #include "player.h"
 
 #include "formbid.h"
-#include "debug.h"
 #include <time.h>
 
 

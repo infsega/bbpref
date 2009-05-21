@@ -1,10 +1,4 @@
-//#define DEBUG
 #include "prfconst.h"
-
-#ifdef DEBUG
-#include <stdio.h>
-#include "debug.h"
-#endif
 
 #include <stdlib.h>
 #include <string.h>
@@ -70,11 +64,6 @@ void Tclist::Free(void *_Item) {
   int index = IndexOf(_Item);
   if ( _Item ) {
     delete _Item;
-    #ifdef DEBUG
-       char msgbuff[1024];
-       sprintf(msgbuff,"Tclist %p: Item Free %i %p",this,index,_Item);
-       debugprint(msgbuff);
-    #endif
   }
   items[index]=NULL;
   aCount--;
@@ -84,12 +73,6 @@ void Tclist::Remove(void *_Item) {
   int index = IndexOf(_Item);
   items[index]=NULL;
   aCount--;
-  #ifdef DEBUG
-       char msgbuff[1024];
-       sprintf(msgbuff,"Tclist %p: Item Remove %i %p",this,index,_Item);
-       debugprint(msgbuff);
-  #endif
-
 }
 //--------------------------------------------------------------------------
 void Tclist::AtFree(int _Index) {
@@ -98,11 +81,6 @@ void Tclist::AtFree(int _Index) {
       delete item;
       items[_Index]=NULL;
       aCount--;
-      #ifdef DEBUG
-       char msgbuff[1024];
-       sprintf(msgbuff,"Tclist %p: Item AtFree %i",this,_Index);
-       debugprint(msgbuff);
-      #endif
   }
 }
 //--------------------------------------------------------------------------
@@ -112,12 +90,6 @@ void Tclist::AtRemove(int _Index) {
   if ( items[_Index]!=NULL)   {
       items[_Index]=NULL;
       aCount--;
-      #ifdef DEBUG
-           char msgbuff[1024];
-           sprintf(msgbuff,"Tclist %p: Item At Remove %i",this,_Index);
-           debugprint(msgbuff);
-      #endif
-
   }
 }
 //--------------------------------------------------------------------------
@@ -133,12 +105,6 @@ void Tclist::RemoveAll(void) {
     AtRemove(i);
   }
   aCount = 0;
-  #ifdef DEBUG
-       char msgbuff[1024];
-       sprintf(msgbuff,"Tclist %p: RemoveAll",this);
-       debugprint(msgbuff);
-  #endif
-
 }
 //--------------------------------------------------------------------------
 void Tclist::FreeAll(void) {
@@ -146,12 +112,6 @@ void Tclist::FreeAll(void) {
     AtFree(i);
   }
   aCount=0;
-  #ifdef DEBUG
-       char msgbuff[1024];
-       sprintf(msgbuff,"Tclist %p: FreeAll",this);
-       debugprint(msgbuff);
-  #endif
-
 }
 //--------------------------------------------------------------------------
 void Tclist::Assign(Tclist *_oldlist) {
