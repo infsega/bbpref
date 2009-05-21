@@ -6,7 +6,7 @@
 #include "card.h"
 #include "ctlist.h"
 #include "coloda.h"
-#include "gamer.h"
+#include "player.h"
 
 
 class TDeskTop : public QObject {
@@ -17,7 +17,7 @@ public:
   TDeskTop (TDeskView *_DeskView);
   virtual ~TDeskTop ();
 
-  TGamer *InsertGamer (TGamer *);
+  Player *InsertGamer (Player *);
   void RunGame ();
   void Repaint (int left, int right, int top, int bottom);
   void Repaint ();
@@ -62,11 +62,11 @@ private:
   void InternalConstruct ();
   //void insertscore (Tclist *, char *);
   //void replace (char *, char, char);
-  TGamer *GetGamerByNum (int);
+  Player *GetGamerByNum (int);
   int GetGamerWithMaxBullet (); // exept closed gamers
   TCard *ControlingMakemove (TCard *, TCard *);
   TCard *PipeMakemove (TCard *lMove, TCard *rMove);
-  void GamerAssign (TGamer *, TGamer *);
+  void GamerAssign (Player *, Player *);
 };
 
 

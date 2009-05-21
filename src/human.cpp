@@ -11,23 +11,23 @@
 
 
 #include "deskview.h"
-#include "gamer.h"
+#include "player.h"
 #include "card.h"
 #include "cardlist.h"
 #include "ncounter.h"
 #include "plscore.h"
-#include "humang.h"
+#include "human.h"
 
 
-THuman::THuman(int _nGamer) : TGamer(_nGamer) {
+HumanPlayer::HumanPlayer(int _nGamer) : Player(_nGamer) {
 }
 
 
-THuman::THuman(int _nGamer,TDeskView *_DeskView) : TGamer(_nGamer, _DeskView) {
+HumanPlayer::HumanPlayer(int _nGamer,TDeskView *_DeskView) : Player(_nGamer, _DeskView) {
 }
 
 
-tGameBid THuman::makemove (tGameBid lMove, tGameBid rMove) {
+tGameBid HumanPlayer::makemove (tGameBid lMove, tGameBid rMove) {
   //ход при торговле
   tGameBid tmpGamesType;
   WaitForMouse = 1;
@@ -49,10 +49,10 @@ tGameBid THuman::makemove (tGameBid lMove, tGameBid rMove) {
 /*
       Repaint(DeskView, (DeskView->DesktopWidht-DeskView->xLen)/2,
         DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight, DeskView->xLen, DeskView->yLen);
-      makemove((TCard *)NULL, (TCard *)NULL, (TGamer *)NULL, (TGamer *)NULL);
+      makemove((TCard *)NULL, (TCard *)NULL, (Player *)NULL, (Player *)NULL);
       Repaint(DeskView, (DeskView->DesktopWidht-DeskView->xLen)/2,
         DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight, DeskView->xLen, DeskView->yLen);
-      makemove((TCard *)NULL, (TCard *)NULL, (TGamer *)NULL, (TGamer *)NULL);
+      makemove((TCard *)NULL, (TCard *)NULL, (Player *)NULL, (Player *)NULL);
       Repaint(DeskView, (DeskView->DesktopWidht-DeskView->xLen)/2,
         DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight, DeskView->xLen, DeskView->yLen);
 */
@@ -71,7 +71,7 @@ tGameBid THuman::makemove (tGameBid lMove, tGameBid rMove) {
 }
 
 
-TCard *THuman::makemove (TCard *lMove, TCard *rMove, TGamer *aLeftGamer, TGamer *aRightGamer) { //ход
+TCard *HumanPlayer::makemove (TCard *lMove, TCard *rMove, Player *aLeftGamer, Player *aRightGamer) { //ход
   Q_UNUSED(aLeftGamer)
   Q_UNUSED(aRightGamer)
 
@@ -160,31 +160,31 @@ TCard *THuman::makemove (TCard *lMove, TCard *rMove, TGamer *aLeftGamer, TGamer 
 }
 
 
-tGameBid THuman::makeout4miser(void) { // после сноса чего играем
+tGameBid HumanPlayer::makeout4miser(void) { // после сноса чего играем
   WaitForMouse = 1;
-  makemove( (TCard *)NULL,(TCard *)NULL,(TGamer *)NULL,(TGamer *)NULL);
+  makemove( (TCard *)NULL,(TCard *)NULL,(Player *)NULL,(Player *)NULL);
   //!Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
   RepaintSimple(true);
   DeskView->mySleep(1);
-  makemove( (TCard *)NULL,(TCard *)NULL,(TGamer *)NULL,(TGamer *)NULL);
+  makemove( (TCard *)NULL,(TCard *)NULL,(Player *)NULL,(Player *)NULL);
   //!Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
   RepaintSimple(true);
   WaitForMouse = 0;
   return g86;
 }
 //-------------------------------------------------------------------------
-tGameBid THuman::makeout4game(void) { // после сноса чего играем
+tGameBid HumanPlayer::makeout4game(void) { // после сноса чего играем
   WaitForMouse = 1;
   tGameBid tmpGamesType;
 //    PQApplication->mainWidget ()->setMouseTracking ( TRUE );
   X=Y=0;
-  THuman::makemove( (TCard *)NULL,(TCard *)NULL,(TGamer *)NULL,(TGamer *)NULL);
+  HumanPlayer::makemove( (TCard *)NULL,(TCard *)NULL,(Player *)NULL,(Player *)NULL);
   //Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
   RepaintSimple(true);
   DeskView->mySleep(1);
 //  Repaint(DeskView,);
   //Repaint (TDeskView *DeskView,int Left,int Top,int Width,int Height) {
-  THuman::makemove( (TCard *)NULL,(TCard *)NULL,(TGamer *)NULL,(TGamer *)NULL);
+  HumanPlayer::makemove( (TCard *)NULL,(TCard *)NULL,(Player *)NULL,(Player *)NULL);
   //Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
   RepaintSimple(true);
   Formtorg->EnableAll();
@@ -205,10 +205,10 @@ tGameBid THuman::makeout4game(void) { // после сноса чего играем
         GetBackSnos();
         //Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
         RepaintSimple(true);
-        makemove( (TCard *)NULL,(TCard *)NULL,(TGamer *)NULL,(TGamer *)NULL);
+        makemove( (TCard *)NULL,(TCard *)NULL,(Player *)NULL,(Player *)NULL);
         //Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
         RepaintSimple(true);
-        makemove( (TCard *)NULL,(TCard *)NULL,(TGamer *)NULL,(TGamer *)NULL);
+        makemove( (TCard *)NULL,(TCard *)NULL,(Player *)NULL,(Player *)NULL);
         //Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
         RepaintSimple(true);
 
@@ -228,7 +228,7 @@ tGameBid THuman::makeout4game(void) { // после сноса чего играем
   return GamesType;
 }
 //-------------------------------------------------------------------------
-tGameBid THuman::makemove (tGameBid MaxGame,int HaveAVist,int nGamerVist) {
+tGameBid HumanPlayer::makemove (tGameBid MaxGame,int HaveAVist,int nGamerVist) {
   Q_UNUSED(HaveAVist)
   Q_UNUSED(nGamerVist)
 //      Formtorg->DisalbeLessThan()
@@ -244,7 +244,7 @@ tGameBid THuman::makemove (tGameBid MaxGame,int HaveAVist,int nGamerVist) {
       return GamesType;
 }
 //-------------------------------------------------------------------------
-void THuman::HintCard (int lx,int ly) {
+void HumanPlayer::HintCard (int lx,int ly) {
   if (!WaitForMouse) {
     if (oldii == -1) return;
     oldii = -1;

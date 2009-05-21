@@ -1,19 +1,3 @@
-/***************************************************************************
-                          kpref.cpp  -  description
-                             -------------------
-    begin                : Mon Mar  6 14:43:31 EET 2000
-    copyright            : (C) 2000 by Azarniy I.V.
-    email                : azarniy@usa.net
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
 #include <QApplication>
 #include <QMouseEvent>
 #include <QMainWindow>
@@ -21,7 +5,7 @@
 #include "kpref.h"
 #include "desktop.h"
 #include "deskview.h"
-#include "gamer.h"
+#include "player.h"
 
 #include "qtformtorg.h"
 #include "debug.h"
@@ -185,7 +169,7 @@ void Kpref::slotNewSingleGame () {
 void Kpref::mouseMoveEvent (QMouseEvent *event) {
   if (nAllReadyHinting) return;
   nAllReadyHinting = 1;
-  TGamer *Gamer = (TGamer *)DeskTop->Gamers->At(DeskTop->nCurrentMove.nValue);
+  Player *Gamer = (Player *)DeskTop->Gamers->At(DeskTop->nCurrentMove.nValue);
   if (Gamer) Gamer->HintCard(event->x(), event->y());
   nAllReadyHinting = 0;
 }
@@ -194,7 +178,7 @@ void Kpref::mouseMoveEvent (QMouseEvent *event) {
 void Kpref::mousePressEvent (QMouseEvent *event) {
   WaitingForMouseUp = 1;
   DeskView->Event = 1;
-  TGamer *Gamer = (TGamer *)DeskTop->Gamers->At(DeskTop->nCurrentMove.nValue);
+  Player *Gamer = (Player *)DeskTop->Gamers->At(DeskTop->nCurrentMove.nValue);
   if (Gamer) {
     Gamer->X = event->x();
     Gamer->Y = event->y();

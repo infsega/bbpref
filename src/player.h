@@ -1,5 +1,5 @@
-#ifndef GAMER_H
-#define GAMER_H
+#ifndef PLAYER_H
+#define PLAYER_H
 
 #include "prfconst.h"
 #include "card.h"
@@ -8,10 +8,9 @@
 #include "ncounter.h"
 #include "plscore.h"
 #include "deskview.h"
-#define MAXMESSAGELEN 256
-#define MAXNIKNAMELEN 16
-//-------------------------------------------------------------------------
-class TGamer {
+
+
+class Player {
 public:
   TDeskView *DeskView;
 
@@ -32,9 +31,9 @@ public:
   TSide Enemy;
   int nGamer;         // мой номер
 
-  TGamer (int _nGamer);
-  TGamer (int _nGamer, TDeskView *aDeskView);
-  virtual ~TGamer ();
+  Player (int _nGamer);
+  Player (int _nGamer, TDeskView *aDeskView);
+  virtual ~Player ();
 
   // at least 28 ints (14 int pairs); return # of used ints; the last int is -1
   // result: ofs, cardNo, ..., -1
@@ -58,7 +57,7 @@ public:
   // this part for miser catchs
   TCard *Pronesti;
 
-  virtual TCard *makemove (TCard *lMove,TCard *rMove,TGamer *aLeftGamer,TGamer *aRightGamer); //ход
+  virtual TCard *makemove (TCard *lMove,TCard *rMove,Player *aLeftGamer,Player *aRightGamer); //ход
   virtual tGameBid makemove (tGameBid lMove,tGameBid rMove); //ход при торговле
   virtual tGameBid makemove (tGameBid MaxGame,int HaveAVist,int nGamerVist); // после получения игроком прикупа - пасс или вист
   virtual tGameBid makeout4game (void);
@@ -101,25 +100,25 @@ private:
   void RecountTables(TCardList *aMaxCardList,int a23); // Пересчитывает таблицу         TMastTable MastTable[5];
   void RecountTables4RasPass(TCardList *aMaxCardList,int a23); // Пересчитывает таблицу дли распасов или мизера
 
-  void LoadLists(TGamer *aLeftGamer,TGamer *aRightGamer,TCardList *aMaxCardList); // Набор списков
-  TCard *MiserCatch1(TGamer *aLeftGamer,TGamer *aRightGamer);
-  TCard *Miser1(TGamer *aLeftGamer,TGamer *aRightGamer);
-  TCard *MyGame1(TGamer *aLeftGamer,TGamer *aRightGamer); // моя игра 1 заход - мой
+  void LoadLists(Player *aLeftGamer,Player *aRightGamer,TCardList *aMaxCardList); // Набор списков
+  TCard *MiserCatch1(Player *aLeftGamer,Player *aRightGamer);
+  TCard *Miser1(Player *aLeftGamer,Player *aRightGamer);
+  TCard *MyGame1(Player *aLeftGamer,Player *aRightGamer); // моя игра 1 заход - мой
 
-  TCard *MyVist1(TGamer *aLeftGamer,TGamer *aRightGamer); // мой вист или пас 1 заход - мой
+  TCard *MyVist1(Player *aLeftGamer,Player *aRightGamer); // мой вист или пас 1 заход - мой
 
-  TCard *MiserCatch2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer);
-  TCard *Miser2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer);
-  TCard *MyGame2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer); // моя игра 2 заход - мой
-  TCard *MyVist2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer); // мой вист или пас 2 заход - мой
+  TCard *MiserCatch2(TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer);
+  TCard *Miser2(TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer);
+  TCard *MyGame2(TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer); // моя игра 2 заход - мой
+  TCard *MyVist2(TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer); // мой вист или пас 2 заход - мой
 
-  TCard *MiserCatch3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer);
-  TCard *Miser3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer);
-  TCard *MyGame3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer); // моя игра 3 заход - мой
-  TCard *MyVist3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer); // мой вист или пас 3 заход - мой
+  TCard *MiserCatch3(TCard *aLeftCard,TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer);
+  TCard *Miser3(TCard *aLeftCard,TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer);
+  TCard *MyGame3(TCard *aLeftCard,TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer); // моя игра 3 заход - мой
+  TCard *MyVist3(TCard *aLeftCard,TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer); // мой вист или пас 3 заход - мой
   // А вот и часть отвечающая за распасы и мизер !!!
-  TCard *MyPass1(TCard *,TGamer *aLeftGamer,TGamer *aRightGamer);
-  TCard *MyPass2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer); // моя игра 2 заход - мой
-  TCard *MyPass3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer); // моя игра 3 заход - мой
+  TCard *MyPass1(TCard *,Player *aLeftGamer,Player *aRightGamer);
+  TCard *MyPass2(TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer); // моя игра 2 заход - мой
+  TCard *MyPass3(TCard *aLeftCard,TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer); // моя игра 3 заход - мой
 };
 #endif

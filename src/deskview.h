@@ -30,7 +30,7 @@ public:
   void MessageBox (const QString &text, const QString &caption);
   void ShowBlankPaper (int nBuletScore);
   void showPlayerScore (int i, const QString &sb, const QString &sm, const QString &slv, const QString &srv, const QString &tv);
-  //----------------------------- for THuman gamer
+  //----------------------------- for human player
   tGameBid makemove (tGameBid lMove, tGameBid rMove);
   void StatusBar (const QString &text);
   void drawRotatedText (QPainter &p, int x, int y, float angle, const QString &text);

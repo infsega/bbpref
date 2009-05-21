@@ -11,10 +11,10 @@
 #include <stdlib.h>
 #include "deskview.h"
 #include "ncounter.h"
-#include "gamer.h"
+#include "player.h"
 #include "desktop.h"
 #include "plscore.h"
-#include "humang.h"
+#include "human.h"
 
 
 QString Tclist2pchar (Tclist *list) {
@@ -53,12 +53,12 @@ void TDeskTop::InternalConstruct(void) {
   nCurrentStart.nMin=nCurrentMove.nMin=1;
   nCurrentStart.nMax=nCurrentMove.nMax=3;
 
-  InsertGamer(new TGamer(0));
-  //InsertGamer(new TGamer(1));
+  InsertGamer(new Player(0));
+  //InsertGamer(new Player(1));
   // I Hate This Game :)
-  InsertGamer(new THuman(1, DeskView));
-  InsertGamer(new TGamer(2, DeskView));
-  InsertGamer(new TGamer(3, DeskView));
+  InsertGamer(new HumanPlayer(1, DeskView));
+  InsertGamer(new Player(2, DeskView));
+  InsertGamer(new Player(3, DeskView));
   Gamers->AtFree(0);
   nflShowPaper = 0;
   nBuletScore = 21;
@@ -124,7 +124,7 @@ void TDeskTop::CloseBullet () {
   Tncounter counter(1, 1, 3);
   int mb = INT_MAX, mm = INT_MAX, i;
   TRospis R[4];
-  TGamer *G;
+  Player *G;
   for (i = 1; i <= 3; i++) {
     G = GetGamerByNum(i);
     R[i].m = G->aScore->nGetMount();
@@ -173,13 +173,13 @@ void TDeskTop::CloseBullet () {
 }
 
 
-TGamer *TDeskTop::InsertGamer (TGamer *Gamer) {
+Player *TDeskTop::InsertGamer (Player *Gamer) {
   Gamers->Insert(Gamer);
   return Gamer;
 }
 
 
-void TDeskTop::GamerAssign (TGamer *newgamer,TGamer *oldgamer) {
+void TDeskTop::GamerAssign (Player *newgamer,Player *oldgamer) {
   newgamer->aCards->Assign(oldgamer->aCards);
   newgamer->aLeft->Assign(oldgamer->aLeft);
   newgamer->aRight->Assign(oldgamer->aRight);
@@ -204,15 +204,15 @@ TCard *TDeskTop::PipeMakemove (TCard *lMove, TCard *rMove) {
 
 
 // ежели  номер не 1 и игра пас или ( ловля мизера и игрок не сетевой),
-// то пораждаем нового THuman с номером текущего
-// ежели номер 1 и игра пас и не сетевая игра то порождаем TGamer
+// то пораждаем нового HumanPlayer с номером текущего
+// ежели номер 1 и игра пас и не сетевая игра то порождаем Player
 TCard *TDeskTop::ControlingMakemove (TCard *lMove, TCard *rMove) {
   TCard *RetVal = NULL;
-  TGamer *Now = GetGamerByNum(nCurrentMove.nValue);
+  Player *Now = GetGamerByNum(nCurrentMove.nValue);
 
   if ((GetGamerByNum(1)->GamesType == vist || GetGamerByNum(1)->GamesType == g86catch) &&
       Now->nGamer != 1 && (Now->GamesType == gtPass || Now->GamesType == g86catch)) {
-    THuman *NewHuman = new THuman(nCurrentMove.nValue, DeskView);
+    HumanPlayer *NewHuman = new HumanPlayer(nCurrentMove.nValue, DeskView);
     GamerAssign(NewHuman, Now);
     Gamers->AtPut(nCurrentMove.nValue, NewHuman);
     RetVal = NewHuman->makemove(lMove, rMove, GetGamerByNum(NextGamer(nCurrentMove)), GetGamerByNum(PrevGamer(nCurrentMove)));
@@ -221,7 +221,7 @@ TCard *TDeskTop::ControlingMakemove (TCard *lMove, TCard *rMove) {
     NewHuman->clear();
     delete NewHuman;
   } else if (Now->nGamer == 1 && Now->GamesType == gtPass) {
-    TGamer *NewHuman = new TGamer(nCurrentMove.nValue, DeskView);
+    Player *NewHuman = new Player(nCurrentMove.nValue, DeskView);
     GamerAssign(NewHuman, Now);
     Gamers->AtPut(nCurrentMove.nValue, NewHuman);
     RetVal = NewHuman->makemove(lMove, rMove, GetGamerByNum(NextGamer(nCurrentMove)), GetGamerByNum(PrevGamer(nCurrentMove)));
@@ -263,7 +263,7 @@ void TDeskTop::RunGame () {
     nflShowPaper = 0;
     // сдали карты
     for (int i = 0; i < CARDINCOLODA-2; i++) {
-      TGamer *tmpGamer = GetGamerByNum(GamersCounter.nValue);
+      Player *tmpGamer = GetGamerByNum(GamersCounter.nValue);
       tmpGamer->AddCard((TCard *)Coloda->At(i));
       if (!((TCard *)Coloda->At(i))) DeskView->MessageBox("TCard = NULL", "Error!!!");
       ++GamersCounter;
@@ -316,11 +316,11 @@ void TDeskTop::RunGame () {
       // не расспасы
       // узнаем кто назначил максимальную игру
       for (int i = 1; i <= 3; i++) {
-        TGamer *tmpg = GetGamerByNum(i);
+        Player *tmpg = GetGamerByNum(i);
         if (tmpg->GamesType == GamesType[0]) {
           nPassCounter = 0;
           Tncounter tmpGamersCounter(1, 3);
-          TGamer *PassOrVistGamers;
+          Player *PassOrVistGamers;
           int PassOrVist = 0, nPassOrVist = 0;
           CardOnDesk[2] = (TCard *)Coloda->At(30);
           CardOnDesk[3] = (TCard *)Coloda->At(31);
@@ -397,7 +397,7 @@ void TDeskTop::RunGame () {
           } else {
             // Открытые или закрытые карты
             for (int ntmp = 2 ; ntmp <= 3 ; ntmp++) {
-              TGamer *Gamer4Open;
+              Player *Gamer4Open;
               Gamer4Open = GetGamerByNum(ntmp);
               if (nPassCounter || CurrentGame == g86) {
                 // если не 2 виста
@@ -422,7 +422,7 @@ void TDeskTop::RunGame () {
     }
     nCurrentMove = nCurrentStart;
     for (int i = 1; i <= 10; i++) {
-      TGamer *tmpg;
+      Player *tmpg;
       CardOnDesk[0] = CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = FirstCard = SecondCard = TherdCard = NULL;
       if (CurrentGame == raspass && (i >= 1 && i <= 3)) nCurrentMove = nCurrentStart;
       if (CurrentGame == raspass && (i == 1 || i == 2)) {
@@ -462,7 +462,7 @@ void TDeskTop::RunGame () {
       DeskView->mySleep(3);
       nPl = nPlayerTakeCards(FirstCard, SecondCard, TherdCard, GamesType[0]-(GamesType[0]/10)*10)-1;
       nCurrentMove = nCurrentMove+nPl;
-      tmpg = (TGamer *)Gamers->At(nCurrentMove.nValue);
+      tmpg = (Player *)Gamers->At(nCurrentMove.nValue);
       tmpg->nGetsCard++;
       CardOnDesk[0] = NULL;
       //DeskView->ClearScreen();
@@ -476,8 +476,8 @@ LabelRecordOnPaper:
     ++nCurrentStart;
     // записи по сдаче
     for (int i = 1; i<= 3;i++ ) {
-      TGamer * tmpg = GetGamerByNum(i);
-      TGamer * Gamer = GetGamerByNum(nGamernumber);
+      Player * tmpg = GetGamerByNum(i);
+      Player * Gamer = GetGamerByNum(nGamernumber);
       int RetValAddRec = tmpg->aScore->AddRecords (CurrentGame,
                 tmpg->GamesType ,
                 Gamer !=NULL ? Gamer->nGetsCard : 0,
@@ -514,7 +514,7 @@ LabelRecordOnPaper:
     // после игры - перевернуть карты и показать их
       for (int k = 1; k<=3;k++) {
         TCardList *tmplist;
-        TGamer * Gamer = GetGamerByNum(k);
+        Player * Gamer = GetGamerByNum(k);
         tmplist = Gamer->aCards;
         Gamer->aCards = Gamer->aCardsOut;
         Gamer->nInvisibleHand = 0;
@@ -558,7 +558,7 @@ int TDeskTop::GetGamerWithMaxBullet(void) {
 //-------------------------------------------------------------
 /*
 void TDeskTop::OnlyMessage (int  nGamer) {
-  TGamer *tmpg = GetGamerByNum(nGamer);
+  Player *tmpg = GetGamerByNum(nGamer);
   if (tmpg) {
     tmpg->DeskView = DeskView;
     switch (nGamer) {
@@ -580,12 +580,12 @@ void TDeskTop::OnlyMessage (int  nGamer) {
 
 
 void TDeskTop::Repaint (int nGamer) {
-  TGamer *tmpg = GetGamerByNum(nGamer);
+  Player *tmpg = GetGamerByNum(nGamer);
   if (!tmpg) return;
   tmpg->DeskView = DeskView;
   tmpg->RepaintSimple(!(tmpg->nInvisibleHand));
 /*
-  TGamer *tmpg = GetGamerByNum(nGamer);
+  Player *tmpg = GetGamerByNum(nGamer);
   if (!tmpg) return;
   tmpg->DeskView = DeskView;
   switch (nGamer) {
@@ -696,8 +696,8 @@ void TDeskTop::ShowCard (int nGamer, TCard *card) {
 }
 
 
-TGamer *TDeskTop::GetGamerByNum (int num) {
-  return (TGamer *)Gamers->At(num);
+Player *TDeskTop::GetGamerByNum (int num) {
+  return (Player *)Gamers->At(num);
 }
 
 
@@ -733,7 +733,7 @@ int TDeskTop::LoadGame (const QString &name)  {
 
     char *buff = new char[1024];
     for (int i = 1; i<=3; i++) {
-        TGamer *Gamer = GetGamerByNum(i);
+        Player *Gamer = GetGamerByNum(i);
         Gamer->aScore->Bullet->FreeAll();
         Gamer->aScore->Mountan->FreeAll();
         Gamer->aScore->LeftVists->FreeAll();
@@ -777,7 +777,7 @@ int TDeskTop::SaveGame (const QString &name)  {
     char *slv = new char[1024];
     char *srv = new char[1024];
     for (int i = 1;i<=3;i++) {
-      TGamer *Gamer = GetGamerByNum(i);
+      Player *Gamer = GetGamerByNum(i);
       sb = Tclist2pchar ( Gamer->aScore->Bullet,sb);
       replace(sb,'.',' ');
       sm = Tclist2pchar (Gamer->aScore->Mountan,sm);
@@ -810,7 +810,7 @@ void TDeskTop::ShowPaper () {
   QString sb, sm, slv, srv, tv;
   DeskView->ShowBlankPaper(nBuletScore);
   for (int i = 1;i<=3;i++) {
-    TGamer *Gamer = GetGamerByNum(i);
+    Player *Gamer = GetGamerByNum(i);
     sb = Tclist2pchar(Gamer->aScore->Bullet);
     sm = Tclist2pchar(Gamer->aScore->Mountan);
     slv = Tclist2pchar(Gamer->aScore->LeftVists);

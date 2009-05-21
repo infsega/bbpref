@@ -9,8 +9,8 @@ HEADERS += \
   $$PWD/debug.h \
   $$PWD/desktop.h \
   $$PWD/deskview.h \
-  $$PWD/gamer.h \
-  $$PWD/humang.h \
+  $$PWD/player.h \
+  $$PWD/human.h \
   $$PWD/kpref.h \
   $$PWD/movenode.h \
   $$PWD/ncounter.h \
@@ -30,8 +30,8 @@ SOURCES += \
   $$PWD/debug.cpp \
   $$PWD/desktop.cpp \
   $$PWD/deskview.cpp \
-  $$PWD/gamer.cpp \
-  $$PWD/humang.cpp \
+  $$PWD/player.cpp \
+  $$PWD/human.cpp \
   $$PWD/kpref.cpp \
   $$PWD/movenode.cpp \
   $$PWD/ncounter.cpp \

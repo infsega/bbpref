@@ -1,19 +1,3 @@
-/***************************************************************************
-                          gamer.cpp  -  description
-                             -------------------
-    begin                : Tue May 23 2000
-    copyright            : (C) 2000 by Azarniy I.V.
-    email                : azarniy@usa.net
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -24,7 +8,7 @@
 
 #include "prfconst.h"
 #include "deskview.h"
-#include "gamer.h"
+#include "player.h"
 #include "card.h"
 #include "cardlist.h"
 #include "coloda.h"
@@ -34,7 +18,7 @@
 //#include "netconst.h"
 
 
-TGamer::TGamer(int _nGamer) {
+Player::Player(int _nGamer) {
   nGamer = _nGamer;
   aScore = new TPlScore();
   aCards = new TCardList(12); // мои
@@ -49,7 +33,7 @@ TGamer::TGamer(int _nGamer) {
 }
 
 
-TGamer::TGamer(int _nGamer,TDeskView *aDeskView) {
+Player::Player(int _nGamer,TDeskView *aDeskView) {
   nGamer = _nGamer;
   aScore = new TPlScore();
   aCards = new TCardList(12);
@@ -65,7 +49,7 @@ TGamer::TGamer(int _nGamer,TDeskView *aDeskView) {
 }
 
 
-TGamer::~TGamer() {
+Player::~Player() {
   delete aCards;
   delete aLeft;
   delete aRight;
@@ -77,7 +61,7 @@ TGamer::~TGamer() {
 }
 
 
-void TGamer::clear () {
+void Player::clear () {
   flMiser = 0;
   aCards->RemoveAll();
   aLeft->RemoveAll();
@@ -101,12 +85,12 @@ void TGamer::clear () {
 }
 
 
-void TGamer::AddCard (TCard *aCard) {
+void Player::AddCard (TCard *aCard) {
   aCards->Insert(aCard);
 }
 
 
-void TGamer::AddCard (int _CName, int _CMast) {
+void Player::AddCard (int _CName, int _CMast) {
   aCards->Insert(new TCard (_CName,_CMast));
 }
 
@@ -114,7 +98,7 @@ void TGamer::AddCard (int _CName, int _CMast) {
 ///////////////////////////////////////////////////////////////////////////////
 // game mechanics
 ///////////////////////////////////////////////////////////////////////////////
-TCard *TGamer::Miser1(TGamer *aLeftGamer,TGamer *aRightGamer) {
+TCard *Player::Miser1(Player *aLeftGamer,Player *aRightGamer) {
     TCard *cur=NULL;
     if (aCards -> AllCard()==10) {  // first move первый выход в 8..туз если она одна
         for (int m=1;m<=4;m++) {
@@ -152,7 +136,7 @@ TCard *TGamer::Miser1(TGamer *aLeftGamer,TGamer *aRightGamer) {
     return cur;
 }
 //-----------------------------------------------------------------------
-TCard *TGamer::Miser2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) {
+TCard *Player::Miser2(TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
     TCard *cur=NULL;
       if ( aCards->AllCard( aRightCard->CMast) ) {
           for (int c=FACE_ACE;c>=7;c--) {
@@ -190,7 +174,7 @@ TCard *TGamer::Miser2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) 
     return cur;
 }
 //-----------------------------------------------------------------------
-TCard *TGamer::Miser3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) {
+TCard *Player::Miser3(TCard *aLeftCard,TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
 // copy from MyPass3
   TCard *cur=NULL;
     /*TCard *MaxCard;*/
@@ -234,7 +218,7 @@ TCard *TGamer::Miser3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGam
   return cur;
 }
 //-----------------------------------------------------------------------
-TCard *TGamer::makemove(TCard *lMove,TCard *rMove,TGamer *aLeftGamer,TGamer *aRightGamer) { //ход
+TCard *Player::makemove(TCard *lMove,TCard *rMove,Player *aLeftGamer,Player *aRightGamer) { //ход
     TCard *cur=NULL;
     if (lMove == NULL && rMove == NULL) { // мой заход - первый
         if ( GamesType == gtPass || GamesType == vist ) {
@@ -287,7 +271,7 @@ TCard *TGamer::makemove(TCard *lMove,TCard *rMove,TGamer *aLeftGamer,TGamer *aRi
     return cur;
 }
 //-----------------------------------------------------------------------
-TMastTable TGamer::vzatok(TMast Mast,TCardList *aMaxCardList,int a23) {
+TMastTable Player::vzatok(TMast Mast,TCardList *aMaxCardList,int a23) {
    TMastTable MastTable;
    TCard *MyCard,*tmpCard;
    TCardList *MyCardStack     = new TCardList(MAXMASTLEN);
@@ -322,7 +306,7 @@ TMastTable TGamer::vzatok(TMast Mast,TCardList *aMaxCardList,int a23) {
    return MastTable;
 }
 //-----------------------------------------------------------------------
-void TGamer::RecountTables4RasPass(TCardList *aMaxCardList,int a23) { // Пересчитывает таблицу дли распасов или мизера
+void Player::RecountTables4RasPass(TCardList *aMaxCardList,int a23) { // Пересчитывает таблицу дли распасов или мизера
   Q_UNUSED(a23)
     int i;
     MastTable[0].vzatok=0;
@@ -337,7 +321,7 @@ void TGamer::RecountTables4RasPass(TCardList *aMaxCardList,int a23) { // Пересчи
 
 }
 //-----------------------------------------------------------------------
-void TGamer::RecountTables( TCardList *aMaxCardList,int a23 ){ // Пересчитывает таблицу         TMastTable MastTable[5];
+void Player::RecountTables( TCardList *aMaxCardList,int a23 ){ // Пересчитывает таблицу         TMastTable MastTable[5];
     int i;
     MastTable[0].vzatok=0;
     MastTable[0].perehvatov=0;
@@ -350,7 +334,7 @@ void TGamer::RecountTables( TCardList *aMaxCardList,int a23 ){ // Пересчитывает 
     }
 }
 //-----------------------------------------------------------------------
-TCard *TGamer::MiserCatch1(TGamer *aLeftGamer,TGamer *aRightGamer) {
+TCard *Player::MiserCatch1(Player *aLeftGamer,Player *aRightGamer) {
   TCard *cur=NULL;
   TCardList *aMaxCardList=new TCardList(20);
   TCardList *Naparnik;
@@ -431,7 +415,7 @@ badlabel:
   return cur;
 }
 //-----------------------------------------------------------------------
-TCard *TGamer::MiserCatch2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) {
+TCard *Player::MiserCatch2(TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
   TCard *cur=NULL;
   TCardList *aMaxCardList=new TCardList(20);
   TCardList *Naparnik;
@@ -517,7 +501,7 @@ TCard *TGamer::MiserCatch2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGa
 
 }
 //-----------------------------------------------------------------------
-TCard *TGamer::MiserCatch3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) {
+TCard *Player::MiserCatch3(TCard *aLeftCard,TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
   TCard *cur=NULL;
   TCardList *aMaxCardList=new TCardList(20);
   TCardList *Naparnik;
@@ -593,7 +577,7 @@ TCard *TGamer::MiserCatch3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer
   return cur;
 }
 //-----------------------------------------------------------------------
-TCard *TGamer::MyGame3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) { // моя игра 3 заход - мой
+TCard *Player::MyGame3(TCard *aLeftCard,TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer) { // моя игра 3 заход - мой
     TCard *cur=NULL;
     TCard *MaxCard;
     tGameBid tmpGamesType=GamesType;
@@ -655,12 +639,12 @@ TCard *TGamer::MyGame3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGa
 
 }
 //-----------------------------------------------------------------------
-TCard *TGamer::MyVist3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) { // мой вист или пас 3 заход - мой
+TCard *Player::MyVist3(TCard *aLeftCard,TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer) { // мой вист или пас 3 заход - мой
     TCard *cur=NULL;
     TCard *MaxCard;
     tGameBid tmpGamesType=GamesType;
     TCardList *aMaxCardList=new TCardList(20);
-    TGamer *aEnemy,*aFriend;
+    Player *aEnemy,*aFriend;
     int mast;
     // Кто игрок а кто напарник
     if ( aLeftGamer -> GamesType != gtPass && aLeftGamer -> GamesType != vist ) {
@@ -779,11 +763,11 @@ TCard *TGamer::MyVist3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGa
 }
 //-----------------------------------------------------------------------
 
-TCard *TGamer::MyVist2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) { // мой вист или пас 2 заход - мой
+TCard *Player::MyVist2(TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer) { // мой вист или пас 2 заход - мой
     TCard *cur=NULL;
     tGameBid tmpGamesType=GamesType;
     TCardList *aMaxCardList=new TCardList(20);
-    TGamer *aEnemy,*aFriend;
+    Player *aEnemy,*aFriend;
     int mast;
     // Кто игрок а кто напарник
     if ( aLeftGamer -> GamesType != gtPass && aLeftGamer -> GamesType != vist ) {
@@ -830,12 +814,12 @@ TCard *TGamer::MyVist2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer)
 
 }
 //-----------------------------------------------------------------------
-TCard *TGamer::MyVist1(TGamer *aLeftGamer,TGamer *aRightGamer) {
+TCard *Player::MyVist1(Player *aLeftGamer,Player *aRightGamer) {
 // 1 - выбить козыря 2-разиграть масти с перехватами 3-без перехватов 4-???
     TCard *cur=NULL;
     tGameBid tmpGamesType=GamesType;
     TCardList *aMaxCardList=new TCardList(20);
-    TGamer *aEnemy,*aFriend;
+    Player *aEnemy,*aFriend;
     int mast;
     // Кто игрок а кто напарник
     if ( aLeftGamer -> GamesType != gtPass && aLeftGamer -> GamesType != vist ) {
@@ -904,7 +888,7 @@ TCard *TGamer::MyVist1(TGamer *aLeftGamer,TGamer *aRightGamer) {
 }
 
 //-----------------------------------------------------------------------
-TCard *TGamer::MyGame2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) {
+TCard *Player::MyGame2(TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
     TCardList *aMaxCardList=new TCardList(20);
     tGameBid tmpGamesType=GamesType;
     TCard *cur=NULL;
@@ -956,7 +940,7 @@ TCard *TGamer::MyGame2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer)
     return cur;
 }
 //-----------------------------------------------------------------------
-TCard *TGamer::MyGame1(TGamer *aLeftGamer,TGamer *aRightGamer) {
+TCard *Player::MyGame1(Player *aLeftGamer,Player *aRightGamer) {
 // 1-выбить козыря 2-разиграть масти с перехватами 3-без перехватов 4-???
     TCard *cur=NULL;
     tGameBid tmpGamesType=GamesType;
@@ -1001,7 +985,7 @@ TCard *TGamer::MyGame1(TGamer *aLeftGamer,TGamer *aRightGamer) {
     return cur;
 }
 //-----------------------------------------------------------------------
-TCard *TGamer::GetMaxCardPere(void) {
+TCard *Player::GetMaxCardPere(void) {
     int index=0,vz=0,pere=0;
 
     for (int i=1;i<=4;i++) {
@@ -1016,7 +1000,7 @@ TCard *TGamer::GetMaxCardPere(void) {
     return NULL;
 }
 //-----------------------------------------------------------------------
-TCard *TGamer::GetMaxCardWithOutPere(void) {
+TCard *Player::GetMaxCardWithOutPere(void) {
     int index=0,vz=0,pere=0;
     for (int i=1;i<=4;i++) {
         if ( MastTable[i].vzatok > vz || (MastTable[i].vzatok == vz && MastTable[i].perehvatov < pere) ) {
@@ -1029,7 +1013,7 @@ TCard *TGamer::GetMaxCardWithOutPere(void) {
     return NULL;
 }
 //-----------------------------------------------------------------------
-TCard *TGamer::GetMinCardWithOutVz(void) {
+TCard *Player::GetMinCardWithOutVz(void) {
     int index=0;
     //,vz=8;
     float koef = 0,koef1 = 0 ;
@@ -1047,7 +1031,7 @@ TCard *TGamer::GetMinCardWithOutVz(void) {
 //    return NULL;
 }
 //-----------------------------------------------------------------------
-void TGamer::LoadLists(TGamer *aLeftGamer,TGamer *aRightGamer,TCardList *aMaxCardList) {
+void Player::LoadLists(Player *aLeftGamer,Player *aRightGamer,TCardList *aMaxCardList) {
 /*    int nLeftVisible = aLeftGamer -> nCardsVisible,nRightVisible = aRightGamer -> nCardsVisible;
     int nCards = aCards -> AllCard();       */
     aLeft  -> RemoveAll();
@@ -1107,7 +1091,7 @@ void TGamer::LoadLists(TGamer *aLeftGamer,TGamer *aRightGamer,TCardList *aMaxCar
     aRight -> Assign(aRightGamer -> aCards);
 }
 //-----------------------------------------------------------------------
-tGameBid TGamer::makemove4out(void) {
+tGameBid Player::makemove4out(void) {
     tGameBid GamesTypeRetVal;
     int i;
     int nMaxMastLen=0;
@@ -1147,7 +1131,7 @@ tGameBid TGamer::makemove4out(void) {
 
 }
 //-----------------------------------------------------------------------
-tGameBid TGamer::makemove(tGameBid MaxGame,int HaveAVist,int nGamerVist) { // после получения игроком прикупа - пасс или вист
+tGameBid Player::makemove(tGameBid MaxGame,int HaveAVist,int nGamerVist) { // после получения игроком прикупа - пасс или вист
   Q_UNUSED(nGamerVist)
   tGameBid Answer;
   tGameBid MyMaxGame = makemove4out();
@@ -1171,7 +1155,7 @@ tGameBid TGamer::makemove(tGameBid MaxGame,int HaveAVist,int nGamerVist) { // по
   return Answer;
 }
 //-----------------------------------------------------------------------
-tGameBid TGamer::makeout4miser(void) {
+tGameBid Player::makeout4miser(void) {
   TCard *FirstCardOut=NULL,*SecondCardOut=NULL;
   TCard *tmpFirstCardOut,*tmpSecondCardOut;
   TCard *RealFirstCardOut,*RealSecondCardOut;
@@ -1184,7 +1168,7 @@ tGameBid TGamer::makeout4miser(void) {
       if ( j!=i ) {
         tmpSecondCardOut = (TCard*) aCards -> At(j);
         aCards -> AtRemove(j);
-        TGamer *tmpGamer = new TGamer(99);
+        Player *tmpGamer = new Player(99);
         tmpGamer -> aCards -> Assign(aCards);
         tmpGamer -> aCards -> mySort();
         tmpHight = tmpGamer -> makemove4out();
@@ -1218,7 +1202,7 @@ tGameBid TGamer::makeout4miser(void) {
   return g86;
 }
 //-----------------------------------------------------------------------
-tGameBid TGamer::makeout4game(void) {
+tGameBid Player::makeout4game(void) {
   TCard *FirstCardOut=NULL,*SecondCardOut=NULL;
   TCard *tmpFirstCardOut,*tmpSecondCardOut;
   TCard *RealFirstCardOut,*RealSecondCardOut;
@@ -1230,7 +1214,7 @@ tGameBid TGamer::makeout4game(void) {
       if ( j!=i ) {
         tmpSecondCardOut = (TCard*) aCards -> At(j);
         aCards -> AtRemove(j);
-        TGamer *tmpGamer = new TGamer(99);
+        Player *tmpGamer = new Player(99);
         tmpGamer -> aCards -> Assign(aCards);
         tmpGamer -> aCards -> mySort();
         tmpHight = tmpGamer -> makemove4out();
@@ -1277,7 +1261,7 @@ tGameBid TGamer::makeout4game(void) {
   return GamesType;
 }
 //-----------------------------------------------------------------------
-tGameBid TGamer::makemove(tGameBid lMove,tGameBid rMove) { //ход при торговле
+tGameBid Player::makemove(tGameBid lMove,tGameBid rMove) { //ход при торговле
 /*  if ( GamesType == gtPass )  {
     GamesType=gtPass;
   } else {*/
@@ -1388,7 +1372,7 @@ tGameBid TGamer::makemove(tGameBid lMove,tGameBid rMove) { //ход при торговле
   return GamesType;
 }
 //-----------------------------------------------------------------------
-int TGamer::Check4Miser( void) {
+int Player::Check4Miser( void) {
   int cur = 0;
   for (int Mast = SuitSpades;Mast<=SuitHearts;Mast++) {
     if ( aCards -> Exist(7,Mast) && ( aCards -> Exist(9,Mast) || aCards -> Exist(8,Mast) ) && ( aCards -> Exist(FACE_JACK,Mast) || aCards -> Exist(10,Mast) )    ){
@@ -1399,7 +1383,7 @@ int TGamer::Check4Miser( void) {
   return 0;
 }
 //-----------------------------------------------------------------------
-TMastTable TGamer::vzatok4game(TMast Mast, int a23) {
+TMastTable Player::vzatok4game(TMast Mast, int a23) {
    TMastTable MastTable;
    TCard *MyCard,*tmpCard;
    TCardList *MyCardStack     = new TCardList(MAXMASTLEN);
@@ -1433,7 +1417,7 @@ TMastTable TGamer::vzatok4game(TMast Mast, int a23) {
    return MastTable;
 }
 //-----------------------------------------------------------------------
-TMastTable TGamer::vzatok4pass(TMast Mast,TCardList *aMaxCardList) {
+TMastTable Player::vzatok4pass(TMast Mast,TCardList *aMaxCardList) {
    TMastTable MastTable;
    TCard *MyCard,*tmpCard;
    TCardList *MyCardStack     = new TCardList(MAXMASTLEN);
@@ -1466,7 +1450,7 @@ TMastTable TGamer::vzatok4pass(TMast Mast,TCardList *aMaxCardList) {
 }
 
 //-----------------------------------------------------------------------
-TMastTable TGamer::Compare2List4Min(TCardList *My,TCardList *Enemy) { // Для мин результата
+TMastTable Player::Compare2List4Min(TCardList *My,TCardList *Enemy) { // Для мин результата
   TMastTable MastTable;
   MastTable.vzatok=0;
   MastTable.perehvatov=0;
@@ -1507,7 +1491,7 @@ TMastTable TGamer::Compare2List4Min(TCardList *My,TCardList *Enemy) { // Для мин
   return MastTable;
 }
 //-----------------------------------------------------------------------
-TMastTable TGamer::Compare2List4Max(TCardList *My,TCardList *Enemy) {
+TMastTable Player::Compare2List4Max(TCardList *My,TCardList *Enemy) {
   TMastTable MastTable;
   MastTable.vzatok=0;
 
@@ -1557,7 +1541,7 @@ TMastTable TGamer::Compare2List4Max(TCardList *My,TCardList *Enemy) {
   return MastTable;
 }
 //-----------------------------------------------------------------------
-TMastTable TGamer::Compare2List4Max23(TCardList *My,TCardList *Enemy) {
+TMastTable Player::Compare2List4Max23(TCardList *My,TCardList *Enemy) {
   TMastTable MastTable;
   MastTable.vzatok=0;
   MastTable.perehvatov=0;
@@ -1595,7 +1579,7 @@ TMastTable TGamer::Compare2List4Max23(TCardList *My,TCardList *Enemy) {
   return MastTable;
 }
 //-----------------------------------------------------------------------
-TCard *TGamer::MyPass1(TCard *rMove,TGamer *aLeftGamer,TGamer *aRightGamer) {
+TCard *Player::MyPass1(TCard *rMove,Player *aLeftGamer,Player *aRightGamer) {
   TCard *cur=NULL;
   tGameBid tmpGamesType=GamesType;
   TCardList *aMaxCardList=new TCardList(20);
@@ -1646,7 +1630,7 @@ TCard *TGamer::MyPass1(TCard *rMove,TGamer *aLeftGamer,TGamer *aRightGamer) {
   return cur;
 }
 //-----------------------------------------------------------------------
-TCard *TGamer::MyPass2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) {
+TCard *Player::MyPass2(TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
   TCard *cur=NULL;
   tGameBid tmpGamesType=GamesType;
   int mast = aRightCard -> CMast;
@@ -1689,7 +1673,7 @@ TCard *TGamer::MyPass2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer)
   return cur;
 }
 //-----------------------------------------------------------------------
-TCard *TGamer::MyPass3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) {
+TCard *Player::MyPass3(TCard *aLeftCard,TCard *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
   TCard *cur=NULL;
     /*TCard *MaxCard;*/
     tGameBid tmpGamesType=GamesType;
@@ -1733,7 +1717,7 @@ TCard *TGamer::MyPass3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGa
   return cur;
 }
 //-----------------------------------------------------------------------
-void TGamer::makestatfill(void) {
+void Player::makestatfill(void) {
    TSide lr=LeftHand;
    for (int m=1;m<=4;m++) {
      for (int c=FACE_ACE;c>=7;c-- ) {
@@ -1750,7 +1734,7 @@ void TGamer::makestatfill(void) {
    }
 }
 //-----------------------------------------------------------------------
-void TGamer::makestatfill(int nCards,int maxmin) {
+void Player::makestatfill(int nCards,int maxmin) {
     int nCounter=0;
     TSide lr=LeftHand;
     if ( maxmin ==1 ) {
@@ -1789,7 +1773,7 @@ void TGamer::makestatfill(int nCards,int maxmin) {
 }
 
 
-void TGamer::GetBackSnos () {
+void Player::GetBackSnos () {
   // Vernut snos
   if (aCardsOut->At(0)) aCards->Insert(aCardsOut->At(0));
   if (aCardsOut->At(1)) aCards->Insert(aCardsOut->At(1));
@@ -1802,7 +1786,7 @@ void TGamer::GetBackSnos () {
 ///////////////////////////////////////////////////////////////////////////////
 //-------------------------------------------------------------------------
 /*
-void TGamer::SetViewPort(void) {
+void Player::SetViewPort(void) {
     DeskView->xLen=DeskView->DesktopWidht/2-2*DeskView->xBorder;
     DeskView->yLen=DeskView->DesktopHeight/2-2*DeskView->yBorder;
     Width  = DeskView->xLen;
@@ -1830,9 +1814,9 @@ void TGamer::SetViewPort(void) {
 
 
 /*
-void TGamer::OnlyMessage (TDeskView *DeskView, int Left, int Top, int Width, int Height) {
+void Player::OnlyMessage (TDeskView *DeskView, int Left, int Top, int Width, int Height) {
   //DeskView->ClearBox(Left, Top, Left+Width, / *Top+* /DeskView->yBorder);
-  //TGamer::Repaint(DeskView, Left, Top, Width, Height);
+  //Player::Repaint(DeskView, Left, Top, Width, Height);
 }
 */
 
@@ -1840,7 +1824,7 @@ void TGamer::OnlyMessage (TDeskView *DeskView, int Left, int Top, int Width, int
 ///////////////////////////////////////////////////////////////////////////////
 // at least 28 ints (14 int pairs); return # of used ints; the last int is -1
 // result: ofs, cardNo, ..., -1
-int TGamer::buildHandXOfs (int *dest, int startX, bool opened) {
+int Player::buildHandXOfs (int *dest, int startX, bool opened) {
   int cnt = 0, oldXX = startX, *oDest = dest;
   TCard *cur = 0, *prev = 0;
 
@@ -1873,7 +1857,7 @@ int TGamer::buildHandXOfs (int *dest, int startX, bool opened) {
 }
 
 
-void TGamer::getLeftTop (int playerNo, int *left, int *top) {
+void Player::getLeftTop (int playerNo, int *left, int *top) {
   *left = 0; *top = 0;
   //int ofs[28], cnt;
   switch (playerNo) {
@@ -1898,7 +1882,7 @@ void TGamer::getLeftTop (int playerNo, int *left, int *top) {
   }
 }
 
-int TGamer::cardAt (int lx, int ly, bool opened) {
+int Player::cardAt (int lx, int ly, bool opened) {
   int ii = -1, ofs[28];
   int left, top;
   getLeftTop(nGamer, &left, &top);
@@ -1936,7 +1920,7 @@ int TGamer::cardAt (int lx, int ly, bool opened) {
 }
 
 
-void TGamer::Repaint (TDeskView *aDeskView, int Left, int Top, int Width, int Height, bool opened, int selNo) {
+void Player::Repaint (TDeskView *aDeskView, int Left, int Top, int Width, int Height, bool opened, int selNo) {
   Q_UNUSED(Width)
   Q_UNUSED(Height)
   if (!aDeskView) return;
@@ -1966,14 +1950,14 @@ void TGamer::Repaint (TDeskView *aDeskView, int Left, int Top, int Width, int He
 }
 
 
-void TGamer::RepaintSimple (bool opened) {
+void Player::RepaintSimple (bool opened) {
   int left, top;
   getLeftTop(nGamer, &left, &top);
   Repaint(DeskView, left, top, opened, oldii);
 }
 
 
-void TGamer::HintCard (int lx, int ly) {
+void Player::HintCard (int lx, int ly) {
   Q_UNUSED(lx)
   Q_UNUSED(ly)
 }
@@ -1982,36 +1966,36 @@ void TGamer::HintCard (int lx, int ly) {
 ///////////////////////////////////////////////////////////////////////////////
 // game networking
 ///////////////////////////////////////////////////////////////////////////////
-int TGamer::GetNikName () {
+int Player::GetNikName () {
   return 1;
 }
 
 
-int TGamer::connecttoserver (const QString &host, unsigned short port) {
+int Player::connecttoserver (const QString &host, unsigned short port) {
   Q_UNUSED(host)
   Q_UNUSED(port)
   return 1;
 }
 
 
-int TGamer::connecttodesk (int req) {
+int Player::connecttodesk (int req) {
   Q_UNUSED(req)
   return 1;
 }
 
 
-int TGamer::join (int req) {
+int Player::join (int req) {
   Q_UNUSED(req)
   return 1;
 }
 
 
-void TGamer::NetGetCards (TColoda *Coloda) {
+void Player::NetGetCards (TColoda *Coloda) {
   Q_UNUSED(Coloda)
 }
 
 
-int TGamer::SendnPlayerTakeCards (int who) {
+int Player::SendnPlayerTakeCards (int who) {
   Q_UNUSED(who)
   return 0;
 }
