@@ -1,169 +1,176 @@
-
 #include "prfconst.h"
 #include "plscore.h"
 
-//-------------------------------------------------------------------
-TPlScore::TPlScore() {
-   Bullet = new Tclist(MAXGAMELEN);
-   Mountan= new Tclist(MAXGAMELEN);
-   LeftVists= new Tclist(MAXGAMELEN);
-   RightVists= new Tclist(MAXGAMELEN);
-   Vists = 0;
-}
-//-------------------------------------------------------------------
-TPlScore::~TPlScore() {
-   delete Bullet ;
-   delete Mountan;
-   delete LeftVists;
-   delete RightVists;
-}
-//-------------------------------------------------------------------
-int TPlScore::AddBullet(int RetValAddRec) {
-  int nScore = nGetBull();
-  if ( (nScore + RetValAddRec) <=  nBuletScore ) {
-    Bullet ->  Insert(new int(nScore + RetValAddRec) );
-    return 0;
-  } else {
-    if (nBuletScore != nGetBull() )
-      Bullet ->  Insert(new int(nBuletScore));
-    return RetValAddRec - (nBuletScore-nScore);
-  }
-}
-//-------------------------------------------------------------------
-void TPlScore::MountanDown(int RetValAddRec) {
-  int nScore = nGetMount()- RetValAddRec;
-  if ( nScore >= 0) {
-    Mountan ->  Insert(new int(nScore) );
-  } else {
-    nScore = (RetValAddRec - nGetMount())*10/2;
-    if ( nGetMount() ) Mountan ->  Insert(new int(0));
-    LeftVists -> Insert(new int (nGetLeftVists()+nScore));
-    RightVists -> Insert(new int (nGetRightVists()+nScore));
-  }
-}
-//-------------------------------------------------------------------
-void TPlScore::MountanUp(int RetValAddRec) {
-  int nScore = nGetMount();
-  Mountan ->  Insert(new int(nScore+RetValAddRec) );
-}
-//-------------------------------------------------------------------
-void TPlScore::AddVist(int index,int myNumber,int Skolko) {
-  Tclist *NaKogo;
-  int *pnCurrent;
-  int nScore=0;
-  NaKogo  = RightVists;
-  if ( (myNumber==1 && index == 2) ||(myNumber==2 && index == 3)|| (myNumber==3 && index == 1) )
-    NaKogo  = LeftVists;
-  pnCurrent = (int *) NaKogo -> LastItem();
-  nScore = (pnCurrent==NULL ? 0: *pnCurrent) + Skolko*10;
-  NaKogo -> Insert(new int (nScore));
-}
-//-------------------------------------------------------------------
-int TPlScore::AddRecords( eGameBid aGamerType,eGameBid aMyType, int nGamerVz/*разигрывающего*/,int nMyVz/*чиcтых моих*/, int nGamer,int myNumber,int nqVist/*кол-во вистующих*/) {
-  int nGamePrice = gamePoolPrice(aGamerType);  // цена игры
-  int nGameCard=gameTricks(aGamerType); // взяток должно быть при  данной игре
-  int nVistCard=gameWhists(aGamerType); // минимальное кол во взяток вистующих на 2 их
-  int nScore=0,*pnCurrent=NULL;
-  Tclist *NaKogo;
-  if ( aMyType >=g61 && aMyType != g86 ) {
-    // значит я что- то играл !
-    if ( nGamerVz >= nGameCard ) {    // и сыграл !
-      return AddBullet(nGamePrice);
 
-   } else {  // и наиграл гору
-      pnCurrent = (int *) Mountan -> LastItem();
-      nScore = nGamePrice*(nGameCard-nMyVz) + (pnCurrent==NULL ? 0: *pnCurrent);
-      if (nScore) Mountan -> Insert(new int (nScore));
-    }
-    return 0;
+static QString intList2Str (const QIntList &list) {
+  QString res;
+  for (int f = 1; f < list.size(); f++) {
+    //if (!res.isEmpty()) res += '.';
+    res += QString::number(list[f]);
+    res += '.';
   }
-    //-------------------------------------------------------------------------
-  if ( aMyType == g86 ) {
-    if (nMyVz) {
-      MountanUp(nGamePrice*nMyVz);
-      return 0;
+  return res;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+TPlScore::TPlScore () {
+  mPool << 0;
+  mMountain << 0;
+  mLeftWhists << 0;
+  mRightWhists << 0;
+  mWhists = 0;
+}
+
+
+TPlScore::~TPlScore () {
+}
+
+
+int TPlScore::poolAdd (int delta) {
+  int score = pool();
+  int ns = score+delta;
+  if (ns <= optMaxPool) {
+    mPool << ns;
+    return 0;
+  } else {
+    if (optMaxPool != score) mPool << optMaxPool;
+    return delta-(optMaxPool-score);
+  }
+}
+
+
+void TPlScore::mountainDown (int delta) {
+  int score = mountain()-delta;
+  if (score >= 0) {
+    mMountain << score;
+  } else {
+    score = (delta-mountain())*10/2;
+    if (mountain()) mMountain << 0;
+    mLeftWhists << leftWhists()+score;
+    mRightWhists << rightWhists()+score;
+  }
+}
+
+
+void TPlScore::mountainUp (int delta) {
+  int score = mountain();
+  mMountain << score+delta;
+}
+
+
+void TPlScore::whistsAdd (int index, int myNumber, int delta) {
+  QIntList *dList;
+  int score;
+  dList = ((myNumber%3)+1 == index) ? &mLeftWhists : &mRightWhists;
+  int pnCurrent = dList->at(dList->size()-1);
+  score = pnCurrent+delta*10;
+  dList->append(score);
+}
+
+
+int TPlScore::recordScores (
+  eGameBid aGamerType,
+  eGameBid aMyType,
+  int nGamerVz, //разыгрывающего
+  int nMyVz, //чиcтых моих
+  int nGamer,
+  int myNumber,
+  int nqVist //кол-во вистующих
+  )
+{
+  int nGamePrice = gamePoolPrice(aGamerType); // цена игры
+  int nGameCard = gameTricks(aGamerType); // взяток должно быть при данной игре
+  int nVistCard = gameWhists(aGamerType); // минимальное кол-во взяток вистующих на двоих
+  int score = 0, pnCurrent = 0;
+  QIntList *dList;
+
+  if (aMyType >= g61 && aMyType != g86) {
+    // значит я что-то играл!
+    if (nGamerVz >= nGameCard) {
+      // и сыграл!
+      return poolAdd(nGamePrice);
     } else {
-      return AddBullet(10);
+      // и наиграл гору
+      pnCurrent = mMountain[mMountain.size()-1];
+      score = nGamePrice*(nGameCard-nMyVz)+pnCurrent;
+      if (score) mMountain << score;
     }
-
-  }
-    //-------------------------------------------------------------------------
-  if ( aMyType == raspass )  {
-      pnCurrent = (int *) Mountan -> LastItem();
-      nScore = nGamePrice*(nMyVz) + (pnCurrent==NULL ? 0: *pnCurrent);
-      if (nMyVz && nScore) {
-          Mountan -> Insert(new int (nScore));
-          return 0;
-        }
-      if ( !nMyVz )
-          return AddBullet(1);
+    return 0;
   }
 
-  NaKogo  = RightVists;
-  if ( (myNumber==1 && nGamer == 2) ||(myNumber==2 && nGamer == 3)|| (myNumber==3 && nGamer == 1) )
-    NaKogo  = LeftVists;
-  pnCurrent = (int *) NaKogo -> LastItem();
-
-    //-------------------------------------------------------------------------
-  if ( aMyType == gtPass && aGamerType != g86 )  {
-    if ( !globvist && nGameCard-nGamerVz > 0)  {   // разигрывающий  - недобрал
-        nScore = nGamePrice*((nGameCard-nGamerVz)+nMyVz) + (pnCurrent==NULL ? 0: *pnCurrent);
+  //-------------------------------------------------------------------------
+  if (aMyType == g86) {
+    if (nMyVz) {
+      mountainUp(nGamePrice*nMyVz);
+      return 0;
     }
-    if (nScore)  NaKogo -> Insert(new int (nScore));
+    return poolAdd(10);
   }
-    //-------------------------------------------------------------------------
-  if ( aMyType == vist && aGamerType != g86 )  {
-    if ( nGameCard-nGamerVz > 0)  {   // разигрывающий  - недобрал
-        if (nqVist == 2) { // 2 вистующих
-            //Запись только за свои взятки + недобор
-            nScore = nGamePrice*((nGameCard-nGamerVz)+nMyVz) + (pnCurrent==NULL ? 0: *pnCurrent);
-        } else { // 1 вистующий
-                nScore = nGamePrice*((nGameCard-nGamerVz)+nMyVz) + (pnCurrent==NULL ? 0: *pnCurrent);
-                //Запись за свои + недобор
-        }
-    } else { // разигрывающий  - взял своeё или больше
+
+  //-------------------------------------------------------------------------
+  if (aMyType == raspass)  {
+    pnCurrent = mMountain[mMountain.size()-1];
+    score = nGamePrice*(nMyVz)+pnCurrent;
+    if (nMyVz && score) {
+      mMountain << score;
+      return 0;
+    }
+    if (!nMyVz) return poolAdd(1);
+  }
+
+  dList = ((myNumber%3)+1 == nGamer) ? &mLeftWhists : &mRightWhists;
+  pnCurrent = dList->at(dList->size()-1);
+
+  //-------------------------------------------------------------------------
+  if (aMyType == gtPass && aGamerType != g86) {
+    if (!globvist && nGameCard-nGamerVz > 0) {
+      // разыгрывающий без лап(ы)
+      score = nGamePrice*((nGameCard-nGamerVz)+nMyVz)+pnCurrent;
+    }
+    if (score) dList->append(score);
+  }
+
+  //-------------------------------------------------------------------------
+  if (aMyType == vist && aGamerType != g86)  {
+    if (nGameCard-nGamerVz > 0) {
+      // разыгрывающий без лап(ы)
       if (nqVist == 2) {
-          nScore = nGamePrice*(nMyVz) + (pnCurrent==NULL ? 0: *pnCurrent);
+        // 2 вистующих
+        // запись только за свои взятки + недобор
+        score = nGamePrice*((nGameCard-nGamerVz)+nMyVz)+pnCurrent;
       } else {
-          nScore = nGamePrice*(10-nGamerVz) + (pnCurrent==NULL ? 0: *pnCurrent);
+        // 1 вистующий
+        // запись за свои + недобор
+        score = nGamePrice*((nGameCard-nGamerVz)+nMyVz)+pnCurrent;
       }
-        // проверить на наличие недобора со стороны вистующего !!!!
-       if ( nVistCard > (10-nGamerVz) ) {
+    } else {
+      // разыгрывающий взял своё или больше
+      if (nqVist == 2) {
+        score = nGamePrice*(nMyVz)+pnCurrent;
+      } else {
+        score = nGamePrice*(10-nGamerVz)+pnCurrent;
+      }
+      // проверить на наличие недобора со стороны вистующего!
+      if (nVistCard > 10-nGamerVz) {
         if (nqVist == 2) {
-              MountanUp(
-                  (int)(((float)(nVistCard/2-nMyVz)) * nGamePrice)
-              );
-        } else { //1 вистующий
-          if ( (nVistCard - nMyVz ) > 0)
-              MountanUp(nGamePrice*(nVistCard - (10-nGamerVz) ));
+          // 2 вистующих
+          double d = nVistCard;
+          d = (d/2-nMyVz)*nGamePrice;
+          mountainUp((int)d);
+        } else {
+          // 1 вистующий
+          if (nVistCard-nMyVz > 0) mountainUp(nGamePrice*(nVistCard-(10-nGamerVz)));
         }
       }
     }
-     if (nScore) NaKogo -> Insert(new int (nScore));
+    if (score) dList->append(score);
   }
   return 0;
 }
-//-------------------------------------------------------------
-int TPlScore::nGetBull() {
-     int *pnScore = (int *) Bullet -> LastItem();
-     if ( pnScore ) return *pnScore;
-     return 0;
-}
-//-------------------------------------------------------------
-int TPlScore::nGetMount() {
-     int *pnScore = (int *) Mountan -> LastItem();
-     if ( pnScore ) return *pnScore;
-     return 0;
-}
-//-------------------------------------------------------------
-int TPlScore::nGetLeftVists() {
-     int *pnScore = (int *) LeftVists -> LastItem();
-     if ( pnScore ) return *pnScore;
-     return 0;
-}
-//-------------------------------------------------------------
-int TPlScore::nGetRightVists() {
-     int *pnScore = (int *) RightVists -> LastItem();
-     if ( pnScore ) return *pnScore;
-     return 0;;
-}
+
+
+QString TPlScore::poolStr () const { return intList2Str(mPool); }
+QString TPlScore::mountainStr () const { return intList2Str(mMountain); }
+QString TPlScore::leftWhistsStr () const { return intList2Str(mLeftWhists); }
+QString TPlScore::rightWhistsStr () const { return intList2Str(mRightWhists); }

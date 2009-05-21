@@ -50,7 +50,7 @@ static tGameName gameNames[] = {
 bool g61stalingrad;
 bool g10vist;
 bool globvist;
-int nBuletScore;
+int optMaxPool;
 eGameBid CurrentGame;
 
 

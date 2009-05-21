@@ -55,7 +55,7 @@ void TDeskTop::InternalConstruct(void) {
   InsertGamer(new Player(3, DeskView));
   Gamers->AtFree(0);
   nflShowPaper = 0;
-  nBuletScore = 21;
+  optMaxPool = 21;
   flProtocol = 0;
   iMoveX = iMoveY = -1;
 }
@@ -124,10 +124,10 @@ void TDeskTop::CloseBullet () {
   Player *G;
   for (i = 1; i <= 3; i++) {
     G = GetGamerByNum(i);
-    R[i].m = G->aScore->nGetMount();
-    R[i].b = G->aScore->nGetBull();
-    R[i].lv = G->aScore->nGetLeftVists();
-    R[i].rv = G->aScore->nGetRightVists();
+    R[i].m = G->aScore->mountain();
+    R[i].b = G->aScore->pool();
+    R[i].lv = G->aScore->leftWhists();
+    R[i].rv = G->aScore->rightWhists();
     if (R[i].m < mm) mm = R[i].m;
     if (R[i].b < mb) mb = R[i].b;
   }
@@ -165,7 +165,7 @@ void TDeskTop::CloseBullet () {
     i1 = counter.nValue;
     ++counter;
     i2 = counter.nValue;
-    GetGamerByNum(i)->aScore->Vists = R[i].lv + R[i].rv - R[i1].rv - R[i2].lv;
+    GetGamerByNum(i)->aScore->setWhists(R[i].lv + R[i].rv - R[i1].rv - R[i2].lv);
   }
 }
 
@@ -281,9 +281,9 @@ void TDeskTop::RunGame () {
   if (flProtocol) OpenProtocol();
   // while !конец пули
   qsrand(time(NULL));
-  while (!(GetGamerByNum(1)->aScore->nGetBull() >= nBuletScore &&
-           GetGamerByNum(2)->aScore->nGetBull() >= nBuletScore &&
-           GetGamerByNum(3)->aScore->nGetBull() >= nBuletScore)) {
+  while (!(GetGamerByNum(1)->aScore->pool() >= optMaxPool &&
+           GetGamerByNum(2)->aScore->pool() >= optMaxPool &&
+           GetGamerByNum(3)->aScore->pool() >= optMaxPool)) {
     Tncounter GamersCounter(1, 1, 3);
     mPlayingRound = false;
     int nPl;
@@ -646,7 +646,7 @@ LabelRecordOnPaper:
     for (int i = 1; i <= 3;i++ ) {
       Player *tmpg = GetGamerByNum(i);
       Player *Gamer = GetGamerByNum(nGamernumber);
-      int RetValAddRec = tmpg->aScore->AddRecords(CurrentGame,
+      int RetValAddRec = tmpg->aScore->recordScores(CurrentGame,
                 tmpg->GamesType,
                 Gamer !=NULL ? Gamer->nGetsCard : 0,
                 tmpg->nGetsCard,
@@ -657,20 +657,20 @@ LabelRecordOnPaper:
       if (RetValAddRec) {
         int index = GetGamerWithMaxBullet();
         if (index) {
-          tmpg->aScore->AddVist(index,i,RetValAddRec); // на этого висты
-          RetValAddRec = GetGamerByNum(index)->aScore->AddBullet(RetValAddRec); // этому в пулю
+          tmpg->aScore->whistsAdd(index,i,RetValAddRec); // на этого висты
+          RetValAddRec = GetGamerByNum(index)->aScore->poolAdd(RetValAddRec); // этому в пулю
           if (RetValAddRec) {
             index = GetGamerWithMaxBullet();
             if (index) {
-              tmpg->aScore->AddVist(index, i, RetValAddRec); // на этого висты
-              RetValAddRec = GetGamerByNum(index)->aScore->AddBullet(RetValAddRec);
-              if (RetValAddRec) tmpg->aScore->MountanDown(RetValAddRec);
+              tmpg->aScore->whistsAdd(index, i, RetValAddRec); // на этого висты
+              RetValAddRec = GetGamerByNum(index)->aScore->poolAdd(RetValAddRec);
+              if (RetValAddRec) tmpg->aScore->mountainDown(RetValAddRec);
             } else {
-              tmpg->aScore->MountanDown(RetValAddRec);
+              tmpg->aScore->mountainDown(RetValAddRec);
             }
           }
         } else {
-          tmpg->aScore->MountanDown(RetValAddRec);
+          tmpg->aScore->mountainDown(RetValAddRec);
         }
       }
     }
@@ -714,8 +714,8 @@ LabelRecordOnPaper:
 int TDeskTop::GetGamerWithMaxBullet(void) {
     int MaxBullet= -1,CurrBullet=-1,RetVal=0;
     for (int i =1 ;i<=3;i++) {
-       CurrBullet = GetGamerByNum(i)->aScore->nGetBull();
-        if (MaxBullet < CurrBullet && CurrBullet < nBuletScore ) {
+       CurrBullet = GetGamerByNum(i)->aScore->pool();
+        if (MaxBullet < CurrBullet && CurrBullet < optMaxPool ) {
           MaxBullet = CurrBullet;
           RetVal = i;
         }
@@ -777,12 +777,12 @@ int TDeskTop::LoadGame (const QString &name)  {
     char *buff = new char[1024];
     for (int i = 1; i<=3; i++) {
         Player *Gamer = GetGamerByNum(i);
-        Gamer->aScore->Bullet->FreeAll();
+        Gamer->aScore->mPool->FreeAll();
         Gamer->aScore->Mountan->FreeAll();
         Gamer->aScore->LeftVists->FreeAll();
         Gamer->aScore->RightVists->FreeAll();
         fgets(buff,1024-1,in);
-        insertscore(Gamer->aScore->Bullet,buff);
+        insertscore(Gamer->aScore->mPool,buff);
         fgets(buff,1024-1,in);
         insertscore(Gamer->aScore->Mountan,buff);
         fgets(buff,1024-1,in);
@@ -793,7 +793,7 @@ int TDeskTop::LoadGame (const QString &name)  {
     fgets(buff,1024-1,in);
     sscanf(buff,"%i",&nCurrentStart.nValue);
     fgets(buff,1024-1,in);
-    sscanf(buff,"%i",&nBuletScore);
+    sscanf(buff,"%i",&optMaxPool);
     fgets(buff,1024-1,in);
     sscanf(buff,"%i",&g61stalingrad);
     fgets(buff,1024-1,in);
@@ -821,7 +821,7 @@ int TDeskTop::SaveGame (const QString &name)  {
     char *srv = new char[1024];
     for (int i = 1;i<=3;i++) {
       Player *Gamer = GetGamerByNum(i);
-      sb = Tclist2pchar ( Gamer->aScore->Bullet,sb);
+      sb = Tclist2pchar ( Gamer->aScore->mPool,sb);
       replace(sb,'.',' ');
       sm = Tclist2pchar (Gamer->aScore->Mountan,sm);
       replace(sm,'.',' ');
@@ -835,7 +835,7 @@ int TDeskTop::SaveGame (const QString &name)  {
       fprintf(out,"%s\n",srv);
     }
     fprintf(out,"%i\n",nCurrentStart.nValue);
-    fprintf(out,"%i\n",nBuletScore);
+    fprintf(out,"%i\n",optMaxPool);
     fprintf(out,"%i\n",g61stalingrad);
     fprintf(out,"%i\n",g10vist);
     fprintf(out,"%i\n",globvist);
@@ -876,16 +876,16 @@ void TDeskTop::drawInGameCard (int mPlayerNo, Card *card) {
 
 
 void TDeskTop::ShowPaper () {
-  QString sb, sm, slv, srv, tv;
-  DeskView->ShowBlankPaper(nBuletScore);
+  QString sb, sm, slw, srw, tw;
+  DeskView->ShowBlankPaper(optMaxPool);
   for (int i = 1;i<=3;i++) {
     Player *Gamer = GetGamerByNum(i);
-    sb = Tclist2pchar(Gamer->aScore->Bullet);
-    sm = Tclist2pchar(Gamer->aScore->Mountan);
-    slv = Tclist2pchar(Gamer->aScore->LeftVists);
-    srv = Tclist2pchar(Gamer->aScore->RightVists);
-    tv = QString::number(Gamer->aScore->Vists);
-    DeskView->showPlayerScore(i, sb, sm, slv, srv, tv);
+    sb = Gamer->aScore->poolStr();
+    sm = Gamer->aScore->mountainStr();
+    slw = Gamer->aScore->leftWhistsStr();
+    srw = Gamer->aScore->rightWhistsStr();
+    tw = Gamer->aScore->whistsStr();
+    DeskView->showPlayerScore(i, sb, sm, slw, srw, tw);
   }
 }
 

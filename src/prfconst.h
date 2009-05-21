@@ -2,7 +2,11 @@
 #define PRFCONST_H
 
 #include <QString>
+#include <QList>
 
+
+typedef QList<int>  QIntList;
+//typedef QList<int>  QIntList;
 
 /*
 #define CARDWIDTH    71
@@ -64,7 +68,7 @@ typedef struct {
 extern bool g61stalingrad;
 extern bool g10vist;
 extern bool globvist;
-extern int nBuletScore;
+extern int optMaxPool;
 extern eGameBid CurrentGame;
 
 

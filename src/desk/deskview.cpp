@@ -369,7 +369,7 @@ void TDeskView::MessageBox (const QString &text, const QString &caption) {
 }
 
 
-void TDeskView::ShowBlankPaper (int nBuletScore) {
+void TDeskView::ShowBlankPaper (int optMaxPool) {
   int PaperWidth = 410;
   int PaperHeight = 530;
   if (!mDeskBmp) return;
@@ -398,10 +398,10 @@ void TDeskView::ShowBlankPaper (int nBuletScore) {
   p.drawLine(xDelta+0, yDelta+255, xDelta+40, yDelta+255);
   p.drawLine(xDelta+410, yDelta+255, xDelta+370, yDelta+255);
   p.drawLine(xDelta+205, yDelta+530, xDelta+205, yDelta+483);
-  //itoa(nBuletScore, buff, 10);
+  //itoa(optMaxPool, buff, 10);
   //p.drawText(xDelta+197, FONTSIZE+yDelta+292, buff);
-  //drawText(QString::number(nBuletScore), xDelta+197, yDelta+290);
-  p.drawText(xDelta+197, yDelta+300, QString::number(nBuletScore));
+  //drawText(QString::number(optMaxPool), xDelta+197, yDelta+290);
+  p.drawText(xDelta+197, yDelta+300, QString::number(optMaxPool));
   p.end();
 }
 

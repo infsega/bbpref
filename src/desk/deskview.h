@@ -28,7 +28,7 @@ public:
   void drawCard (Card *card, int x, int y, bool opened, bool hilight);
   void drawText (const QString &str, int x, int y, QRgb textColor=qRgb(255,255,255), QRgb outlineColor=qRgb(0,0,0));
   void MessageBox (const QString &text, const QString &caption);
-  void ShowBlankPaper (int nBuletScore);
+  void ShowBlankPaper (int optMaxPool);
   void showPlayerScore (int i, const QString &sb, const QString &sm, const QString &slv, const QString &srv, const QString &tv);
   //----------------------------- for human player
   eGameBid makemove (eGameBid lMove, eGameBid rMove);

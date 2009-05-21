@@ -140,7 +140,7 @@ void Kpref::slotNewSingleGame () {
       DeskView -> PaintDevice = this; // &&&
       DeskTop = new TDeskTop();
       DeskTop -> DeskView = DeskView;
-      nBuletScore = newgame.QSpinBox_2 ->value();
+      optMaxPool = newgame.QSpinBox_2 ->value();
       g61stalingrad =  (newgame.StalingradGame->isChecked() == true);
       g10vist = (newgame.TenVist->isChecked() == true);
       globvist = (newgame.VistNonBr->isChecked() == true);
@@ -164,7 +164,7 @@ void Kpref::slotNewSingleGame () {
     DeskView = new TDeskView(width(), height());
     DeskTop = new TDeskTop();
     DeskTop->DeskView = DeskView;
-    nBuletScore = 10; //k8:!!!
+    optMaxPool = 10; //k8:!!!
     g61stalingrad = true; //k8:!!!
     g10vist = false; //k8:!!!
     globvist = true; //k8:!!!

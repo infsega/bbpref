@@ -1,28 +1,43 @@
 #ifndef PLSCORE_H
 #define PLSCORE_H
 
-#include "ctlist.h"
+#include <QString>
+
 #include "prfconst.h"
 
 
 class TPlScore {
 public:
-   TPlScore ();
-   ~TPlScore ();
-   int AddRecords (eGameBid aGamerType, eGameBid aMyType, int nGamerVz, int nMyVz, int nGamer, int myNumber, int nqVist);
-   Tclist *Bullet;
-   Tclist *Mountan;
-   Tclist *LeftVists;
-   Tclist *RightVists;
-   int nGetBull();
-   int nGetMount();
-   int nGetLeftVists();
-   int nGetRightVists();
-   int AddBullet(int RetValAddRec);
-   void AddVist(int index,int myNumber,int Skolko);
-   void MountanDown(int RetValAddRec);
-   void MountanUp(int RetValAddRec);
-   int Vists;
+  TPlScore ();
+  ~TPlScore ();
+
+  int recordScores (eGameBid aGamerType, eGameBid aMyType, int nGamerVz, int nMyVz, int nGamer, int myNumber, int nqVist);
+
+  inline int pool () const { return mPool[mPool.size()-1]; }
+  inline int mountain () const { return mMountain[mMountain.size()-1]; }
+  inline int leftWhists () const { return mLeftWhists[mLeftWhists.size()-1]; }
+  inline int rightWhists () const { return mRightWhists[mRightWhists.size()-1]; }
+
+  int poolAdd (int delta);
+  void whistsAdd (int index, int myNumber, int delta);
+  void mountainDown (int delta);
+  void mountainUp (int delta);
+
+  QString poolStr () const;
+  QString mountainStr () const;
+  QString leftWhistsStr () const;
+  QString rightWhistsStr () const;
+  inline QString whistsStr () const { return QString::number(mWhists); }
+
+  inline int whists () const { return mWhists; }
+  inline void setWhists (int w) { mWhists = w; }
+
+private:
+  QIntList mPool;
+  QIntList mMountain;
+  QIntList mLeftWhists;
+  QIntList mRightWhists;
+  int mWhists;
 };
 
 

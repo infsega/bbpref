@@ -50,7 +50,6 @@ public:
   Card *FirstCard,*SecondCard,*TherdCard;
   Card *CardOnDesk[4];
 
-  //int nBuletScore;
   int nflShowPaper;
 
 private:
