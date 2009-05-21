@@ -56,7 +56,7 @@ private:
   QAction *actQuit;
 
 public:
-  TDeskTop *DeskTop;
+  PrefDesktop *DeskTop;
   TDeskView *DeskView;
   int WaitingForMouseUp;
   int nAllReadyHinting;

@@ -4,18 +4,17 @@
 #include <QObject>
 
 #include "card.h"
-#include "ctlist.h"
 #include "deck.h"
 #include "player.h"
 
 
-class TDeskTop : public QObject {
+class PrefDesktop : public QObject {
   Q_OBJECT
 
 public:
-  TDeskTop ();
-  TDeskTop (TDeskView *_DeskView);
-  virtual ~TDeskTop ();
+  PrefDesktop ();
+  PrefDesktop (TDeskView *_DeskView);
+  virtual ~PrefDesktop ();
 
   Player *InsertGamer (Player *);
   void RunGame ();
@@ -25,6 +24,8 @@ public:
   int SaveGame (const QString &name);
   int LoadGame (const QString &name);
   void CloseBullet ();
+
+  inline Player *currentPlayer () const { return mPlayers[nCurrentMove.nValue]; }
 
   // Protocol
   time_t t;
@@ -45,7 +46,7 @@ signals:
 public:
   TDeskView *DeskView;
   Deck *Coloda;
-  Tclist  *Gamers;
+  QList<Player *> mPlayers;
   Tncounter nCurrentStart,nCurrentMove;
   Card *FirstCard,*SecondCard,*TherdCard;
   Card *CardOnDesk[4];
@@ -54,10 +55,7 @@ public:
 
 private:
   void InternalConstruct ();
-  //void insertscore (Tclist *, char *);
-  //void replace (char *, char, char);
-  Player *GetGamerByNum (int);
-  int GetGamerWithMaxBullet (); // exept closed gamers
+  Player *player (int);
   Card *ControlingMakemove (Card *, Card *);
   Card *PipeMakemove (Card *lMove, Card *rMove);
   void GamerAssign (Player *, Player *);
@@ -68,14 +66,13 @@ private:
   void drawBidWindows (const eGameBid *bids, int curPlr);
   void getPMsgXY (int plr, int *x, int *y);
 
+  int playerWithMaxPool (); // except the players who closed the pool
+
 private:
   bool mPlayingRound;
   int mPlayerActive; // кто играет (если не распасы и mPlayingRound=true)
   int iMoveX, iMoveY;
 };
-
-
-QString Tclist2pchar (Tclist *);
 
 
 #endif

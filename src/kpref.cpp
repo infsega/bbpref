@@ -40,7 +40,7 @@ Kpref::Kpref () {
 void Kpref::init () {
   //StatusBar1 = new QStatusBar(this);
   DeskView = new TDeskView(width(), height());
-  DeskTop = new TDeskTop(DeskView);
+  DeskTop = new PrefDesktop(DeskView);
   connect(DeskTop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
   connect(DeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
 }
@@ -138,7 +138,7 @@ void Kpref::slotNewSingleGame () {
       delete DeskView;
       DeskView = new TDeskView();
       DeskView -> PaintDevice = this; // &&&
-      DeskTop = new TDeskTop();
+      DeskTop = new PrefDesktop();
       DeskTop -> DeskView = DeskView;
       optMaxPool = newgame.QSpinBox_2 ->value();
       g61stalingrad =  (newgame.StalingradGame->isChecked() == true);
@@ -162,7 +162,7 @@ void Kpref::slotNewSingleGame () {
     delete DeskTop;
     delete DeskView;
     DeskView = new TDeskView(width(), height());
-    DeskTop = new TDeskTop();
+    DeskTop = new PrefDesktop();
     DeskTop->DeskView = DeskView;
     optMaxPool = 10; //k8:!!!
     g61stalingrad = true; //k8:!!!
@@ -180,8 +180,8 @@ void Kpref::slotNewSingleGame () {
 void Kpref::mouseMoveEvent (QMouseEvent *event) {
   if (nAllReadyHinting) return;
   nAllReadyHinting = 1;
-  Player *Gamer = (Player *)DeskTop->Gamers->At(DeskTop->nCurrentMove.nValue);
-  if (Gamer) Gamer->HintCard(event->x(), event->y());
+  Player *plr = DeskTop->currentPlayer();
+  if (plr) plr->HintCard(event->x(), event->y());
   nAllReadyHinting = 0;
 }
 
@@ -189,10 +189,10 @@ void Kpref::mouseMoveEvent (QMouseEvent *event) {
 void Kpref::mousePressEvent (QMouseEvent *event) {
   WaitingForMouseUp = 1;
   DeskView->Event = 1;
-  Player *Gamer = (Player *)DeskTop->Gamers->At(DeskTop->nCurrentMove.nValue);
-  if (Gamer) {
-    Gamer->X = event->x();
-    Gamer->Y = event->y();
+  Player *plr = DeskTop->currentPlayer();
+  if (plr) {
+    plr->X = event->x();
+    plr->Y = event->y();
   }
   WaitingForMouseUp = 0;
 }
