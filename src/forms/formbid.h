@@ -20,7 +20,7 @@ public:
   void EnableAll (void);
   void DisalbeAll (void);
   void DisableLessThan (tGameBid);
-  void DisalbeGames (tGameBid);
+  void disableGames (tGameBid);
   void EnableGames (tGameBid);
 
 public slots:

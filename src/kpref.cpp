@@ -38,7 +38,7 @@ Kpref::Kpref () {
 
 
 void Kpref::init () {
-  StatusBar1 = new QStatusBar(this);
+  //StatusBar1 = new QStatusBar(this);
   DeskView = new TDeskView(width(), height());
   DeskTop = new TDeskTop(DeskView);
   connect(DeskTop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
@@ -47,7 +47,7 @@ void Kpref::init () {
 
 
 Kpref::~Kpref () {
-  delete StatusBar1;
+  //delete StatusBar1;
   //!delete formBid;
   delete DeskView;
   delete DeskTop;
@@ -71,7 +71,7 @@ void Kpref::initMenuBar () {
   actFileSave->setEnabled(false);
 
   viewMenu = menuBar()->addMenu("&Show");
-  viewMenu->addAction(QIcon(QString(":/pics/paper.png")), "Score...", this, SLOT(slotShowBollet()), Qt::CTRL+Qt::Key_P);
+  viewMenu->addAction(QIcon(QString(":/pics/paper.png")), "Score...", this, SLOT(slotShowScore()), Qt::CTRL+Qt::Key_P);
 
   menuBar()->addSeparator();
   helpMenu = menuBar()->addMenu("&Help");
@@ -113,12 +113,12 @@ void Kpref::slotEndSleep () {
 }
 
 
-void Kpref::slotShowBollet () {
+void Kpref::slotShowScore () {
   DeskTop->CloseBullet();
   DeskTop->nflShowPaper = 1;
   DeskTop->ShowPaper();
-  DeskTop->DeskView->mySleep(0);
-  DeskView->ClearScreen();
+  DeskTop->DeskView->mySleep(-1);
+  //DeskView->ClearScreen();
   DeskTop->nflShowPaper = 0;
   DeskTop->Repaint();
 }

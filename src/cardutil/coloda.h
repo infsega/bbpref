@@ -9,7 +9,7 @@
 class  TColoda : public TCardList {
 public:
   TColoda (int _Limit);
-  void Mix ();
+  void shuffle ();
 };
 
 

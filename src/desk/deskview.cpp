@@ -76,7 +76,6 @@ TDeskView::TDeskView (int aW, int aH) : mDeskBmp(0) {
   CardHeight = CARDHEIGHT;
   xBorder = 20;
   yBorder = 20;
-  yBorder = 40;
   DesktopWidht = aW;
   DesktopHeight = aH;
   //mDeskBmp = new QPixmap(DesktopWidht, DesktopHeight);
@@ -213,7 +212,7 @@ void TDeskView::ShowBlankPaper (int nBuletScore) {
   QBrush brush(qRgb(255, 255, 255));
   p.fillRect(NewRect, brush);
   QBrush b1(brush);
-  b1.setColor(qRgb(0xc0,0xc0,0xc0));
+  b1.setColor(qRgb(255, 255, 0));
   p.setBrush(b1);
   p.setPen(qRgb(0, 0, 0));
   p.drawEllipse(xDelta+188,yDelta+277,35,35);
@@ -232,13 +231,15 @@ void TDeskView::ShowBlankPaper (int nBuletScore) {
   p.drawLine(xDelta+205, yDelta+530, xDelta+205, yDelta+483);
   //itoa(nBuletScore, buff, 10);
   //p.drawText(xDelta+197, FONTSIZE+yDelta+292, buff);
+  //drawText(QString::number(nBuletScore), xDelta+197, yDelta+290);
+  p.drawText(xDelta+197, yDelta+300, QString::number(nBuletScore));
   p.end();
-  drawText(QString::number(nBuletScore), xDelta+197, yDelta+292);
 }
 
 
 void TDeskView::StatusBar (const QString &text) {
-  kpref->StatusBar1->showMessage(text);
+  qDebug() << text;
+  //kpref->StatusBar1->showMessage(text);
 }
 
 

@@ -17,7 +17,7 @@ TColoda::TColoda (int _Limit) : TCardList(_Limit) {
 }
 
 
-void TColoda::Mix () {
+void TColoda::shuffle () {
 /*
    int i;
    time_t t;

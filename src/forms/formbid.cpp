@@ -86,7 +86,7 @@ void FormBid::DisableLessThan (tGameBid GamesType) {
 }
 
 
-void FormBid::DisalbeGames (tGameBid GamesType) {
+void FormBid::disableGames (tGameBid GamesType) {
   QList<QPushButton *> wList(buttonList());
   foreach (QPushButton *b, wList) {
     if (GamesTypeByName(b->objectName()) == GamesType) b->setEnabled(false);

@@ -1,5 +1,5 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef AIPLAYER_H
+#define AIPLAYER_H
 
 #include "prfconst.h"
 #include "card.h"
@@ -42,13 +42,6 @@ public:
   void getLeftTop (int playerNo, int *left, int *top);
 
   QString NikName;
-  // networking part
-  virtual int connecttoserver (const QString &host, unsigned short port);
-  virtual int connecttodesk (int);
-  virtual int join (int);
-  void NetGetCards (TColoda *Coloda);
-  virtual int SendnPlayerTakeCards (int);
-  int GetNikName (void);
 
   int X, Y;
   int WaitForMouse;
@@ -70,9 +63,9 @@ public:
   virtual void AddCard (int _CName, int _CMast); // получить сданную карту
 
   virtual void clear ();
-  void Repaint (TDeskView *aDeskView, int Left, int Top, int selNo=-1);
-  void RepaintSimple ();
-  //void OnlyMessage (TDeskView *,int,int,int,int);
+  void RepaintAt (TDeskView *aDeskView, int Left, int Top, int selNo=-1);
+  void Repaint ();
+  void clearCardArea ();
 
 private:
   int flMiser;

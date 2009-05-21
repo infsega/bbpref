@@ -248,13 +248,13 @@ void TDeskTop::RunGame () {
            GetGamerByNum(3)->aScore->nGetBull() >= nBuletScore)) {
     Tncounter GamersCounter(1, 1, 3);
     int nPl;
-    int nGamernumber = 0 ; // номер заказавшего игру
+    int nGamernumber = 0; // номер заказавшего игру
     int nPassCounter = 0; // кол-во спасовавших
     GamesType[3] = GamesType[2] = GamesType[1] = GamesType[0] = undefined;
     CardOnDesk[0] = CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = FirstCard = SecondCard = TherdCard = 0;
     delete Coloda;
     Coloda = new TColoda(CARDINCOLODA);
-    Coloda->Mix();
+    Coloda->shuffle();
     GetGamerByNum(1)->clear();
     GetGamerByNum(2)->clear();
     GetGamerByNum(3)->clear();
@@ -263,26 +263,27 @@ void TDeskTop::RunGame () {
     // сдали карты
     for (int i = 0; i < CARDINCOLODA-2; i++) {
       Player *tmpGamer = GetGamerByNum(GamersCounter.nValue);
+      if (!(Coloda->At(i))) DeskView->MessageBox("TCard = NULL", "Error!!!");
       tmpGamer->AddCard((TCard *)Coloda->At(i));
-      if (!((TCard *)Coloda->At(i))) DeskView->MessageBox("TCard = NULL", "Error!!!");
       ++GamersCounter;
     }
     Repaint();
-    emitRepaint();
-    //DeskView->mySleep(1);
+    //emitRepaint();
+    DeskView->mySleep(0);
     GamersCounter = nCurrentStart;
 
     sprintf(ProtocolBuff, "Current start:%i", nCurrentStart.nValue);
     WriteProtocol(ProtocolBuff);
 
+    // пошла торговля
     npasscounter = 0;
     while (npasscounter < 2) {
-      // пока как минимум 2 е не спасовали
+      // пока как минимум двое не спасовали
       if (GamesType[1] != gtPass) GamesType[1] = GetGamerByNum(GamersCounter.nValue)->makemove(GamesType[2], GamesType[3]);
       sprintf(ProtocolBuff, "Gamer 1:%i say: %s", GamersCounter.nValue, sGameName(GamesType[1]));
       WriteProtocol(ProtocolBuff);
       Repaint();
-      emitRepaint();
+      //emitRepaint();
 
       ++GamersCounter;
       ENDOFTORG
@@ -291,7 +292,7 @@ void TDeskTop::RunGame () {
       sprintf(ProtocolBuff, "Gamer 2:%i say: %s", GamersCounter.nValue, sGameName(GamesType[1]));
       WriteProtocol(ProtocolBuff);
       Repaint();
-      emitRepaint();
+      //emitRepaint();
 
       ++GamersCounter;
       ENDOFTORG
@@ -300,7 +301,7 @@ void TDeskTop::RunGame () {
       sprintf(ProtocolBuff, "Gamer 3:%i say: %s", GamersCounter.nValue, sGameName(GamesType[1]));
       WriteProtocol(ProtocolBuff);
       Repaint();
-      emitRepaint();
+      //emitRepaint();
 
       ++GamersCounter;
       ENDOFTORG
@@ -311,7 +312,7 @@ void TDeskTop::RunGame () {
       if (GamesType[0] < GamesType[i]) GamesType[0] = GamesType[i];
     }
 
-    if (GamesType[0] !=gtPass) {
+    if (GamesType[0] != gtPass) {
       // не расспасы
       // узнаем кто назначил максимальную игру
       for (int i = 1; i <= 3; i++) {
@@ -326,8 +327,8 @@ void TDeskTop::RunGame () {
           sprintf(ProtocolBuff,"Get cards %i %i for %i game", Card2Int(CardOnDesk[2]), Card2Int(CardOnDesk[3]), GamesType[0]);
           WriteProtocol(ProtocolBuff);
           Repaint();
-          emitRepaint();
-          DeskView->mySleep(4);
+          //emitRepaint();
+          DeskView->mySleep(-1);
           // запихиваем ему прикуп
           tmpg->AddCard((TCard *)Coloda->At(30));
           tmpg->AddCard((TCard *)Coloda->At(31));
@@ -335,7 +336,7 @@ void TDeskTop::RunGame () {
           nGamernumber = tmpg->mPlayerNo;
           //DeskView->ClearScreen();
           Repaint();
-          emitRepaint();
+          //emitRepaint();
           DeskView->mySleep(2);
           if (tmpg->GamesType != g86) { // не мизер
             nCurrentMove.nValue = i;
@@ -347,47 +348,47 @@ void TDeskTop::RunGame () {
             //tmpg->nCardsVisible = 0;
             tmpg->nInvisibleHand = 0;
             Repaint();
-            emitRepaint();
-            if (tmpg->mPlayerNo !=1) DeskView->MessageBox("Try to remember the cards", "Message");
+            //emitRepaint();
+            if (tmpg->mPlayerNo != 1) DeskView->MessageBox("Try to remember the cards", "Message");
             // ждать до события
-            //DeskView->mySleep(0);
+            DeskView->mySleep(-1);
             tmpg->nInvisibleHand = nVisibleState;
             nCurrentMove.nValue = tmpg->mPlayerNo;
             GamesType[0] = CurrentGame = tmpg->makeout4miser();
             nCurrentMove.nValue = tempint;
           }
           tmpGamersCounter.nValue = i;
-          DeskView->ClearScreen();
-          Repaint();
-          emitRepaint();
+          //DeskView->ClearScreen();
+          //Repaint();
+          //emitRepaint();
           // пас или вист
           ++tmpGamersCounter;
           PassOrVistGamers=GetGamerByNum(tmpGamersCounter.nValue);
           PassOrVistGamers->GamesType = undefined;
           Repaint();
-          emitRepaint();
+          //emitRepaint();
           //OnlyMessage(tmpGamersCounter.nValue);
           DeskView->mySleep(2);
-          PassOrVist = PassOrVistGamers->makemove(CurrentGame,gtPass,0);
+          PassOrVist = PassOrVistGamers->makemove(CurrentGame, gtPass, 0);
           nPassOrVist = tmpGamersCounter.nValue;
-          if (PassOrVistGamers->GamesType == gtPass ) nPassCounter++;
+          if (PassOrVistGamers->GamesType == gtPass) nPassCounter++;
           Repaint();
-          emitRepaint();
+          //emitRepaint();
           //OnlyMessage(tmpGamersCounter.nValue);
           DeskView->mySleep(1);
           ++tmpGamersCounter;
-          PassOrVistGamers=GetGamerByNum(tmpGamersCounter.nValue);
+          PassOrVistGamers = GetGamerByNum(tmpGamersCounter.nValue);
           PassOrVistGamers->GamesType = undefined;
           //Repaint(tmpGamersCounter.nValue);
           Repaint();
-          emitRepaint();
+          //emitRepaint();
           DeskView->mySleep(1);
           PassOrVistGamers->makemove(CurrentGame, PassOrVist, nPassOrVist);
           if (PassOrVistGamers->GamesType == gtPass) nPassCounter++;
           Repaint();
-          emitRepaint();
+          //emitRepaint();
           DeskView->mySleep(1);
-          if (nPassCounter==2) {
+          if (nPassCounter == 2) {
             // двое спасовали :)
             tmpg->nGetsCard = nGetGameCard(tmpg->GamesType);
             sprintf(ProtocolBuff,"Two gamers said 'pass'");
@@ -405,7 +406,7 @@ void TDeskTop::RunGame () {
               }
             }
             Repaint();
-            emitRepaint();
+            //emitRepaint();
           }
           break;
         }
@@ -417,8 +418,9 @@ void TDeskTop::RunGame () {
       GetGamerByNum(2)->GamesType = raspass;
       GetGamerByNum(3)->GamesType = raspass;
       Repaint();
-      emitRepaint();
+      //emitRepaint();
     }
+    // партия (10 ходов)
     nCurrentMove = nCurrentStart;
     for (int i = 1; i <= 10; i++) {
       Player *tmpg;
@@ -430,35 +432,36 @@ void TDeskTop::RunGame () {
         tmp4show = (TCard *)Coloda->At(29+i);
         ptmp4rpass = new TCard(1, tmp4show->CMast);
         CardOnDesk[0] = tmp4show;
-        ShowCard(0, CardOnDesk[0]);
-        DeskView->mySleep(2);
-        CardOnDesk[nCurrentMove.nValue] = FirstCard = ControlingMakemove((TCard*)NULL, ptmp4rpass);
+        //drawInGameCard(0, CardOnDesk[0]);
+        Repaint();
+        DeskView->mySleep(-1);
+        CardOnDesk[nCurrentMove.nValue] = FirstCard = ControlingMakemove(0, ptmp4rpass);
         delete ptmp4rpass;
       } else {
-        CardOnDesk[nCurrentMove.nValue] = FirstCard = ControlingMakemove((TCard*)NULL, (TCard*)NULL);
+        CardOnDesk[nCurrentMove.nValue] = FirstCard = ControlingMakemove(0, 0);
       }
       sprintf(ProtocolBuff, "First card:%i", Card2Int(FirstCard));
       WriteProtocol(ProtocolBuff);
       Repaint();
-      emitRepaint();
-      //!!!ShowCard(nCurrentMove.nValue, FirstCard);
+      //emitRepaint();
+      //!!!drawInGameCard(nCurrentMove.nValue, FirstCard);
       ++nCurrentMove;
-      CardOnDesk[nCurrentMove.nValue] = SecondCard = ControlingMakemove((TCard*)NULL, FirstCard);
+      CardOnDesk[nCurrentMove.nValue] = SecondCard = ControlingMakemove(0, FirstCard);
       sprintf(ProtocolBuff, "Second card:%i", Card2Int(SecondCard));
       WriteProtocol(ProtocolBuff);
-      Repaint(nCurrentMove.nValue);
-      emitRepaint();
-      //!!!ShowCard(nCurrentMove.nValue,SecondCard);
+      //Repaint(nCurrentMove.nValue);
+      Repaint();
+      //!!!drawInGameCard(nCurrentMove.nValue,SecondCard);
       ++nCurrentMove;
       CardOnDesk[nCurrentMove.nValue] = TherdCard = ControlingMakemove(FirstCard, SecondCard);
       sprintf(ProtocolBuff,"Therd card :%i",Card2Int(TherdCard));
       WriteProtocol(ProtocolBuff);
-      Repaint(nCurrentMove.nValue);
-      emitRepaint();
-      //!!!ShowCard(nCurrentMove.nValue,TherdCard);
+      //Repaint(nCurrentMove.nValue);
+      Repaint();
+      //!!!drawInGameCard(nCurrentMove.nValue,TherdCard);
       CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = NULL;
       ++nCurrentMove;
-      DeskView->mySleep(3);
+      DeskView->mySleep(-1);
       nPl = nPlayerTakeCards(FirstCard, SecondCard, TherdCard, GamesType[0]-(GamesType[0]/10)*10)-1;
       nCurrentMove = nCurrentMove+nPl;
       tmpg = (Player *)Gamers->At(nCurrentMove.nValue);
@@ -466,65 +469,76 @@ void TDeskTop::RunGame () {
       CardOnDesk[0] = NULL;
       //DeskView->ClearScreen();
       Repaint();
-      emitRepaint();
+      //emitRepaint();
     }
     //DeskView->mySleep(2);
 LabelRecordOnPaper:
+    // партия закончена
     Repaint();
-    emitRepaint();
+    //emitRepaint();
     ++nCurrentStart;
     // записи по сдаче
-    for (int i = 1; i<= 3;i++ ) {
-      Player * tmpg = GetGamerByNum(i);
-      Player * Gamer = GetGamerByNum(nGamernumber);
-      int RetValAddRec = tmpg->aScore->AddRecords (CurrentGame,
-                tmpg->GamesType ,
+    for (int i = 1; i <= 3;i++ ) {
+      Player *tmpg = GetGamerByNum(i);
+      Player *Gamer = GetGamerByNum(nGamernumber);
+      int RetValAddRec = tmpg->aScore->AddRecords(CurrentGame,
+                tmpg->GamesType,
                 Gamer !=NULL ? Gamer->nGetsCard : 0,
                 tmpg->nGetsCard,
                 Gamer !=NULL ? nGamernumber : 0,
                 i,
         2-nPassCounter);
 
-        if ( RetValAddRec ) {
-            int index = GetGamerWithMaxBullet();
+      if (RetValAddRec) {
+        int index = GetGamerWithMaxBullet();
+        if (index) {
+          tmpg->aScore->AddVist(index,i,RetValAddRec); // на этого висты
+          RetValAddRec = GetGamerByNum(index)->aScore->AddBullet(RetValAddRec); // этому в пулю
+          if (RetValAddRec) {
+            index = GetGamerWithMaxBullet();
             if (index) {
-              tmpg->aScore->AddVist(index,i,RetValAddRec) ; // этот на него висты
-              RetValAddRec =   GetGamerByNum(index)->aScore->AddBullet(RetValAddRec); // этому в пулю
-              if (RetValAddRec) {
-                index = GetGamerWithMaxBullet();
-                if (index) {
-                  tmpg->aScore->AddVist(index,i,RetValAddRec) ; // этот на него висты
-                  RetValAddRec =  GetGamerByNum(index)->aScore->AddBullet(RetValAddRec);
-                  if (RetValAddRec) {
-                    tmpg->aScore->MountanDown(RetValAddRec);
-                  }
-                } else {
-                  tmpg->aScore->MountanDown(RetValAddRec);
-                }
-              }
+              tmpg->aScore->AddVist(index, i, RetValAddRec); // на этого висты
+              RetValAddRec = GetGamerByNum(index)->aScore->AddBullet(RetValAddRec);
+              if (RetValAddRec) tmpg->aScore->MountanDown(RetValAddRec);
             } else {
               tmpg->aScore->MountanDown(RetValAddRec);
             }
+          }
+        } else {
+          tmpg->aScore->MountanDown(RetValAddRec);
         }
+      }
     }
     CloseBullet();
     // если сетевая игра -  передаем на сервер результаты круга  и кто след. заходит
 
     // после игры - перевернуть карты и показать их
-      for (int k = 1; k<=3;k++) {
-        TCardList *tmplist;
-        Player * Gamer = GetGamerByNum(k);
-        tmplist = Gamer->aCards;
-        Gamer->aCards = Gamer->aCardsOut;
-        Gamer->nInvisibleHand = 0;
-        Repaint(k);
-        emitRepaint();
-        Gamer->aCardsOut = Gamer->aCards;
-        Gamer->aCards = tmplist;
+    TCardList *tmplist[3];
+    for (int f = 1; f <= 3; f++) {
+      Player *plr = GetGamerByNum(f);
+      tmplist[f] = 0;
+      if (!plr) continue;
+      if (nPassCounter != 2) {
+        // была партия
+        tmplist[f] = plr->aCards;
+        plr->aCards = plr->aCardsOut;
       }
-      DeskView->mySleep(2);
-    // показать пулю
+      plr->nInvisibleHand = false;
+    }
+    nflShowPaper = 1;
+    Repaint();
+    DeskView->mySleep(-1);
+    if (nPassCounter != 2) {
+      // была партия
+      for (int f = 1; f <= 3; f++) {
+        Player *plr = GetGamerByNum(f);
+        if (!plr) continue;
+        plr->aCardsOut = plr->aCards;
+        plr->aCards = tmplist[f];
+      }
+    }
 /*
+    // показать пулю
       filename = new char[FILENAME_MAX];
       strcpy(filename,getenv("HOME"));
       strcat(filename,"/");
@@ -532,12 +546,15 @@ LabelRecordOnPaper:
       SaveGame(filename);
       delete filename;
 */
+/*
     nflShowPaper = 1;
     ShowPaper();
     DeskView->mySleep(4);
     nflShowPaper = 0;
     DeskView->ClearScreen();
+*/
   } // конец пули
+  nflShowPaper = 1;
   ShowPaper();
   DeskView->mySleep(0);
 }
@@ -554,105 +571,6 @@ int TDeskTop::GetGamerWithMaxBullet(void) {
     }
     return RetVal;
 }
-//-------------------------------------------------------------
-/*
-void TDeskTop::OnlyMessage (int  mPlayerNo) {
-  Player *tmpg = GetGamerByNum(mPlayerNo);
-  if (tmpg) {
-    tmpg->DeskView = DeskView;
-    switch (mPlayerNo) {
-      case 1: 
-        tmpg->OnlyMessage(DeskView, (DeskView->DesktopWidht-DeskView->xLen)/2, DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight, DeskView->xLen, DeskView->yLen);
-        break;
-      case 2:
-        tmpg->OnlyMessage(DeskView, DeskView->xBorder, DeskView->yBorder, DeskView->xLen, DeskView->yLen);
-        break;
-      case 3:
-        tmpg->OnlyMessage(DeskView, DeskView->DesktopWidht/2+DeskView->xBorder, DeskView->yBorder, DeskView->xLen, DeskView->yLen);
-        break;
-      default: ;
-    }
-  }
-  emitRepaint();
-}
-*/
-
-
-void TDeskTop::Repaint (int mPlayerNo) {
-  Player *tmpg = GetGamerByNum(mPlayerNo);
-  if (!tmpg) return;
-  tmpg->DeskView = DeskView;
-  tmpg->RepaintSimple();
-/*
-  Player *tmpg = GetGamerByNum(mPlayerNo);
-  if (!tmpg) return;
-  tmpg->DeskView = DeskView;
-  switch (mPlayerNo) {
-    case 1:
-      tmpg->Repaint(DeskView, (DeskView->DesktopWidht-DeskView->xLen)/2,
-        DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight, DeskView->xLen,DeskView->yLen);
-      break;
-    case 2:
-      tmpg->Repaint(DeskView, DeskView->xBorder, DeskView->yBorder, DeskView->xLen, DeskView->yLen);
-      break;
-    case 3:
-      tmpg->Repaint(DeskView, DeskView->DesktopWidht/2+DeskView->xBorder,
-        DeskView->yBorder, DeskView->xLen,DeskView->yLen);
-    default: ;
-  }
-*/
-/*
-  Repaint(1);
-  Repaint(2);
-  Repaint(3);
-*/
-}
-
-
-void TDeskTop::RepaintCardOnDesk () {
-  for (int f = 0; f <= 3; f++) {
-    if (CardOnDesk[f]) ShowCard(f, CardOnDesk[f]);
-  }
-}
-
-
-void TDeskTop::Repaint (int left, int top, int right, int bottom) {
-  Q_UNUSED(left)
-  Q_UNUSED(right)
-  Q_UNUSED(top)
-  Q_UNUSED(bottom)
-/*
-  DeskView->xLen=DeskView->DesktopWidht/2-2*DeskView->xBorder;
-  DeskView->yLen=DeskView->DesktopHeight/2-2*DeskView->yBorder;
-
-  if (  ( ((DeskView->DesktopWidht-DeskView->xLen)/2)>=left && ((DeskView->DesktopWidht-DeskView->xLen)/2)<=right ) ||( (DeskView->xLen)>=left && (DeskView->xLen)<=right )   ) {
-    Repaint(1);
-  }
-  if (  ((DeskView->xBorder) >=left && (DeskView->xBorder) <=right) ||((DeskView->xLen) >=left && (DeskView->xLen) <=right) ) {
-    Repaint(2);
-  }
-  if (  ( (DeskView->DesktopWidht/2+DeskView->xBorder)>=left  && (DeskView->DesktopWidht/2+DeskView->xBorder)<=right )  ||(  (DeskView->xLen)>=left  && (DeskView->xLen)<=right     ) ) {
-    Repaint(3);
-  }
-*/
-  Repaint(1);
-  Repaint(2);
-  Repaint(3);
-}
-
-
-void TDeskTop::Repaint () {
-  DeskView->ClearScreen();
-/*
-  DeskView->xLen = DeskView->DesktopWidht/2-2*DeskView->xBorder;
-  DeskView->yLen = DeskView->DesktopHeight/2-2*DeskView->yBorder;
-*/
-  Repaint(1);
-  Repaint(2);
-  Repaint(3);
-  RepaintCardOnDesk();
-  if (nflShowPaper) ShowPaper();
-}
 
 
 int TDeskTop::nPlayerTakeCards (TCard *p1, TCard *p2, TCard *p3, int koz) {
@@ -667,31 +585,6 @@ int TDeskTop::nPlayerTakeCards (TCard *p1, TCard *p2, TCard *p3, int koz) {
     nRelVal = 3;
   }
   return nRelVal;
-}
-
-
-// draw ingame card (the card that is in game, not in hand)
-void TDeskTop::ShowCard (int mPlayerNo, TCard *card) {
-  int w = DeskView->DesktopWidht/2, h = DeskView->DesktopHeight/2;
-  int x = w, y = h;
-  switch (mPlayerNo) {
-    case 0:
-      x -= CARDWIDTH*2+8;
-      y -= CARDHEIGHT/2;
-      break;
-    case 1:
-      x -= CARDWIDTH/2;
-      break;
-    case 2:
-      x -= CARDWIDTH;
-      y -= CARDHEIGHT;
-      break;
-    case 3:
-      y -= CARDHEIGHT;
-      break;
-    default: return;
-  }
-  DeskView->drawCard(card, x, y, 1, 0);
 }
 
 
@@ -805,6 +698,32 @@ int TDeskTop::SaveGame (const QString &name)  {
 }
 
 
+// draw ingame card (the card that is in game, not in hand)
+void TDeskTop::drawInGameCard (int mPlayerNo, TCard *card) {
+  if (!card) return;
+  int w = DeskView->DesktopWidht/2, h = DeskView->DesktopHeight/2;
+  int x = w, y = h;
+  switch (mPlayerNo) {
+    case 0:
+      x -= CARDWIDTH*2+8;
+      y -= CARDHEIGHT/2;
+      break;
+    case 1:
+      x -= CARDWIDTH/2;
+      break;
+    case 2:
+      x -= CARDWIDTH;
+      y -= CARDHEIGHT;
+      break;
+    case 3:
+      y -= CARDHEIGHT;
+      break;
+    default: return;
+  }
+  DeskView->drawCard(card, x, y, 1, 0);
+}
+
+
 void TDeskTop::ShowPaper () {
   QString sb, sm, slv, srv, tv;
   DeskView->ShowBlankPaper(nBuletScore);
@@ -817,4 +736,25 @@ void TDeskTop::ShowPaper () {
     tv = QString::number(Gamer->aScore->Vists);
     DeskView->showPlayerScore(i, sb, sm, slv, srv, tv);
   }
+}
+
+
+void TDeskTop::Repaint () {
+  if (!DeskView) return;
+  DeskView->ClearScreen();
+  // repaint players
+  for (int f = 1; f <= 3; f++) {
+    Player *plr = GetGamerByNum(f);
+    if (plr) {
+      plr->DeskView = DeskView;
+      plr->Repaint();
+    }
+  }
+  // repaint in-game cards
+  for (int f = 0; f <= 3; f++) {
+    if (CardOnDesk[f]) drawInGameCard(f, CardOnDesk[f]);
+  }
+  // repaint scoreboard
+  if (nflShowPaper) ShowPaper();
+  emitRepaint();
 }

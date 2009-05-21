@@ -39,9 +39,14 @@ tGameBid HumanPlayer::makemove (tGameBid lMove, tGameBid rMove) {
 
   formBid->EnableAll();
   if (qMax(lMove, rMove) != gtPass) formBid->DisableLessThan(qMax(lMove, rMove));
-  if (GamesType != undefined) formBid->DisalbeGames(g86);
-  formBid->DisalbeGames(vist);
-  formBid->EnableGames(gtPass);
+  if (GamesType != undefined) formBid->disableGames(g86);
+  formBid->disableGames(vist);
+  if (lMove == g61 && rMove == gtPass) {
+    // сталинград
+    formBid->disableGames(gtPass);
+  } else {
+    formBid->EnableGames(gtPass);
+  }
   formBid->showbullet->setEnabled(TRUE);
   formBid->bgetback->setEnabled(FALSE);
 
@@ -56,9 +61,10 @@ tGameBid HumanPlayer::makemove (tGameBid lMove, tGameBid rMove) {
     } else if (tmpGamesType == 1) {
       // показать пулю
       kpref->DeskTop->nflShowPaper = 1;
-      kpref->slotShowBollet();
+      kpref->slotShowScore();
     }
   } while (tmpGamesType <= 1);
+  formBid->EnableGames(gtPass); // возвернём сталинградское
   GamesType = tmpGamesType;
   WaitForMouse = 0;
   formBid->EnableAll();
@@ -74,13 +80,13 @@ TCard *HumanPlayer::makemove (TCard *lMove, TCard *rMove, Player *aLeftGamer, Pl
   TCard *RetVal = 0;
   X = Y = 0;
   WaitForMouse = 1;
-  RepaintSimple();
+  Repaint();
   while (!RetVal) {
     if (DeskView) DeskView->mySleep(0); // just a little pause
     int cNo = cardAt(X, Y, !nInvisibleHand);
     if (cNo == -1) {
       X = Y = 0;
-      //RepaintSimple();
+      //Repaint();
       continue;
     }
     //qDebug() << "selected:" << cNo << "X:" << X << "Y:" << Y;
@@ -96,11 +102,13 @@ TCard *HumanPlayer::makemove (TCard *lMove, TCard *rMove, Player *aLeftGamer, Pl
         (!aCards->MinCard(Validator->CMast) && (RetVal->CMast == koz || ((!aCards->MinCard(koz)))))
        )) RetVal = NULL;
   }
+  clearCardArea();
+  oldii = -1;
   aCards->Remove(RetVal);
   aCardsOut->Insert(RetVal);
   X = Y = 0;
   WaitForMouse = 0;
-  RepaintSimple();
+  Repaint();
   return RetVal;
 }
 
@@ -125,10 +133,10 @@ tGameBid HumanPlayer::makeout4game () {
   DeskView->mySleep(1);
   makemove(0, 0, 0, 0);
   formBid->EnableAll();
-  formBid->DisalbeGames(vist);
-  formBid->DisalbeGames(gtPass);
-  if (GamesType != g86) formBid->DisalbeGames(g86);
-  formBid->DisableLessThan( GamesType);
+  formBid->disableGames(vist);
+  formBid->disableGames(gtPass);
+  if (GamesType != g86) formBid->disableGames(g86);
+  formBid->DisableLessThan(GamesType);
   formBid->showbullet->setEnabled(TRUE);
   formBid->bgetback->setEnabled(TRUE);
 
@@ -142,7 +150,7 @@ tGameBid HumanPlayer::makeout4game () {
       makemove(0, 0, 0, 0);
     } else if (tmpGamesType == 1) {
       // показать пулю
-      kpref->slotShowBollet();
+      kpref->slotShowScore();
     }
   } while (tmpGamesType <= 1);
   GamesType = tmpGamesType;
@@ -180,5 +188,5 @@ void HumanPlayer::HintCard (int lx, int ly) {
     //qDebug() << "oldii:" << oldii << "cNo:" << cNo;
     oldii = cNo;
   }
-  RepaintSimple();
+  Repaint();
 }
