@@ -145,7 +145,7 @@ void Kpref::slotNewSingleGame () {
       g10vist = (newgame.TenVist->isChecked() == true);
       globvist = (newgame.VistNonBr->isChecked() == true);
       DeskView -> DesktopHeight = height();
-      DeskView -> DesktopWidht = width();
+      DeskView -> DesktopWidth = width();
       //DeskView->ClearScreen();
       if (newgame.flProtocol->isChecked () ) {
         QByteArray ba(newgame.ProtocolFileName->text().toUtf8());
@@ -210,7 +210,7 @@ void Kpref::paintEvent (QPaintEvent *event) {
   nflAleradyPainting = 1;
   if (DeskView) {
     DeskView->DesktopHeight = height();
-    DeskView->DesktopWidht = width();
+    DeskView->DesktopWidth = width();
   }
   if (DeskView && DeskView->mDeskBmp) {
     QPainter p;

@@ -46,6 +46,7 @@ public:
   void drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game);
 
   void drawMessageWindow (int x0, int y0, const QString &msg, bool dim=false);
+  void drawIMove (int x, int y);
 
   void emitRepaint ();
 
@@ -56,15 +57,18 @@ public:
   int Event;
   QPixmap *mDeskBmp;
   QImage *mBidBmp;
+  QImage *mIMoveBmp;
   QImage *mKeyBmp[2];
   QImage *mDigitsBmp;
 
   int nSecondStartWait;
-  int DesktopWidht, DesktopHeight;
+  int DesktopWidth, DesktopHeight;
   int CardWidht, CardHeight;
   int xBorder, yBorder;
   //int xLen,yLen;
   int xDelta, yDelta;
+
+  int imoveX, imoveY;
 
 private:
   void drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy);

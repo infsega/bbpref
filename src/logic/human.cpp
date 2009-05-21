@@ -50,9 +50,10 @@ eGameBid HumanPlayer::makemove (eGameBid lMove, eGameBid rMove) {
     tmpGamesType = DeskView->makemove(lMove, rMove);
     if (tmpGamesType == 0) {
       // вернуть снос (если есть) и снести заново
+      clearCardArea();
       GetBackSnos();
       makemove(0, 0, 0, 0);
-      DeskView->mySleep(1);
+      //DeskView->mySleep(1);
       makemove(0, 0, 0, 0);
     } else if (tmpGamesType == 1) {
       // показать пулю
@@ -112,7 +113,7 @@ Card *HumanPlayer::makemove (Card *lMove, Card *rMove, Player *aLeftGamer, Playe
 eGameBid HumanPlayer::makeout4miser () {
   WaitForMouse = 1;
   makemove(0, 0, 0, 0);
-  DeskView->mySleep(1);
+  //DeskView->mySleep(1);
   makemove(0, 0, 0, 0);
   WaitForMouse = 0;
   return g86;
@@ -141,9 +142,10 @@ eGameBid HumanPlayer::makeout4game () {
     tmpGamesType = DeskView->makemove(zerogame, zerogame);
     if (tmpGamesType == 0) {
       // вернуть снос
+      clearCardArea();
       GetBackSnos();
       makemove(0, 0, 0, 0);
-      DeskView->mySleep(1);
+      //DeskView->mySleep(1);
       makemove(0, 0, 0, 0);
     } else if (tmpGamesType == 1) {
       // показать пулю

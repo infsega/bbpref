@@ -1833,15 +1833,15 @@ void Player::getLeftTop (int playerNo, int *left, int *top) {
   if (!DeskView) return;
   switch (playerNo) {
     case 1:
-      *left = (DeskView->DesktopWidht-(DeskView->DesktopWidht/2-2*DeskView->xBorder))/2;
-      *top = DeskView->DesktopHeight-(DeskView->yBorder)-DeskView->CardHeight-FONTSIZE-10;
+      *left = (DeskView->DesktopWidth-(DeskView->DesktopWidth/2-2*DeskView->xBorder))/2;
+      *top = DeskView->DesktopHeight-(DeskView->yBorder)-DeskView->CardHeight-10;
       break;
     case 2:
       *left = DeskView->xBorder;
       *top = DeskView->yBorder+20;
       break;
     case 3:
-      *left = DeskView->DesktopWidht-DeskView->xBorder;
+      *left = DeskView->DesktopWidth-DeskView->xBorder;
       *top = DeskView->yBorder+20;
       break;
     default: ;
@@ -1865,7 +1865,7 @@ void Player::RepaintAt (TDeskView *aDeskView, int Left, int Top, int selNo) {
     Card *card = (Card *)aCards->At(ofs[f+1]);
     aDeskView->drawCard(card, x, y, !nInvisibleHand, ofs[f+1]==selNo);
   }
-
+/*
   QString msg;
   int textX = Left, textY = Top+CARDHEIGHT+4;
   if (GamesType != undefined) {
@@ -1881,13 +1881,13 @@ void Player::RepaintAt (TDeskView *aDeskView, int Left, int Top, int selNo) {
     }
   }
   if (msg.isEmpty()) msg = "...";
-/*
+/ *
   msg += " ";
   if (!nInvisibleHand) msg += "OPEN "; else msg += "closed ";
   msg += QString::number(selNo);
-*/
+* /
   if (!msg.isEmpty()) aDeskView->drawText(msg, textX, textY);
-
+*/
   aDeskView->emitRepaint();
   DeskView = oDesk;
 }

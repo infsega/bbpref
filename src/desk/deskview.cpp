@@ -90,6 +90,7 @@ TDeskView::TDeskView (int aW, int aH) : mDeskBmp(0) {
   mKeyBmp[0] = new QImage(QString(":/pics/presskey.png"));
   mKeyBmp[1] = new QImage(QString(":/pics/presskey.png"));
   yellowize(mKeyBmp[1], qRgb(127, 127, 127));
+  mIMoveBmp = new QImage(QString(":/pics/imove.png"));
 
   if (!cardsLoaded) {
     if (!loadCards()) abort();
@@ -100,15 +101,16 @@ TDeskView::TDeskView (int aW, int aH) : mDeskBmp(0) {
   CardHeight = CARDHEIGHT;
   xBorder = 20;
   yBorder = 20;
-  DesktopWidht = aW;
+  DesktopWidth = aW;
   DesktopHeight = aH;
-  //mDeskBmp = new QPixmap(DesktopWidht, DesktopHeight);
+  //mDeskBmp = new QPixmap(DesktopWidth, DesktopHeight);
   ClearScreen();
 }
 
 
 TDeskView::~TDeskView () {
   if (mDeskBmp) delete mDeskBmp;
+  delete mIMoveBmp;
   delete mKeyBmp[0];
   delete mKeyBmp[1];
   delete mBidBmp;
@@ -118,6 +120,14 @@ TDeskView::~TDeskView () {
 
 void TDeskView::emitRepaint () {
   emit deskChanged();
+}
+
+
+void TDeskView::drawIMove (int x, int y) {
+  if (!mDeskBmp) return;
+  QPainter p(mDeskBmp);
+  p.drawImage(x, y, *mIMoveBmp);
+  p.end();
 }
 
 
@@ -204,7 +214,7 @@ void TDeskView::drawGameBid (eGameBid game) {
 void TDeskView::drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game) {
   if (!mDeskBmp) return;
   QImage *i = mBidBmp;
-  bidBmpX = DesktopWidht-(i->width()+8);
+  bidBmpX = DesktopWidth-(i->width()+8);
   bidBmpY = DesktopHeight-(i->height()+8);
   QPainter p(mDeskBmp);
   p.drawImage(bidBmpX, bidBmpY, *i);
@@ -273,11 +283,11 @@ void TDeskView::mySleep (int seconds) {
 
 
 void TDeskView::ClearScreen () {
-  if (!mDeskBmp || (mDeskBmp->width() != DesktopWidht || mDeskBmp->height() != DesktopHeight)) {
+  if (!mDeskBmp || (mDeskBmp->width() != DesktopWidth || mDeskBmp->height() != DesktopHeight)) {
     if (mDeskBmp) delete mDeskBmp;
-    mDeskBmp = new QPixmap(DesktopWidht, DesktopHeight);
+    mDeskBmp = new QPixmap(DesktopWidth, DesktopHeight);
   }
-  ClearBox(0, 0, DesktopWidht, DesktopHeight);
+  ClearBox(0, 0, DesktopWidth, DesktopHeight);
 }
 
 
@@ -363,7 +373,7 @@ void TDeskView::ShowBlankPaper (int nBuletScore) {
   int PaperWidth = 410;
   int PaperHeight = 530;
   if (!mDeskBmp) return;
-  xDelta = (DesktopWidht-PaperWidth)/2;
+  xDelta = (DesktopWidth-PaperWidth)/2;
   yDelta = (DesktopHeight-PaperHeight)/2;
   //char buff[16];
   QPainter p(mDeskBmp);
@@ -470,7 +480,7 @@ void TDeskView::drawMessageWindow (int x0, int y0, const QString &msg, bool dim)
   // .|.....text.....|.
   int w = boundR.width()+4+4+2+2, h = boundR.height()+2+2+2+2;
   if (x0 < 0) {
-    if (x0 == -666) x0 = (DesktopWidht-w)/2; else x0 += DesktopWidht-w;
+    if (x0 == -666) x0 = (DesktopWidth-w)/2; else x0 += DesktopWidth-w;
   }
   if (y0 < 0) {
     if (y0 == -666) y0 = (DesktopHeight-h)/2; else y0 += DesktopHeight-h;

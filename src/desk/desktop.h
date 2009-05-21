@@ -72,6 +72,7 @@ private:
 private:
   bool mPlayingRound;
   int mPlayerActive; // кто играет (если не распасы и mPlayingRound=true)
+  int iMoveX, iMoveY;
 };
 
 
