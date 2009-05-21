@@ -7,7 +7,7 @@
 #include "deskview.h"
 #include "player.h"
 
-#include "qtformtorg.h"
+#include "formbid.h"
 #include "debug.h"
 #include <time.h>
 
@@ -37,7 +37,7 @@ void Kpref::init () {
 
 Kpref::~Kpref () {
   delete StatusBar1;
-  //!delete Formtorg;
+  //!delete formBid;
   delete DeskView;
   delete DeskTop;
 }

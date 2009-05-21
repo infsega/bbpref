@@ -1,30 +1,30 @@
 #include <QObject>
 
-#include "qtformtorg.h"
+#include "formbid.h"
 
 #include "prfconst.h"
 
 
-QTFormtorg *Formtorg;
+FormBid *formBid;
 
 
-QTFormtorg::QTFormtorg (QWidget *parent) : QDialog (parent) {
+FormBid::FormBid (QWidget *parent) : QDialog (parent) {
   initDialog();
 }
 
 
-QTFormtorg::~QTFormtorg () {
+FormBid::~FormBid () {
 }
 
 
-void QTFormtorg::slotPushButtonClick86 () { _GamesType = g86; accept(); }
-void QTFormtorg::slotPushButtonClickPass () { _GamesType = gtPass; accept(); }
-void QTFormtorg::slotPushButtonClickVist () { _GamesType = vist; accept(); }
-void QTFormtorg::slotGetBackSnos () { _GamesType = (tGameBid)0; reject(); }
-void QTFormtorg::slotShowBullet () { _GamesType = (tGameBid)1; reject(); }
+void FormBid::slotPushButtonClick86 () { _GamesType = g86; accept(); }
+void FormBid::slotPushButtonClickPass () { _GamesType = gtPass; accept(); }
+void FormBid::slotPushButtonClickVist () { _GamesType = vist; accept(); }
+void FormBid::slotGetBackSnos () { _GamesType = (tGameBid)0; reject(); }
+void FormBid::slotShowBullet () { _GamesType = (tGameBid)1; reject(); }
 
 
-void QTFormtorg::onBidClick () {
+void FormBid::onBidClick () {
   QBidButton *b = dynamic_cast<QBidButton *>(sender());
   if (!b) return;
   _GamesType = b->bid();
@@ -32,7 +32,7 @@ void QTFormtorg::onBidClick () {
 }
 
 
-QList<QPushButton *> QTFormtorg::buttonList () {
+QList<QPushButton *> FormBid::buttonList () {
   QList<QPushButton *> res;
   QList<QWidget *> wList = qFindChildren<QWidget *>(this);
   foreach (QWidget *widget, wList) {
@@ -43,7 +43,7 @@ QList<QPushButton *> QTFormtorg::buttonList () {
 }
 
 
-QList<QBidButton *> QTFormtorg::bidButtonList () {
+QList<QBidButton *> FormBid::bidButtonList () {
   QList<QBidButton *> res;
   QList<QWidget *> wList = qFindChildren<QWidget *>(this);
   foreach (QWidget *widget, wList) {
@@ -54,19 +54,19 @@ QList<QBidButton *> QTFormtorg::bidButtonList () {
 }
 
 
-void QTFormtorg::EnableAll (void) {
+void FormBid::EnableAll (void) {
   QList<QPushButton *> wList(buttonList());
   foreach (QPushButton *b, wList) b->setEnabled(true);
 }
 
 
-void QTFormtorg::DisalbeAll (void) {
+void FormBid::DisalbeAll (void) {
   QList<QPushButton *> wList(buttonList());
   foreach (QPushButton *b, wList) b->setEnabled(false);
 }
 
 
-void QTFormtorg::DisableLessThan (tGameBid GamesType) {
+void FormBid::DisableLessThan (tGameBid GamesType) {
   QList<QPushButton *> wList(buttonList());
   foreach (QPushButton *b, wList) {
     if (GamesTypeByName(b->objectName()) < GamesType) b->setEnabled(false);
@@ -74,7 +74,7 @@ void QTFormtorg::DisableLessThan (tGameBid GamesType) {
 }
 
 
-void QTFormtorg::DisalbeGames (tGameBid GamesType) {
+void FormBid::DisalbeGames (tGameBid GamesType) {
   QList<QPushButton *> wList(buttonList());
   foreach (QPushButton *b, wList) {
     if (GamesTypeByName(b->objectName()) == GamesType) b->setEnabled(false);
@@ -82,7 +82,7 @@ void QTFormtorg::DisalbeGames (tGameBid GamesType) {
 }
 
 
-void QTFormtorg::EnableGames (tGameBid GamesType) {
+void FormBid::EnableGames (tGameBid GamesType) {
   QList<QPushButton *> wList(buttonList());
   foreach (QPushButton *b, wList) {
     if (GamesTypeByName(b->objectName()) == GamesType) b->setEnabled(true);
@@ -90,7 +90,7 @@ void QTFormtorg::EnableGames (tGameBid GamesType) {
 }
 
 
-void QTFormtorg::initDialog () {
+void FormBid::initDialog () {
   this->resize(220, 230);
   this->setMinimumSize(220, 230);
   this->setMaximumSize(220, 230);

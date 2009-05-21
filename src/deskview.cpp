@@ -11,13 +11,12 @@
 #include <QPixmap>
 #include <QImage>
 #include <QPainter>
-#include "qtformtorg.h"
+#include "formbid.h"
 #include <QTimer>
 #include <QDialog>
 #include <QObject>
 #include <QHash>
 
-#include "papplication.h"
 #include "kpref.h"
 
 #include "prfconst.h"
@@ -302,6 +301,6 @@ void TDeskView::drawRotatedText (QPainter &p, int x, int y, float angle, const Q
 tGameBid TDeskView::makemove (tGameBid lMove, tGameBid rMove) {
   Q_UNUSED(lMove)
   Q_UNUSED(rMove)
-  if (!Formtorg->exec()) qApp->quit();
-  return Formtorg->_GamesType;
+  if (!formBid->exec()) qApp->quit();
+  return formBid->_GamesType;
 }

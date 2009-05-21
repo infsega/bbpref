@@ -9,17 +9,15 @@ HEADERS += \
   $$PWD/debug.h \
   $$PWD/desktop.h \
   $$PWD/deskview.h \
-  $$PWD/player.h \
+  $$PWD/formbid.h \
   $$PWD/human.h \
   $$PWD/kpref.h \
   $$PWD/movenode.h \
   $$PWD/ncounter.h \
-  $$PWD/papplication.h \
-  $$PWD/pcommon.h \
+  $$PWD/player.h \
   $$PWD/plscore.h \
   $$PWD/prfconst.h \
   $$PWD/qbidbutton.h \
-  $$PWD/qtformtorg.h \
   $$PWD/main.h
 
 SOURCES += \
@@ -30,13 +28,13 @@ SOURCES += \
   $$PWD/debug.cpp \
   $$PWD/desktop.cpp \
   $$PWD/deskview.cpp \
-  $$PWD/player.cpp \
+  $$PWD/formbid.cpp \
   $$PWD/human.cpp \
   $$PWD/kpref.cpp \
   $$PWD/movenode.cpp \
   $$PWD/ncounter.cpp \
+  $$PWD/player.cpp \
   $$PWD/plscore.cpp \
   $$PWD/prfconst.cpp \
   $$PWD/qbidbutton.cpp \
-  $$PWD/qtformtorg.cpp \
   $$PWD/main.cpp

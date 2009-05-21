@@ -5,7 +5,6 @@
 #include <QApplication>
 #include "prfconst.h"
 #include "kpref.h"
-#include "papplication.h"
 
 
 #endif

@@ -1,12 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "pcommon.h"
-
 #include "prfconst.h"
 
-#include "papplication.h"
-#include "qtformtorg.h"
+#include "formbid.h"
 #include "kpref.h"
 
 
@@ -33,13 +30,13 @@ tGameBid HumanPlayer::makemove (tGameBid lMove, tGameBid rMove) {
   WaitForMouse = 1;
   //PQApplication->mainWidget ()->setMouseTracking ( TRUE );
 
-  Formtorg->EnableAll();
-  if (qMax(lMove, rMove) != gtPass) Formtorg->DisableLessThan(qMax(lMove, rMove));
-  if (GamesType != undefined) Formtorg->DisalbeGames(g86);
-  Formtorg->DisalbeGames(vist);
-  Formtorg->EnableGames(gtPass);
-  Formtorg->showbullet->setEnabled(TRUE);
-  Formtorg->bgetback->setEnabled(FALSE);
+  formBid->EnableAll();
+  if (qMax(lMove, rMove) != gtPass) formBid->DisableLessThan(qMax(lMove, rMove));
+  if (GamesType != undefined) formBid->DisalbeGames(g86);
+  formBid->DisalbeGames(vist);
+  formBid->EnableGames(gtPass);
+  formBid->showbullet->setEnabled(TRUE);
+  formBid->bgetback->setEnabled(FALSE);
 
   do {
     tmpGamesType = DeskView->makemove(lMove, rMove);
@@ -66,7 +63,7 @@ tGameBid HumanPlayer::makemove (tGameBid lMove, tGameBid rMove) {
   GamesType = tmpGamesType;
   //PQApplication->mainWidget()->setMouseTracking(FALSE);
   WaitForMouse = 0;
-  Formtorg->EnableAll();
+  formBid->EnableAll();
   return GamesType;
 }
 
@@ -187,16 +184,16 @@ tGameBid HumanPlayer::makeout4game(void) { // после сноса чего играем
   HumanPlayer::makemove( (TCard *)NULL,(TCard *)NULL,(Player *)NULL,(Player *)NULL);
   //Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
   RepaintSimple(true);
-  Formtorg->EnableAll();
-  Formtorg->DisalbeGames(vist);
-  Formtorg->DisalbeGames(gtPass);
+  formBid->EnableAll();
+  formBid->DisalbeGames(vist);
+  formBid->DisalbeGames(gtPass);
   if (GamesType != g86) {
-    Formtorg->DisalbeGames(g86);
+    formBid->DisalbeGames(g86);
   }
-  Formtorg->DisableLessThan(  GamesType );
+  formBid->DisableLessThan(  GamesType );
 //  GamesType = DeskView->makemove((tGameBid)NULL,(tGameBid)NULL);
-  Formtorg->showbullet->setEnabled(TRUE);
-  Formtorg->bgetback->setEnabled(TRUE);
+  formBid->showbullet->setEnabled(TRUE);
+  formBid->bgetback->setEnabled(TRUE);
 
 
   do {
@@ -221,7 +218,7 @@ tGameBid HumanPlayer::makeout4game(void) { // после сноса чего играем
 
 //  GamesType = DeskView->makemove(zerogame, zerogame );
 
-  Formtorg->EnableAll();
+  formBid->EnableAll();
 //    PQApplication->mainWidget ()->setMouseTracking ( FALSE );
 
   WaitForMouse = 0;
@@ -231,15 +228,15 @@ tGameBid HumanPlayer::makeout4game(void) { // после сноса чего играем
 tGameBid HumanPlayer::makemove (tGameBid MaxGame,int HaveAVist,int nGamerVist) {
   Q_UNUSED(HaveAVist)
   Q_UNUSED(nGamerVist)
-//      Formtorg->DisalbeLessThan()
+//      formBid->DisalbeLessThan()
       if ( MaxGame == g86 ) {
         GamesType = g86catch;
       } else {
-        Formtorg->DisalbeAll();
-          Formtorg->EnableGames(gtPass);
-          Formtorg->EnableGames(vist);
+        formBid->DisalbeAll();
+          formBid->EnableGames(gtPass);
+          formBid->EnableGames(vist);
           GamesType = DeskView->makemove(zerogame,zerogame);
-          Formtorg->EnableAll();
+          formBid->EnableAll();
         }
       return GamesType;
 }

@@ -4,8 +4,6 @@
 #include <QPixmap>
 #include <QPainter>
 
-//#include "pcommon.h"
-
 #include "prfconst.h"
 #include "deskview.h"
 #include "player.h"

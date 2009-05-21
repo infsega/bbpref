@@ -1,7 +1,6 @@
 #include "prfconst.h"
 
 #include <QMainWindow>
-#include "papplication.h"
 #include "kpref.h"
 
 #include <time.h>
