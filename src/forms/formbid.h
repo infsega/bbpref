@@ -36,6 +36,8 @@ protected:
   QList<QPushButton *> buttonList ();
   QList<QBidButton *> bidButtonList ();
 
+  void showEvent (QShowEvent *event);
+
 public:
   tGameBid _GamesType;
   QPushButton *bgetback;

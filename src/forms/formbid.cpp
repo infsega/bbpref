@@ -1,3 +1,5 @@
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QObject>
 
 #include "formbid.h"
@@ -14,6 +16,16 @@ FormBid::FormBid (QWidget *parent) : QDialog (parent) {
 
 
 FormBid::~FormBid () {
+}
+
+
+void FormBid::showEvent (QShowEvent *event) {
+  Q_UNUSED(event)
+  QDesktopWidget *desk = QApplication::desktop();
+  QRect dims(desk->availableGeometry(this));
+  int x = dims.left()+(dims.width()-width())/2;
+  int y = dims.top()+(dims.height()-height())/2;
+  move(x, y);
 }
 
 
