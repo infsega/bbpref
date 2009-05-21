@@ -20,8 +20,8 @@ public:
   void EnableAll (void);
   void DisalbeAll (void);
   void DisableLessThan (eGameBid);
-  void disableGames (eGameBid);
-  void EnableGames (eGameBid);
+  void disableItem (eGameBid);
+  void enableItem (eGameBid);
 
 public slots:
   void onBidClick (); // universal handler

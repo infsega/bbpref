@@ -31,12 +31,6 @@ QString Tclist2pchar (Tclist *list) {
 }
 
 
-//-------------------------------------------------------------
-//#define ENDOFTORG  if ( (GamesType[1] != undefined &&    GamesType[2] != undefined && GamesType[3] != undefined )&& ((GamesType[1] == gtPass ? 1:0)+(GamesType[2] == gtPass ? 1:0)+(GamesType[3] == gtPass ? 1:0) >= 2 )) break;
-#define ENDOFTORG \
-  if ((GamesType[1] != undefined && GamesType[2] != undefined && GamesType[3] != undefined) && \
-      ((GamesType[1] == gtPass?1:0)+(GamesType[2] == gtPass?1:0)+(GamesType[3] == gtPass?1:0) >= 2)) break;
-//-------------------------------------------------------------
 typedef struct {
   int m,b,lv, rv;
 } TRospis;
@@ -48,7 +42,8 @@ void TDeskTop::InternalConstruct(void) {
   Coloda = new Deck(CARDINCOLODA);
   Gamers = new Tclist(4); // 1...3
 
-  nCurrentStart.nValue=nCurrentMove.nValue=2;
+  qsrand(time(NULL));
+  nCurrentStart.nValue=nCurrentMove.nValue=(qrand()%3)+1;
   nCurrentStart.nMin=nCurrentMove.nMin=1;
   nCurrentStart.nMax=nCurrentMove.nMax=3;
 
@@ -200,7 +195,7 @@ void TDeskTop::GamerAssign (Player *newgamer,Player *oldgamer) {
 
 Card *TDeskTop::PipeMakemove (Card *lMove, Card *rMove) {
   return (GetGamerByNum(nCurrentMove.nValue))->
-    makemove(lMove, rMove, GetGamerByNum(NextGamer(nCurrentMove)), GetGamerByNum(PrevGamer(nCurrentMove)));
+    makemove(lMove, rMove, GetGamerByNum(succPlayer(nCurrentMove)), GetGamerByNum(predPlayer(nCurrentMove)));
 }
 
 
@@ -216,7 +211,7 @@ Card *TDeskTop::ControlingMakemove (Card *lMove, Card *rMove) {
     HumanPlayer *NewHuman = new HumanPlayer(nCurrentMove.nValue, DeskView);
     GamerAssign(NewHuman, Now);
     Gamers->AtPut(nCurrentMove.nValue, NewHuman);
-    RetVal = NewHuman->makemove(lMove, rMove, GetGamerByNum(NextGamer(nCurrentMove)), GetGamerByNum(PrevGamer(nCurrentMove)));
+    RetVal = NewHuman->makemove(lMove, rMove, GetGamerByNum(succPlayer(nCurrentMove)), GetGamerByNum(predPlayer(nCurrentMove)));
     GamerAssign(Now, NewHuman);
     Gamers->AtPut(nCurrentMove.nValue, Now);
     NewHuman->clear();
@@ -225,7 +220,7 @@ Card *TDeskTop::ControlingMakemove (Card *lMove, Card *rMove) {
     Player *NewHuman = new Player(nCurrentMove.nValue, DeskView);
     GamerAssign(NewHuman, Now);
     Gamers->AtPut(nCurrentMove.nValue, NewHuman);
-    RetVal = NewHuman->makemove(lMove, rMove, GetGamerByNum(NextGamer(nCurrentMove)), GetGamerByNum(PrevGamer(nCurrentMove)));
+    RetVal = NewHuman->makemove(lMove, rMove, GetGamerByNum(succPlayer(nCurrentMove)), GetGamerByNum(predPlayer(nCurrentMove)));
     GamerAssign(Now, NewHuman);
     Gamers->AtPut(nCurrentMove.nValue, Now);
     NewHuman->clear();
@@ -237,19 +232,59 @@ Card *TDeskTop::ControlingMakemove (Card *lMove, Card *rMove) {
 }
 
 
+void TDeskTop::getPMsgXY (int plr, int *x, int *y) {
+  switch (plr) {
+    case 1:
+      *x = -666;
+      *y = 60;
+      break;
+    case 2:
+      *x = 30;
+      *y = 30;
+      break;
+    case 3:
+      *x = -30;
+      *y = 30;
+      break;
+    default:
+      *x = -666;
+      *y = -666;
+      break;
+  }
+}
+
+
+void TDeskTop::drawBidWindows (const eGameBid *bids, int curPlr) {
+  Repaint(false);
+  for (int f = 2; f <= 3; f++) {
+    int x, y;
+    getPMsgXY(f, &x, &y);
+    if (f != curPlr) {
+      if (bids[f] != undefined) {
+        DeskView->drawMessageWindow(x, y, sGameName(bids[f]), true);
+      }
+    } else DeskView->drawMessageWindow(x, y, QString("thinking..."));
+  }
+  //emitRepaint();
+  //if (curPlr != 3) DeskView->mySleep(2); else emitRepaint();
+}
+
+
 void TDeskTop::RunGame () {
-  eGameBid GamesType[4];
+  eGameBid GamesType[4], bids4win[4];
   //char *filename;
   //Card *FirstCard, *SecondCard, *TherdCard;
   int npasscounter;
+
   //DeskView->ClearScreen();
   if (flProtocol) OpenProtocol();
   // while !конец пули
+  qsrand(time(NULL));
   while (!(GetGamerByNum(1)->aScore->nGetBull() >= nBuletScore &&
            GetGamerByNum(2)->aScore->nGetBull() >= nBuletScore &&
            GetGamerByNum(3)->aScore->nGetBull() >= nBuletScore)) {
-    mPlayingRound = false;
     Tncounter GamersCounter(1, 1, 3);
+    mPlayingRound = false;
     int nPl;
     int nGamernumber = 0; // номер заказавшего игру
     int nPassCounter = 0; // кол-во спасовавших
@@ -280,34 +315,47 @@ void TDeskTop::RunGame () {
 
     // пошла торговля
     npasscounter = 0;
+    bids4win[0] = bids4win[1] = bids4win[2] = bids4win[3] = undefined;
+    int curBidIdx = 0;
+    //drawBidWindows(bids4win, GamersCounter.nValue);
+    //if (GamersCounter.nValue != 1) DeskView->mySleep(2); else emitRepaint();
     while (npasscounter < 2) {
       // пока как минимум двое не спасовали
+/*
       if (GamesType[1] != gtPass) GamesType[1] = GetGamerByNum(GamersCounter.nValue)->makemove(GamesType[2], GamesType[3]);
-      sprintf(ProtocolBuff, "Gamer 1:%i say: %s", GamersCounter.nValue, sGameName(GamesType[1]));
-      WriteProtocol(ProtocolBuff);
-      Repaint();
-      //emitRepaint();
-
+      bids4win[GamersCounter.nValue] = GamesType[1];
+      drawBidWindows(bids4win, GamersCounter.nValue);
       ++GamersCounter;
       ENDOFTORG
 
       if (GamesType[2] != gtPass) GamesType[2] = GetGamerByNum(GamersCounter.nValue)->makemove(GamesType[3], GamesType[1]);
-      sprintf(ProtocolBuff, "Gamer 2:%i say: %s", GamersCounter.nValue, sGameName(GamesType[1]));
-      WriteProtocol(ProtocolBuff);
-      Repaint();
-      //emitRepaint();
-
+      bids4win[GamersCounter.nValue] = GamesType[2];
+      drawBidWindows(bids4win, GamersCounter.nValue);
       ++GamersCounter;
       ENDOFTORG
 
       if (GamesType[3] != gtPass) GamesType[3] = GetGamerByNum(GamersCounter.nValue)->makemove(GamesType[1], GamesType[2]);
-      sprintf(ProtocolBuff, "Gamer 3:%i say: %s", GamersCounter.nValue, sGameName(GamesType[1]));
-      WriteProtocol(ProtocolBuff);
-      Repaint();
-      //emitRepaint();
-
+      bids4win[GamersCounter.nValue] = GamesType[3];
+      drawBidWindows(bids4win, GamersCounter.nValue);
       ++GamersCounter;
       ENDOFTORG
+#define ENDOFTORG \
+  if ((GamesType[1] != undefined && GamesType[2] != undefined && GamesType[3] != undefined) && \
+      ((GamesType[1] == gtPass?1:0)+(GamesType[2] == gtPass?1:0)+(GamesType[3] == gtPass?1:0) >= 2)) break;
+*/
+      int p = GamersCounter.nValue;
+      drawBidWindows(bids4win, p);
+      if (p != 1) DeskView->mySleep(2); else emitRepaint();
+
+      if (GamesType[curBidIdx+1] != gtPass) {
+        GamesType[curBidIdx+1] = GetGamerByNum(p)->makemove(GamesType[((curBidIdx+1)%3)+1], GamesType[((curBidIdx+2)%3)+1]);
+      }
+      bids4win[p] = GamesType[curBidIdx+1];
+      ++GamersCounter;
+      curBidIdx = (curBidIdx+1)%3;
+
+      if ((GamesType[1] != undefined && GamesType[2] != undefined && GamesType[3] != undefined) &&
+          ((GamesType[1] == gtPass?1:0)+(GamesType[2] == gtPass?1:0)+(GamesType[3] == gtPass?1:0) >= 2)) break;
     }
 
     // выч. максим игру
@@ -315,8 +363,10 @@ void TDeskTop::RunGame () {
       if (GamesType[0] < GamesType[i]) GamesType[0] = GamesType[i];
     }
 
+    // поехали совать прикуп и выбирать финальную ставку (ну, или ничего, если распасы)
     mPlayerActive = 0;
     mPlayingRound = true;
+    bids4win[0] = bids4win[1] = bids4win[2] = bids4win[3] = undefined;
     if (GamesType[0] != gtPass) {
       // не расспасы
       // узнаем кто назначил максимальную игру
@@ -336,7 +386,13 @@ void TDeskTop::RunGame () {
           // извращение с CurrentGame -- для того, чтобы показало игру на bidboard
           //!eGameBid oc = CurrentGame;
           CurrentGame = GamesType[0];
-          Repaint();
+          Repaint(false);
+          { // рисуем ставку
+          int x, y;
+          getPMsgXY(mPlayerActive, &x, &y);
+          DeskView->drawMessageWindow(x, y, sGameName(CurrentGame));
+          }
+          //drawBidWindows(bids4win, 1);
           //emitRepaint();
           DeskView->mySleep(-1);
           //!CurrentGame = oc; // вернём CurrentGame на место -- на всякий случай
@@ -348,7 +404,7 @@ void TDeskTop::RunGame () {
           //DeskView->ClearScreen();
           Repaint();
           //emitRepaint();
-          DeskView->mySleep(2);
+          //DeskView->mySleep(2);
           if (tmpg->GamesType != g86) { // не мизер
             nCurrentMove.nValue = i;
             GamesType[0] = CurrentGame = tmpg->makeout4game();
@@ -372,33 +428,88 @@ void TDeskTop::RunGame () {
           //DeskView->ClearScreen();
           //Repaint();
           //emitRepaint();
-          // пас или вист
+
+          // попёрли выбирать: пас или вист?
           ++tmpGamersCounter;
           PassOrVistGamers = GetGamerByNum(tmpGamersCounter.nValue);
           PassOrVistGamers->GamesType = undefined;
           Repaint();
           //emitRepaint();
           //OnlyMessage(tmpGamersCounter.nValue);
-          DeskView->mySleep(2);
+          //DeskView->mySleep(2);
+
+          // выбирает первый
+          int firstPW = tmpGamersCounter.nValue;
+          if (mPlayerActive != 1) { // рисуем ставку
+            int x, y;
+            getPMsgXY(mPlayerActive, &x, &y);
+            DeskView->drawMessageWindow(x, y, sGameName(CurrentGame), true);
+          }
+          if (firstPW != 1) { // рисуем думалку
+            int x, y;
+            getPMsgXY(firstPW, &x, &y);
+            DeskView->drawMessageWindow(x, y, "thinking...");
+            DeskView->mySleep(2);
+          }
           PassOrVist = PassOrVistGamers->makemove(CurrentGame, gtPass, 0);
           nPassOrVist = tmpGamersCounter.nValue;
           if (PassOrVistGamers->GamesType == gtPass) nPassCounter++;
-          Repaint();
+          bids4win[1] = PassOrVistGamers->GamesType;
           //emitRepaint();
           //OnlyMessage(tmpGamersCounter.nValue);
-          DeskView->mySleep(1);
+          //DeskView->mySleep(1);
+
+          // выбирает второй
+          Repaint(false);
           ++tmpGamersCounter;
+          int nextPW = tmpGamersCounter.nValue;
+          if (mPlayerActive != 1) { // рисуем ставку
+            int x, y;
+            getPMsgXY(mPlayerActive, &x, &y);
+            DeskView->drawMessageWindow(x, y, sGameName(CurrentGame), true);
+          }
+          if (firstPW != 1) { // рисуем выбор
+            int x, y;
+            getPMsgXY(firstPW, &x, &y);
+            DeskView->drawMessageWindow(x, y, sGameName(bids4win[1]), true);
+          }
+          if (nextPW != 1) { // рисуем думалку
+            int x, y;
+            getPMsgXY(nextPW, &x, &y);
+            DeskView->drawMessageWindow(x, y, "thinking...");
+            DeskView->mySleep(2);
+          }
           PassOrVistGamers = GetGamerByNum(tmpGamersCounter.nValue);
           PassOrVistGamers->GamesType = undefined;
           //Repaint(tmpGamersCounter.nValue);
-          Repaint();
+          //Repaint();
           //emitRepaint();
-          DeskView->mySleep(1);
+          //DeskView->mySleep(1);
           PassOrVistGamers->makemove(CurrentGame, PassOrVist, nPassOrVist);
           if (PassOrVistGamers->GamesType == gtPass) nPassCounter++;
+          bids4win[2] = PassOrVistGamers->GamesType;
           Repaint();
           //emitRepaint();
-          DeskView->mySleep(1);
+          //DeskView->mySleep(1);
+
+          // всё, рисуем финалы
+          if (mPlayerActive != 1) { // рисуем ставку
+            int x, y;
+            getPMsgXY(mPlayerActive, &x, &y);
+            DeskView->drawMessageWindow(x, y, sGameName(CurrentGame), true);
+          }
+          if (firstPW != 1) { // рисуем выбор
+            int x, y;
+            getPMsgXY(firstPW, &x, &y);
+            DeskView->drawMessageWindow(x, y, sGameName(bids4win[1]), true);
+          }
+          if (nextPW != 1) { // рисуем выбор
+            int x, y;
+            getPMsgXY(nextPW, &x, &y);
+            DeskView->drawMessageWindow(x, y, sGameName(bids4win[2]), true);
+          }
+          if (nextPW != 1) DeskView->mySleep(2);
+
           if (nPassCounter == 2) {
             // двое спасовали :)
             tmpg->nGetsCard = gameTricks(tmpg->GamesType);
@@ -432,6 +543,7 @@ void TDeskTop::RunGame () {
       //Repaint();
       //emitRepaint();
     }
+
     // партия (10 ходов)
     nCurrentMove = nCurrentStart;
     //mPlayingRound = true;
@@ -739,7 +851,7 @@ void TDeskTop::ShowPaper () {
 }
 
 
-void TDeskTop::Repaint () {
+void TDeskTop::Repaint (bool emitSignal) {
   if (!DeskView) return;
   DeskView->ClearScreen();
   // repaint players
@@ -766,5 +878,5 @@ void TDeskTop::Repaint () {
   }
   // repaint scoreboard
   if (nflShowPaper) ShowPaper();
-  emitRepaint();
+  if (emitSignal) emitRepaint();
 }

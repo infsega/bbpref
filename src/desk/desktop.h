@@ -19,7 +19,7 @@ public:
 
   Player *InsertGamer (Player *);
   void RunGame ();
-  void Repaint ();
+  void Repaint (bool emitSignal=true);
   int nPlayerTakeCards (Card *p1, Card *p2, Card *p3, int koz);
   void ShowPaper ();
   int SaveGame (const QString &name);
@@ -64,6 +64,10 @@ private:
   void GamerAssign (Player *, Player *);
 
   void drawInGameCard (int mPlayerNo, Card *card);
+
+private:
+  void drawBidWindows (const eGameBid *bids, int curPlr);
+  void getPMsgXY (int plr, int *x, int *y);
 
 private:
   bool mPlayingRound;

@@ -245,6 +245,12 @@ void TDeskView::mySleep (int seconds) {
     timer->start(seconds*1000);
   }
   drawPKeyBmp(seconds < 0);
+/*
+  if (seconds < 0) {
+    drawMessageWindow(50, 50, "6\1s wow!\nsecond line", true);
+    drawMessageWindow(90, 90, "10\1h wow!\nanother\tline");
+  }
+*/
   emitRepaint();
   while (!Event) {
     qApp->processEvents();
@@ -320,6 +326,14 @@ void TDeskView::drawCard (Card *card, int x, int y, bool opened, bool hilight) {
 
 void TDeskView::drawText (const QString &str, int x, int y, QRgb textColor, QRgb outlineColor) {
   if (!mDeskBmp) return;
+
+  QString s(str);
+  s.replace("\1s", QChar((ushort)0x2660));
+  s.replace("\1c", QChar((ushort)0x2663));
+  s.replace("\1d", QChar((ushort)0x2666));
+  s.replace("\1h", QChar((ushort)0x2665));
+  s = s.trimmed();
+
   QPainter p(mDeskBmp);
   p.setPen(outlineColor);
   QBrush b(p.brush());
@@ -328,13 +342,13 @@ void TDeskView::drawText (const QString &str, int x, int y, QRgb textColor, QRgb
   y += FONTSIZE;
   for (int dy = -1; dy <= 1; dy++) {
     for (int dx = -1; dx <= 1; dx++) {
-      if (dx || dy) p.drawText(x+dx, y+dy, str);
+      if (dx || dy) p.drawText(x+dx, y+dy, s);
     }
   }
   p.setPen(textColor);
   b.setColor(textColor);
   p.setBrush(b);
-  p.drawText(x, y, str);
+  p.drawText(x, y, s);
   p.end();
 }
 
@@ -401,7 +415,7 @@ void TDeskView::showPlayerScore (int i, const QString &sb, const QString &sm, co
       p.drawText(xDelta+188, FONTSIZE+yDelta+390, tv);
       break;
     case 2:
-      drawRotatedText(p, xDelta+60, FONTSIZE+yDelta+5, 90, sb );
+      drawRotatedText(p, xDelta+60, FONTSIZE+yDelta+5, 90, sb);
       drawRotatedText(p, xDelta+100, FONTSIZE+yDelta+5, 90, sm);
       drawRotatedText(p, xDelta+18, FONTSIZE+yDelta+5, 90, slv);
       drawRotatedText(p, xDelta+18, FONTSIZE+yDelta+270, 90, srv);
@@ -432,6 +446,53 @@ void TDeskView::drawRotatedText (QPainter &p, int x, int y, float angle, const Q
 eGameBid TDeskView::makemove (eGameBid lMove, eGameBid rMove) {
   Q_UNUSED(lMove)
   Q_UNUSED(rMove)
-  if (!formBid->exec()) qApp->quit();
+  //if (!formBid->exec()) qApp->quit();
+  formBid->exec();
   return formBid->_GamesType;
+}
+
+
+void TDeskView::drawMessageWindow (int x0, int y0, const QString &msg, bool dim) {
+  if (!mDeskBmp) return;
+  QPainter p(mDeskBmp);
+  // change suits to unicode chars
+  QString s(msg);
+  s.replace("\1s", QChar((ushort)0x2660));
+  s.replace("\1c", QChar((ushort)0x2663));
+  s.replace("\1d", QChar((ushort)0x2666));
+  s.replace("\1h", QChar((ushort)0x2665));
+  s = s.trimmed();
+  // now i want to know text extents
+  QRect drawR(0, 0, 0, 0);
+  QRect boundR;
+  p.drawText(drawR, Qt::AlignLeft | Qt::AlignTop | Qt::TextExpandTabs, s, &boundR);
+  // window size
+  // .|.....text.....|.
+  int w = boundR.width()+4+4+2+2, h = boundR.height()+2+2+2+2;
+  if (x0 < 0) {
+    if (x0 == -666) x0 = (DesktopWidht-w)/2; else x0 += DesktopWidht-w;
+  }
+  if (y0 < 0) {
+    if (y0 == -666) y0 = (DesktopHeight-h)/2; else y0 += DesktopHeight-h;
+  }
+  // draw shadow
+  QBrush brush(qRgba(0, 0, 0, 128));
+  QRect winR(x0, y0, w, h);
+  winR.adjust(-4, 8, -4, 8);
+  p.fillRect(winR, brush);
+  winR.adjust(4, -8, 4, -8);
+  // draw window
+  brush.setColor(qRgb(dim?164:255, dim?164:255, dim?164:255));
+  p.fillRect(winR, brush);
+  // draw frame
+  p.setPen(qRgb(0, 0, 0));
+  p.drawLine(x0+1, y0+1, x0+w-2, y0+1);
+  p.drawLine(x0+1, y0+h-2, x0+w-2, y0+h-2);
+  p.drawLine(x0+1, y0+1, x0+1, y0+h-2);
+  p.drawLine(x0+w-2, y0+1, x0+w-2, y0+h-2);
+  // draw text
+  boundR.adjust(x0+2+4, y0+2+2, x0+2+4, y0+2+2);
+  p.drawText(boundR, Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextExpandTabs, s);
+  // done
+  p.end();
 }

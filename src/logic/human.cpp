@@ -32,15 +32,17 @@ void HumanPlayer::clear () {
 }
 
 
-//ход при торговле
+// ход при торговле
 eGameBid HumanPlayer::makemove (eGameBid lMove, eGameBid rMove) {
   eGameBid tmpGamesType;
   WaitForMouse = 1;
 
+  //fprintf(stderr, "select bid\n");
   formBid->EnableAll();
   if (qMax(lMove, rMove) != gtPass) formBid->DisableLessThan(qMax(lMove, rMove));
-  if (GamesType != undefined) formBid->disableGames(g86);
-  formBid->disableGames(vist);
+  if (GamesType != undefined) formBid->disableItem(g86);
+  formBid->enableItem(gtPass);
+  formBid->disableItem(vist);
   formBid->showbullet->setEnabled(TRUE);
   formBid->bgetback->setEnabled(FALSE);
 
@@ -119,16 +121,18 @@ eGameBid HumanPlayer::makeout4miser () {
 
 // после сноса чего играем
 eGameBid HumanPlayer::makeout4game () {
-  WaitForMouse = 1;
+  //WaitForMouse = 1;
+  //X = Y = 0;
   eGameBid tmpGamesType;
-  X = Y = 0;
+
   makemove(0, 0, 0, 0);
-  DeskView->mySleep(1);
+  //!.!DeskView->mySleep(1);
   makemove(0, 0, 0, 0);
+
   formBid->EnableAll();
-  formBid->disableGames(vist);
-  formBid->disableGames(gtPass);
-  if (GamesType != g86) formBid->disableGames(g86);
+  formBid->disableItem(vist);
+  formBid->disableItem(gtPass);
+  if (GamesType != g86) formBid->disableItem(g86);
   formBid->DisableLessThan(GamesType);
   formBid->showbullet->setEnabled(TRUE);
   formBid->bgetback->setEnabled(TRUE);
@@ -147,6 +151,7 @@ eGameBid HumanPlayer::makeout4game () {
     }
   } while (tmpGamesType <= 1);
   GamesType = tmpGamesType;
+
   formBid->EnableAll();
   WaitForMouse = 0;
   return GamesType;
@@ -156,15 +161,17 @@ eGameBid HumanPlayer::makeout4game () {
 eGameBid HumanPlayer::makemove (eGameBid MaxGame, int HaveAVist, int nGamerVist) {
   Q_UNUSED(HaveAVist)
   Q_UNUSED(nGamerVist)
+
+  //fprintf(stderr, "whist/pass\n");
   if (MaxGame == g86) {
     GamesType = g86catch;
   } else {
     // сталинград?
-    if (g61stalingrad && MaxGame == g61) formBid->disableGames(gtPass);
-    else formBid->EnableGames(gtPass);
+    if (g61stalingrad && MaxGame == g61) formBid->disableItem(gtPass);
+    else formBid->enableItem(gtPass);
     formBid->DisalbeAll();
-    formBid->EnableGames(gtPass);
-    formBid->EnableGames(vist);
+    formBid->enableItem(gtPass);
+    formBid->enableItem(vist);
     GamesType = DeskView->makemove(zerogame, zerogame);
     formBid->EnableAll();
   }

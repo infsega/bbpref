@@ -1,54 +1,46 @@
 #include <values.h>
 #include "ncounter.h"
 
-Tncounter::Tncounter() {
-   nMin=nValue = 0;
-   nMax = MAXINT;
+
+Tncounter::Tncounter () {
+  nMin = nValue = 0;
+  nMax = MAXINT;
 }
 
-Tncounter::Tncounter(int _nMin,int _nMax) {
-   nMin = nValue = _nMin;
-   nMax = _nMax;
+
+Tncounter::Tncounter (int _nMin, int _nMax) {
+  nMin = nValue = _nMin;
+  nMax = _nMax;
 }
 
-Tncounter::Tncounter(int _nValue,int _nMin,int _nMax) {
-   nValue = _nValue;
-   nMin = _nMin;
-   nMax = _nMax;
+
+Tncounter::Tncounter (int _nValue, int _nMin, int _nMax) {
+  nMin = _nMin;
+  nMax = _nMax;
+  nValue = (_nValue-nMin)%(nMax-nMin+1)+nMin;
 }
 
-Tncounter & operator - (Tncounter &c,int n) {
-  for ( int i=0;i<n;i++ )
-    --c;
+
+Tncounter &operator - (Tncounter &c, int n) {
+  while (n-- > 0) --c;
   return c;
 }
 
-Tncounter & operator + (Tncounter &c,int n) {
-   for ( int i=0;i<n;i++ )
-    ++c;
+
+Tncounter &operator + (Tncounter &c,int n) {
+  while (n-- > 0) ++c;
   return c;
 }
 
-int NextGamer(Tncounter aCurrent) {
-    Tncounter RetVal = aCurrent;
-    ++RetVal;
-    return RetVal.nValue;
+
+int succPlayer (const Tncounter &aCurrent) {
+  int res = aCurrent.nValue+1;
+  if (res > aCurrent.nMax) res = aCurrent.nMin;
+  return res;
 }
 
-int PrevGamer(Tncounter aCurrent) {
-    Tncounter RetVal = aCurrent;
-    --RetVal;
-    return RetVal.nValue;
+int predPlayer(const Tncounter &aCurrent) {
+  int res = aCurrent.nValue-1;
+  if (res < aCurrent.nMin) res = aCurrent.nMax;
+  return res;
 }
-
-/*int operator ++ (Tncounter &c) {
-   c.nValue++;
-   if ( c.nValue > c.nMax )  c.nValue = c.nMin;
-   return c.nValue;
-}
-
-int operator -- (Tncounter &c) {
-   c.nValue--;
-   if ( c.nValue < c.nMin )  c.nValue = c.nMax;
-   return c.nValue;
-} */

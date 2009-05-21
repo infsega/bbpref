@@ -7,7 +7,7 @@
 
 typedef struct {
  eGameBid game;
- const char *name;
+ const QString name;
 } tGameName;
 
 
@@ -17,32 +17,32 @@ static tGameName gameNames[] = {
   {undefined, "-----"},
   {vist, "whist"},
   {gtPass, "pass"},
-  {g61, "6 of spades"},
-  {g62, "6 of clubs"},
-  {g63, "6 of diamonds"},
-  {g64, "6 of hearts"},
-  {g65, "6 NT"},
-  {g71, "7 of spades"},
-  {g72, "7 of clubs"},
-  {g73, "7 of diamonds"},
-  {g74, "7 of hearts"},
-  {g75, "7 NT"},
-  {g81, "8 of spades"},
-  {g82, "8 of clubs"},
-  {g83, "8 of diamonds"},
-  {g84, "8 of hearts"},
-  {g85, "8 NT"},
+  {g61, "6\1s"},
+  {g62, "6\1c"},
+  {g63, "6\1d"},
+  {g64, "6\1h"},
+  {g65, "6NT"},
+  {g71, "7\1s"},
+  {g72, "7\1c"},
+  {g73, "7\1d"},
+  {g74, "7\1h"},
+  {g75, "7NT"},
+  {g81, "8\1s"},
+  {g82, "8\1c"},
+  {g83, "8\1d"},
+  {g84, "8\1h"},
+  {g85, "8NT"},
   {g86, "Misere"},
-  {g91, "9 of spades"},
-  {g92, "9 of clubs"},
-  {g93, "9 of diamonds"},
-  {g94, "9 of hearts"},
-  {g95, "9 NT"},
-  {g101, "10 of spades"},
-  {g102, "10 of clubs"},
-  {g103, "10 of diamonds"},
-  {g104, "10 of hearts"},
-  {g105, "10 NT"},
+  {g91, "9\1s"},
+  {g92, "9\1c"},
+  {g93, "9\1d"},
+  {g94, "9\1h"},
+  {g95, "9NT"},
+  {g101, "10\1s"},
+  {g102, "10\1c"},
+  {g103, "10\1d"},
+  {g104, "10\1h"},
+  {g105, "10NT"},
   {zerogame, NULL}
 };
 
@@ -81,11 +81,12 @@ int succBid (eGameBid game) {
 }
 
 
-const char *sGameName (eGameBid game) {
-  for (int i = 0; gameNames[i].name; i++) {
+const QString &sGameName (eGameBid game) {
+  static QString empty;
+  for (int i = 0; !gameNames[i].name.isEmpty(); i++) {
     if (gameNames[i].game == game) return gameNames[i].name;
   }
-  return "                 ";
+  return empty;
 }
 
 

@@ -69,7 +69,7 @@ extern eGameBid CurrentGame;
 
 
 int succBid (eGameBid game);
-const char *sGameName (eGameBid game);
+const QString &sGameName (eGameBid game);
 int trumpSuit ();
 int gameTricks (eGameBid gType);
 int gameWhists (eGameBid gType);

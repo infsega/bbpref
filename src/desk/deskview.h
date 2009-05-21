@@ -45,6 +45,8 @@ public:
    */
   void drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game);
 
+  void drawMessageWindow (int x0, int y0, const QString &msg, bool dim=false);
+
   void emitRepaint ();
 
 signals:
