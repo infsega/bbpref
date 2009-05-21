@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
   //a.setFont (QFont("helvetica", FONTSIZE));
   kpref=new Kpref();
   //!!!qApp->setMainWidget(kpref);
-  Formtorg = new QTFormtorg(0, "Formtorg");
+  Formtorg = new QTFormtorg(0);
   Formtorg->hide();
   kpref->init();
   kpref->showMaximized();

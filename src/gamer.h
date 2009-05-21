@@ -28,7 +28,7 @@ public:
 
   int nGetsCard;
   TMast Mast;
-  TGamesType GamesType;
+  tGameBid GamesType;
   TSide Enemy;
   int nGamer;         // мой номер
 
@@ -59,10 +59,10 @@ public:
   TCard *Pronesti;
 
   virtual TCard *makemove (TCard *lMove,TCard *rMove,TGamer *aLeftGamer,TGamer *aRightGamer); //ход
-  virtual TGamesType makemove (TGamesType lMove,TGamesType rMove); //ход при торговле
-  virtual TGamesType makemove (TGamesType MaxGame,int HaveAVist,int nGamerVist); // после получения игроком прикупа - пасс или вист
-  virtual TGamesType makeout4game (void);
-  virtual TGamesType makeout4miser (void);
+  virtual tGameBid makemove (tGameBid lMove,tGameBid rMove); //ход при торговле
+  virtual tGameBid makemove (tGameBid MaxGame,int HaveAVist,int nGamerVist); // после получения игроком прикупа - пасс или вист
+  virtual tGameBid makeout4game (void);
+  virtual tGameBid makeout4miser (void);
   virtual void HintCard (int, int);
   virtual void GetBackSnos ();
 
@@ -77,17 +77,19 @@ public:
 private:
   int flMiser;
   int Check4Miser(void);
-  TGamesType makemove4out(void); //для расчета сноса
+  tGameBid makemove4out(void); //для расчета сноса
   void makestatfill(void);
   void makestatfill(int nCards,int maxmin);
   TMastTable vzatok4game(TMast ,int a23);
   TMastTable vzatok(TMast,TCardList *,int a23);
   TMastTable vzatok4pass(TMast,TCardList *);
+
 public:
   // Два списка
   TMastTable Compare2List4Max(TCardList *My,TCardList *Enemy); // Для максимального результата на 1 руке
   TMastTable Compare2List4Max23(TCardList *My,TCardList *Enemy); // Для максимального результата на 2 и 3 руке
   TMastTable Compare2List4Min(TCardList *My,TCardList *Enemy); // Для мин результата
+
 private:
   // Три списка
   //TMastTable Compare3List4Max(TCardList *My,TCardList *Left,TCardList *Right); // Для максимального результата

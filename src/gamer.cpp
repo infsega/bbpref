@@ -194,7 +194,7 @@ TCard *TGamer::Miser3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGam
 // copy from MyPass3
   TCard *cur=NULL;
     /*TCard *MaxCard;*/
-    TGamesType tmpGamesType=GamesType;
+    tGameBid tmpGamesType=GamesType;
     TCardList *aMaxCardList=new TCardList(20);
 //    int mast = GamesType - (GamesType/10) * 10;
     // набираем списки
@@ -596,7 +596,7 @@ TCard *TGamer::MiserCatch3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer
 TCard *TGamer::MyGame3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) { // моя игра 3 заход - мой
     TCard *cur=NULL;
     TCard *MaxCard;
-    TGamesType tmpGamesType=GamesType;
+    tGameBid tmpGamesType=GamesType;
     TCardList *aMaxCardList=new TCardList(20);
     int mast = GamesType - (GamesType/10) * 10;
     // набираем списки
@@ -658,7 +658,7 @@ TCard *TGamer::MyGame3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGa
 TCard *TGamer::MyVist3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) { // мой вист или пас 3 заход - мой
     TCard *cur=NULL;
     TCard *MaxCard;
-    TGamesType tmpGamesType=GamesType;
+    tGameBid tmpGamesType=GamesType;
     TCardList *aMaxCardList=new TCardList(20);
     TGamer *aEnemy,*aFriend;
     int mast;
@@ -781,7 +781,7 @@ TCard *TGamer::MyVist3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGa
 
 TCard *TGamer::MyVist2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) { // мой вист или пас 2 заход - мой
     TCard *cur=NULL;
-    TGamesType tmpGamesType=GamesType;
+    tGameBid tmpGamesType=GamesType;
     TCardList *aMaxCardList=new TCardList(20);
     TGamer *aEnemy,*aFriend;
     int mast;
@@ -833,7 +833,7 @@ TCard *TGamer::MyVist2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer)
 TCard *TGamer::MyVist1(TGamer *aLeftGamer,TGamer *aRightGamer) {
 // 1 - выбить козыря 2-разиграть масти с перехватами 3-без перехватов 4-???
     TCard *cur=NULL;
-    TGamesType tmpGamesType=GamesType;
+    tGameBid tmpGamesType=GamesType;
     TCardList *aMaxCardList=new TCardList(20);
     TGamer *aEnemy,*aFriend;
     int mast;
@@ -906,7 +906,7 @@ TCard *TGamer::MyVist1(TGamer *aLeftGamer,TGamer *aRightGamer) {
 //-----------------------------------------------------------------------
 TCard *TGamer::MyGame2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) {
     TCardList *aMaxCardList=new TCardList(20);
-    TGamesType tmpGamesType=GamesType;
+    tGameBid tmpGamesType=GamesType;
     TCard *cur=NULL;
     TCard *MaxLeftCard=NULL;
     int mast = aRightCard -> CMast;
@@ -959,7 +959,7 @@ TCard *TGamer::MyGame2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer)
 TCard *TGamer::MyGame1(TGamer *aLeftGamer,TGamer *aRightGamer) {
 // 1-выбить козыря 2-разиграть масти с перехватами 3-без перехватов 4-???
     TCard *cur=NULL;
-    TGamesType tmpGamesType=GamesType;
+    tGameBid tmpGamesType=GamesType;
     TCardList *aMaxCardList=new TCardList(20);
     int mast = GamesType - (GamesType/10) * 10;
     // набираем списки
@@ -1107,8 +1107,8 @@ void TGamer::LoadLists(TGamer *aLeftGamer,TGamer *aRightGamer,TCardList *aMaxCar
     aRight -> Assign(aRightGamer -> aCards);
 }
 //-----------------------------------------------------------------------
-TGamesType TGamer::makemove4out(void) {
-    TGamesType GamesTypeRetVal;
+tGameBid TGamer::makemove4out(void) {
+    tGameBid GamesTypeRetVal;
     int i;
     int nMaxMastLen=0;
     TMast nMaxMast=SuitNone;
@@ -1141,16 +1141,16 @@ TGamesType TGamer::makemove4out(void) {
     }
 
     //масть и звятки уже посчитали
-    GamesTypeRetVal = ( TGamesType ) (LocalMastTable[0].vzatok*10 + nMaxMast );
+    GamesTypeRetVal = ( tGameBid ) (LocalMastTable[0].vzatok*10 + nMaxMast );
     // это то, что мы можем играть максимально
     return GamesTypeRetVal;
 
 }
 //-----------------------------------------------------------------------
-TGamesType TGamer::makemove(TGamesType MaxGame,int HaveAVist,int nGamerVist) { // после получения игроком прикупа - пасс или вист
+tGameBid TGamer::makemove(tGameBid MaxGame,int HaveAVist,int nGamerVist) { // после получения игроком прикупа - пасс или вист
   Q_UNUSED(nGamerVist)
-  TGamesType Answer;
-  TGamesType MyMaxGame = makemove4out();
+  tGameBid Answer;
+  tGameBid MyMaxGame = makemove4out();
 
   int vz = MyMaxGame / 10;
   if ( HaveAVist != vist && vz >= nGetMinCard4Vist(MaxGame) ) {
@@ -1171,11 +1171,11 @@ TGamesType TGamer::makemove(TGamesType MaxGame,int HaveAVist,int nGamerVist) { /
   return Answer;
 }
 //-----------------------------------------------------------------------
-TGamesType TGamer::makeout4miser(void) {
+tGameBid TGamer::makeout4miser(void) {
   TCard *FirstCardOut=NULL,*SecondCardOut=NULL;
   TCard *tmpFirstCardOut,*tmpSecondCardOut;
   TCard *RealFirstCardOut,*RealSecondCardOut;
-  TGamesType  Hight = g105,  tmpHight = g105;
+  tGameBid  Hight = g105,  tmpHight = g105;
   for ( int i=0;i<12;i++ ) {
     tmpFirstCardOut = (TCard*) aCards -> At(i);
     aCards -> AtRemove(i);
@@ -1218,11 +1218,11 @@ TGamesType TGamer::makeout4miser(void) {
   return g86;
 }
 //-----------------------------------------------------------------------
-TGamesType TGamer::makeout4game(void) {
+tGameBid TGamer::makeout4game(void) {
   TCard *FirstCardOut=NULL,*SecondCardOut=NULL;
   TCard *tmpFirstCardOut,*tmpSecondCardOut;
   TCard *RealFirstCardOut,*RealSecondCardOut;
-  TGamesType  Hight = zerogame,  tmpHight = zerogame;
+  tGameBid  Hight = zerogame,  tmpHight = zerogame;
   for ( int i=0;i<12;i++ ) {
     tmpFirstCardOut = (TCard*) aCards -> At(i);
     aCards -> AtRemove(i);
@@ -1268,7 +1268,7 @@ TGamesType TGamer::makeout4game(void) {
     int tmpvz = Hight/10,tmpmast = Hight - tmpvz*10;
     while ( tmpHight < GamesType )  {
       tmpvz++;
-      tmpHight = (TGamesType) (tmpvz*10+tmpmast);
+      tmpHight = (tGameBid) (tmpvz*10+tmpmast);
     }
     GamesType = tmpHight;
   } else {
@@ -1277,7 +1277,7 @@ TGamesType TGamer::makeout4game(void) {
   return GamesType;
 }
 //-----------------------------------------------------------------------
-TGamesType TGamer::makemove(TGamesType lMove,TGamesType rMove) { //ход при торговле
+tGameBid TGamer::makemove(tGameBid lMove,tGameBid rMove) { //ход при торговле
 /*  if ( GamesType == gtPass )  {
     GamesType=gtPass;
   } else {*/
@@ -1286,7 +1286,7 @@ TGamesType TGamer::makemove(TGamesType lMove,TGamesType rMove) { //ход при торго
     int nMaxMastLen=0;
     TMast nMaxMast=SuitNone;
     TMastTable LocalMastTable[5];
-    TGamesType MGT = qMax(lMove,rMove);
+    tGameBid MGT = qMax(lMove,rMove);
     LocalMastTable[0].vzatok=0;
     LocalMastTable[0].perehvatov=0;
     LocalMastTable[0].sum = 0;
@@ -1311,9 +1311,9 @@ TGamesType TGamer::makemove(TGamesType lMove,TGamesType rMove) { //ход при торго
     }
     //масть и взятки уже посчитали
     if (MGT <= g75) {
-      GamesType = ( TGamesType ) ((LocalMastTable[0].vzatok+1)*10 + nMaxMast );
+      GamesType = ( tGameBid ) ((LocalMastTable[0].vzatok+1)*10 + nMaxMast );
     } else {
-      GamesType = ( TGamesType ) ((LocalMastTable[0].vzatok)*10 + nMaxMast );
+      GamesType = ( tGameBid ) ((LocalMastTable[0].vzatok)*10 + nMaxMast );
     }
     if ( (rMove==gtPass || rMove==undefined) && ( lMove==gtPass || lMove==undefined ) ) {
       if ( LocalMastTable[0].vzatok >= 4 ) {
@@ -1331,13 +1331,13 @@ TGamesType TGamer::makemove(TGamesType lMove,TGamesType rMove) { //ход при торго
         }
       }
     } else if(GamesType >= MGT) {
-        GamesType = (TGamesType) NextGame(MGT);
+        GamesType = (tGameBid) NextGame(MGT);
     } else {
       GamesType = gtPass;
     }
 
 /*    if( GamesType >= MGT  ) {
-        GamesType = (TGamesType) NextGame(MGT);
+        GamesType = (tGameBid) NextGame(MGT);
     } else {
     }*/
     // это то, что мы можем играть максимально
@@ -1347,7 +1347,7 @@ TGamesType TGamer::makemove(TGamesType lMove,TGamesType rMove) { //ход при торго
           if ( lMove!=g61 )
               GamesType = lMove; // say here
           else
-              GamesType = (TGamesType) NextGame(lMove);
+              GamesType = (tGameBid) NextGame(lMove);
         } else {
           GamesType = gtPass;
         }
@@ -1355,7 +1355,7 @@ TGamesType TGamer::makemove(TGamesType lMove,TGamesType rMove) { //ход при торго
         if ( GamesType > rMove ) {
 //          asm int 3;
             if (rMove!=undefined) {
-              GamesType = (TGamesType) NextGame(rMove);
+              GamesType = (tGameBid) NextGame(rMove);
              } else {
               GamesType = g61;
              }
@@ -1597,7 +1597,7 @@ TMastTable TGamer::Compare2List4Max23(TCardList *My,TCardList *Enemy) {
 //-----------------------------------------------------------------------
 TCard *TGamer::MyPass1(TCard *rMove,TGamer *aLeftGamer,TGamer *aRightGamer) {
   TCard *cur=NULL;
-  TGamesType tmpGamesType=GamesType;
+  tGameBid tmpGamesType=GamesType;
   TCardList *aMaxCardList=new TCardList(20);
   TCardList *aTmpList=new TCardList(MAXMASTLEN);
   TCardList *aStackStore=NULL;
@@ -1648,7 +1648,7 @@ TCard *TGamer::MyPass1(TCard *rMove,TGamer *aLeftGamer,TGamer *aRightGamer) {
 //-----------------------------------------------------------------------
 TCard *TGamer::MyPass2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) {
   TCard *cur=NULL;
-  TGamesType tmpGamesType=GamesType;
+  tGameBid tmpGamesType=GamesType;
   int mast = aRightCard -> CMast;
   TCardList *aMaxCardList=new TCardList(20);
   LoadLists(aLeftGamer,aRightGamer,aMaxCardList);
@@ -1692,7 +1692,7 @@ TCard *TGamer::MyPass2(TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer)
 TCard *TGamer::MyPass3(TCard *aLeftCard,TCard *aRightCard,TGamer *aLeftGamer,TGamer *aRightGamer) {
   TCard *cur=NULL;
     /*TCard *MaxCard;*/
-    TGamesType tmpGamesType=GamesType;
+    tGameBid tmpGamesType=GamesType;
     TCardList *aMaxCardList=new TCardList(20);
 //    int mast = GamesType - (GamesType/10) * 10;
     // набираем списки
@@ -1875,7 +1875,7 @@ int TGamer::buildHandXOfs (int *dest, int startX, bool opened) {
 
 void TGamer::getLeftTop (int playerNo, int *left, int *top) {
   *left = 0; *top = 0;
-  int ofs[28], cnt;
+  //int ofs[28], cnt;
   switch (playerNo) {
     case 1:
       *left = (DeskView->DesktopWidht-(DeskView->DesktopWidht/2-2*DeskView->xBorder))/2;

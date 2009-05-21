@@ -7,16 +7,16 @@
 
 //--------------------------------------------------------------------------
 typedef struct {
- TGamesType GamesType;
+ tGameBid GamesType;
  const char *name;
 }  TGameName;
 //--------------------------------------------------------------------------
 TGameName GameName[] = {
   {g86catch," "},
-  {raspass,"PassOut"},
+  {raspass,"pass-out"},
   {undefined,"-----"},
-  {vist,"Whist"},
-  {gtPass,"Pass"},
+  {vist,"whist"},
+  {gtPass,"pass"},
   {g61,"6 of spades"},
   {g62,"6 of clubs"},
   {g63,"6 of diamonds"},
@@ -32,7 +32,7 @@ TGameName GameName[] = {
   {g83,"8 of diamonds"},
   {g84,"8 of hearts"},
   {g85,"8 NT"},
-  {g86,"Miser"},
+  {g86,"Misere"},
   {g91,"9 of spades"},
   {g92,"9 of clubs"},
   {g93,"9 of diamonds"},
@@ -49,14 +49,14 @@ int g61stalingrad;
 int g10vist;
 int globvist;
 int nBuletScore;
-TGamesType CurrentGame;
+tGameBid CurrentGame;
 
 //--------------------------------------------------------------------------
 int nGetKoz(void) {
   return CurrentGame - (CurrentGame/10) * 10;
 }
 //--------------------------------------------------------------------------
-int NextGame(TGamesType GamesType) {
+int NextGame(tGameBid GamesType) {
 
   if ( GamesType == g86 )  {
     return g91;
@@ -84,14 +84,14 @@ int NextGame(TGamesType GamesType) {
 }
 //--------------------------------------------------------------------------
 
-const char *sGameName(TGamesType GamesType) {
+const char *sGameName(tGameBid GamesType) {
    for (unsigned int i=0;i<=sizeof(GameName)/sizeof(TGameName);i++) {
       if (GameName[i].GamesType == GamesType) return (char *) GameName[i].name;
    }
    return "                 ";
 }
 //--------------------------------------------------------------------------
-int nGetGameCard(TGamesType gType) {
+int nGetGameCard(tGameBid gType) {
    if ( gType >=g71 && gType <= 75)   return 7;
    if ( gType >=g81 && gType <= 85)   return 8;
    if ( gType ==g86)                  return 0;
@@ -100,7 +100,7 @@ int nGetGameCard(TGamesType gType) {
    return 6;
 }
 //--------------------------------------------------------------------------
-int nGetVistCard(TGamesType gType) {
+int nGetVistCard(tGameBid gType) {
    if ( gType >=g71 && gType <= 75)   return 2;
    if ( gType >=g81 && gType <= 85)   return 1;
    if ( gType ==g86)                  return 0;
@@ -109,7 +109,7 @@ int nGetVistCard(TGamesType gType) {
    return 4;
 }
 //--------------------------------------------------------------------------
-int nGetMinCard4Vist(TGamesType gType) {
+int nGetMinCard4Vist(tGameBid gType) {
    if ( gType >=g71 && gType <= 75)   return 2;
    if ( gType >=g81 && gType <= 85)   return 1;
 
@@ -119,7 +119,7 @@ int nGetMinCard4Vist(TGamesType gType) {
    return 3;
 }
 //--------------------------------------------------------------------------
-int nGetGamePrice(TGamesType gType) {
+int nGetGamePrice(tGameBid gType) {
    if ( gType >=g71 && gType <= 75)    return 4;
    if ( gType >=g81 && gType <= 85)    return 6;
    if ( gType ==g86)                   return 10;
@@ -130,12 +130,12 @@ int nGetGamePrice(TGamesType gType) {
 
 
 //----------------------------------------------------------------------
-static bool strcmpQ (const QString &s0, const QString &s1) {
+static bool inline strcmpQ (const QString &s0, const QString &s1) {
   return s0 == s1;
 }
 
 
-TGamesType GamesTypeByName (const QString &s) {
+tGameBid GamesTypeByName (const QString &s) {
   if (strcmpQ("raspass",s)) return raspass;
   if (strcmpQ("vist",s)) return vist;
   if (strcmpQ("undefined",s)) return undefined;

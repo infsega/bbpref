@@ -27,9 +27,9 @@ THuman::THuman(int _nGamer,TDeskView *_DeskView) : TGamer(_nGamer, _DeskView) {
 }
 
 
-TGamesType THuman::makemove (TGamesType lMove, TGamesType rMove) {
+tGameBid THuman::makemove (tGameBid lMove, tGameBid rMove) {
   //ход при торговле
-  TGamesType tmpGamesType;
+  tGameBid tmpGamesType;
   WaitForMouse = 1;
   //PQApplication->mainWidget ()->setMouseTracking ( TRUE );
 
@@ -160,7 +160,7 @@ TCard *THuman::makemove (TCard *lMove, TCard *rMove, TGamer *aLeftGamer, TGamer 
 }
 
 
-TGamesType THuman::makeout4miser(void) { // после сноса чего играем
+tGameBid THuman::makeout4miser(void) { // после сноса чего играем
   WaitForMouse = 1;
   makemove( (TCard *)NULL,(TCard *)NULL,(TGamer *)NULL,(TGamer *)NULL);
   //!Repaint(DeskView,(DeskView->DesktopWidht-DeskView->xLen)/2,DeskView->DesktopHeight-(DeskView->yBorder*2)-DeskView->CardHeight,DeskView->xLen,DeskView->yLen);
@@ -173,9 +173,9 @@ TGamesType THuman::makeout4miser(void) { // после сноса чего играем
   return g86;
 }
 //-------------------------------------------------------------------------
-TGamesType THuman::makeout4game(void) { // после сноса чего играем
+tGameBid THuman::makeout4game(void) { // после сноса чего играем
   WaitForMouse = 1;
-  TGamesType tmpGamesType;
+  tGameBid tmpGamesType;
 //    PQApplication->mainWidget ()->setMouseTracking ( TRUE );
   X=Y=0;
   THuman::makemove( (TCard *)NULL,(TCard *)NULL,(TGamer *)NULL,(TGamer *)NULL);
@@ -194,7 +194,7 @@ TGamesType THuman::makeout4game(void) { // после сноса чего играем
     Formtorg->DisalbeGames(g86);
   }
   Formtorg->DisableLessThan(  GamesType );
-//  GamesType = DeskView->makemove((TGamesType)NULL,(TGamesType)NULL);
+//  GamesType = DeskView->makemove((tGameBid)NULL,(tGameBid)NULL);
   Formtorg->showbullet->setEnabled(TRUE);
   Formtorg->bgetback->setEnabled(TRUE);
 
@@ -228,7 +228,7 @@ TGamesType THuman::makeout4game(void) { // после сноса чего играем
   return GamesType;
 }
 //-------------------------------------------------------------------------
-TGamesType THuman::makemove(TGamesType MaxGame,int HaveAVist,int nGamerVist) {
+tGameBid THuman::makemove (tGameBid MaxGame,int HaveAVist,int nGamerVist) {
   Q_UNUSED(HaveAVist)
   Q_UNUSED(nGamerVist)
 //      Formtorg->DisalbeLessThan()

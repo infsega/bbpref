@@ -59,7 +59,7 @@ void TPlScore::AddVist(int index,int myNumber,int Skolko) {
   NaKogo -> Insert(new int (nScore));
 }
 //-------------------------------------------------------------------
-int TPlScore::AddRecords( TGamesType aGamerType,TGamesType aMyType, int nGamerVz/*разигрывающего*/,int nMyVz/*чиcтых моих*/, int nGamer,int myNumber,int nqVist/*кол-во вистующих*/) {
+int TPlScore::AddRecords( tGameBid aGamerType,tGameBid aMyType, int nGamerVz/*разигрывающего*/,int nMyVz/*чиcтых моих*/, int nGamer,int myNumber,int nqVist/*кол-во вистующих*/) {
   int nGamePrice = nGetGamePrice(aGamerType);  // цена игры
   int nGameCard=nGetGameCard(aGamerType); // взяток должно быть при  данной игре
   int nVistCard=nGetVistCard(aGamerType); // минимальное кол во взяток вистующих на 2 их

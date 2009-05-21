@@ -44,8 +44,8 @@ enum TMast {
   SuitNone,
 };
 
-enum TGamesType {
-  zerogame = 0,
+enum tGameBid {
+  zerogame=0,
   g86catch=56,
   raspass=57,
   vist=58,
@@ -69,17 +69,17 @@ extern int g61stalingrad;
 extern int g10vist;
 extern int globvist;
 extern int nBuletScore;
-extern TGamesType CurrentGame;
+extern tGameBid CurrentGame;
 
 //-----------------------------------------------------------------------------
-int  NextGame(TGamesType);
-const char *sGameName(TGamesType);
+int  NextGame(tGameBid);
+const char *sGameName(tGameBid);
 int nGetKoz(void);
-int nGetGameCard(TGamesType gType);
-int nGetVistCard(TGamesType gType);
-int nGetMinCard4Vist(TGamesType gType);
-int nGetGamePrice(TGamesType gType);
-TGamesType GamesTypeByName(const QString &s);
+int nGetGameCard(tGameBid gType);
+int nGetVistCard(tGameBid gType);
+int nGetMinCard4Vist(tGameBid gType);
+int nGetGamePrice(tGameBid gType);
+tGameBid GamesTypeByName(const QString &s);
 int Card2Int(void *);
 
 #endif

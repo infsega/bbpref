@@ -299,7 +299,7 @@ void TDeskView::drawRotatedText (QPainter &p, int x, int y, float angle, const Q
 }
 
 
-TGamesType TDeskView::makemove (TGamesType lMove, TGamesType rMove) {
+tGameBid TDeskView::makemove (tGameBid lMove, tGameBid rMove) {
   Q_UNUSED(lMove)
   Q_UNUSED(rMove)
   if (!Formtorg->exec()) qApp->quit();

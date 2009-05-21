@@ -18,6 +18,7 @@ HEADERS += \
   $$PWD/pcommon.h \
   $$PWD/plscore.h \
   $$PWD/prfconst.h \
+  $$PWD/qbidbutton.h \
   $$PWD/qtformtorg.h \
   $$PWD/main.h
 
@@ -36,6 +37,6 @@ SOURCES += \
   $$PWD/ncounter.cpp \
   $$PWD/plscore.cpp \
   $$PWD/prfconst.cpp \
+  $$PWD/qbidbutton.cpp \
   $$PWD/qtformtorg.cpp \
-  $$PWD/qtformtorgdata.cpp \
   $$PWD/main.cpp

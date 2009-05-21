@@ -237,7 +237,7 @@ TCard *TDeskTop::ControlingMakemove (TCard *lMove, TCard *rMove) {
 
 
 void TDeskTop::RunGame () {
-  TGamesType GamesType[4];
+  tGameBid GamesType[4];
   //char *filename;
   //TCard *FirstCard, *SecondCard, *TherdCard;
   int npasscounter;

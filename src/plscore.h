@@ -1,17 +1,15 @@
 #ifndef PLSCORE_H
 #define PLSCORE_H
 
-
 #include "ctlist.h"
 #include "prfconst.h"
 
 
-
 class TPlScore {
- public:
-   TPlScore();
-   ~TPlScore();
-   int AddRecords( TGamesType aGamerType,TGamesType aMyType, int nGamerVz,int nMyVz, int nGamer,int myNumber,int nqVist);
+public:
+   TPlScore ();
+   ~TPlScore ();
+   int AddRecords (tGameBid aGamerType, tGameBid aMyType, int nGamerVz, int nMyVz, int nGamer, int myNumber, int nqVist);
    Tclist *Bullet;
    Tclist *Mountan;
    Tclist *LeftVists;

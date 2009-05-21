@@ -31,7 +31,7 @@ public:
   void ShowBlankPaper (int nBuletScore);
   void showPlayerScore (int i, const QString &sb, const QString &sm, const QString &slv, const QString &srv, const QString &tv);
   //----------------------------- for THuman gamer
-  TGamesType makemove (TGamesType lMove,TGamesType rMove);
+  tGameBid makemove (tGameBid lMove, tGameBid rMove);
   void StatusBar (const QString &text);
   void drawRotatedText (QPainter &p, int x, int y, float angle, const QString &text);
 
