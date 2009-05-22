@@ -153,7 +153,7 @@ Card *Player::Miser2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
              cur = GetMinCardWithOutVz(); // лабуду
            }
              if ( !cur ) {
-              cur = aCards->maxCard();
+              cur = aCards->maxFace();
           }
           delete aMaxCardList;
         }
@@ -195,7 +195,7 @@ Card *Player::Miser3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player 
              cur = GetMinCardWithOutVz(); // лабуду
        }
        if ( !cur ) {
-              cur = aCards->minCard();
+              cur = aCards->minFace();
        }
 
     }
@@ -391,7 +391,7 @@ Card *Player::MiserCatch1(Player *aLeftGamer,Player *aRightGamer) {
     }
 // 3    пытаемс
     if (!cur) cur = GetMaxCardWithOutPere();
-    if (!cur) cur = aCards->minCard();
+    if (!cur) cur = aCards->minFace();
 //  } else { //Side == LeftHand
 //  }
 badlabel:
@@ -444,12 +444,12 @@ Card *Player::MiserCatch2(Card *aRightCard,Player *aLeftGamer,Player *aRightGame
             cur = Pronesti;
           } else {
             cur = aCards->maxInSuit(Pronesti->suit());
-            if (!cur)   cur = aCards->maxCard();
+            if (!cur)   cur = aCards->maxFace();
           }
         } else {
           // указания на пронос - нет
           cur = GetMaxCardPere();
-        if (!cur) cur = aCards->maxCard();
+        if (!cur) cur = aCards->maxFace();
         }
       }
   } else { // противник зашел под меня
@@ -473,13 +473,13 @@ Card *Player::MiserCatch2(Card *aRightCard,Player *aLeftGamer,Player *aRightGame
       // а у меня нет масти
 
           cur = GetMaxCardPere();
-        if (!cur) cur = aCards->maxCard();
+        if (!cur) cur = aCards->maxFace();
     }
 
   }
   Pronesti = NULL;
   if (!cur)
-    cur = aCards->minCard();
+    cur = aCards->minFace();
 
   aMaxCardList->clear();
   delete aMaxCardList;
@@ -525,12 +525,12 @@ Card *Player::MiserCatch3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Pl
             cur = Pronesti;
           } else {
             cur = aCards->maxInSuit(Pronesti->suit());
-            if (!cur) cur = aCards->maxCard();
+            if (!cur) cur = aCards->maxFace();
           }
         } else {
           // указания на пронос - нет
           cur = GetMaxCardPere();
-        if (!cur) cur = aCards->maxCard();
+        if (!cur) cur = aCards->maxFace();
         }
       }
   } else { // RightHand - my friend
@@ -552,7 +552,7 @@ Card *Player::MiserCatch3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Pl
     } else {
       // а у меня нет масти
           cur = GetMaxCardPere();
-        if (!cur) cur = aCards->maxCard();
+        if (!cur) cur = aCards->maxFace();
     }
 
   }
@@ -616,7 +616,7 @@ Card *Player::MyGame3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
            cur = GetMinCardWithOutVz();
        }
        if ( ! cur ) {
-           cur = aCards->minCard();
+           cur = aCards->minFace();
        }
     }
     GamesType=tmpGamesType;
@@ -736,7 +736,7 @@ Card *Player::MyVist3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
            cur = GetMinCardWithOutVz();
        }
        if ( ! cur ) {
-           cur = aCards->minCard();
+           cur = aCards->minFace();
        }
 
 
@@ -865,7 +865,7 @@ Card *Player::MyVist1(Player *aLeftGamer,Player *aRightGamer) {
             cur = GetMaxCardPere();
         }
         if ( !cur) {
-            cur = aCards->maxCard();
+            cur = aCards->maxFace();
         }
     }
     GamesType=tmpGamesType;
@@ -897,7 +897,7 @@ Card *Player::MyGame2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
                 cur = GetMinCardWithOutVz(); // лабуду
             }
             if ( !cur ) {
-                 cur = aCards->minCard();
+                 cur = aCards->minFace();
             }
         } else { // Есть масть у левого
             cur = aCards->minInSuit(koz);
@@ -947,7 +947,7 @@ Card *Player::MyGame1(Player *aLeftGamer,Player *aRightGamer) {
              cur = GetMinCardWithOutVz(); // лабуду
         }
         if ( !cur ) {
-             cur = aCards->maxCard();
+             cur = aCards->maxFace();
         }
     } else { // а козырьков у них и нету !!!
         if ( !cur ) {
@@ -963,7 +963,7 @@ Card *Player::MyGame1(Player *aLeftGamer,Player *aRightGamer) {
             cur = aCards->maxInSuit(mast);
         }
         if ( !cur ) {
-             cur = aCards->maxCard();
+             cur = aCards->maxFace();
         }
     }
     GamesType=tmpGamesType;
@@ -1013,7 +1013,7 @@ Card *Player::GetMinCardWithOutVz(void) {
     if (index && index <=4)
         return aCards->minInSuit(index);
       else
-        return aCards->minCard();
+        return aCards->minFace();
 //    return NULL;
 }
 //-----------------------------------------------------------------------
@@ -1180,7 +1180,7 @@ eGameBid Player::makeout4miser(void) {
    } else {
     RealSecondCardOut = aCards->greaterInSuit(FirstCardOut);
     if ( !RealSecondCardOut )
-      RealSecondCardOut = aCards->maxCard(); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 Bad algoritm
+      RealSecondCardOut = aCards->maxFace(); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 Bad algoritm
    }
   aCards->remove(RealSecondCardOut);
   aOut->append(RealSecondCardOut);
@@ -1228,7 +1228,7 @@ eGameBid Player::makeout4game () {
   } else {
     RealSecondCardOut = aCards->greaterInSuit(FirstCardOut);
     if (!RealSecondCardOut)
-      RealSecondCardOut = aCards->minCard(); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 Bad algoritm
+      RealSecondCardOut = aCards->minFace(); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 Bad algoritm
   }
   aCards->remove(RealSecondCardOut);
   aOut->append(RealSecondCardOut);
@@ -1385,7 +1385,7 @@ tSuitProbs Player::vzatok4game (eSuit Mast, int a23) {
       EnemyCardStack->append(new Card(c, Mast));
    }
    if ( MyCardStack->count() >=4 && MyCardStack->count() <=5 )    {
-      EnemyCardStack->free(EnemyCardStack->minCard());
+      EnemyCardStack->free(EnemyCardStack->minFace());
    }
    if ( a23 == 23 ) {
        MastTable = Compare2List4Max23(MyCardStack,EnemyCardStack);
@@ -1446,19 +1446,19 @@ tSuitProbs Player::Compare2List4Min(CardList *My,CardList *Enemy) { // Для мин р
   int nMaxLen;
   Card *MyCardMin,*EnemyCardMax,*EnemyCardMin;
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//  Enemy->free(Enemy->minCard());
+//  Enemy->free(Enemy->minFace());
   My->count()>Enemy->count() ? nMaxLen = My->count() : nMaxLen = Enemy->count();
   for ( int i=1; i<=nMaxLen; i++ )  {
-    MyCardMin = My->minCard();
-    EnemyCardMax = Enemy->maxCard();
+    MyCardMin = My->minFace();
+    EnemyCardMax = Enemy->maxFace();
     if ( MyCardMin ) {
       EnemyCardMin = Enemy->lesserInSuit(MyCardMin);
       if (!EnemyCardMin) {
-          EnemyCardMin = Enemy->minCard();
+          EnemyCardMin = Enemy->minFace();
       }
 
     } else {
-//      EnemyCardMin = Enemy->minCard();
+//      EnemyCardMin = Enemy->minFace();
       break;
     }
     if ( !EnemyCardMax && !EnemyCardMin)  {
@@ -1489,16 +1489,16 @@ tSuitProbs Player::Compare2List4Max(CardList *My,CardList *Enemy) {
   Card *MyCardMax=0,*EnemyCardMax=0,*EnemyCardMin=0;
   My->count()>Enemy->count() ? nMaxLen = My->count() : nMaxLen = Enemy->count();
   for ( int i=1; i<=nMaxLen; i++ )  {
-    MyCardMax = My->maxCard();
+    MyCardMax = My->maxFace();
     if ( MyCardMax ) {
       EnemyCardMax = Enemy->greaterInSuit(MyCardMax);
       if (!EnemyCardMax) {
-        EnemyCardMax = Enemy->minCard();
+        EnemyCardMax = Enemy->minFace();
       }
     } else {
-      EnemyCardMax = Enemy->maxCard();
+      EnemyCardMax = Enemy->maxFace();
     }
-    EnemyCardMin = Enemy->minCard();
+    EnemyCardMin = Enemy->minFace();
     if ( !MyCardMax )  {
       break;
     }
@@ -1538,11 +1538,11 @@ tSuitProbs Player::Compare2List4Max23(CardList *My,CardList *Enemy) {
   Card *MyCardMax,*EnemyCardMax;
   My->count()>Enemy->count() ? nMaxLen = My->count() : nMaxLen = Enemy->count();
   for ( int i=1; i<=nMaxLen; i++ )  {
-    EnemyCardMax = Enemy->maxCard();
+    EnemyCardMax = Enemy->maxFace();
     if (EnemyCardMax) {// Пытаемся н-ти больше чеm у него
       MyCardMax = My->greaterInSuit(EnemyCardMax);
       if ( ! MyCardMax ) {  // Нет у меня больше чем у него
-        MyCardMax = My->minCard();
+        MyCardMax = My->minFace();
         if (!MyCardMax ) {  // и меньше тож нет
           break ;
         } else {  // Меньше чем у него
@@ -1602,7 +1602,7 @@ Card *Player::MyPass1(Card *rMove,Player *aLeftGamer,Player *aRightGamer) {
        cur = GetMinCardWithOutVz(); // лабуду
     }
     if ( !cur ) {
-        cur = aCards->minCard();
+        cur = aCards->minFace();
     }
   }
   if ( rMove != NULL )  {
@@ -1639,7 +1639,7 @@ Card *Player::MyPass2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer) {
              cur = GetMinCardWithOutVz(); // лабуду
        }
        if ( !cur ) {
-              cur = aCards->minCard();
+              cur = aCards->minFace();
        }
 
     } else { // У меня есть масть
@@ -1696,7 +1696,7 @@ Card *Player::MyPass3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player
              cur = GetMinCardWithOutVz(); // лабуду
        }
        if ( !cur ) {
-              cur = aCards->minCard();
+              cur = aCards->minFace();
        }
 
     }

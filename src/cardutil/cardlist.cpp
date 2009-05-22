@@ -46,23 +46,13 @@ Card *CardList::exists (const Card &cc) const {
 }
 
 
-Card *CardList::minCard () const {
-  Card *res = 0;
-  foreach (Card *c, mList) {
-    if (!c) continue;
-    if (!res || res->face() > c->face()) res = c;
-  }
-  return res;
+Card *CardList::minFace () const {
+  return minInSuit(-1);
 }
 
 
-Card *CardList::maxCard () const {
-  Card *res = 0;
-  foreach (Card *c, mList) {
-    if (!c) continue;
-    if (!res || res->face() < c->face()) res = c;
-  }
-  return res;
+Card *CardList::maxFace () const {
+  return maxInSuit(-1);
 }
 
 
@@ -70,7 +60,7 @@ Card *CardList::minInSuit (int aSuit) const {
   Card *res = 0;
   foreach (Card *c, mList) {
     if (!c) continue;
-    if (c->suit() != aSuit) continue;
+    if (aSuit > 0 && c->suit() != aSuit) continue;
     if (!res || res->face() > c->face()) res = c;
   }
   return res;
@@ -81,7 +71,7 @@ Card * CardList::maxInSuit (int aSuit) const {
   Card *res = 0;
   foreach (Card *c, mList) {
     if (!c) continue;
-    if (c->suit() != aSuit) continue;
+    if (aSuit > 0 && c->suit() != aSuit) continue;
     if (!res || res->face() < c->face()) res = c;
   }
   return res;

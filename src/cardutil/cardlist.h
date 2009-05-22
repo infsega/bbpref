@@ -21,8 +21,8 @@ public:
 
   Card *minInSuit (int aSuit) const;
   Card *maxInSuit (int aSuit) const;
-  Card *minCard () const;
-  Card *maxCard () const;
+  Card *minFace () const;
+  Card *maxFace () const;
 
   bool hasSuit (int aSuit) const;
 
