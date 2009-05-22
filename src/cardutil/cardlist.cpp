@@ -61,7 +61,7 @@ Card *CardList::minInSuit (int aSuit) const {
   foreach (Card *c, mList) {
     if (!c) continue;
     if (aSuit > 0 && c->suit() != aSuit) continue;
-    if (!res || res->face() > c->face()) res = c;
+    if (!res || res > c) res = c;
   }
   return res;
 }
@@ -72,7 +72,7 @@ Card * CardList::maxInSuit (int aSuit) const {
   foreach (Card *c, mList) {
     if (!c) continue;
     if (aSuit > 0 && c->suit() != aSuit) continue;
-    if (!res || res->face() < c->face()) res = c;
+    if (!res || res < c) res = c;
   }
   return res;
 }
