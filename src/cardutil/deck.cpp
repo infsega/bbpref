@@ -10,20 +10,14 @@
 Deck::Deck () : CardList() {
   for (int suit = 1; suit <= 4; suit++) {
     for (int face = 7; face <= FACE_ACE; face++) {
-      mList << new Card(face, suit);
+      mList << newCard(face, suit);
     }
   }
 }
 
 
-void Deck::clear () {
-  foreach (Card *c, mList) if (c) delete c;
-  mList.clear();
-}
-
-
 void Deck::shuffle () {
-  removeNulls();
+  //removeNulls();
   time_t t;
   qsrand((unsigned)time(&t));
   //k8: Fisher-Yates shuffler

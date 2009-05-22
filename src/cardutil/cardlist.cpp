@@ -15,6 +15,7 @@ void CardList::clear () {
 }
 
 
+/*
 void CardList::removeNulls () {
   // remove null items
   QMutableListIterator<Card *> i(mList);
@@ -23,25 +24,19 @@ void CardList::removeNulls () {
     if (!c) i.remove();
   }
 }
-
-
-Card *CardList::exists (int aPacked) const {
-  Card c(aPacked);
-  return exists(c);
-}
+*/
 
 
 Card *CardList::exists (int aFace, int aSuit) const {
-  Card c(aFace, aSuit);
+  Card *c = newCard(aFace, aSuit);
   return exists(c);
 }
 
 
-Card *CardList::exists (const Card &cc) const {
-  foreach (Card *c, mList) {
-    if (!c) continue;
-    if (cc == *c) return c;
-  }
+// can compare pointers, 'cause cards are singletones
+Card *CardList::exists (Card *cc) const {
+  if (!cc) return 0;
+  if (mList.indexOf(cc) >= 0) return cc;
   return 0;
 }
 
@@ -170,14 +165,20 @@ int CardList::emptySuit (int aSuit) const {
 
 void CardList::copySuit (const CardList *src, eSuit aSuit) {
   // remove existing cards
+/*
   QMutableListIterator<Card *> i(mList);
   while (i.hasNext()) {
     Card *c = i.next();
     if (c->suit() == (int)aSuit) i.remove();
   }
+*/
+  for (int f = mList.size()-1; f >= 0; f--) {
+    Card *c = mList[f];
+    if (c && c->suit() == aSuit) mList[f] = 0;
+  }
   // copy cards
   foreach (Card *c, src->mList) {
-    if (c && c->suit() == (int)aSuit) mList << c;
+    if (c && c->suit() == (int)aSuit) insert(c);
   }
 }
 

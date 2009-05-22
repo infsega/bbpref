@@ -8,18 +8,6 @@ Card::Card (int aFace, int aSuit) {
 }
 
 
-Card::Card (int aPacked) {
-  if (aPacked < 61) {
-    mFace = mSuit = 0;
-    mValid = false;
-  } else {
-    mFace = aPacked/10;
-    mSuit = aPacked%10;
-    validate();
-  }
-}
-
-
 Card::~Card () {
 }
 
@@ -69,4 +57,31 @@ int operator == (const Card &c0, const Card &c1) {
 
 int operator != (const Card &c0, const Card &c1) {
   return (c0.compareWith(c1) != 0) ? 1 : 0;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+static Card *cList[33];
+static bool inited = false;
+
+
+void initCardList () {
+  if (inited) return;
+  for (int f = 0; f < 32; f++) cList[f] = new Card(f/4+7, f%4+1);
+/*
+  cList[32] = new Card(7, 1);
+  cList[32]->mFace = 0;
+  cList[32]->mSuit = 0;
+  cList[32]->mValid = false;
+*/
+  cList[32] = 0;
+  inited = true;
+}
+
+
+Card *newCard (int aFace, int aSuit) {
+  initCardList();
+  int no = 32;
+  if (aFace >= 7 && aFace <= FACE_ACE && aSuit >= 1 && aSuit <= 4) no = (aFace-7)*4+(aSuit-1);
+  return cList[no];
 }

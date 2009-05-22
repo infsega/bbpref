@@ -23,7 +23,7 @@ public:
   CardList *aCardsOut; // во взятках мои
   CardList *aLeftOut;  // во взятках Противника с лева (предполагаемый или открытые)
   CardList *aRightOut; // во взятках С права (предполагаемый или открытые)
-  tSuitProbs MastTable[5];
+  tSuitProbs suitProb[5];
 
   int nGetsCard;
   eSuit Mast;
@@ -93,7 +93,7 @@ private:
   Card *GetMaxCardWithOutPere(void);
   Card *GetMinCardWithOutVz(void);
 
-  void RecountTables(CardList *aMaxCardList,int a23); // Пересчитывает таблицу         tSuitProbs MastTable[5];
+  void RecountTables(CardList *aMaxCardList,int a23); // Пересчитывает таблицу         tSuitProbs suitProb[5];
   void RecountTables4RasPass(CardList *aMaxCardList,int a23); // Пересчитывает таблицу дли распасов или мизера
 
   void LoadLists(Player *aLeftGamer,Player *aRightGamer,CardList *aMaxCardList); // Набор списков

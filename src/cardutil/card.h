@@ -12,10 +12,6 @@ const int FACE_ACE   = 14;
 
 class Card {
 public:
-  Card (int aFace, int aSuit);
-  Card (int aPacked);
-  ~Card ();
-
   inline int face () const { return mFace; }
   inline int suit () const { return mSuit; }
   inline bool isValid () const { return mValid; }
@@ -29,9 +25,15 @@ public:
   friend int operator == (const Card &c0, const Card &c1);
   friend int operator != (const Card &c0, const Card &c1);
 
+  friend Card *newCard (int aFace, int aSuit);
+  friend void initCardList ();
+
 private:
   void validate ();
   int compareWith (const Card &c1) const;
+
+  Card (int aFace, int aSuit);
+  ~Card ();
 
 private:
   int mFace; //от 7,8,9,10,11j,12q,13k,14a
@@ -41,6 +43,11 @@ private:
 
 
 typedef QList<Card *> QCardList;
+
+
+void initCardList ();
+Card *newCard (int aFace, int aSuit);
+Card *newCard (int aPacked);
 
 
 #endif

@@ -70,6 +70,9 @@ public:
 
   int imoveX, imoveY;
 
+private slots:
+  void timerSlot ();
+
 private:
   void drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy);
   void drawNumber (int x0, int y0, int n, bool red);

@@ -43,7 +43,7 @@ static tGameName gameNames[] = {
   {g103, "10\1d"},
   {g104, "10\1h"},
   {g105, "10NT"},
-  {zerogame, NULL}
+  {zerogame, 0}
 };
 
 

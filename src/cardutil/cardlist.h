@@ -12,12 +12,11 @@ public:
   CardList ();
   ~CardList ();
 
-  virtual void clear ();
+  void clear ();
 
   void mySort ();
   Card *exists (int aFace, int aSuit) const;
-  Card *exists (int aPacked) const;
-  Card *exists (const Card &cc) const;
+  Card *exists (Card *cc) const;
 
   Card *minInSuit (int aSuit) const;
   Card *maxInSuit (int aSuit) const;
@@ -43,12 +42,12 @@ public:
   }
   inline void putAt (int idx, Card *c) {
     if (idx < 0) return;
-    while (idx >= mList.size()) mList.append(0);
+    while (idx >= mList.size()) mList << 0;
     mList[idx] = c;
   }
   inline void removeAt (int idx) { if (idx >= 0 && idx < mList.size()) mList[idx] = 0; }
   inline void remove (Card *c) { removeAt(mList.indexOf(c)); }
-  inline int append (Card *c) {
+  inline int insert (Card *c) {
     int idx = mList.indexOf(0);
     if (idx < 0) {
       idx = mList.size();
@@ -56,18 +55,20 @@ public:
     } else mList[idx] = c;
     return idx;
   }
+/*
   inline void free (Card *c) {
     int idx = mList.indexOf(c);
     if (idx >= 0) {
       mList[idx] = 0;
-      delete c;
+      //!.!delete c;
     }
   }
+*/
   inline int size () const { return mList.size(); }
-  virtual void shallowCopy (CardList *list);
+  void shallowCopy (CardList *list);
 
 protected:
-  void removeNulls ();
+  //void removeNulls ();
 
 protected:
   QCardList mList;

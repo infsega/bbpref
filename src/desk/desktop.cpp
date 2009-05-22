@@ -23,7 +23,7 @@ typedef struct {
 
 
 void PrefDesktop::InternalConstruct () {
-  CardOnDesk[0] = CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = FirstCard = SecondCard = TherdCard=NULL;
+  CardOnDesk[0] = CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = FirstCard = SecondCard = TherdCard=0;
   deck = new Deck;
 
   qsrand(time(NULL));
@@ -190,7 +190,7 @@ Card *PrefDesktop::PipeMakemove (Card *lMove, Card *rMove) {
 // то пораждаем нового HumanPlayer с номером текущего
 // ежели номер 1 и игра пас и не сетевая игра то порождаем Player
 Card *PrefDesktop::ControlingMakemove (Card *lMove, Card *rMove) {
-  Card *RetVal = NULL;
+  Card *RetVal = 0;
   Player *Now = player(nCurrentMove.nValue);
 
   if ((player(1)->GamesType == vist || player(1)->GamesType == g86catch) &&
@@ -288,7 +288,7 @@ void PrefDesktop::RunGame () {
     // сдали карты
     for (int i = 0; i < CARDINCOLODA-2; i++) {
       Player *tmpGamer = player(GamersCounter.nValue);
-      if (!(deck->at(i))) DeskView->MessageBox("Card = NULL", "Error!!!");
+      if (!(deck->at(i))) DeskView->MessageBox("Card = 0", "Error!!!");
       tmpGamer->AddCard(deck->at(i));
       ++GamersCounter;
     }
@@ -371,7 +371,7 @@ void PrefDesktop::RunGame () {
           // запихиваем ему прикуп
           tmpg->AddCard(deck->at(30));
           tmpg->AddCard(deck->at(31));
-          CardOnDesk[2] = CardOnDesk[3] = NULL;
+          CardOnDesk[2] = CardOnDesk[3] = 0;
           nGamernumber = tmpg->mPlayerNo;
           //DeskView->ClearScreen();
           Repaint();
@@ -542,19 +542,19 @@ void PrefDesktop::RunGame () {
     //mPlayingRound = true;
     for (int i = 1; i <= 10; i++) {
       Player *tmpg;
-      CardOnDesk[0] = CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = FirstCard = SecondCard = TherdCard = NULL;
+      CardOnDesk[0] = CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = FirstCard = SecondCard = TherdCard = 0;
       if (CurrentGame == raspass && (i >= 1 && i <= 3)) nCurrentMove = nCurrentStart;
       if (CurrentGame == raspass && (i == 1 || i == 2)) {
         Card *tmp4show;
         Card *ptmp4rpass;
         tmp4show = deck->at(29+i);
-        ptmp4rpass = new Card(1, tmp4show->suit());
+        ptmp4rpass = newCard(1, tmp4show->suit());
         CardOnDesk[0] = tmp4show;
         //drawInGameCard(0, CardOnDesk[0]);
         Repaint();
         DeskView->mySleep(-1);
         CardOnDesk[nCurrentMove.nValue] = FirstCard = ControlingMakemove(0, ptmp4rpass);
-        delete ptmp4rpass;
+        //!.!delete ptmp4rpass;
       } else {
         CardOnDesk[nCurrentMove.nValue] = FirstCard = ControlingMakemove(0, 0);
       }
@@ -577,7 +577,7 @@ void PrefDesktop::RunGame () {
       //Repaint(nCurrentMove.nValue);
       Repaint();
       //!!!drawInGameCard(nCurrentMove.nValue,TherdCard);
-      CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = NULL;
+      CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = 0;
       ++nCurrentMove;
       DeskView->mySleep(-1);
       nPl = nPlayerTakeCards(FirstCard, SecondCard, TherdCard, GamesType[0]-(GamesType[0]/10)*10)-1;
@@ -602,9 +602,9 @@ LabelRecordOnPaper:
       Player *Gamer = player(nGamernumber);
       int RetValAddRec = tmpg->aScore->recordScores(CurrentGame,
                 tmpg->GamesType,
-                Gamer !=NULL ? Gamer->nGetsCard : 0,
+                Gamer !=0 ? Gamer->nGetsCard : 0,
                 tmpg->nGetsCard,
-                Gamer !=NULL ? nGamernumber : 0,
+                Gamer !=0 ? nGamernumber : 0,
                 i,
         2-nPassCounter);
 

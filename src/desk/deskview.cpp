@@ -133,7 +133,7 @@ void TDeskView::drawIMove (int x, int y) {
 
 void TDeskView::drawPKeyBmp (bool show) {
   if (!mDeskBmp) return;
-  time_t tt = time(NULL);
+  time_t tt = time(0);
   int phase = tt%2;
   QImage *i = mKeyBmp[phase];
   if (show) {
@@ -245,13 +245,17 @@ void TDeskView::drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid gam
 }
 
 
+void TDeskView::timerSlot () {
+}
+
+
 void TDeskView::mySleep (int seconds) {
-  time_t tStart = time(NULL);
+  time_t tStart = time(0);
   Event = 0;
   QTimer *timer = 0;
   if (seconds > 0) {
     timer = new QTimer();
-    //connect(timer, SIGNAL(timeout()), SLOT(PQApplication->mainWidget()->slotEndSleep()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(timerSlot()));
     timer->start(seconds*1000);
   }
   drawPKeyBmp(seconds < 0);
@@ -263,11 +267,12 @@ void TDeskView::mySleep (int seconds) {
 */
   emitRepaint();
   while (!Event) {
-    qApp->processEvents();
+    qApp->processEvents(QEventLoop::WaitForMoreEvents);
     qApp->sendPostedEvents();
-    qApp->flush();
+    //qApp->flush();
+    //qApp->processEvents(QEventLoop::AllEvents | QEventLoop::WaitForMoreEvents, 900);
     if (seconds > 0) {
-      if (difftime(time(NULL), tStart) >= seconds) Event = 1;
+      if (difftime(time(0), tStart) >= seconds) Event = 1;
     }
     usleep(10000); //1000000
     if (seconds == 0) break;

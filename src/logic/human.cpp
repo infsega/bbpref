@@ -96,12 +96,12 @@ Card *HumanPlayer::makemove (Card *lMove, Card *rMove, Player *aLeftGamer, Playe
     // пропускаем ход через правила
     if (!((Validator->suit() == RetVal->suit()) ||
         (!aCards->minInSuit(Validator->suit()) && (RetVal->suit() == koz || ((!aCards->minInSuit(koz)))))
-       )) RetVal = NULL;
+       )) RetVal = 0;
   }
   clearCardArea();
   oldii = -1;
   aCards->remove(RetVal);
-  aCardsOut->append(RetVal);
+  aCardsOut->insert(RetVal);
   X = Y = 0;
   WaitForMouse = 0;
   Repaint();

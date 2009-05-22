@@ -11,9 +11,6 @@ class Deck : public CardList {
 public:
   Deck ();
 
-  virtual void shallowCopy (CardList *) { abort(); }
-
-  virtual void clear ();
   void shuffle ();
 };
 
