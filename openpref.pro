@@ -4,8 +4,8 @@ TARGET = openpref
 QT += gui
 
 CONFIG += qt warn_on
-#CONFIG += debug_and_release
-CONFIG += debug
+CONFIG += debug_and_release
+#CONFIG += debug
 #CONFIG += release
 
 #QMAKE_CFLAGS_RELEASE ~= s/\-O./-Os
@@ -19,7 +19,7 @@ CONFIG += debug
 #QMAKE_CFLAGS_RELEASE += -mtune=native
 #QMAKE_CXXFLAGS_RELEASE += -mtune=native
 
-#QMAKE_LFLAGS_RELEASE += -s
+QMAKE_LFLAGS_RELEASE += -s
 
 
 DESTDIR = .

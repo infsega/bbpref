@@ -47,12 +47,22 @@ Card *CardList::exists (const Card &cc) const {
 
 
 Card *CardList::minCard () const {
-  return minInSuit(-1);
+  Card *res = 0;
+  foreach (Card *c, mList) {
+    if (!c) continue;
+    if (!res || res->face() > c->face()) res = c;
+  }
+  return res;
 }
 
 
 Card *CardList::maxCard () const {
-  return maxInSuit(-1);
+  Card *res = 0;
+  foreach (Card *c, mList) {
+    if (!c) continue;
+    if (!res || res->face() < c->face()) res = c;
+  }
+  return res;
 }
 
 
@@ -60,8 +70,8 @@ Card *CardList::minInSuit (int aSuit) const {
   Card *res = 0;
   foreach (Card *c, mList) {
     if (!c) continue;
-    if (aSuit > 0 && c->suit() != aSuit) continue;
-    if (!res || res > c) res = c;
+    if (c->suit() != aSuit) continue;
+    if (!res || res->face() > c->face()) res = c;
   }
   return res;
 }
@@ -71,8 +81,8 @@ Card * CardList::maxInSuit (int aSuit) const {
   Card *res = 0;
   foreach (Card *c, mList) {
     if (!c) continue;
-    if (aSuit > 0 && c->suit() != aSuit) continue;
-    if (!res || res < c) res = c;
+    if (c->suit() != aSuit) continue;
+    if (!res || res->face() < c->face()) res = c;
   }
   return res;
 }
@@ -162,7 +172,7 @@ bool CardList::hasSuit (int aSuit) const {
 int CardList::emptySuit (int aSuit) const {
   for (int f = 1; f <= 4; f++) {
     if (f == aSuit) continue; //k8:bug? break;
-    if (!hasSuit(aSuit)) return f;
+    if (!hasSuit(f)) return f;
   }
   return 0;
 }
@@ -179,15 +189,6 @@ void CardList::copySuit (const CardList *src, eSuit aSuit) {
   foreach (Card *c, src->mList) {
     if (c && c->suit() == (int)aSuit) mList << c;
   }
-/*
-  Card *card;
-  for ( int f = 0;f < _oldlist -> aLimit;f++ )  {
-    card =(Card* ) _oldlist ->At(f);
-    if ( card && card -> suit()==Mast)  {
-        append(card);
-    }
-  }
-*/
 }
 
 
