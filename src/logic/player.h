@@ -12,27 +12,26 @@
 
 class Player {
 public:
-  TDeskView *DeskView;
+  TDeskView *mDeskView;
 
-  ScoreBoard aScore;
-  CardList aCards; // мои
-  CardList aLeft;  // Противника с лева (предполагаемый или открытые)
-  CardList aRight; // С права (предполагаемый или открытые)
+  ScoreBoard mScore;
+  CardList mCards; // мои
+  CardList mLeft;  // Противника с лева (предполагаемый или открытые)
+  CardList mRight; // С права (предполагаемый или открытые)
 
-  CardList aOut;   // Снос (мой или предполагаемый)
-  CardList aCardsOut; // во взятках мои
-  CardList aLeftOut;  // во взятках Противника с лева (предполагаемый или открытые)
-  CardList aRightOut; // во взятках С права (предполагаемый или открытые)
-  tSuitProbs suitProb[5];
+  CardList mOut;   // Снос (мой или предполагаемый)
+  CardList mCardsOut; // во взятках мои
+  //CardList mLeftOut;  // во взятках Противника слева (предполагаемый или открытые): unused
+  //CardList mRightOut; // во взятках Справа (предполагаемый или открытые)
+  tSuitProbs mSuitProb[5];
 
-  int nGetsCard;
-  eSuit Mast;
-  eGameBid GamesType;
-  eHand Enemy;
-  int mPlayerNo;         // мой номер
+  int mTricksTaken;
+  //eSuit Mast;
+  eGameBid mMyGame;
+  //eHand mEnemy;
+  int mPlayerNo; // мой номер
 
-  Player (int _nGamer);
-  Player (int _nGamer, TDeskView *aDeskView);
+  Player (int aMyNumber, TDeskView *aDeskView=0);
   virtual ~Player ();
 
   // at least 28 ints (14 int pairs); return # of used ints; the last int is -1
@@ -43,7 +42,7 @@ public:
 
   void sortCards ();
 
-  QString NikName;
+  QString mNick;
 
   int X, Y;
   int WaitForMouse;
@@ -95,7 +94,7 @@ private:
   Card *GetMaxCardWithOutPere ();
   Card *GetMinCardWithOutVz ();
 
-  void RecountTables (CardList &aMaxCardList,int a23); // Пересчитывает таблицу         tSuitProbs suitProb[5];
+  void RecountTables (CardList &aMaxCardList,int a23); // Пересчитывает таблицу tSuitProbs mSuitProb[5];
   void RecountTables4RasPass (CardList &aMaxCardList,int a23); // Пересчитывает таблицу дли распасов или мизера
 
   void LoadLists(Player *aLeftGamer,Player *aRightGamer, CardList &aMaxCardList); // Набор списков

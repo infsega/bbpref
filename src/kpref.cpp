@@ -20,7 +20,7 @@ Kpref::Kpref () {
   //!!!setTitle("OpenPref");
   initMenuBar();
   nflAleradyPainting = nAllReadyHinting = WaitingForMouseUp = 0;
-  DeskView = 0;
+  mDeskView = 0;
   DeskTop = 0;
   setMouseTracking(true);
 
@@ -39,23 +39,23 @@ Kpref::Kpref () {
 
 void Kpref::init () {
   //StatusBar1 = new QStatusBar(this);
-  DeskView = new TDeskView(width(), height());
-  DeskTop = new PrefDesktop(DeskView);
+  mDeskView = new TDeskView(width(), height());
+  DeskTop = new PrefDesktop(mDeskView);
   connect(DeskTop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
-  connect(DeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
+  connect(mDeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
 }
 
 
 Kpref::~Kpref () {
   //delete StatusBar1;
   //!delete formBid;
-  delete DeskView;
+  delete mDeskView;
   delete DeskTop;
 }
 
 
 void Kpref::adjustDesk () {
-  if (DeskView) DeskView->ClearScreen();
+  if (mDeskView) mDeskView->ClearScreen();
   update();
 }
 
@@ -117,8 +117,8 @@ void Kpref::slotShowScore () {
   DeskTop->CloseBullet();
   DeskTop->nflShowPaper = 1;
   DeskTop->ShowPaper();
-  DeskTop->DeskView->mySleep(-1);
-  //DeskView->ClearScreen();
+  DeskTop->mDeskView->mySleep(-1);
+  //mDeskView->ClearScreen();
   DeskTop->nflShowPaper = 0;
   DeskTop->Repaint();
 }
@@ -135,18 +135,18 @@ void Kpref::slotNewSingleGame () {
   if (  newgame.exec() ) {
     if (DeskTop) {
       delete DeskTop;
-      delete DeskView;
-      DeskView = new TDeskView();
-      DeskView -> PaintDevice = this; // &&&
+      delete mDeskView;
+      mDeskView = new TDeskView();
+      mDeskView -> PaintDevice = this; // &&&
       DeskTop = new PrefDesktop();
-      DeskTop -> DeskView = DeskView;
+      DeskTop -> mDeskView = mDeskView;
       optMaxPool = newgame.QSpinBox_2 ->value();
       g61stalingrad =  (newgame.StalingradGame->isChecked() == true);
       g10vist = (newgame.TenVist->isChecked() == true);
       globvist = (newgame.VistNonBr->isChecked() == true);
-      DeskView -> DesktopHeight = height();
-      DeskView -> DesktopWidth = width();
-      //DeskView->ClearScreen();
+      mDeskView -> DesktopHeight = height();
+      mDeskView -> DesktopWidth = width();
+      //mDeskView->ClearScreen();
       if (newgame.flProtocol->isChecked () ) {
         QByteArray ba(newgame.ProtocolFileName->text().toUtf8());
         strcpy(DeskTop->ProtocolFileName, ba.constData());
@@ -160,17 +160,17 @@ void Kpref::slotNewSingleGame () {
 */
   if (DeskTop) {
     delete DeskTop;
-    delete DeskView;
-    DeskView = new TDeskView(width(), height());
+    delete mDeskView;
+    mDeskView = new TDeskView(width(), height());
     DeskTop = new PrefDesktop();
-    DeskTop->DeskView = DeskView;
+    DeskTop->mDeskView = mDeskView;
     optMaxPool = 10; //k8:!!!
     g61stalingrad = true; //k8:!!!
     g10vist = false; //k8:!!!
     globvist = true; //k8:!!!
     connect(DeskTop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
-    connect(DeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
-    //DeskView->ClearScreen();
+    connect(mDeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
+    //mDeskView->ClearScreen();
   }
   //!!!fileMenu->setItemEnabled(nSaveGameID,TRUE);
   DeskTop->RunGame();
@@ -188,7 +188,7 @@ void Kpref::mouseMoveEvent (QMouseEvent *event) {
 
 void Kpref::mousePressEvent (QMouseEvent *event) {
   WaitingForMouseUp = 1;
-  DeskView->Event = 1;
+  mDeskView->Event = 1;
   Player *plr = DeskTop->currentPlayer();
   if (plr) {
     plr->X = event->x();
@@ -200,7 +200,7 @@ void Kpref::mousePressEvent (QMouseEvent *event) {
 
 void  Kpref::keyPressEvent (QKeyEvent *event) {
   Q_UNUSED(event)
-  if (DeskView) DeskView->Event = 1;
+  if (mDeskView) mDeskView->Event = 1;
 }
 
 
@@ -208,14 +208,14 @@ void Kpref::paintEvent (QPaintEvent *event) {
   Q_UNUSED(event)
   if (nflAleradyPainting) return;
   nflAleradyPainting = 1;
-  if (DeskView) {
-    DeskView->DesktopHeight = height();
-    DeskView->DesktopWidth = width();
+  if (mDeskView) {
+    mDeskView->DesktopHeight = height();
+    mDeskView->DesktopWidth = width();
   }
-  if (DeskView && DeskView->mDeskBmp) {
+  if (mDeskView && mDeskView->mDeskBmp) {
     QPainter p;
     p.begin(this);
-    p.drawPixmap(0, 0, *(DeskView->mDeskBmp));
+    p.drawPixmap(0, 0, *(mDeskView->mDeskBmp));
     p.end();
   }
   nflAleradyPainting = 0;

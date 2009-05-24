@@ -57,7 +57,7 @@ private:
 
 public:
   PrefDesktop *DeskTop;
-  TDeskView *DeskView;
+  TDeskView *mDeskView;
   int WaitingForMouseUp;
   int nAllReadyHinting;
   int nflAleradyPainting;

@@ -37,7 +37,7 @@ signals:
   void deskChanged ();
 
 public:
-  TDeskView *DeskView;
+  TDeskView *mDeskView;
   Deck *deck;
   QList<Player *> mPlayers;
   WrapCounter nCurrentStart, nCurrentMove;
