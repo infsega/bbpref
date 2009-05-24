@@ -174,6 +174,7 @@ void CardList::copySuit (const CardList *src, eSuit aSuit) {
 
 void CardList::shallowCopy (const CardList *list) {
   clear();
+  if (!list) return;
   foreach (Card *c, list->mList) mList << c;
 }
 
@@ -215,5 +216,11 @@ bool CardList::unserialize (QByteArray &ba, int *pos) {
 
 CardList &CardList::operator = (const CardList &cl) {
   if (&cl != this) shallowCopy(cl);
+  return *this;
+}
+
+
+CardList &CardList::operator = (const CardList *cl) {
+  if (cl != this) shallowCopy(cl);
   return *this;
 }

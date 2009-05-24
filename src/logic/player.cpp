@@ -13,6 +13,7 @@ Player::Player (int aMyNumber, DeskView *aDeskView) : mDeskView(aDeskView), mPla
 
 
 Player::~Player () {
+  clear();
 }
 
 
@@ -382,8 +383,8 @@ void Player::loadLists (Player *aLeftPlayer, Player *aRightPlayer, CardList &aMa
   }
   if ( nLeftVisible && nRightVisible ) {
 */
-    mLeft.shallowCopy(aLeftPlayer->mCards);
-    mRight.shallowCopy(aRightPlayer->mCards);
+    mLeft = aLeftPlayer->mCards;
+    mRight = aRightPlayer->mCards;
 /*
   }
 */
@@ -424,8 +425,8 @@ void Player::loadLists (Player *aLeftPlayer, Player *aRightPlayer, CardList &aMa
   }
   mLeft.clear();
   mRight.clear();
-  mLeft.shallowCopy(aLeftPlayer->mCards);
-  mRight.shallowCopy(aRightPlayer->mCards);
+  mLeft = aLeftPlayer->mCards;
+  mRight = aRightPlayer->mCards;
 }
 
 
@@ -1119,8 +1120,8 @@ Card *Player::MyPass1 (Card *rMove, Player *aLeftPlayer, Player *aRightPlayer) {
 
   if (rMove != 0)  {
     aTmpList.copySuit(&mCards, (eSuit)rMove->suit());
-    aStackStore.shallowCopy(mCards);
-    mCards.shallowCopy(&aTmpList);
+    aStackStore = mCards;
+    mCards = aTmpList;
     doRest = 1;
     //loadLists(aLeftPlayer, aRightPlayer, aMaxCardList); // !!!!!!!!!
     //recalcPassOutTables(aMaxCardList, 1);
@@ -1140,7 +1141,7 @@ Card *Player::MyPass1 (Card *rMove, Player *aLeftPlayer, Player *aRightPlayer) {
     if (!cur) cur = GetMinCardWithOutVz(); // лабуду
     if (!cur) cur = mCards.minFace();
   }
-  if (doRest) mCards.shallowCopy(aStackStore);
+  if (doRest) mCards = aStackStore;
   mMyGame = tmpGamesType;
   return cur;
 }
@@ -1322,7 +1323,7 @@ eGameBid Player::dropForMisere () {
         tmpSecondCardOut = mCards.at(j);
         mCards.removeAt(j);
         Player *tmpGamer = new Player(99);
-        tmpGamer->mCards.shallowCopy(mCards);
+        tmpGamer->mCards = mCards;
         tmpGamer->mCards.mySort();
         tmpHight = tmpGamer->moveCalcDrop();
         if ((tmpHight < Hight) ||
@@ -1369,7 +1370,7 @@ eGameBid Player::dropForGame () {
         tmpSecondCardOut = mCards.at(j);
         mCards.removeAt(j);
         Player *tmpGamer = new Player(99);
-        tmpGamer->mCards.shallowCopy(mCards);
+        tmpGamer->mCards = mCards;
         tmpGamer->mCards.mySort();
         tmpHight = tmpGamer->moveCalcDrop();
         if ((tmpHight > Hight) ||
@@ -1607,7 +1608,7 @@ int Player::buildHandXOfs (int *dest, int startX, bool opened) {
   int cnt = 0, oldXX = startX, *oDest = dest;
   Card *cur = 0, *prev = 0;
 
-  CardList lst; lst.shallowCopy(mCards);
+  CardList lst = mCards;
   lst.mySort();
 
   if (mPlayerNo == 3) startX = 0;

@@ -70,6 +70,7 @@ public:
   bool unserialize (QByteArray &ba, int *pos);
 
   CardList &operator = (const CardList &cl);
+  CardList &operator = (const CardList *cl);
 
 protected:
   //void removeNulls ();

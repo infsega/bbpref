@@ -421,30 +421,53 @@ void DeskView::showPlayerScore (int i, const QString &sb, const QString &sm, con
   if (!mDeskBmp) return;
   QPainter p(mDeskBmp);
   p.setPen(qRgb(0, 0, 0));
+  QFont fnt(p.font());
+  fnt.setBold(false);
+  p.setFont(fnt);
   switch (i) {
     case 1:
+      p.setPen(qRgb(0, 128, 0));
       p.drawText(xDelta+65, FONTSIZE+yDelta+450, sb);
+      p.setPen(qRgb(255, 0, 0));
       p.drawText(xDelta+105, FONTSIZE+yDelta+420, sm);
+      p.setPen(qRgb(0, 0, 0));
       p.drawText(xDelta+15, FONTSIZE+yDelta+510, slv);
       p.drawText(xDelta+220, FONTSIZE+yDelta+510, srv);
+      p.setPen(qRgb(0, 0, 255));
+      fnt.setBold(true);
+      p.setFont(fnt);
       p.drawText(xDelta+188, FONTSIZE+yDelta+390, tv);
       break;
     case 2:
+      p.setPen(qRgb(0, 128, 0));
       drawRotatedText(p, xDelta+60, FONTSIZE+yDelta+5, 90, sb);
+      p.setPen(qRgb(255, 0, 0));
       drawRotatedText(p, xDelta+100, FONTSIZE+yDelta+5, 90, sm);
+      p.setPen(qRgb(0, 0, 0));
       drawRotatedText(p, xDelta+18, FONTSIZE+yDelta+5, 90, slv);
       drawRotatedText(p, xDelta+18, FONTSIZE+yDelta+270, 90, srv);
+      p.setPen(qRgb(0, 0, 255));
+      fnt.setBold(true);
+      p.setFont(fnt);
       drawRotatedText(p, xDelta+170, FONTSIZE+yDelta+120, 90, tv);
       break;
     case 3:
+      p.setPen(qRgb(0, 128, 0));
       drawRotatedText(p, xDelta+355, FONTSIZE+yDelta+440, -90, sb);
+      p.setPen(qRgb(255, 0, 0));
       drawRotatedText(p, xDelta+322, FONTSIZE+yDelta+405, -90, sm);
+      p.setPen(qRgb(0, 0, 0));
       drawRotatedText(p, xDelta+400, FONTSIZE+yDelta+500, -90, slv);
       drawRotatedText(p, xDelta+400, FONTSIZE+yDelta+240, -90, srv);
+      p.setPen(qRgb(0, 0, 255));
+      fnt.setBold(true);
+      p.setFont(fnt);
       drawRotatedText(p, xDelta+250, FONTSIZE+yDelta+120, -90, tv);
       break;
     default: ;
   }
+  fnt.setBold(false);
+  p.setFont(fnt);
   p.end();
 }
 

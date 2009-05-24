@@ -83,7 +83,7 @@ void PrefDesktop::closePool () {
   // Amnistiya puli
   for (i = 1; i <= 3; i++) R[i].pool -= mb;
   // svou pulu sebe v visti
-  for (i=1;i<=3;i++) {
+  for (i = 1; i <= 3;i++) {
     //R[i].leftWh += R[i].pool*10/2;
     //R[i].rightWh += R[i].pool*10/2;
     R[i].leftWh += R[i].pool*10/3;
@@ -117,9 +117,9 @@ void PrefDesktop::closePool () {
 }
 
 
-Player *PrefDesktop::addPlayer (Player *Gamer) {
-  mPlayers << Gamer;
-  return Gamer;
+Player *PrefDesktop::addPlayer (Player *plr) {
+  mPlayers << plr;
+  return plr;
 }
 
 
@@ -144,7 +144,6 @@ Card *PrefDesktop::ControlingMakemove (Card *lMove, Card *rMove) {
     RetVal = NewHuman->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)));
     *Now = *NewHuman;
     mPlayers[nCurrentMove.nValue] = Now;
-    NewHuman->clear();
     delete NewHuman;
   } else if (Now->mPlayerNo == 1 && Now->mMyGame == gtPass) {
     Player *NewHuman = new Player(nCurrentMove.nValue, mDeskView);
@@ -153,7 +152,6 @@ Card *PrefDesktop::ControlingMakemove (Card *lMove, Card *rMove) {
     RetVal = NewHuman->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)));
     *Now = *NewHuman;
     mPlayers[nCurrentMove.nValue] = Now;
-    NewHuman->clear();
     delete NewHuman;
   } else {
     RetVal = PipeMakemove(lMove, rMove);
@@ -215,7 +213,7 @@ static void cardName (char *dest, const Card *c) {
 
 
 static void dumpCardList (char *dest, const CardList &lst) {
-  CardList tmp; tmp.shallowCopy(lst); tmp.mySort();
+  CardList tmp = lst; tmp.mySort();
   for (int f = 0; f < tmp.size(); f++) {
     Card *c = tmp.at(f);
     if (!c) continue;
@@ -241,7 +239,6 @@ void PrefDesktop::runGame () {
     WrapCounter GamersCounter(1, 1, 3);
     mPlayingRound = false;
     int nPl;
-    int nGamernumber = 0; // номер заказавшего игру
     int nPassCounter = 0; // кол-во спасовавших
     playerBids[3] = playerBids[2] = playerBids[1] = playerBids[0] = undefined;
     mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard = 0;
@@ -378,7 +375,6 @@ void PrefDesktop::runGame () {
           tmpg->dealCard(mDeck.at(30));
           tmpg->dealCard(mDeck.at(31));
           mCardsOnDesk[2] = mCardsOnDesk[3] = 0;
-          nGamernumber = tmpg->mPlayerNo;
           //mDeskView->ClearScreen();
           //tmpg->sortCards();
           draw();
@@ -514,7 +510,7 @@ void PrefDesktop::runGame () {
           gnS = sGameName(CurrentGame);
           gnS.prepend("game: ");
           gnS += "; player: ";
-          gnS += QString::number(nGamernumber);
+          gnS += QString::number(mPlayerActive);
           dlogS(gnS);
           //!DUMP OTHERS!
 
@@ -632,12 +628,12 @@ LabelRecordOnPaper:
     // записи по сдаче
     for (int i = 1; i <= 3;i++ ) {
       Player *tmpg = player(i);
-      Player *Gamer = player(nGamernumber);
+      Player *plr = player(mPlayerActive);
       int RetValAddRec = tmpg->mScore.recordScores(CurrentGame,
                 tmpg->mMyGame,
-                Gamer !=0 ? Gamer->mTricksTaken : 0,
+                plr ? plr->mTricksTaken : 0,
                 tmpg->mTricksTaken,
-                Gamer !=0 ? nGamernumber : 0,
+                plr ? mPlayerActive : 0,
                 i,
         2-nPassCounter);
 
@@ -670,8 +666,8 @@ LabelRecordOnPaper:
       // была партия
       for (int f = 1; f <= 3; f++) {
         Player *plr = player(f);
-        tmplist[f-1].shallowCopy(&plr->mCards);
-        plr->mCards.shallowCopy(&plr->mCardsOut);
+        tmplist[f-1] = plr->mCards;
+        plr->mCards = plr->mCardsOut;
         plr->mInvisibleHand = false;
       }
     }
@@ -684,8 +680,8 @@ LabelRecordOnPaper:
       // была партия
       for (int f = 1; f <= 3; f++) {
         Player *plr = player(f);
-        plr->mCardsOut.shallowCopy(&plr->mCards);
-        plr->mCards.shallowCopy(&tmplist[f-1]);
+        plr->mCardsOut = plr->mCards;
+        plr->mCards = tmplist[f-1];
       }
     }
   } // конец пули
@@ -780,12 +776,12 @@ void PrefDesktop::drawPool () {
   QString sb, sm, slw, srw, tw;
   mDeskView->ShowBlankPaper(optMaxPool);
   for (int i = 1;i<=3;i++) {
-    Player *Gamer = player(i);
-    sb = Gamer->mScore.poolStr();
-    sm = Gamer->mScore.mountainStr();
-    slw = Gamer->mScore.leftWhistsStr();
-    srw = Gamer->mScore.rightWhistsStr();
-    tw = Gamer->mScore.whistsStr();
+    Player *plr = player(i);
+    sb = plr->mScore.poolStr();
+    sm = plr->mScore.mountainStr();
+    slw = plr->mScore.leftWhistsStr();
+    srw = plr->mScore.rightWhistsStr();
+    tw = plr->mScore.whistsStr();
     mDeskView->showPlayerScore(i, sb, sm, slw, srw, tw);
   }
 }
