@@ -285,13 +285,19 @@ void PrefDesktop::RunGame () {
     player(3)->clear();
     CurrentGame = undefined;
     nflShowPaper = 0;
-    // сдали карты
+    // сдаём карты
     for (int i = 0; i < CARDINCOLODA-2; i++) {
       Player *tmpGamer = player(GamersCounter.nValue);
       if (!(deck->at(i))) DeskView->MessageBox("Card = 0", "Error!!!");
       tmpGamer->AddCard(deck->at(i));
       ++GamersCounter;
     }
+/*
+    for (int f = 0; f < 2; f++) {
+      Player *plr = player(f);
+      plr->sortCards();
+    }
+*/
     //emitRepaint();
     //DeskView->mySleep(0);
     GamersCounter = nCurrentStart;
@@ -351,6 +357,7 @@ void PrefDesktop::RunGame () {
       // узнаем кто назначил максимальную игру
       for (int i = 1; i <= 3; i++) {
         Player *tmpg = player(i);
+        //tmpg->sortCards();
         if (tmpg->GamesType == GamesType[0]) {
           mPlayerActive = i;
           nPassCounter = 0;
@@ -374,6 +381,7 @@ void PrefDesktop::RunGame () {
           CardOnDesk[2] = CardOnDesk[3] = 0;
           nGamernumber = tmpg->mPlayerNo;
           //DeskView->ClearScreen();
+          //tmpg->sortCards();
           Repaint();
           //emitRepaint();
           //DeskView->mySleep(2);
@@ -426,6 +434,7 @@ void PrefDesktop::RunGame () {
           ++tmpGamersCounter;
           PassOrVistGamers = player(tmpGamersCounter.nValue);
           PassOrVistGamers->GamesType = undefined;
+          //PassOrVistGamers->sortCards();
           Repaint();
           //emitRepaint();
           //OnlyMessage(tmpGamersCounter.nValue);

@@ -36,6 +36,10 @@ public:
   int count () const;
   int emptySuit (int aSuit) const; //возврат масти (за исключение данной) в которой нет карт
 
+  inline int indexOf (Card *cc) const {
+    if (!cc) return -1;
+    return mList.indexOf(cc);
+  }
   inline Card *at (int idx) const {
     if (idx < 0 || idx >= mList.size()) return 0;
     return mList[idx];
@@ -55,15 +59,7 @@ public:
     } else mList[idx] = c;
     return idx;
   }
-/*
-  inline void free (Card *c) {
-    int idx = mList.indexOf(c);
-    if (idx >= 0) {
-      mList[idx] = 0;
-      //!.!delete c;
-    }
-  }
-*/
+
   inline int size () const { return mList.size(); }
   void shallowCopy (CardList *list);
 

@@ -81,6 +81,11 @@ void Player::AddCard (int _CName, int _CMast) {
 }
 
 
+void Player::sortCards () {
+  aCards->mySort();
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // utils
 ///////////////////////////////////////////////////////////////////////////////
@@ -1583,7 +1588,7 @@ Card *Player::MyPass1(Card *rMove,Player *aLeftGamer,Player *aRightGamer) {
   CardList *aStackStore=0;
 
   if ( rMove != 0 )  {
-    aTmpList=new CardList;
+    aTmpList = new CardList;
     aTmpList->copySuit(aCards, (eSuit)rMove->suit());
     aStackStore = aCards;
     aCards = aTmpList;
@@ -1789,11 +1794,14 @@ int Player::buildHandXOfs (int *dest, int startX, bool opened) {
   int cnt = 0, oldXX = startX, *oDest = dest;
   Card *cur = 0, *prev = 0;
 
+  CardList lst; lst.shallowCopy(aCards);
+  lst.mySort();
+
   if (mPlayerNo == 3) startX = 0;
   // normal
   startX -= opened ? SUIT_OFFSET : CLOSED_CARD_OFFSET ;
-  for (int f = 0; f < aCards->size(); f++) {
-    Card *pp = (Card *)aCards->at(f);
+  for (int f = 0; f < lst.size(); f++) {
+    Card *pp = lst.at(f);
     if (!pp) continue;
     prev = cur;
     cur = pp;
@@ -1801,7 +1809,9 @@ int Player::buildHandXOfs (int *dest, int startX, bool opened) {
       startX += (prev && prev->suit() != cur->suit()) ? NEW_SUIT_OFFSET : SUIT_OFFSET ;
     } else startX += CLOSED_CARD_OFFSET;
     *dest++ = startX;
-    *dest++ = f;
+    int idx = aCards->indexOf(cur);
+    *dest++ = idx;
+    if (idx < 0) abort();
     cnt++;
     if (cnt > 12) abort();
   }
@@ -1860,13 +1870,13 @@ void Player::RepaintAt (TDeskView *aDeskView, int Left, int Top, int selNo) {
   if (!aDeskView) return;
   DeskView = aDeskView;
 
-  aCards->mySort();
+  //aCards->mySort();
 
   int cnt = buildHandXOfs(ofs, Left, !nInvisibleHand);
   if (cnt) Left = ofs[0];
   for (int f = 0; ofs[f] >= 0; f += 2) {
     int x = ofs[f], y = Top;
-    Card *card = (Card *)aCards->at(ofs[f+1]);
+    Card *card = aCards->at(ofs[f+1]);
     aDeskView->drawCard(card, x, y, !nInvisibleHand, ofs[f+1]==selNo);
   }
 /*
@@ -1915,7 +1925,7 @@ void Player::clearCardArea () {
   int left, top, ofs[28];
   if (!DeskView) return;
   getLeftTop(mPlayerNo, &left, &top);
-  aCards->mySort();
+  //aCards->mySort();
   int cnt = buildHandXOfs(ofs, left, !nInvisibleHand);
   if (!cnt) return;
   for (int f = 0; ofs[f] >= 0; f += 2) {

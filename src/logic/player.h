@@ -41,6 +41,8 @@ public:
   int cardAt (int lx, int ly, bool opened=true);
   void getLeftTop (int playerNo, int *left, int *top);
 
+  void sortCards ();
+
   QString NikName;
 
   int X, Y;

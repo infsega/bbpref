@@ -15,18 +15,6 @@ void CardList::clear () {
 }
 
 
-/*
-void CardList::removeNulls () {
-  // remove null items
-  QMutableListIterator<Card *> i(mList);
-  while (i.hasNext()) {
-    Card *c = i.next();
-    if (!c) i.remove();
-  }
-}
-*/
-
-
 Card *CardList::exists (int aFace, int aSuit) const {
   Card *c = newCard(aFace, aSuit);
   return exists(c);
@@ -88,7 +76,6 @@ int CardList::count () const {
 
 
 void CardList::mySort () {
-  //removeNulls();
   int cnt = mList.size();
   // bubble sort
   for (int f = 0; f < cnt; f++) {
