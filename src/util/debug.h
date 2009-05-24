@@ -6,6 +6,9 @@
 #define XDEBUG
 
 
+extern int allowDebugLog;
+
+
 #ifdef XDEBUG
 void dlogS (const QString &s);
 void dlogf (const char *fmt, ...) __attribute__((format(printf, 1, 2)));

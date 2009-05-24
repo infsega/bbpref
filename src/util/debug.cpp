@@ -3,6 +3,9 @@
 #include "debug.h"
 
 
+int allowDebugLog = 0;
+
+
 #ifdef XDEBUG
 void dlogS (const QString &s) {
   QByteArray ba(s.toUtf8());
@@ -27,7 +30,7 @@ void dlogfVA (const char *fmt, va_list ap) {
   time_t t;
   struct tm bt;
 
-  if (!fmt) return;
+  if (!fmt || !allowDebugLog) return;
 
   va_copy(ap2, ap);
   int res = vsnprintf(buf, sizeof(buf)/sizeof(char), fmt, ap2);
