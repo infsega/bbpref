@@ -41,8 +41,8 @@ public:
   Deck *deck;
   QList<Player *> mPlayers;
   WrapCounter nCurrentStart, nCurrentMove;
-  Card *FirstCard,*SecondCard,*TherdCard;
-  Card *CardOnDesk[4];
+  Card *mFirstCard, *mSecondCard, *mThirdCard;
+  Card *mCardsOnDesk[4];
 
   int nflShowPaper;
 

@@ -842,14 +842,17 @@ Card *Player::MyGame2 (Card *aRightCard, Player *aLeftGamer, Player *aRightGamer
     // Нет Масти
     if (!aLeftGamer->aCards.cardsInSuit(mast)) {
       // У левого тож нету
-      MaxLeftCard = aLeftGamer->aCards.maxInSuit(koz);
-      cur = aCards.greaterInSuit(MaxLeftCard);
-      if (!cur) cur = aCards.lesserInSuit(MaxLeftCard);
+      MaxLeftCard = aLeftGamer->aCards.maxInSuit(koz); // k8: это заебись, а чо, если у нас нихуя козыря нет?
+      cur = aCards.greaterInSuit(MaxLeftCard); // k8: тогда тут тоже нет нихуя
+      if (!cur) cur = aCards.lesserInSuit(MaxLeftCard); // k8: и тут тоже нихуя
       if (!cur) cur = GetMinCardWithOutVz(); // лабуду
       if (!cur) cur = aCards.minFace();
     } else {
       // Есть масть у левого
-      cur = aCards.minInSuit(koz);
+      cur = aCards.minInSuit(koz); // k8: это заебись, а чо, если у нас нихуя козыря нет?
+      // k8: копипасты?
+      if (!cur) cur = GetMinCardWithOutVz(); // лабуду
+      if (!cur) cur = aCards.minFace();
     }
   } else {
     // У меня есть масть

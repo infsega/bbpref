@@ -25,7 +25,7 @@ typedef struct {
 
 
 void PrefDesktop::InternalConstruct () {
-  CardOnDesk[0] = CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = FirstCard = SecondCard = TherdCard=0;
+  mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard=0;
   deck = new Deck;
 
   qsrand(time(NULL));
@@ -241,8 +241,9 @@ static void cardName (char *dest, const Card *c) {
 
 
 static void dumpCardList (char *dest, const CardList &lst) {
-  for (int f = 0; f < lst.size(); f++) {
-    Card *c = lst.at(f);
+  CardList tmp; tmp.shallowCopy(lst); tmp.mySort();
+  for (int f = 0; f < tmp.size(); f++) {
+    Card *c = tmp.at(f);
     if (!c) continue;
     strcat(dest, " ");
     cardName(dest, c);
@@ -253,7 +254,7 @@ static void dumpCardList (char *dest, const CardList &lst) {
 void PrefDesktop::RunGame () {
   eGameBid GamesType[4], bids4win[4];
   //char *filename;
-  //Card *FirstCard, *SecondCard, *TherdCard;
+  //Card *mFirstCard, *mSecondCard, *mThirdCard;
   int npasscounter;
 
   //DeskView->ClearScreen();
@@ -269,7 +270,7 @@ void PrefDesktop::RunGame () {
     int nGamernumber = 0; // номер заказавшего игру
     int nPassCounter = 0; // кол-во спасовавших
     GamesType[3] = GamesType[2] = GamesType[1] = GamesType[0] = undefined;
-    CardOnDesk[0] = CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = FirstCard = SecondCard = TherdCard = 0;
+    mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard = 0;
     delete deck;
     deck = new Deck;
     deck->shuffle();
@@ -393,9 +394,9 @@ void PrefDesktop::RunGame () {
           WrapCounter tmpGamersCounter(1, 3);
           Player *PassOrVistGamers;
           int PassOrVist = 0, nPassOrVist = 0;
-          CardOnDesk[2] = deck->at(30);
-          CardOnDesk[3] = deck->at(31);
-          //!.!sprintf(ProtocolBuff, "Get cards %i %i for %i game", Card2Int(CardOnDesk[2]), Card2Int(CardOnDesk[3]), GamesType[0]);
+          mCardsOnDesk[2] = deck->at(30);
+          mCardsOnDesk[3] = deck->at(31);
+          //!.!sprintf(ProtocolBuff, "Get cards %i %i for %i game", Card2Int(mCardsOnDesk[2]), Card2Int(mCardsOnDesk[3]), GamesType[0]);
           //!.!WriteProtocol(ProtocolBuff);
           // извращение с CurrentGame -- для того, чтобы показало игру на bidboard
           //!eGameBid oc = CurrentGame;
@@ -406,7 +407,7 @@ void PrefDesktop::RunGame () {
           // запихиваем ему прикуп
           tmpg->AddCard(deck->at(30));
           tmpg->AddCard(deck->at(31));
-          CardOnDesk[2] = CardOnDesk[3] = 0;
+          mCardsOnDesk[2] = mCardsOnDesk[3] = 0;
           nGamernumber = tmpg->mPlayerNo;
           //DeskView->ClearScreen();
           //tmpg->sortCards();
@@ -586,7 +587,7 @@ void PrefDesktop::RunGame () {
     //mPlayingRound = true;
     for (int i = 1; i <= 10; i++) {
       Player *tmpg;
-      CardOnDesk[0] = CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = FirstCard = SecondCard = TherdCard = 0;
+      mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard = 0;
       if (CurrentGame == raspass && (i >= 1 && i <= 3)) nCurrentMove = nCurrentStart;
 
       dlogf("------------------------\nmove #%i", i);
@@ -602,42 +603,51 @@ void PrefDesktop::RunGame () {
         Card *ptmp4rpass;
         tmp4show = deck->at(29+i);
         ptmp4rpass = newCard(1, tmp4show->suit());
-        CardOnDesk[0] = tmp4show;
-        //drawInGameCard(0, CardOnDesk[0]);
+        mCardsOnDesk[0] = tmp4show;
+        //drawInGameCard(0, mCardsOnDesk[0]);
         Repaint();
         DeskView->mySleep(-1);
-        CardOnDesk[nCurrentMove.nValue] = FirstCard = ControlingMakemove(0, ptmp4rpass);
+        mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = ControlingMakemove(0, ptmp4rpass);
         //!.!delete ptmp4rpass;
       } else {
-        CardOnDesk[nCurrentMove.nValue] = FirstCard = ControlingMakemove(0, 0);
+        mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = ControlingMakemove(0, 0);
       }
-      //!.!sprintf(ProtocolBuff, "First card:%i", Card2Int(FirstCard));
+      xxBuf[0] = 0;
+      cardName(xxBuf, mCardsOnDesk[nCurrentMove.nValue]);
+      dlogf(" (1st) player %i:%s", nCurrentMove.nValue, xxBuf);
+      //!.!sprintf(ProtocolBuff, "First card:%i", Card2Int(mFirstCard));
       //!.!WriteProtocol(ProtocolBuff);
       Repaint();
       //emitRepaint();
-      //!!!drawInGameCard(nCurrentMove.nValue, FirstCard);
+      //!!!drawInGameCard(nCurrentMove.nValue, mFirstCard);
       ++nCurrentMove;
-      CardOnDesk[nCurrentMove.nValue] = SecondCard = ControlingMakemove(0, FirstCard);
-      //!.!sprintf(ProtocolBuff, "Second card:%i", Card2Int(SecondCard));
+      mCardsOnDesk[nCurrentMove.nValue] = mSecondCard = ControlingMakemove(0, mFirstCard);
+      xxBuf[0] = 0;
+      cardName(xxBuf, mCardsOnDesk[nCurrentMove.nValue]);
+      dlogf(" (2nd) player %i:%s", nCurrentMove.nValue, xxBuf);
+      //!.!sprintf(ProtocolBuff, "Second card:%i", Card2Int(mSecondCard));
       //!.!WriteProtocol(ProtocolBuff);
       //Repaint(nCurrentMove.nValue);
       Repaint();
-      //!!!drawInGameCard(nCurrentMove.nValue,SecondCard);
+      //!!!drawInGameCard(nCurrentMove.nValue,mSecondCard);
       ++nCurrentMove;
-      CardOnDesk[nCurrentMove.nValue] = TherdCard = ControlingMakemove(FirstCard, SecondCard);
-      //!.!sprintf(ProtocolBuff,"Therd card :%i",Card2Int(TherdCard));
+      mCardsOnDesk[nCurrentMove.nValue] = mThirdCard = ControlingMakemove(mFirstCard, mSecondCard);
+      xxBuf[0] = 0;
+      cardName(xxBuf, mCardsOnDesk[nCurrentMove.nValue]);
+      dlogf(" (3rd) player %i:%s", nCurrentMove.nValue, xxBuf);
+      //!.!sprintf(ProtocolBuff,"Therd card :%i",Card2Int(mThirdCard));
       //!.!WriteProtocol(ProtocolBuff);
       //Repaint(nCurrentMove.nValue);
       Repaint();
-      //!!!drawInGameCard(nCurrentMove.nValue,TherdCard);
-      CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = 0;
+      //!!!drawInGameCard(nCurrentMove.nValue,mThirdCard);
+      mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = 0;
       ++nCurrentMove;
       DeskView->mySleep(-1);
-      nPl = nPlayerTakeCards(FirstCard, SecondCard, TherdCard, GamesType[0]-(GamesType[0]/10)*10)-1;
+      nPl = nPlayerTakeCards(mFirstCard, mSecondCard, mThirdCard, GamesType[0]-(GamesType[0]/10)*10)-1;
       nCurrentMove = nCurrentMove+nPl;
       tmpg = mPlayers[nCurrentMove.nValue];
       tmpg->nGetsCard++;
-      CardOnDesk[0] = 0;
+      mCardsOnDesk[0] = 0;
       //DeskView->ClearScreen();
       Repaint();
       //emitRepaint();
@@ -824,7 +834,7 @@ void PrefDesktop::Repaint (bool emitSignal) {
   }
   // repaint in-game cards
   for (int f = 0; f <= 3; f++) {
-    if (CardOnDesk[f]) drawInGameCard(f, CardOnDesk[f]);
+    if (mCardsOnDesk[f]) drawInGameCard(f, mCardsOnDesk[f]);
   }
   // draw bidboard
   if (mPlayingRound) {

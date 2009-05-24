@@ -21,10 +21,18 @@ FormBid::~FormBid () {
 
 void FormBid::showEvent (QShowEvent *event) {
   Q_UNUSED(event)
-  QDesktopWidget *desk = QApplication::desktop();
-  QRect dims(desk->availableGeometry(this));
-  int x = dims.left()+(dims.width()-width())/2;
-  int y = dims.top()+(dims.height()-height())/2;
+  QWidget *parentObj = dynamic_cast<QWidget *>(parent());
+  int x, y;
+  if (parentObj) {
+    QRect dims(parentObj->frameGeometry());
+    x = dims.left()+(dims.width()-width())/2;
+    y = dims.top()+(dims.height()-height())/2;
+  } else {
+    QDesktopWidget *desk = QApplication::desktop();
+    QRect dims(desk->availableGeometry(this));
+    x = dims.left()+(dims.width()-width())/2;
+    y = dims.top()+(dims.height()-height())/2;
+  }
   move(x, y);
 }
 
