@@ -69,6 +69,8 @@ public:
   void serialize (QByteArray &ba) const;
   bool unserialize (QByteArray &ba, int *pos);
 
+  CardList &operator = (const CardList &cl);
+
 protected:
   //void removeNulls ();
 

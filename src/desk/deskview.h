@@ -31,7 +31,7 @@ public:
   void ShowBlankPaper (int optMaxPool);
   void showPlayerScore (int i, const QString &sb, const QString &sm, const QString &slv, const QString &srv, const QString &tv);
   //----------------------------- for human player
-  eGameBid makemove (eGameBid lMove, eGameBid rMove);
+  eGameBid selectBid (eGameBid lMove, eGameBid rMove);
   void StatusBar (const QString &text);
   void drawRotatedText (QPainter &p, int x, int y, float angle, const QString &text);
 

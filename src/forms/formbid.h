@@ -17,9 +17,9 @@ public:
   FormBid (QWidget *parent=0);
   ~FormBid ();
 
-  void EnableAll (void);
-  void DisalbeAll (void);
-  void DisableLessThan (eGameBid);
+  void enableAll ();
+  void disableAll ();
+  void disableLessThan (eGameBid);
   void disableItem (eGameBid);
   void enableItem (eGameBid);
 

@@ -22,6 +22,18 @@ HumanPlayer::HumanPlayer (int aMyNumber, DeskView *aDeskView) : Player(aMyNumber
 }
 
 
+HumanPlayer &HumanPlayer::operator = (const Player &pl) {
+  Player::clone(&pl);
+  return *this;
+}
+
+
+HumanPlayer &HumanPlayer::operator = (const HumanPlayer &pl) {
+  Player::clone(&pl);
+  return *this;
+}
+
+
 void HumanPlayer::clear () {
   Player::clear();
   mInvisibleHand = false;
@@ -29,42 +41,42 @@ void HumanPlayer::clear () {
 
 
 // ход при торговле
-eGameBid HumanPlayer::makemove (eGameBid lMove, eGameBid rMove) {
+eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
   eGameBid tmpGamesType;
   mClickX = mClickY = 0; mWaitingForClick = true;
 
   //fprintf(stderr, "select bid\n");
-  formBid->EnableAll();
-  if (qMax(lMove, rMove) != gtPass) formBid->DisableLessThan(qMax(lMove, rMove));
+  formBid->enableAll();
+  if (qMax(lMove, rMove) != gtPass) formBid->disableLessThan(qMax(lMove, rMove));
   if (mMyGame != undefined) formBid->disableItem(g86);
   formBid->enableItem(gtPass);
   formBid->disableItem(vist);
   formBid->showbullet->setEnabled(true);
   formBid->bgetback->setEnabled(false);
   do {
-    tmpGamesType = mDeskView->makemove(lMove, rMove);
+    tmpGamesType = mDeskView->selectBid(lMove, rMove);
     if (tmpGamesType == 0) {
       // вернуть снос (если есть) и снести заново
       clearCardArea();
       returnDrop();
-      makemove(0, 0, 0, 0);
+      moveSelectCard(0, 0, 0, 0);
       //mDeskView->mySleep(1);
-      makemove(0, 0, 0, 0);
+      moveSelectCard(0, 0, 0, 0);
     } else if (tmpGamesType == 1) {
       // показать пулю
-      kpref->DeskTop->nflShowPaper = 1;
+      kpref->DeskTop->mShowPool = true;
       kpref->slotShowScore();
     }
   } while (tmpGamesType <= 1);
   mMyGame = tmpGamesType;
   mWaitingForClick = false;
-  formBid->EnableAll();
+  formBid->enableAll();
   return mMyGame;
 }
 
 
 //ход
-Card *HumanPlayer::makemove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer) {
+Card *HumanPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer) {
   Q_UNUSED(aLeftPlayer)
   Q_UNUSED(aRightPlayer)
   Card *RetVal = 0;
@@ -102,43 +114,43 @@ Card *HumanPlayer::makemove (Card *lMove, Card *rMove, Player *aLeftPlayer, Play
 
 
 // после сноса чего играем
-eGameBid HumanPlayer::makeout4miser () {
+eGameBid HumanPlayer::dropForMisere () {
   mClickX = mClickY = 0; mWaitingForClick = true;
-  makemove(0, 0, 0, 0);
+  moveSelectCard(0, 0, 0, 0);
   //mDeskView->mySleep(1);
-  makemove(0, 0, 0, 0);
+  moveSelectCard(0, 0, 0, 0);
   mWaitingForClick = false;
   return g86;
 }
 
 
 // после сноса чего играем
-eGameBid HumanPlayer::makeout4game () {
+eGameBid HumanPlayer::dropForGame () {
   //mWaitingForClick = 1;
   //mClickX = mClickY = 0;
   eGameBid tmpGamesType;
 
-  makemove(0, 0, 0, 0);
+  moveSelectCard(0, 0, 0, 0);
   //!.!mDeskView->mySleep(1);
-  makemove(0, 0, 0, 0);
+  moveSelectCard(0, 0, 0, 0);
 
-  formBid->EnableAll();
+  formBid->enableAll();
   formBid->disableItem(vist);
   formBid->disableItem(gtPass);
   if (mMyGame != g86) formBid->disableItem(g86);
-  formBid->DisableLessThan(mMyGame);
+  formBid->disableLessThan(mMyGame);
   formBid->showbullet->setEnabled(TRUE);
   formBid->bgetback->setEnabled(TRUE);
 
   do {
-    tmpGamesType = mDeskView->makemove(zerogame, zerogame);
+    tmpGamesType = mDeskView->selectBid(zerogame, zerogame);
     if (tmpGamesType == 0) {
       // вернуть снос
       clearCardArea();
       returnDrop();
-      makemove(0, 0, 0, 0);
+      moveSelectCard(0, 0, 0, 0);
       //mDeskView->mySleep(1);
-      makemove(0, 0, 0, 0);
+      moveSelectCard(0, 0, 0, 0);
     } else if (tmpGamesType == 1) {
       // показать пулю
       kpref->slotShowScore();
@@ -146,13 +158,13 @@ eGameBid HumanPlayer::makeout4game () {
   } while (tmpGamesType <= 1);
   mMyGame = tmpGamesType;
 
-  formBid->EnableAll();
+  formBid->enableAll();
   mWaitingForClick = false;
   return mMyGame;
 }
 
 
-eGameBid HumanPlayer::makemove (eGameBid MaxGame, int HaveAVist, int nGamerVist) {
+eGameBid HumanPlayer::moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerVist) {
   Q_UNUSED(HaveAVist)
   Q_UNUSED(nGamerVist)
 
@@ -163,11 +175,11 @@ eGameBid HumanPlayer::makemove (eGameBid MaxGame, int HaveAVist, int nGamerVist)
     // сталинград?
     if (g61stalingrad && MaxGame == g61) formBid->disableItem(gtPass);
     else formBid->enableItem(gtPass);
-    formBid->DisalbeAll();
+    formBid->disableAll();
     formBid->enableItem(gtPass);
     formBid->enableItem(vist);
-    mMyGame = mDeskView->makemove(zerogame, zerogame);
-    formBid->EnableAll();
+    mMyGame = mDeskView->selectBid(zerogame, zerogame);
+    formBid->enableAll();
   }
   return mMyGame;
 }

@@ -42,6 +42,8 @@ public:
 
   void sortCards ();
 
+  Player &operator = (const Player &pl);
+
 public:
   QString mNick;
 
@@ -52,11 +54,11 @@ public:
   Card *mCardCarryThru;
 
 public:
-  virtual Card *makemove (Card *lMove,Card *rMove,Player *aLeftPlayer,Player *aRightPlayer); //ход
-  virtual eGameBid makemove (eGameBid lMove,eGameBid rMove); //ход при торговле
-  virtual eGameBid makemove (eGameBid MaxGame,int HaveAVist,int nGamerVist); // после получения игроком прикупа - пасс или вист
-  virtual eGameBid makeout4game (void);
-  virtual eGameBid makeout4miser (void);
+  virtual Card *moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer); //ход
+  virtual eGameBid moveBidding (eGameBid lMove, eGameBid rMove); //ход при торговле
+  virtual eGameBid moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerVist); // после получения игроком прикупа - пасс или вист
+  virtual eGameBid dropForGame ();
+  virtual eGameBid dropForMisere ();
 
   virtual void hilightCard (int lx, int ly);
   virtual void returnDrop ();
@@ -66,7 +68,6 @@ public:
   virtual void clear ();
 
   void draw ();
-  void clearCardArea ();
 
 protected:
   int mPrevHiCardIdx;
@@ -74,6 +75,7 @@ protected:
 
 protected:
   void drawAt (DeskView *aDeskView, int left, int top, int selNo=-1);
+  void clearCardArea ();
 
   int checkForMisere ();
   eGameBid moveCalcDrop (); //для расчета сноса
@@ -91,6 +93,7 @@ public:
 
 protected:
   void internalInit ();
+  void clone (const Player *pl);
 
   void recalcTables (CardList &aMaxCardList, int a23); // Пересчитывает таблицу tSuitProbs mSuitProb[5];
   void recalcPassOutTables (CardList &aMaxCardList, int a23); // Пересчитывает таблицу дли распасов или мизера

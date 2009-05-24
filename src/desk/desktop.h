@@ -13,18 +13,20 @@ class PrefDesktop : public QObject {
   Q_OBJECT
 
 public:
-  PrefDesktop ();
-  PrefDesktop (DeskView *_DeskView);
+  PrefDesktop (DeskView *aDeskView=0);
   virtual ~PrefDesktop ();
 
-  Player *InsertGamer (Player *);
-  void RunGame ();
+  Player *addPlayer (Player *);
+
+  void runGame ();
+
   void draw (bool emitSignal=true);
-  int nPlayerTakeCards (Card *p1, Card *p2, Card *p3, int koz);
-  void ShowPaper ();
-  bool SaveGame (const QString &name);
-  bool LoadGame (const QString &name);
-  void CloseBullet ();
+  void drawPool ();
+
+  bool saveGame (const QString &name); // don't working!
+  bool loadGame (const QString &name); // don't working!
+
+  void closePool ();
 
   inline Player *currentPlayer () const { return mPlayers[nCurrentMove.nValue]; }
 
@@ -38,20 +40,19 @@ signals:
 
 public:
   DeskView *mDeskView;
-  Deck *deck;
+  Deck mDeck;
   QList<Player *> mPlayers;
   WrapCounter nCurrentStart, nCurrentMove;
   Card *mFirstCard, *mSecondCard, *mThirdCard;
   Card *mCardsOnDesk[4];
 
-  int nflShowPaper;
+  bool mShowPool;
 
 private:
-  void InternalConstruct ();
+  void internalInit ();
   Player *player (int);
   Card *ControlingMakemove (Card *, Card *);
   Card *PipeMakemove (Card *lMove, Card *rMove);
-  void GamerAssign (Player *, Player *);
 
   void drawInGameCard (int mPlayerNo, Card *card);
 
@@ -60,6 +61,8 @@ private:
   void getPMsgXY (int plr, int *x, int *y);
 
   int playerWithMaxPool (); // except the players who closed the pool
+
+  int whoseTrick (Card *p1, Card *p2, Card *p3, int koz);
 
 private:
   bool mPlayingRound;

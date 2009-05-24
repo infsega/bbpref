@@ -85,9 +85,9 @@ void Kpref::initMenuBar () {
 void Kpref::slotFileOpen () {
   QString fileName = QFileDialog::getOpenFileName(this, "Select saved game", "", "*.prf");
   if (!fileName.isEmpty())  {
-    DeskTop->LoadGame(fileName);
+    DeskTop->loadGame(fileName);
     actFileSave->setEnabled(true);
-    DeskTop->RunGame();
+    DeskTop->runGame();
   }
 }
 
@@ -95,7 +95,7 @@ void Kpref::slotFileOpen () {
 void Kpref::slotFileSave () {
   if (DeskTop) {
     QString fn = QFileDialog::getSaveFileName(this, "Select file to save the current game", "", "*.prf");
-    if (!fn.isEmpty()) DeskTop->SaveGame(fn);
+    if (!fn.isEmpty()) DeskTop->saveGame(fn);
   }
 }
 
@@ -114,12 +114,12 @@ void Kpref::slotEndSleep () {
 
 
 void Kpref::slotShowScore () {
-  DeskTop->CloseBullet();
-  DeskTop->nflShowPaper = 1;
-  DeskTop->ShowPaper();
+  DeskTop->closePool();
+  DeskTop->mShowPool = true;
+  DeskTop->drawPool();
   DeskTop->mDeskView->mySleep(-1);
   //mDeskView->ClearScreen();
-  DeskTop->nflShowPaper = 0;
+  DeskTop->mShowPool = false;
   DeskTop->draw();
 }
 
@@ -155,7 +155,7 @@ void Kpref::slotNewSingleGame () {
       }
     }
     //!!!fileMenu->setItemEnabled(nSaveGameID,TRUE);
-    DeskTop -> RunGame();
+    DeskTop -> runGame();
   }
 */
   if (DeskTop) {
@@ -173,7 +173,7 @@ void Kpref::slotNewSingleGame () {
     //mDeskView->ClearScreen();
   }
   //!!!fileMenu->setItemEnabled(nSaveGameID,TRUE);
-  DeskTop->RunGame();
+  DeskTop->runGame();
 }
 
 

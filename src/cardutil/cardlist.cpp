@@ -211,3 +211,9 @@ bool CardList::unserialize (QByteArray &ba, int *pos) {
   }
   return true;
 }
+
+
+CardList &CardList::operator = (const CardList &cl) {
+  if (&cl != this) shallowCopy(cl);
+  return *this;
+}

@@ -22,6 +22,32 @@ void Player::internalInit () {
 }
 
 
+Player &Player::operator = (const Player &pl) {
+  clone(&pl);
+  return *this;
+}
+
+
+void Player::clone (const Player *pl) {
+  if (pl && pl != this) {
+    mCards = pl->mCards;
+    mLeft = pl->mLeft;
+    mRight = pl->mRight;
+    mOut = pl->mOut;
+    mCardsOut = pl->mCardsOut;
+    //mLeftOut.shallowCopy(pl->mLeftOut);
+    //mRightOut.shallowCopy(pl->mRightOut);
+    mTricksTaken = pl->mTricksTaken;
+    //Mast = pl->Mast;
+    mMyGame = pl->mMyGame;
+    //Enemy = pl->Enemy;
+    mInvisibleHand = pl->mInvisibleHand;
+    mDeskView = pl->mDeskView;
+    mCardCarryThru = pl->mCardCarryThru;
+  }
+}
+
+
 void Player::clear () {
   //flMiser = 0;
   mCards.clear();
@@ -833,7 +859,7 @@ Card *Player::MyGame3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, P
   loadLists(aLeftPlayer, aRightPlayer, aMaxCardList);
   recalcTables(aMaxCardList, 23);
   if (mCards.cardsInSuit(aLeftCard->suit())) {
-    // у меня есть масть  в которую зашел левый
+    // у меня есть масть, в которую зашел левый
     if (aLeftCard->suit() == aRightCard->suit()) {
       // постараемся ударить
       cur = mCards.greaterInSuit(aLeftCard);
@@ -895,7 +921,7 @@ Card *Player::MyVist1 (Player *aLeftPlayer, Player *aRightPlayer) {
     // Слева игрок
     loadLists(aLeftPlayer, aLeftPlayer, aMaxCardList);
     recalcTables(aMaxCardList, 1);
-    if (aLeftPlayer->mCards.cardsInSuit(mast) <=2) {
+    if (aLeftPlayer->mCards.cardsInSuit(mast) <= 2) {
       Card *m = mCards.maxInSuit(mast);
       if (!m) cur = mCards.minInSuit(aLeftPlayer->mCards.emptySuit (mast));
       else if (aLeftPlayer->mCards.maxInSuit(mast)->face() < m->face()) cur = mCards.maxInSuit(mast);
@@ -1135,7 +1161,7 @@ Card *Player::MyPass2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlay
     cur = mCards.maxInSuit(mast); // !!!!!!!!!!!! здеся обышка
     if (!cur) {
       // Нет Масти
-      // во шара !!! Льем мах в масти где есть 100 % взятки
+      // во шара !!! Льем мах в масти где есть 100% взятки
       cur = GetMaxCardWithOutPere();
       if (!cur) cur = GetMaxCardPere(); //масть с перехватами (max)
       if (!cur) cur = GetMinCardWithOutVz(); // лабуду
@@ -1194,7 +1220,7 @@ Card *Player::MyPass3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, P
 // game moves
 ///////////////////////////////////////////////////////////////////////////////
 // make game move (dispatcher)
-Card *Player::makemove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer) {
+Card *Player::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer) {
   Card *cur = 0;
   if (lMove == 0 && rMove == 0) {
     // мой заход - первый
@@ -1228,7 +1254,7 @@ Card *Player::makemove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *a
 
 ///////////////////////////////////////////////////////////////////////////////
 // после получения игроком прикупа - пасс или вист
-eGameBid Player::makemove (eGameBid MaxGame, int HaveAVist, int nGamerVist) {
+eGameBid Player::moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerVist) {
   Q_UNUSED(nGamerVist)
   eGameBid Answer;
   eGameBid MyMaxGame = moveCalcDrop();
@@ -1282,7 +1308,7 @@ eGameBid Player::moveCalcDrop () {
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-eGameBid Player::makeout4miser () {
+eGameBid Player::dropForMisere () {
   Card *FirstCardOut = 0, *SecondCardOut = 0;
   Card *tmpFirstCardOut, *tmpSecondCardOut;
   Card *RealFirstCardOut, *RealSecondCardOut;
@@ -1329,7 +1355,7 @@ eGameBid Player::makeout4miser () {
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-eGameBid Player::makeout4game () {
+eGameBid Player::dropForGame () {
   Card *FirstCardOut = 0, *SecondCardOut = 0;
   Card *tmpFirstCardOut, *tmpSecondCardOut;
   Card *RealFirstCardOut, *RealSecondCardOut;
@@ -1372,7 +1398,7 @@ eGameBid Player::makeout4game () {
   mCards.remove(RealSecondCardOut);
   mOut.insert(RealSecondCardOut);
   mCards.mySort();
-  //Hight = makemove(undefined,undefined);
+  //Hight = moveBidding(undefined,undefined);
   Hight = moveCalcDrop();
   if (Hight < mMyGame)  {
     // Вот такая ерунда
@@ -1390,7 +1416,7 @@ eGameBid Player::makeout4game () {
 
 
 //ход при торговле
-eGameBid Player::makemove (eGameBid lMove, eGameBid rMove) {
+eGameBid Player::moveBidding (eGameBid lMove, eGameBid rMove) {
 /*
   if ( mMyGame == gtPass )  {
     mMyGame=gtPass;

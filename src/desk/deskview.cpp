@@ -458,7 +458,7 @@ void DeskView::drawRotatedText (QPainter &p, int x, int y, float angle, const QS
 }
 
 
-eGameBid DeskView::makemove (eGameBid lMove, eGameBid rMove) {
+eGameBid DeskView::selectBid (eGameBid lMove, eGameBid rMove) {
   Q_UNUSED(lMove)
   Q_UNUSED(rMove)
   //if (!formBid->exec()) qApp->quit();
