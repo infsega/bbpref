@@ -225,11 +225,11 @@ void Kpref::paintEvent (QPaintEvent *event) {
 void Kpref::slotHelpAbout () {
   QMessageBox::about(this, "About...",
     "OpenPref\n"
-    "developer version (0.1.0)\n"
-    "http://openpref.boom.ru/\n"
+    "developer version (0.1.1)\n"
+    "http://gitorious.org/openprefqt4\n"
     "\n"
     "(c) 2004 Fedotov A.V.\n"
-    "\n"
-    "Based on kpref (c) Azarniy I.V."
+    "Based on kpref (c) Azarniy I.V.\n"
+    "Qt4 port and many new bugs by Ketmar"
   );
 }
