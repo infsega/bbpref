@@ -14,12 +14,12 @@ class PrefDesktop : public QObject {
 
 public:
   PrefDesktop ();
-  PrefDesktop (TDeskView *_DeskView);
+  PrefDesktop (DeskView *_DeskView);
   virtual ~PrefDesktop ();
 
   Player *InsertGamer (Player *);
   void RunGame ();
-  void Repaint (bool emitSignal=true);
+  void draw (bool emitSignal=true);
   int nPlayerTakeCards (Card *p1, Card *p2, Card *p3, int koz);
   void ShowPaper ();
   bool SaveGame (const QString &name);
@@ -37,7 +37,7 @@ signals:
   void deskChanged ();
 
 public:
-  TDeskView *mDeskView;
+  DeskView *mDeskView;
   Deck *deck;
   QList<Player *> mPlayers;
   WrapCounter nCurrentStart, nCurrentMove;

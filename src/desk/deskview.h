@@ -15,11 +15,11 @@
 #include "card.h"
 
 
-class TDeskView : public QObject {
+class DeskView : public QObject {
   Q_OBJECT
 public:
-  TDeskView (int aW, int aH);
-  ~TDeskView ();
+  DeskView (int aW, int aH);
+  ~DeskView ();
 
   void mySleep (int seconds);
 

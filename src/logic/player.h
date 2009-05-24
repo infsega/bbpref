@@ -12,7 +12,7 @@
 
 class Player {
 public:
-  TDeskView *mDeskView;
+  DeskView *mDeskView;
 
   ScoreBoard mScore;
   CardList mCards; // мои
@@ -31,7 +31,7 @@ public:
   //eHand mEnemy;
   int mPlayerNo; // мой номер
 
-  Player (int aMyNumber, TDeskView *aDeskView=0);
+  Player (int aMyNumber, DeskView *aDeskView=0);
   virtual ~Player ();
 
   // at least 28 ints (14 int pairs); return # of used ints; the last int is -1
@@ -42,80 +42,89 @@ public:
 
   void sortCards ();
 
+public:
   QString mNick;
 
-  int X, Y;
-  int WaitForMouse;
-  int oldii;
-  bool nInvisibleHand;
+  int mClickX, mClickY;
+  bool mWaitingForClick;
+  bool mInvisibleHand;
   // this part for miser catchs
-  Card *Pronesti;
+  Card *mCardCarryThru;
 
-  virtual Card *makemove (Card *lMove,Card *rMove,Player *aLeftGamer,Player *aRightGamer); //ход
+public:
+  virtual Card *makemove (Card *lMove,Card *rMove,Player *aLeftPlayer,Player *aRightPlayer); //ход
   virtual eGameBid makemove (eGameBid lMove,eGameBid rMove); //ход при торговле
   virtual eGameBid makemove (eGameBid MaxGame,int HaveAVist,int nGamerVist); // после получения игроком прикупа - пасс или вист
   virtual eGameBid makeout4game (void);
   virtual eGameBid makeout4miser (void);
 
-  virtual void HintCard (int lx, int ly);
-  virtual void GetBackSnos ();
+  virtual void hilightCard (int lx, int ly);
+  virtual void returnDrop ();
 
-  virtual void AddCard (Card *aCard); // получить сданную карту
-  virtual void AddCard (int _CName, int _CMast); // получить сданную карту
+  virtual void dealCard (Card *aCard); // получить сданную карту
 
   virtual void clear ();
-  void RepaintAt (TDeskView *aDeskView, int Left, int Top, int selNo=-1);
-  void Repaint ();
+
+  void draw ();
   void clearCardArea ();
 
-private:
-  int flMiser;
-  int Check4Miser(void);
-  eGameBid makemove4out(void); //для расчета сноса
-  void makestatfill(void);
-  void makestatfill(int nCards,int maxmin);
-  tSuitProbs vzatok4game(eSuit ,int a23);
-  tSuitProbs vzatok(eSuit, CardList &,int a23);
-  tSuitProbs vzatok4pass(eSuit, CardList &);
+protected:
+  int mPrevHiCardIdx;
+  //int flMiser;
+
+protected:
+  void drawAt (DeskView *aDeskView, int left, int top, int selNo=-1);
+
+  int checkForMisere ();
+  eGameBid moveCalcDrop (); //для расчета сноса
+  //void makestatfill ();
+  //void makestatfill (int nCards,int maxmin);
+  tSuitProbs vzatok4game (eSuit, int a23);
+  tSuitProbs vzatok (eSuit, CardList &, int a23);
+  tSuitProbs vzatok4pass (eSuit, CardList &);
 
 public:
   // Два списка
-  tSuitProbs Compare2List4Max(CardList &My, CardList &Enemy); // Для максимального результата на 1 руке
-  tSuitProbs Compare2List4Max23(CardList &My, CardList &Enemy); // Для максимального результата на 2 и 3 руке
-  tSuitProbs Compare2List4Min(CardList &My, CardList &Enemy); // Для мин результата
+  tSuitProbs compare2List4Max (CardList &my, CardList &enemy); // Для максимального результата на 1 руке
+  tSuitProbs compare2List4Max23 (CardList &my, CardList &enemy); // Для максимального результата на 2 и 3 руке
+  tSuitProbs compare2List4Min (CardList &my, CardList &enemy); // Для мин результата
 
-private:
+protected:
   void internalInit ();
 
+  void recalcTables (CardList &aMaxCardList, int a23); // Пересчитывает таблицу tSuitProbs mSuitProb[5];
+  void recalcPassOutTables (CardList &aMaxCardList, int a23); // Пересчитывает таблицу дли распасов или мизера
+
+  void loadLists (Player *aLeftPlayer, Player *aRightPlayer, CardList &aMaxCardList); // Набор списков
+
   // Три списка
-  //tSuitProbs Compare3List4Max(CardList *My,CardList *Left,CardList *Right); // Для максимального результата
-  //tSuitProbs Compare3List4Min(CardList *My,CardList *Left,CardList *Right); // Для мин результата
+  //tSuitProbs Compare3List4Max(CardList *my,CardList *Left,CardList *Right); // Для максимального результата
+  //tSuitProbs Compare3List4Min(CardList *my,CardList *Left,CardList *Right); // Для мин результата
   Card *GetMaxCardPere ();
   Card *GetMaxCardWithOutPere ();
   Card *GetMinCardWithOutVz ();
 
-  void RecountTables (CardList &aMaxCardList,int a23); // Пересчитывает таблицу tSuitProbs mSuitProb[5];
-  void RecountTables4RasPass (CardList &aMaxCardList,int a23); // Пересчитывает таблицу дли распасов или мизера
+  Card *Miser1 (Player *aLeftPlayer, Player *aRightPlayer);
+  Card *Miser2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer);
+  Card *Miser3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer);
 
-  void LoadLists(Player *aLeftGamer,Player *aRightGamer, CardList &aMaxCardList); // Набор списков
-  Card *MiserCatch1(Player *aLeftGamer,Player *aRightGamer);
-  Card *Miser1(Player *aLeftGamer,Player *aRightGamer);
-  Card *MyGame1(Player *aLeftGamer,Player *aRightGamer); // моя игра 1 заход - мой
+  Card *MyGame1 (Player *aLeftPlayer, Player *aRightPlayer); // моя игра 1 заход - мой
+  Card *MyGame2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // моя игра 2 заход - мой
+  Card *MyGame3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // моя игра 3 заход - мой
 
-  Card *MyVist1(Player *aLeftGamer,Player *aRightGamer); // мой вист или пас 1 заход - мой
+  Card *MyVist1 (Player *aLeftPlayer, Player *aRightPlayer); // мой вист или пас 1 заход - мой
+  Card *MyVist2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // мой вист или пас 2 заход - мой
+  Card *MyVist3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // мой вист или пас 3 заход - мой
 
-  Card *MiserCatch2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer);
-  Card *Miser2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer);
-  Card *MyGame2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer); // моя игра 2 заход - мой
-  Card *MyVist2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer); // мой вист или пас 2 заход - мой
-
-  Card *MiserCatch3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player *aRightGamer);
-  Card *Miser3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player *aRightGamer);
-  Card *MyGame3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player *aRightGamer); // моя игра 3 заход - мой
-  Card *MyVist3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player *aRightGamer); // мой вист или пас 3 заход - мой
   // А вот и часть отвечающая за распасы и мизер !!!
-  Card *MyPass1(Card *,Player *aLeftGamer,Player *aRightGamer);
-  Card *MyPass2(Card *aRightCard,Player *aLeftGamer,Player *aRightGamer); // моя игра 2 заход - мой
-  Card *MyPass3(Card *aLeftCard,Card *aRightCard,Player *aLeftGamer,Player *aRightGamer); // моя игра 3 заход - мой
+  Card *MyPass1 (Card *, Player *aLeftPlayer, Player *aRightPlayer);
+  Card *MyPass2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // моя игра 2 заход - мой
+  Card *MyPass3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // моя игра 3 заход - мой
+
+  Card *MiserCatch1 (Player *aLeftPlayer, Player *aRightPlayer);
+  Card *MiserCatch2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer);
+  Card *MiserCatch3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer);
 };
+
+
 #endif

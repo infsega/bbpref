@@ -84,7 +84,7 @@ static QImage *GetXpmByNameI (const char *name) {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-TDeskView::TDeskView (int aW, int aH) : mDeskBmp(0) {
+DeskView::DeskView (int aW, int aH) : mDeskBmp(0) {
   mDigitsBmp = new QImage(QString(":/pics/digits/digits.png"));
   mBidBmp = new QImage(QString(":/pics/bidinfo.png"));
   mKeyBmp[0] = new QImage(QString(":/pics/presskey.png"));
@@ -108,7 +108,7 @@ TDeskView::TDeskView (int aW, int aH) : mDeskBmp(0) {
 }
 
 
-TDeskView::~TDeskView () {
+DeskView::~DeskView () {
   if (mDeskBmp) delete mDeskBmp;
   delete mIMoveBmp;
   delete mKeyBmp[0];
@@ -118,12 +118,12 @@ TDeskView::~TDeskView () {
 }
 
 
-void TDeskView::emitRepaint () {
+void DeskView::emitRepaint () {
   emit deskChanged();
 }
 
 
-void TDeskView::drawIMove (int x, int y) {
+void DeskView::drawIMove (int x, int y) {
   if (!mDeskBmp) return;
   QPainter p(mDeskBmp);
   p.drawImage(x, y, *mIMoveBmp);
@@ -131,7 +131,7 @@ void TDeskView::drawIMove (int x, int y) {
 }
 
 
-void TDeskView::drawPKeyBmp (bool show) {
+void DeskView::drawPKeyBmp (bool show) {
   if (!mDeskBmp) return;
   time_t tt = time(0);
   int phase = tt%2;
@@ -146,14 +146,14 @@ void TDeskView::drawPKeyBmp (bool show) {
 }
 
 
-void TDeskView::drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy) {
+void DeskView::drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy) {
   QRect tgt(x0, y0, 8, 14);
   QRect src(cx, cy, 8, 14);
   p.drawImage(tgt, *mDigitsBmp, src);
 }
 
 
-void TDeskView::drawNumber (int x0, int y0, int n, bool red) {
+void DeskView::drawNumber (int x0, int y0, int n, bool red) {
   if (!mDeskBmp || n < 0 || n > 1024) return;
   char buf[12], *pd;
   sprintf(buf, "%i", n);
@@ -178,7 +178,7 @@ static int numWidth (int n) {
 }
 
 
-void TDeskView::drawGameBid (eGameBid game) {
+void DeskView::drawGameBid (eGameBid game) {
   if (!mDeskBmp) return;
   if (game != raspass && (game < 61 || game > 105)) return; // unknown game
   QPainter p(mDeskBmp);
@@ -211,7 +211,7 @@ void TDeskView::drawGameBid (eGameBid game) {
  *  =0: nt
  * plrAct: 0-3
  */
-void TDeskView::drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game) {
+void DeskView::drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game) {
   if (!mDeskBmp) return;
   QImage *i = mBidBmp;
   bidBmpX = DesktopWidth-(i->width()+8);
@@ -245,11 +245,11 @@ void TDeskView::drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid gam
 }
 
 
-void TDeskView::timerSlot () {
+void DeskView::timerSlot () {
 }
 
 
-void TDeskView::mySleep (int seconds) {
+void DeskView::mySleep (int seconds) {
   time_t tStart = time(0);
   Event = 0;
   QTimer *timer = 0;
@@ -287,7 +287,7 @@ void TDeskView::mySleep (int seconds) {
 }
 
 
-void TDeskView::ClearScreen () {
+void DeskView::ClearScreen () {
   if (!mDeskBmp || (mDeskBmp->width() != DesktopWidth || mDeskBmp->height() != DesktopHeight)) {
     if (mDeskBmp) delete mDeskBmp;
     mDeskBmp = new QPixmap(DesktopWidth, DesktopHeight);
@@ -296,7 +296,7 @@ void TDeskView::ClearScreen () {
 }
 
 
-void TDeskView::ClearBox (int x1, int y1, int x2, int y2) {
+void DeskView::ClearBox (int x1, int y1, int x2, int y2) {
   if (!mDeskBmp) return;
   QPainter p(mDeskBmp);
   QBrush brush(qRgb(0, 128, 0));
@@ -306,7 +306,7 @@ void TDeskView::ClearBox (int x1, int y1, int x2, int y2) {
 }
 
 
-void TDeskView::drawCard (Card *card, int x, int y, bool opened, bool hilight) {
+void DeskView::drawCard (Card *card, int x, int y, bool opened, bool hilight) {
   char cCardName[16];
 
   if (!mDeskBmp) return;
@@ -339,7 +339,7 @@ void TDeskView::drawCard (Card *card, int x, int y, bool opened, bool hilight) {
 }
 
 
-void TDeskView::drawText (const QString &str, int x, int y, QRgb textColor, QRgb outlineColor) {
+void DeskView::drawText (const QString &str, int x, int y, QRgb textColor, QRgb outlineColor) {
   if (!mDeskBmp) return;
 
   QString s(str);
@@ -368,13 +368,13 @@ void TDeskView::drawText (const QString &str, int x, int y, QRgb textColor, QRgb
 }
 
 
-void TDeskView::MessageBox (const QString &text, const QString &caption) {
+void DeskView::MessageBox (const QString &text, const QString &caption) {
   QMessageBox mb(caption, text, QMessageBox::Information, QMessageBox::Ok | QMessageBox::Default, 0, 0);
   mb.exec();
 }
 
 
-void TDeskView::ShowBlankPaper (int optMaxPool) {
+void DeskView::ShowBlankPaper (int optMaxPool) {
   int PaperWidth = 410;
   int PaperHeight = 530;
   if (!mDeskBmp) return;
@@ -411,13 +411,13 @@ void TDeskView::ShowBlankPaper (int optMaxPool) {
 }
 
 
-void TDeskView::StatusBar (const QString &text) {
+void DeskView::StatusBar (const QString &text) {
   qDebug() << text;
   //kpref->StatusBar1->showMessage(text);
 }
 
 
-void TDeskView::showPlayerScore (int i, const QString &sb, const QString &sm, const QString &slv, const QString &srv, const QString &tv) {
+void DeskView::showPlayerScore (int i, const QString &sb, const QString &sm, const QString &slv, const QString &srv, const QString &tv) {
   if (!mDeskBmp) return;
   QPainter p(mDeskBmp);
   p.setPen(qRgb(0, 0, 0));
@@ -449,7 +449,7 @@ void TDeskView::showPlayerScore (int i, const QString &sb, const QString &sm, co
 }
 
 
-void TDeskView::drawRotatedText (QPainter &p, int x, int y, float angle, const QString &text) {
+void DeskView::drawRotatedText (QPainter &p, int x, int y, float angle, const QString &text) {
   p.translate(x, y);
   p.rotate(angle);
   p.drawText(0, 0, text);
@@ -458,7 +458,7 @@ void TDeskView::drawRotatedText (QPainter &p, int x, int y, float angle, const Q
 }
 
 
-eGameBid TDeskView::makemove (eGameBid lMove, eGameBid rMove) {
+eGameBid DeskView::makemove (eGameBid lMove, eGameBid rMove) {
   Q_UNUSED(lMove)
   Q_UNUSED(rMove)
   //if (!formBid->exec()) qApp->quit();
@@ -467,7 +467,7 @@ eGameBid TDeskView::makemove (eGameBid lMove, eGameBid rMove) {
 }
 
 
-void TDeskView::drawMessageWindow (int x0, int y0, const QString &msg, bool dim) {
+void DeskView::drawMessageWindow (int x0, int y0, const QString &msg, bool dim) {
   if (!mDeskBmp) return;
   QPainter p(mDeskBmp);
   // change suits to unicode chars

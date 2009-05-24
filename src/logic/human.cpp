@@ -18,24 +18,20 @@
 #include "human.h"
 
 
-HumanPlayer::HumanPlayer (int _nGamer) : Player(_nGamer) {
-}
-
-
-HumanPlayer::HumanPlayer (int _nGamer,TDeskView *_DeskView) : Player(_nGamer, _DeskView) {
+HumanPlayer::HumanPlayer (int aMyNumber, DeskView *aDeskView) : Player(aMyNumber, aDeskView) {
 }
 
 
 void HumanPlayer::clear () {
   Player::clear();
-  nInvisibleHand = false;
+  mInvisibleHand = false;
 }
 
 
 // ход при торговле
 eGameBid HumanPlayer::makemove (eGameBid lMove, eGameBid rMove) {
   eGameBid tmpGamesType;
-  WaitForMouse = 1;
+  mClickX = mClickY = 0; mWaitingForClick = true;
 
   //fprintf(stderr, "select bid\n");
   formBid->EnableAll();
@@ -50,7 +46,7 @@ eGameBid HumanPlayer::makemove (eGameBid lMove, eGameBid rMove) {
     if (tmpGamesType == 0) {
       // вернуть снос (если есть) и снести заново
       clearCardArea();
-      GetBackSnos();
+      returnDrop();
       makemove(0, 0, 0, 0);
       //mDeskView->mySleep(1);
       makemove(0, 0, 0, 0);
@@ -61,29 +57,28 @@ eGameBid HumanPlayer::makemove (eGameBid lMove, eGameBid rMove) {
     }
   } while (tmpGamesType <= 1);
   mMyGame = tmpGamesType;
-  WaitForMouse = 0;
+  mWaitingForClick = false;
   formBid->EnableAll();
   return mMyGame;
 }
 
 
 //ход
-Card *HumanPlayer::makemove (Card *lMove, Card *rMove, Player *aLeftGamer, Player *aRightGamer) {
-  Q_UNUSED(aLeftGamer)
-  Q_UNUSED(aRightGamer)
+Card *HumanPlayer::makemove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer) {
+  Q_UNUSED(aLeftPlayer)
+  Q_UNUSED(aRightPlayer)
   Card *RetVal = 0;
-  X = Y = 0;
-  WaitForMouse = 1;
-  Repaint();
+  mClickX = mClickY = 0; mWaitingForClick = true;
+  draw();
   while (!RetVal) {
     if (mDeskView) mDeskView->mySleep(0); // just a little pause
-    int cNo = cardAt(X, Y, !nInvisibleHand);
+    int cNo = cardAt(mClickX, mClickY, !mInvisibleHand);
     if (cNo == -1) {
-      X = Y = 0;
-      //Repaint();
+      mClickX = mClickY = 0;
+      //draw();
       continue;
     }
-    //qDebug() << "selected:" << cNo << "X:" << X << "Y:" << Y;
+    //qDebug() << "selected:" << cNo << "mClickX:" << mClickX << "mClickY:" << mClickY;
     Card *Validator;
     int koz = trumpSuit();
     Validator = RetVal = mCards.at(cNo);
@@ -97,31 +92,30 @@ Card *HumanPlayer::makemove (Card *lMove, Card *rMove, Player *aLeftGamer, Playe
        )) RetVal = 0;
   }
   clearCardArea();
-  oldii = -1;
+  mPrevHiCardIdx = -1;
   mCards.remove(RetVal);
   mCardsOut.insert(RetVal);
-  X = Y = 0;
-  WaitForMouse = 0;
-  Repaint();
+  mClickX = mClickY = 0; mWaitingForClick = false;
+  draw();
   return RetVal;
 }
 
 
 // после сноса чего играем
 eGameBid HumanPlayer::makeout4miser () {
-  WaitForMouse = 1;
+  mClickX = mClickY = 0; mWaitingForClick = true;
   makemove(0, 0, 0, 0);
   //mDeskView->mySleep(1);
   makemove(0, 0, 0, 0);
-  WaitForMouse = 0;
+  mWaitingForClick = false;
   return g86;
 }
 
 
 // после сноса чего играем
 eGameBid HumanPlayer::makeout4game () {
-  //WaitForMouse = 1;
-  //X = Y = 0;
+  //mWaitingForClick = 1;
+  //mClickX = mClickY = 0;
   eGameBid tmpGamesType;
 
   makemove(0, 0, 0, 0);
@@ -141,7 +135,7 @@ eGameBid HumanPlayer::makeout4game () {
     if (tmpGamesType == 0) {
       // вернуть снос
       clearCardArea();
-      GetBackSnos();
+      returnDrop();
       makemove(0, 0, 0, 0);
       //mDeskView->mySleep(1);
       makemove(0, 0, 0, 0);
@@ -153,7 +147,7 @@ eGameBid HumanPlayer::makeout4game () {
   mMyGame = tmpGamesType;
 
   formBid->EnableAll();
-  WaitForMouse = 0;
+  mWaitingForClick = false;
   return mMyGame;
 }
 
@@ -179,17 +173,17 @@ eGameBid HumanPlayer::makemove (eGameBid MaxGame, int HaveAVist, int nGamerVist)
 }
 
 
-void HumanPlayer::HintCard (int lx, int ly) {
+void HumanPlayer::hilightCard (int lx, int ly) {
   //qDebug() << "lx:" << lx << "ly:" << ly;
-  if (!WaitForMouse) {
+  if (!mWaitingForClick) {
     // not in "card selection" mode
-    if (oldii == -1) return; // nothing selected --> nothing to redraw
-    oldii = -1;
+    if (mPrevHiCardIdx == -1) return; // nothing selected --> nothing to redraw
+    mPrevHiCardIdx = -1;
   } else {
-    int cNo = cardAt(lx, ly, !nInvisibleHand);
-    if (cNo == oldii) return; // same selected --> nothing to redraw
-    //qDebug() << "oldii:" << oldii << "cNo:" << cNo;
-    oldii = cNo;
+    int cNo = cardAt(lx, ly, !mInvisibleHand);
+    if (cNo == mPrevHiCardIdx) return; // same selected --> nothing to redraw
+    //qDebug() << "mPrevHiCardIdx:" << mPrevHiCardIdx << "cNo:" << cNo;
+    mPrevHiCardIdx = cNo;
   }
-  Repaint();
+  draw();
 }

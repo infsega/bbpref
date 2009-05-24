@@ -39,7 +39,7 @@ Kpref::Kpref () {
 
 void Kpref::init () {
   //StatusBar1 = new QStatusBar(this);
-  mDeskView = new TDeskView(width(), height());
+  mDeskView = new DeskView(width(), height());
   DeskTop = new PrefDesktop(mDeskView);
   connect(DeskTop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
   connect(mDeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
@@ -120,7 +120,7 @@ void Kpref::slotShowScore () {
   DeskTop->mDeskView->mySleep(-1);
   //mDeskView->ClearScreen();
   DeskTop->nflShowPaper = 0;
-  DeskTop->Repaint();
+  DeskTop->draw();
 }
 
 
@@ -136,7 +136,7 @@ void Kpref::slotNewSingleGame () {
     if (DeskTop) {
       delete DeskTop;
       delete mDeskView;
-      mDeskView = new TDeskView();
+      mDeskView = new DeskView();
       mDeskView -> PaintDevice = this; // &&&
       DeskTop = new PrefDesktop();
       DeskTop -> mDeskView = mDeskView;
@@ -161,7 +161,7 @@ void Kpref::slotNewSingleGame () {
   if (DeskTop) {
     delete DeskTop;
     delete mDeskView;
-    mDeskView = new TDeskView(width(), height());
+    mDeskView = new DeskView(width(), height());
     DeskTop = new PrefDesktop();
     DeskTop->mDeskView = mDeskView;
     optMaxPool = 10; //k8:!!!
@@ -181,7 +181,7 @@ void Kpref::mouseMoveEvent (QMouseEvent *event) {
   if (nAllReadyHinting) return;
   nAllReadyHinting = 1;
   Player *plr = DeskTop->currentPlayer();
-  if (plr) plr->HintCard(event->x(), event->y());
+  if (plr) plr->hilightCard(event->x(), event->y());
   nAllReadyHinting = 0;
 }
 
@@ -191,8 +191,8 @@ void Kpref::mousePressEvent (QMouseEvent *event) {
   mDeskView->Event = 1;
   Player *plr = DeskTop->currentPlayer();
   if (plr) {
-    plr->X = event->x();
-    plr->Y = event->y();
+    plr->mClickX = event->x();
+    plr->mClickY = event->y();
   }
   WaitingForMouseUp = 0;
 }
