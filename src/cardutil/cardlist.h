@@ -12,6 +12,7 @@
 class CardList {
 public:
   CardList ();
+  CardList (const CardList &cl);
   ~CardList ();
 
   void clear ();
@@ -63,8 +64,6 @@ public:
   }
 
   inline int size () const { return mList.size(); }
-  void shallowCopy (const CardList *list);
-  void shallowCopy (const CardList &list);
 
   void serialize (QByteArray &ba) const;
   bool unserialize (QByteArray &ba, int *pos);
@@ -74,6 +73,8 @@ public:
 
 protected:
   //void removeNulls ();
+  void shallowCopy (const CardList *list);
+  void shallowCopy (const CardList &list);
 
 protected:
   QCardList mList;

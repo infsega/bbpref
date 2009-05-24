@@ -7,6 +7,11 @@ CardList::CardList () {
 }
 
 
+CardList::CardList (const CardList &cl) {
+  shallowCopy(cl);
+}
+
+
 CardList::~CardList () {
   clear();
 }

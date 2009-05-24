@@ -213,7 +213,7 @@ static void cardName (char *dest, const Card *c) {
 
 
 static void dumpCardList (char *dest, const CardList &lst) {
-  CardList tmp = lst; tmp.mySort();
+  CardList tmp(lst); tmp.mySort();
   for (int f = 0; f < tmp.size(); f++) {
     Card *c = tmp.at(f);
     if (!c) continue;
@@ -687,7 +687,8 @@ LabelRecordOnPaper:
   } // конец пули
   mShowPool = true;
   drawPool();
-  mDeskView->mySleep(0);
+  emitRepaint();
+  //mDeskView->mySleep(0);
 }
 
 

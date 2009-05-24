@@ -32,6 +32,7 @@ public:
   int mPlayerNo; // мой номер
 
   Player (int aMyNumber, DeskView *aDeskView=0);
+  Player (const Player &pl);
   virtual ~Player ();
 
   // at least 28 ints (14 int pairs); return # of used ints; the last int is -1

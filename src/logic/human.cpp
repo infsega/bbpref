@@ -83,7 +83,7 @@ Card *HumanPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
   mClickX = mClickY = 0; mWaitingForClick = true;
   draw();
   while (!RetVal) {
-    if (mDeskView) mDeskView->mySleep(0); // just a little pause
+    if (mDeskView) mDeskView->mySleep(-2);
     int cNo = cardAt(mClickX, mClickY, !mInvisibleHand);
     if (cNo == -1) {
       mClickX = mClickY = 0;

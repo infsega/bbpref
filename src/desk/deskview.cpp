@@ -258,13 +258,7 @@ void DeskView::mySleep (int seconds) {
     connect(timer, SIGNAL(timeout()), this, SLOT(timerSlot()));
     timer->start(seconds*1000);
   }
-  drawPKeyBmp(seconds < 0);
-/*
-  if (seconds < 0) {
-    drawMessageWindow(50, 50, "6\1s wow!\nsecond line", true);
-    drawMessageWindow(90, 90, "10\1h wow!\nanother\tline");
-  }
-*/
+  drawPKeyBmp(seconds == -1);
   emitRepaint();
   while (!Event) {
     qApp->processEvents(QEventLoop::WaitForMoreEvents);
@@ -272,13 +266,16 @@ void DeskView::mySleep (int seconds) {
     //qApp->flush();
     //qApp->processEvents(QEventLoop::AllEvents | QEventLoop::WaitForMoreEvents, 900);
     if (seconds > 0) {
-      if (difftime(time(0), tStart) >= seconds) Event = 1;
+      if (difftime(time(0), tStart) >= seconds) Event = 3;
     }
     usleep(10000); //1000000
     if (seconds == 0) break;
     if (seconds < 0) {
-      drawPKeyBmp(true);
-      emitRepaint();
+      if (seconds == -1) {
+        drawPKeyBmp(true);
+        emitRepaint();
+      }
+      if (seconds < -1 && Event == 2) Event = 0;
     }
   }
   if (timer) delete timer;

@@ -58,13 +58,9 @@ private:
 public:
   PrefDesktop *DeskTop;
   DeskView *mDeskView;
-  int WaitingForMouseUp;
-  int nAllReadyHinting;
-  int nflAleradyPainting;
-  int nMultiGameIDConnect;
-  int nMultiGameIDCreate;
-  int nMultiGameInetID;
-  //int nSaveGameID;
+  bool mWaitingMouseUp;
+  bool mInMouseMoveEvent;
+  bool mInPaintEvent;
   //QStatusBar *StatusBar1;
 
 protected:

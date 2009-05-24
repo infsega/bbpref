@@ -12,6 +12,12 @@ Player::Player (int aMyNumber, DeskView *aDeskView) : mDeskView(aDeskView), mPla
 }
 
 
+Player::Player (const Player &pl) {
+  internalInit();
+  clone(&pl);
+}
+
+
 Player::~Player () {
   clear();
 }
@@ -1608,7 +1614,7 @@ int Player::buildHandXOfs (int *dest, int startX, bool opened) {
   int cnt = 0, oldXX = startX, *oDest = dest;
   Card *cur = 0, *prev = 0;
 
-  CardList lst = mCards;
+  CardList lst(mCards);
   lst.mySort();
 
   if (mPlayerNo == 3) startX = 0;
