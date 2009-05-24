@@ -8,6 +8,8 @@
 #include <limits.h>
 #include <stdlib.h>
 
+#include "baser.h"
+#include "debug.h"
 #include "deskview.h"
 #include "ncounter.h"
 #include "kpref.h"
@@ -27,7 +29,7 @@ void PrefDesktop::InternalConstruct () {
   deck = new Deck;
 
   qsrand(time(NULL));
-  nCurrentStart.nValue=nCurrentMove.nValue=(qrand()%3)+1;
+  nCurrentStart.nValue=nCurrentMove.nValue=1;//(qrand()%3)+1;
   nCurrentStart.nMin=nCurrentMove.nMin=1;
   nCurrentStart.nMax=nCurrentMove.nMax=3;
 
@@ -41,7 +43,6 @@ void PrefDesktop::InternalConstruct () {
   //mPlayers->AtFree(0);
   nflShowPaper = 0;
   optMaxPool = 21;
-  flProtocol = 0;
   iMoveX = iMoveY = -1;
 }
 
@@ -60,7 +61,6 @@ PrefDesktop::PrefDesktop () : QObject(0) {
 
 
 PrefDesktop::~PrefDesktop () {
-  CloseProtocol();
   delete deck;
   foreach (Player *p, mPlayers) if (p) delete p;
   mPlayers.clear();
@@ -72,39 +72,8 @@ void PrefDesktop::emitRepaint () {
 }
 
 
-int PrefDesktop::CloseProtocol () {
-  if (flProtocol) {
-    t = time(NULL);
-    tblock = localtime(&t);
-    fprintf(ProtocolFile,"\nClose protocol %s", asctime(tblock));
-    fclose(ProtocolFile);
-  }
-  return 1;
-}
-
-
-int PrefDesktop::WriteProtocol (const char *line) {
-  if (flProtocol) fprintf(ProtocolFile, "\n %s", line);
-  return 1;
-}
-
-
-int PrefDesktop::OpenProtocol () {
-  const char messageprotocol[1024] = "Cant open or create protocol file!";
-  if (!(ProtocolFile = fopen(ProtocolFileName, "a"))) {
-    DeskView->MessageBox(messageprotocol, "Warning!");
-    flProtocol = 0;
-    return 0;
-  }
-  t = time(NULL);
-  tblock = localtime(&t);
-  fprintf(ProtocolFile,"\nStart protocol %s", asctime(tblock));
-  return 1;
-}
-
-
 void PrefDesktop::CloseBullet () {
-  Tncounter counter(1, 1, 3);
+  WrapCounter counter(1, 1, 3);
   int mb = INT_MAX, mm = INT_MAX, i;
   tScores R[4];
   Player *G;
@@ -257,6 +226,30 @@ void PrefDesktop::drawBidWindows (const eGameBid *bids, int curPlr) {
 }
 
 
+static void cardName (char *dest, const Card *c) {
+  static const char *faceN[] = {" 7"," 8"," 9","10"," J"," Q"," K"," A"};
+  static const char *suitN[] = {"S","C","D","H"};
+  if (!c) { strcat(dest, "..."); return; }
+  int face = c->face(), suit = c->suit();
+  if (face >= 7 && face <= FACE_ACE && suit >= 1 && suit <= 4) {
+    strcat(dest, faceN[face-7]);
+    strcat(dest, suitN[suit-1]);
+    return;
+  }
+  strcat(dest, "???");
+}
+
+
+static void dumpCardList (char *dest, const CardList &lst) {
+  for (int f = 0; f < lst.size(); f++) {
+    Card *c = lst.at(f);
+    if (!c) continue;
+    strcat(dest, " ");
+    cardName(dest, c);
+  }
+}
+
+
 void PrefDesktop::RunGame () {
   eGameBid GamesType[4], bids4win[4];
   //char *filename;
@@ -264,13 +257,13 @@ void PrefDesktop::RunGame () {
   int npasscounter;
 
   //DeskView->ClearScreen();
-  if (flProtocol) OpenProtocol();
   // while !конец пули
   qsrand(time(NULL));
+  int roundNo = 0;
   while (!(player(1)->aScore.pool() >= optMaxPool &&
            player(2)->aScore.pool() >= optMaxPool &&
            player(3)->aScore.pool() >= optMaxPool)) {
-    Tncounter GamersCounter(1, 1, 3);
+    WrapCounter GamersCounter(1, 1, 3);
     mPlayingRound = false;
     int nPl;
     int nGamernumber = 0; // номер заказавшего игру
@@ -280,6 +273,25 @@ void PrefDesktop::RunGame () {
     delete deck;
     deck = new Deck;
     deck->shuffle();
+
+    QFile dbgD("dbg.deck");
+    if (dbgD.open(QIODevice::ReadOnly)) {
+      QByteArray ba(dbgD.readAll());
+      dbgD.close();
+      int pos = 0;
+      if (!deck->unserialize(ba, &pos)) abort();
+    } else {
+      QString fns(QString::number(roundNo++));
+      while (fns.length() < 2) fns.prepend('0');
+      QFile fl(fns);
+      if (fl.open(QIODevice::WriteOnly)) {
+        QByteArray ba;
+        deck->serialize(ba);
+        fl.write(ba);
+        fl.close();
+      }
+    }
+
     player(1)->clear();
     player(2)->clear();
     player(3)->clear();
@@ -298,6 +310,19 @@ void PrefDesktop::RunGame () {
       plr->sortCards();
     }
 */
+    dlogf("=========================================");
+    dlogf("player %i moves...", nCurrentStart.nValue);
+    char xxBuf[1024];
+    for (int f = 1; f <= 3; f++) {
+      Player *plr = player(nCurrentStart.nValue); ++nCurrentStart;
+      xxBuf[0] = 0;
+      dumpCardList(xxBuf, plr->aCards);
+      dlogf("hand %i:%s", plr->mPlayerNo, xxBuf);
+    }
+    xxBuf[0] = 0;
+    cardName(xxBuf, deck->at(30));
+    cardName(xxBuf, deck->at(31));
+    dlogf("talion: %s", xxBuf);
     //emitRepaint();
     //DeskView->mySleep(0);
     GamersCounter = nCurrentStart;
@@ -317,9 +342,6 @@ void PrefDesktop::RunGame () {
       default: iMoveX = iMoveY = -1; break;
     }
     Repaint();
-
-    sprintf(ProtocolBuff, "Current start:%i", nCurrentStart.nValue);
-    WriteProtocol(ProtocolBuff);
 
     // пошла торговля
     npasscounter = 0;
@@ -353,16 +375,22 @@ void PrefDesktop::RunGame () {
     mPlayerActive = 0;
     mPlayingRound = true;
     if (GamesType[0] != gtPass) {
-      // не расспасы
-      // узнаем кто назначил максимальную игру
+      // не распасы
+      // узнаем, кто назначил максимальную игру
       for (int i = 1; i <= 3; i++) {
         Player *tmpg = player(i);
         //tmpg->sortCards();
         if (tmpg->GamesType == GamesType[0]) {
+          QString gnS(sGameName(GamesType[0]));
+          gnS.prepend("game: ");
+          gnS += "; player: ";
+          gnS += QString::number(i);
+          dlogS(gnS);
+
           mPlayerActive = i;
           nPassCounter = 0;
           // показываем прикуп
-          Tncounter tmpGamersCounter(1, 3);
+          WrapCounter tmpGamersCounter(1, 3);
           Player *PassOrVistGamers;
           int PassOrVist = 0, nPassOrVist = 0;
           CardOnDesk[2] = deck->at(30);
@@ -512,11 +540,17 @@ void PrefDesktop::RunGame () {
           }
           /*if (nextPW != 1) */DeskView->mySleep(-1);
 
+          gnS = sGameName(CurrentGame);
+          gnS.prepend("game: ");
+          gnS += "; player: ";
+          gnS += QString::number(nGamernumber);
+          dlogS(gnS);
+          //!DUMP OTHERS!
+
           if (nPassCounter == 2) {
             // двое спасовали :)
             tmpg->nGetsCard = gameTricks(tmpg->GamesType);
-            sprintf(ProtocolBuff, "Two gamers said 'pass'");
-            WriteProtocol(ProtocolBuff);
+            dlogf("clean out!\n");
             goto LabelRecordOnPaper;
           } else {
             // Открытые или закрытые карты
@@ -537,6 +571,7 @@ void PrefDesktop::RunGame () {
       } // узнаем кто назначил максимальную игру
     }  else {
       // раскручиваем распас
+      dlogf("game: pass-out");
       mPlayerActive = 0;
       GamesType[0] = CurrentGame = raspass;
       player(1)->GamesType = raspass;
@@ -553,6 +588,15 @@ void PrefDesktop::RunGame () {
       Player *tmpg;
       CardOnDesk[0] = CardOnDesk[1] = CardOnDesk[2] = CardOnDesk[3] = FirstCard = SecondCard = TherdCard = 0;
       if (CurrentGame == raspass && (i >= 1 && i <= 3)) nCurrentMove = nCurrentStart;
+
+      dlogf("------------------------\nmove #%i", i);
+      for (int f = 1; f <= 3; f++) {
+        Player *plr = player(nCurrentMove.nValue); ++nCurrentMove;
+        xxBuf[0] = 0;
+        dumpCardList(xxBuf, plr->aCards);
+        dlogf("hand %i:%s", plr->mPlayerNo, xxBuf);
+      }
+
       if (CurrentGame == raspass && (i == 1 || i == 2)) {
         Card *tmp4show;
         Card *ptmp4rpass;
@@ -705,15 +749,24 @@ Player *PrefDesktop::player (int num) {
 }
 
 
-int PrefDesktop::LoadGame (const QString &name)  {
-  Q_UNUSED(name)
-  return 0;
+bool PrefDesktop::LoadGame (const QString &name)  {
+  QFile fl(name);
+  if (!fl.open(QIODevice::ReadOnly)) return false;
+  QByteArray ba(fl.readAll());
+  fl.close();
+  int pos = 0;
+  return unserialize(ba, &pos);
 }
 
 
-int PrefDesktop::SaveGame (const QString &name)  {
-  Q_UNUSED(name)
-  return 0;
+bool PrefDesktop::SaveGame (const QString &name)  {
+  QFile fl(name);
+  if (!fl.open(QIODevice::WriteOnly)) return false;
+  QByteArray ba;
+  serialize(ba);
+  fl.write(ba);
+  fl.close();
+  return true;
 }
 
 
@@ -786,4 +839,37 @@ void PrefDesktop::Repaint (bool emitSignal) {
   // repaint scoreboard
   if (nflShowPaper) ShowPaper();
   if (emitSignal) emitRepaint();
+}
+
+
+void PrefDesktop::serialize (QByteArray &ba) {
+  for (int f = 1; f <= 3; f++) {
+    Player *plr = player(f);
+    plr->aScore.serialize(ba);
+  }
+  serializeInt(ba, nCurrentStart.nValue);
+  serializeInt(ba, optMaxPool);
+  serializeInt(ba, g61stalingrad);
+  serializeInt(ba, g10vist);
+  serializeInt(ba, globvist);
+}
+
+
+bool PrefDesktop::unserialize (QByteArray &ba, int *pos) {
+  for (int f = 1; f <= 3; f++) {
+    Player *plr = player(f);
+    if (!plr->aScore.unserialize(ba, pos)) return false;
+  }
+  int t;
+  if (!unserializeInt(ba, pos, &t)) return false;
+  nCurrentStart.nValue = t;
+  if (!unserializeInt(ba, pos, &t)) return false;
+  optMaxPool = t;
+  if (!unserializeInt(ba, pos, &t)) return false;
+  g61stalingrad = t;
+  if (!unserializeInt(ba, pos, &t)) return false;
+  g10vist = t;
+  if (!unserializeInt(ba, pos, &t)) return false;
+  globvist = t;
+  return true;
 }

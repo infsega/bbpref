@@ -2,6 +2,8 @@
 #ifndef CARDLIST_H
 #define CARDLIST_H
 
+#include <QByteArray>
+
 #include "prfconst.h"
 #include "card.h"
 
@@ -63,6 +65,9 @@ public:
   inline int size () const { return mList.size(); }
   void shallowCopy (const CardList *list);
   void shallowCopy (const CardList &list);
+
+  void serialize (QByteArray &ba) const;
+  bool unserialize (QByteArray &ba, int *pos);
 
 protected:
   //void removeNulls ();

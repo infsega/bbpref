@@ -1,5 +1,7 @@
 #include "cardlist.h"
 
+#include "baser.h"
+
 
 CardList::CardList () {
 }
@@ -97,7 +99,7 @@ void CardList::mySort () {
 
 
 Card *CardList::greaterInSuit (int aFace, int aSuit) const {
-  if (aFace >= FACE_ACE) return 0;
+  if (aFace > FACE_ACE) return 0;
   if (aFace < 7) aFace = 7;
   while (aFace <= FACE_ACE) {
     Card *found = exists(aFace, aSuit);
@@ -115,9 +117,9 @@ Card *CardList::greaterInSuit (Card *card) const {
 
 
 Card *CardList::lesserInSuit (int aFace, int aSuit) const {
-  if (aFace <= 7) return 0;
+  if (aFace < 7) return 0;
   if (aFace > FACE_ACE) aFace = FACE_ACE;
-  while (aFace <= 7) {
+  while (aFace >= 7) {
     Card *found = exists(aFace, aSuit);
     if (found) return found;
     aFace--;
@@ -179,4 +181,33 @@ void CardList::shallowCopy (const CardList *list) {
 void CardList::shallowCopy (const CardList &list) {
   clear();
   foreach (Card *c, list.mList) mList << c;
+}
+
+
+void CardList::serialize (QByteArray &ba) const {
+  serializeInt(ba, mList.size());
+  for (int f = 0; f < mList.size(); f++) {
+    Card *c = mList[f];
+    int i = 0;
+    if (c) i = (c->face()-7)*10+c->suit();
+    serializeInt(ba, i);
+  }
+}
+
+
+bool CardList::unserialize (QByteArray &ba, int *pos) {
+  clear();
+  int cnt;
+  if (!unserializeInt(ba, pos, &cnt)) return false;
+  while (cnt-- > 0) {
+    int t;
+    if (!unserializeInt(ba, pos, &t)) return false;
+    if (t < 1 || t > 74) t = 0;
+    if (t) {
+      int face = (t/10)+7, suit = t%10;
+      if (face >= 7 && face <= FACE_ACE && suit >= 1 && suit <= 4) mList << newCard(face, suit);
+      else mList << 0;
+    } else mList << 0;
+  }
+  return true;
 }

@@ -2,11 +2,11 @@
 #define NCOUNTER_H
 
 
-class Tncounter {
+class WrapCounter {
 public:
-  Tncounter ();
-  Tncounter (int _nMin, int _nMax );
-  Tncounter (int _nValue, int _nMin, int _nMax);
+  WrapCounter ();
+  WrapCounter (int _nMin, int _nMax );
+  WrapCounter (int _nValue, int _nMin, int _nMax);
 
   int operator ++ () {
     if (++nValue > nMax) nValue = nMin;
@@ -18,8 +18,8 @@ public:
      return nValue;
   }
 
-  friend Tncounter &operator - (Tncounter &c, int n);
-  friend Tncounter &operator + (Tncounter &c, int n);
+  friend WrapCounter &operator - (WrapCounter &c, int n);
+  friend WrapCounter &operator + (WrapCounter &c, int n);
 
 public:
   int nValue;
@@ -28,8 +28,8 @@ public:
 };
 
 
-int succPlayer (const Tncounter &aCurrent);
-int predPlayer (const Tncounter &aCurrent);
+int succPlayer (const WrapCounter &aCurrent);
+int predPlayer (const WrapCounter &aCurrent);
 
 
 #endif

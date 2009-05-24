@@ -1,5 +1,7 @@
-#include "prfconst.h"
 #include "plscore.h"
+
+#include "baser.h"
+#include "prfconst.h"
 
 
 static QString intList2Str (const QIntList &list) {
@@ -174,3 +176,41 @@ QString ScoreBoard::poolStr () const { return intList2Str(mPool); }
 QString ScoreBoard::mountainStr () const { return intList2Str(mMountain); }
 QString ScoreBoard::leftWhistsStr () const { return intList2Str(mLeftWhists); }
 QString ScoreBoard::rightWhistsStr () const { return intList2Str(mRightWhists); }
+
+
+static void serializeIntList (QByteArray &ba, const QIntList &lst) {
+  serializeInt(ba, lst.size());
+  for (int f = 0; f < lst.size(); f++) serializeInt(ba, lst[f]);
+}
+
+
+static bool unserializeIntList (QByteArray &ba, int *pos, QIntList &lst) {
+  int t;
+  lst.clear();
+  if (!unserializeInt(ba, pos, &t)) return false;
+  while (t-- > 0) {
+    int c;
+    if (!unserializeInt(ba, pos, &c)) return false;
+    lst << c;
+  }
+  return true;
+}
+
+
+void ScoreBoard::serialize (QByteArray &ba) {
+  serializeIntList(ba, mPool);
+  serializeIntList(ba, mMountain);
+  serializeIntList(ba, mLeftWhists);
+  serializeIntList(ba, mRightWhists);
+  serializeInt(ba, mWhists);
+}
+
+
+bool ScoreBoard::unserialize (QByteArray &ba, int *pos) {
+  if (!unserializeIntList(ba, pos, mPool)) return false;
+  if (!unserializeIntList(ba, pos, mMountain)) return false;
+  if (!unserializeIntList(ba, pos, mLeftWhists)) return false;
+  if (!unserializeIntList(ba, pos, mRightWhists)) return false;
+  if (!unserializeInt(ba, pos, &mWhists)) return false;
+  return true;
+}

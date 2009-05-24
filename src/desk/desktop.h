@@ -1,6 +1,7 @@
 #ifndef DESKTOP_H
 #define DESKTOP_H
 
+#include <QByteArray>
 #include <QObject>
 
 #include "card.h"
@@ -21,22 +22,14 @@ public:
   void Repaint (bool emitSignal=true);
   int nPlayerTakeCards (Card *p1, Card *p2, Card *p3, int koz);
   void ShowPaper ();
-  int SaveGame (const QString &name);
-  int LoadGame (const QString &name);
+  bool SaveGame (const QString &name);
+  bool LoadGame (const QString &name);
   void CloseBullet ();
 
   inline Player *currentPlayer () const { return mPlayers[nCurrentMove.nValue]; }
 
-  // Protocol
-  time_t t;
-  struct tm *tblock;
-  int flProtocol;
-  char ProtocolFileName[1024];
-  char ProtocolBuff[1024];
-  FILE *ProtocolFile;
-  int OpenProtocol ();
-  int CloseProtocol ();
-  int WriteProtocol (const char *line);
+  void serialize (QByteArray &ba);
+  bool unserialize (QByteArray &ba, int *pos);
 
   void emitRepaint ();
 
@@ -47,7 +40,7 @@ public:
   TDeskView *DeskView;
   Deck *deck;
   QList<Player *> mPlayers;
-  Tncounter nCurrentStart,nCurrentMove;
+  WrapCounter nCurrentStart, nCurrentMove;
   Card *FirstCard,*SecondCard,*TherdCard;
   Card *CardOnDesk[4];
 

@@ -69,9 +69,9 @@ public:
 
 protected:
   void  paintEvent (QPaintEvent *);
-  void  mousePressEvent ( QMouseEvent * );
-  void  mouseMoveEvent ( QMouseEvent * );
-  void  keyPressEvent ( QKeyEvent * );
+  void  mousePressEvent (QMouseEvent *);
+  void  mouseMoveEvent (QMouseEvent *);
+  void  keyPressEvent (QKeyEvent *);
 };
 
 extern Kpref *kpref;

@@ -32,6 +32,9 @@ public:
   inline int whists () const { return mWhists; }
   inline void setWhists (int w) { mWhists = w; }
 
+  void serialize (QByteArray &ba);
+  bool unserialize (QByteArray &ba, int *pos);
+
 private:
   QIntList mPool;
   QIntList mMountain;
