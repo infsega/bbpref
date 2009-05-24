@@ -61,7 +61,8 @@ public:
   }
 
   inline int size () const { return mList.size(); }
-  void shallowCopy (CardList *list);
+  void shallowCopy (const CardList *list);
+  void shallowCopy (const CardList &list);
 
 protected:
   //void removeNulls ();

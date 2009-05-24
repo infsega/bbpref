@@ -110,10 +110,10 @@ void PrefDesktop::CloseBullet () {
   Player *G;
   for (i = 1; i <= 3; i++) {
     G = player(i);
-    R[i].mount = G->aScore->mountain();
-    R[i].pool = G->aScore->pool();
-    R[i].leftWh = G->aScore->leftWhists();
-    R[i].rightWh = G->aScore->rightWhists();
+    R[i].mount = G->aScore.mountain();
+    R[i].pool = G->aScore.pool();
+    R[i].leftWh = G->aScore.leftWhists();
+    R[i].rightWh = G->aScore.rightWhists();
     if (R[i].mount < mm) mm = R[i].mount;
     if (R[i].pool < mb) mb = R[i].pool;
   }
@@ -151,7 +151,7 @@ void PrefDesktop::CloseBullet () {
     i1 = counter.nValue;
     ++counter;
     i2 = counter.nValue;
-    player(i)->aScore->setWhists(R[i].leftWh + R[i].rightWh - R[i1].rightWh - R[i2].leftWh);
+    player(i)->aScore.setWhists(R[i].leftWh + R[i].rightWh - R[i1].rightWh - R[i2].leftWh);
   }
 }
 
@@ -163,13 +163,13 @@ Player *PrefDesktop::InsertGamer (Player *Gamer) {
 
 
 void PrefDesktop::GamerAssign (Player *newgamer,Player *oldgamer) {
-  newgamer->aCards->shallowCopy(oldgamer->aCards);
-  newgamer->aLeft->shallowCopy(oldgamer->aLeft);
-  newgamer->aRight->shallowCopy(oldgamer->aRight);
-  newgamer->aOut->shallowCopy(oldgamer->aOut);
-  newgamer->aCardsOut->shallowCopy(oldgamer->aCardsOut);
-  newgamer->aLeftOut->shallowCopy(oldgamer->aLeftOut);
-  newgamer->aRightOut->shallowCopy(oldgamer->aRightOut);
+  newgamer->aCards.shallowCopy(oldgamer->aCards);
+  newgamer->aLeft.shallowCopy(oldgamer->aLeft);
+  newgamer->aRight.shallowCopy(oldgamer->aRight);
+  newgamer->aOut.shallowCopy(oldgamer->aOut);
+  newgamer->aCardsOut.shallowCopy(oldgamer->aCardsOut);
+  newgamer->aLeftOut.shallowCopy(oldgamer->aLeftOut);
+  newgamer->aRightOut.shallowCopy(oldgamer->aRightOut);
   newgamer->nGetsCard = oldgamer->nGetsCard;
   newgamer->Mast = oldgamer->Mast;
   newgamer->GamesType = oldgamer->GamesType;
@@ -267,9 +267,9 @@ void PrefDesktop::RunGame () {
   if (flProtocol) OpenProtocol();
   // while !конец пули
   qsrand(time(NULL));
-  while (!(player(1)->aScore->pool() >= optMaxPool &&
-           player(2)->aScore->pool() >= optMaxPool &&
-           player(3)->aScore->pool() >= optMaxPool)) {
+  while (!(player(1)->aScore.pool() >= optMaxPool &&
+           player(2)->aScore.pool() >= optMaxPool &&
+           player(3)->aScore.pool() >= optMaxPool)) {
     Tncounter GamersCounter(1, 1, 3);
     mPlayingRound = false;
     int nPl;
@@ -609,7 +609,7 @@ LabelRecordOnPaper:
     for (int i = 1; i <= 3;i++ ) {
       Player *tmpg = player(i);
       Player *Gamer = player(nGamernumber);
-      int RetValAddRec = tmpg->aScore->recordScores(CurrentGame,
+      int RetValAddRec = tmpg->aScore.recordScores(CurrentGame,
                 tmpg->GamesType,
                 Gamer !=0 ? Gamer->nGetsCard : 0,
                 tmpg->nGetsCard,
@@ -620,20 +620,20 @@ LabelRecordOnPaper:
       if (RetValAddRec) {
         int index = playerWithMaxPool();
         if (index) {
-          tmpg->aScore->whistsAdd(index,i,RetValAddRec); // на этого висты
-          RetValAddRec = player(index)->aScore->poolAdd(RetValAddRec); // этому в пулю
+          tmpg->aScore.whistsAdd(index,i,RetValAddRec); // на этого висты
+          RetValAddRec = player(index)->aScore.poolAdd(RetValAddRec); // этому в пулю
           if (RetValAddRec) {
             index = playerWithMaxPool();
             if (index) {
-              tmpg->aScore->whistsAdd(index, i, RetValAddRec); // на этого висты
-              RetValAddRec = player(index)->aScore->poolAdd(RetValAddRec);
-              if (RetValAddRec) tmpg->aScore->mountainDown(RetValAddRec);
+              tmpg->aScore.whistsAdd(index, i, RetValAddRec); // на этого висты
+              RetValAddRec = player(index)->aScore.poolAdd(RetValAddRec);
+              if (RetValAddRec) tmpg->aScore.mountainDown(RetValAddRec);
             } else {
-              tmpg->aScore->mountainDown(RetValAddRec);
+              tmpg->aScore.mountainDown(RetValAddRec);
             }
           }
         } else {
-          tmpg->aScore->mountainDown(RetValAddRec);
+          tmpg->aScore.mountainDown(RetValAddRec);
         }
       }
     }
@@ -641,17 +641,15 @@ LabelRecordOnPaper:
     // если сетевая игра -  передаем на сервер результаты круга  и кто след. заходит
 
     // после игры - перевернуть карты и показать их
-    CardList *tmplist[3];
-    for (int f = 1; f <= 3; f++) {
-      Player *plr = player(f);
-      tmplist[f] = 0;
-      if (!plr) continue;
-      if (nPassCounter != 2) {
-        // была партия
-        tmplist[f] = plr->aCards;
-        plr->aCards = plr->aCardsOut;
+    CardList tmplist[3];
+    if (nPassCounter != 2) {
+      // была партия
+      for (int f = 1; f <= 3; f++) {
+        Player *plr = player(f);
+        tmplist[f-1].shallowCopy(&plr->aCards);
+        plr->aCards.shallowCopy(&plr->aCardsOut);
+        plr->nInvisibleHand = false;
       }
-      plr->nInvisibleHand = false;
     }
     nflShowPaper = 1;
     mPlayingRound = true;
@@ -662,9 +660,8 @@ LabelRecordOnPaper:
       // была партия
       for (int f = 1; f <= 3; f++) {
         Player *plr = player(f);
-        if (!plr) continue;
-        plr->aCardsOut = plr->aCards;
-        plr->aCards = tmplist[f];
+        plr->aCardsOut.shallowCopy(&plr->aCards);
+        plr->aCards.shallowCopy(&tmplist[f-1]);
       }
     }
   } // конец пули
@@ -677,7 +674,7 @@ LabelRecordOnPaper:
 int PrefDesktop::playerWithMaxPool () {
   int MaxBullet= -1,CurrBullet=-1,RetVal=0;
   for (int i =1 ;i<=3;i++) {
-     CurrBullet = player(i)->aScore->pool();
+     CurrBullet = player(i)->aScore.pool();
       if (MaxBullet < CurrBullet && CurrBullet < optMaxPool ) {
         MaxBullet = CurrBullet;
         RetVal = i;
@@ -751,11 +748,11 @@ void PrefDesktop::ShowPaper () {
   DeskView->ShowBlankPaper(optMaxPool);
   for (int i = 1;i<=3;i++) {
     Player *Gamer = player(i);
-    sb = Gamer->aScore->poolStr();
-    sm = Gamer->aScore->mountainStr();
-    slw = Gamer->aScore->leftWhistsStr();
-    srw = Gamer->aScore->rightWhistsStr();
-    tw = Gamer->aScore->whistsStr();
+    sb = Gamer->aScore.poolStr();
+    sm = Gamer->aScore.mountainStr();
+    slw = Gamer->aScore.leftWhistsStr();
+    srw = Gamer->aScore.rightWhistsStr();
+    tw = Gamer->aScore.whistsStr();
     DeskView->showPlayerScore(i, sb, sm, slw, srw, tw);
   }
 }

@@ -170,7 +170,13 @@ void CardList::copySuit (const CardList *src, eSuit aSuit) {
 }
 
 
-void CardList::shallowCopy (CardList *list) {
+void CardList::shallowCopy (const CardList *list) {
   clear();
   foreach (Card *c, list->mList) mList << c;
+}
+
+
+void CardList::shallowCopy (const CardList &list) {
+  clear();
+  foreach (Card *c, list.mList) mList << c;
 }

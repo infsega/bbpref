@@ -14,15 +14,15 @@ class Player {
 public:
   TDeskView *DeskView;
 
-  ScoreBoard *aScore;
-  CardList *aCards; // мои
-  CardList *aLeft;  // Противника с лева (предполагаемый или открытые)
-  CardList *aRight; // С права (предполагаемый или открытые)
+  ScoreBoard aScore;
+  CardList aCards; // мои
+  CardList aLeft;  // Противника с лева (предполагаемый или открытые)
+  CardList aRight; // С права (предполагаемый или открытые)
 
-  CardList *aOut;   // Снос (мой или предполагаемый)
-  CardList *aCardsOut; // во взятках мои
-  CardList *aLeftOut;  // во взятках Противника с лева (предполагаемый или открытые)
-  CardList *aRightOut; // во взятках С права (предполагаемый или открытые)
+  CardList aOut;   // Снос (мой или предполагаемый)
+  CardList aCardsOut; // во взятках мои
+  CardList aLeftOut;  // во взятках Противника с лева (предполагаемый или открытые)
+  CardList aRightOut; // во взятках С права (предполагаемый или открытые)
   tSuitProbs suitProb[5];
 
   int nGetsCard;
@@ -76,14 +76,14 @@ private:
   void makestatfill(void);
   void makestatfill(int nCards,int maxmin);
   tSuitProbs vzatok4game(eSuit ,int a23);
-  tSuitProbs vzatok(eSuit,CardList *,int a23);
-  tSuitProbs vzatok4pass(eSuit,CardList *);
+  tSuitProbs vzatok(eSuit, CardList &,int a23);
+  tSuitProbs vzatok4pass(eSuit, CardList &);
 
 public:
   // Два списка
-  tSuitProbs Compare2List4Max(CardList *My,CardList *Enemy); // Для максимального результата на 1 руке
-  tSuitProbs Compare2List4Max23(CardList *My,CardList *Enemy); // Для максимального результата на 2 и 3 руке
-  tSuitProbs Compare2List4Min(CardList *My,CardList *Enemy); // Для мин результата
+  tSuitProbs Compare2List4Max(CardList &My, CardList &Enemy); // Для максимального результата на 1 руке
+  tSuitProbs Compare2List4Max23(CardList &My, CardList &Enemy); // Для максимального результата на 2 и 3 руке
+  tSuitProbs Compare2List4Min(CardList &My, CardList &Enemy); // Для мин результата
 
 private:
   void internalInit ();
@@ -91,14 +91,14 @@ private:
   // Три списка
   //tSuitProbs Compare3List4Max(CardList *My,CardList *Left,CardList *Right); // Для максимального результата
   //tSuitProbs Compare3List4Min(CardList *My,CardList *Left,CardList *Right); // Для мин результата
-  Card *GetMaxCardPere(void);
-  Card *GetMaxCardWithOutPere(void);
-  Card *GetMinCardWithOutVz(void);
+  Card *GetMaxCardPere ();
+  Card *GetMaxCardWithOutPere ();
+  Card *GetMinCardWithOutVz ();
 
-  void RecountTables(CardList *aMaxCardList,int a23); // Пересчитывает таблицу         tSuitProbs suitProb[5];
-  void RecountTables4RasPass(CardList *aMaxCardList,int a23); // Пересчитывает таблицу дли распасов или мизера
+  void RecountTables (CardList &aMaxCardList,int a23); // Пересчитывает таблицу         tSuitProbs suitProb[5];
+  void RecountTables4RasPass (CardList &aMaxCardList,int a23); // Пересчитывает таблицу дли распасов или мизера
 
-  void LoadLists(Player *aLeftGamer,Player *aRightGamer,CardList *aMaxCardList); // Набор списков
+  void LoadLists(Player *aLeftGamer,Player *aRightGamer, CardList &aMaxCardList); // Набор списков
   Card *MiserCatch1(Player *aLeftGamer,Player *aRightGamer);
   Card *Miser1(Player *aLeftGamer,Player *aRightGamer);
   Card *MyGame1(Player *aLeftGamer,Player *aRightGamer); // моя игра 1 заход - мой
