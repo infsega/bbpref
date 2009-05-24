@@ -43,9 +43,8 @@ eGameBid HumanPlayer::makemove (eGameBid lMove, eGameBid rMove) {
   if (GamesType != undefined) formBid->disableItem(g86);
   formBid->enableItem(gtPass);
   formBid->disableItem(vist);
-  formBid->showbullet->setEnabled(TRUE);
-  formBid->bgetback->setEnabled(FALSE);
-
+  formBid->showbullet->setEnabled(true);
+  formBid->bgetback->setEnabled(false);
   do {
     tmpGamesType = DeskView->makemove(lMove, rMove);
     if (tmpGamesType == 0) {
@@ -72,7 +71,6 @@ eGameBid HumanPlayer::makemove (eGameBid lMove, eGameBid rMove) {
 Card *HumanPlayer::makemove (Card *lMove, Card *rMove, Player *aLeftGamer, Player *aRightGamer) {
   Q_UNUSED(aLeftGamer)
   Q_UNUSED(aRightGamer)
-
   Card *RetVal = 0;
   X = Y = 0;
   WaitForMouse = 1;
