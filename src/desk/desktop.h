@@ -53,8 +53,7 @@ private:
   void internalInit ();
   Player *player (int);
   Player *player (const WrapCounter &cnt);
-  Card *ControlingMakemove (Card *, Card *);
-  Card *PipeMakemove (Card *lMove, Card *rMove);
+  Card *makeGameMove (Card *lMove, Card *rMove);
 
   void drawInGameCard (int mCardNo, Card *card);
   void inGameCardLeftTop (int mCardNo, int *left, int *top);

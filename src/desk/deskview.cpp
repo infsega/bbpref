@@ -515,7 +515,9 @@ void DeskView::drawMessageWindow (int x0, int y0, const QString &msg, bool dim) 
   if (!mDeskBmp) return;
   QPainter p(mDeskBmp);
   // change suits to unicode chars
+  QRgb textRGB(qRgb(0, 0, 0));
   QString s(msg);
+  if (s.indexOf("\1d") >= 0 || s.indexOf("\1h") >= 0) textRGB = qRgb(255, 0, 0);
   s.replace("\1s", QChar((ushort)0x2660));
   s.replace("\1c", QChar((ushort)0x2663));
   s.replace("\1d", QChar((ushort)0x2666));
@@ -551,6 +553,7 @@ void DeskView::drawMessageWindow (int x0, int y0, const QString &msg, bool dim) 
   p.drawLine(x0+w-2, y0+1, x0+w-2, y0+h-2);
   // draw text
   boundR.adjust(x0+2+4, y0+2+2, x0+2+4, y0+2+2);
+  p.setPen(textRGB);
   p.drawText(boundR, Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextExpandTabs, s);
   // done
   p.end();
