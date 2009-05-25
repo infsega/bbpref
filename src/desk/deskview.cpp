@@ -302,6 +302,7 @@ void DeskView::aniSleep (int milliseconds) {
         milliseconds = 0;
       }
     }
+    emitRepaint();
   } while (milliseconds > 0);
   Event = 0;
   //emitRepaint();

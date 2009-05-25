@@ -229,3 +229,34 @@ CardList &CardList::operator = (const CardList *cl) {
   if (cl != this) shallowCopy(cl);
   return *this;
 }
+
+
+CardList &CardList::operator << (Card *cc) {
+  if (cc) insert(cc);
+  return *this;
+}
+
+
+void CardList::newDeck () {
+  mList.clear();
+  for (int suit = 1; suit <= 4; suit++) {
+    for (int face = 7; face <= FACE_ACE; face++) {
+      mList << newCard(face, suit);
+    }
+  }
+}
+
+
+void CardList::shuffle () {
+  // remove nulls
+  QMutableListIterator<Card *> i(mList);
+  while (i.hasNext()) {
+    Card *c = i.next();
+    if (!c) i.remove();
+  }
+  // Fisher-Yates shuffler
+  for (int f = mList.size()-1; f >= 0; f--) {
+    int n = (qrand()/256)%(f+1); // 0<=n<=f
+    mList.swap(f, n);
+  }
+}

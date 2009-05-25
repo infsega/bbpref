@@ -9,7 +9,6 @@
 #include "player.h"
 
 #include "formbid.h"
-#include <time.h>
 
 
 char *documentation; //see bottom this file

@@ -5,7 +5,6 @@
 #include <QObject>
 
 #include "card.h"
-#include "deck.h"
 #include "ncounter.h"
 #include "player.h"
 
@@ -41,13 +40,14 @@ signals:
 
 public:
   DeskView *mDeskView;
-  Deck mDeck;
+  CardList mDeck;
   QList<Player *> mPlayers;
   WrapCounter nCurrentStart, nCurrentMove;
   Card *mFirstCard, *mSecondCard, *mThirdCard;
   Card *mCardsOnDesk[4];
 
   bool mShowPool;
+  bool mOnDeskClosed;
 
 private:
   void internalInit ();

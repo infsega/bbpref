@@ -2,7 +2,6 @@
 
 #include <QMainWindow>
 
-#include <time.h>
 #include <stdio.h>
 #include <string.h>
 #include <limits.h>
@@ -27,7 +26,6 @@ typedef struct {
 void PrefDesktop::internalInit () {
   mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard=0;
 
-  qsrand(time(NULL));
   nCurrentStart.nValue = nCurrentMove.nValue = (qrand()%3)+1;
   nCurrentStart.nMin = nCurrentMove.nMin = 1;
   nCurrentStart.nMax = nCurrentMove.nMax = 3;
@@ -39,6 +37,7 @@ void PrefDesktop::internalInit () {
   addPlayer(new Player(2, mDeskView));
   addPlayer(new Player(3, mDeskView));
   mShowPool = false;
+  mOnDeskClosed = false;
   optMaxPool = 21;
   iMoveX = iMoveY = -1;
 }
@@ -333,7 +332,7 @@ void PrefDesktop::drawInGameCard (int mCardNo, Card *card) {
   if (!card) return;
   int x, y;
   inGameCardLeftTop(mCardNo, &x, &y);
-  mDeskView->drawCard(card, x, y, 1, 0);
+  mDeskView->drawCard(card, x, y, !mOnDeskClosed, 0);
 }
 
 
@@ -424,17 +423,17 @@ void PrefDesktop::runGame () {
 
   //mDeskView->ClearScreen();
   // while !конец пули
-  qsrand(time(NULL));
   int roundNo = 0;
   while (!(player(1)->mScore.pool() >= optMaxPool &&
            player(2)->mScore.pool() >= optMaxPool &&
            player(3)->mScore.pool() >= optMaxPool)) {
-    WrapCounter GamersCounter(1, 1, 3);
+    WrapCounter plrCounter(1, 1, 3);
     mPlayingRound = false;
     int nPl;
     int nPassCounter = 0; // кол-во спасовавших
     playerBids[3] = playerBids[2] = playerBids[1] = playerBids[0] = undefined;
     mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard = 0;
+    mDeck.newDeck();
     mDeck.shuffle();
 
     QFile dbgD("dbg.mDeck");
@@ -461,12 +460,42 @@ void PrefDesktop::runGame () {
     CurrentGame = undefined;
     mShowPool = false;
     // сдаём карты
+    /*
     for (int i = 0; i < CARDINCOLODA-2; i++) {
-      Player *tmpGamer = player(GamersCounter);
+      Player *tmpGamer = player(plrCounter);
       if (!(mDeck.at(i))) mDeskView->MessageBox("Card = 0", "Error!!!");
       tmpGamer->dealCard(mDeck.at(i));
-      ++GamersCounter;
+      ++plrCounter;
     }
+    */
+    {
+    CardList tmpDeck; int cc = succPlayer(nCurrentStart), tPos = 0, tNo = 0;
+    mOnDeskClosed = true;
+    for (int f = 0; f < 15; f++) {
+      if (f == 3) {
+        // talion
+        tNo = tPos; 
+        mCardsOnDesk[0] = mDeck.at(tPos++);
+        draw(); mDeskView->aniSleep(40);
+        mCardsOnDesk[1] = mDeck.at(tPos++);
+        draw(); mDeskView->aniSleep(40);
+      }
+      Player *plr = player(cc); cc = (cc%3)+1;
+      plr->dealCard(mDeck.at(tPos)); tmpDeck << mDeck.at(tPos++);
+      draw(); mDeskView->aniSleep(40);
+      plr->dealCard(mDeck.at(tPos)); tmpDeck << mDeck.at(tPos++);
+      draw(); mDeskView->aniSleep(80);
+      if (f%3 == 2) mDeskView->aniSleep(200);
+    }
+    tmpDeck << mDeck.at(tNo++);
+    tmpDeck << mDeck.at(tNo);
+    if (tmpDeck.count() != 32) abort();
+    mDeck = tmpDeck;
+    mOnDeskClosed = false;
+    mCardsOnDesk[0] = mCardsOnDesk[1] = 0;
+    draw(false);
+    }
+
     dlogf("=========================================");
     dlogf("player %i moves...", nCurrentStart.nValue);
     char xxBuf[1024];
@@ -481,7 +510,7 @@ void PrefDesktop::runGame () {
     cardName(xxBuf, mDeck.at(31));
     dlogf("talion: %s", xxBuf);
 
-    GamersCounter = nCurrentStart;
+    plrCounter = nCurrentStart;
     switch (nCurrentStart.nValue) {
       case 1:
         iMoveX = mDeskView->DesktopWidth/2-15;
@@ -505,7 +534,7 @@ void PrefDesktop::runGame () {
     int curBidIdx = 0;
     while (npasscounter < 2) {
       // пока как минимум двое не спасовали
-      int p = GamersCounter.nValue;
+      int p = plrCounter.nValue;
       drawBidWindows(bids4win, p);
       if (p != 1) mDeskView->mySleep(2); else emitRepaint();
 
@@ -513,7 +542,7 @@ void PrefDesktop::runGame () {
         playerBids[curBidIdx+1] = player(p)->moveBidding(playerBids[((curBidIdx+1)%3)+1], playerBids[((curBidIdx+2)%3)+1]);
       }
       bids4win[p] = playerBids[curBidIdx+1];
-      ++GamersCounter;
+      ++plrCounter;
       curBidIdx = (curBidIdx+1)%3;
 
       if ((playerBids[1] != undefined && playerBids[2] != undefined && playerBids[3] != undefined) &&

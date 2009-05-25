@@ -4,7 +4,6 @@
 #include "prfconst.h"
 #include "card.h"
 #include "cardlist.h"
-#include "deck.h"
 #include "ncounter.h"
 #include "plscore.h"
 #include "deskview.h"

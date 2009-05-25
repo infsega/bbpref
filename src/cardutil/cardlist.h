@@ -70,6 +70,10 @@ public:
 
   CardList &operator = (const CardList &cl);
   CardList &operator = (const CardList *cl);
+  CardList &operator << (Card *cc);
+
+  void newDeck ();
+  void shuffle ();
 
 protected:
   //void removeNulls ();

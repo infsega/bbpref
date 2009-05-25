@@ -1,3 +1,5 @@
+#include <time.h>
+
 #include <QApplication>
 
 #include "main.h"
@@ -21,6 +23,8 @@ int main (int argc, char *argv[]) {
       f--;
     }
   }
+
+  qsrand((unsigned)time(0));
 
   QApplication a(argc, argv);
 
