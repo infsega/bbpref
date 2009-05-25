@@ -20,7 +20,7 @@ Kpref::Kpref () {
   initMenuBar();
   mInPaintEvent = mInMouseMoveEvent = mWaitingMouseUp = false;
   mDeskView = 0;
-  DeskTop = 0;
+  mDesktop = 0;
   setMouseTracking(true);
 
   QDesktopWidget *desk = QApplication::desktop();
@@ -39,8 +39,8 @@ Kpref::Kpref () {
 void Kpref::init () {
   //StatusBar1 = new QStatusBar(this);
   mDeskView = new DeskView(width(), height());
-  DeskTop = new PrefDesktop(mDeskView);
-  connect(DeskTop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
+  mDesktop = new PrefDesktop(mDeskView);
+  connect(mDesktop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
   connect(mDeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
 }
 
@@ -49,7 +49,7 @@ Kpref::~Kpref () {
   //delete StatusBar1;
   //!delete formBid;
   delete mDeskView;
-  delete DeskTop;
+  delete mDesktop;
 }
 
 
@@ -84,17 +84,17 @@ void Kpref::initMenuBar () {
 void Kpref::slotFileOpen () {
   QString fileName = QFileDialog::getOpenFileName(this, "Select saved game", "", "*.prf");
   if (!fileName.isEmpty())  {
-    DeskTop->loadGame(fileName);
+    mDesktop->loadGame(fileName);
     actFileSave->setEnabled(true);
-    DeskTop->runGame();
+    mDesktop->runGame();
   }
 }
 
 
 void Kpref::slotFileSave () {
-  if (DeskTop) {
+  if (mDesktop) {
     QString fn = QFileDialog::getSaveFileName(this, "Select file to save the current game", "", "*.prf");
-    if (!fn.isEmpty()) DeskTop->saveGame(fn);
+    if (!fn.isEmpty()) mDesktop->saveGame(fn);
   }
 }
 
@@ -113,13 +113,12 @@ void Kpref::slotEndSleep () {
 
 
 void Kpref::slotShowScore () {
-  DeskTop->closePool();
-  DeskTop->mShowPool = true;
-  DeskTop->drawPool();
-  DeskTop->mDeskView->mySleep(-1);
-  //mDeskView->ClearScreen();
-  DeskTop->mShowPool = false;
-  DeskTop->draw();
+  mDesktop->closePool();
+  mDesktop->mShowPool = true;
+  mDesktop->drawPool();
+  mDesktop->mDeskView->mySleep(-1);
+  mDesktop->mShowPool = false;
+  mDesktop->draw();
 }
 
 
@@ -129,57 +128,27 @@ void Kpref::forceRepaint () {
 
 
 void Kpref::slotNewSingleGame () {
-/*
-  qtnewgameu newgame(this,"NewSingleGame");
-  if (  newgame.exec() ) {
-    if (DeskTop) {
-      delete DeskTop;
-      delete mDeskView;
-      mDeskView = new DeskView();
-      mDeskView -> PaintDevice = this; // &&&
-      DeskTop = new PrefDesktop();
-      DeskTop -> mDeskView = mDeskView;
-      optMaxPool = newgame.QSpinBox_2 ->value();
-      g61stalingrad =  (newgame.StalingradGame->isChecked() == true);
-      g10vist = (newgame.TenVist->isChecked() == true);
-      globvist = (newgame.VistNonBr->isChecked() == true);
-      mDeskView -> DesktopHeight = height();
-      mDeskView -> DesktopWidth = width();
-      //mDeskView->ClearScreen();
-      if (newgame.flProtocol->isChecked () ) {
-        QByteArray ba(newgame.ProtocolFileName->text().toUtf8());
-        strcpy(DeskTop->ProtocolFileName, ba.constData());
-        DeskTop -> flProtocol = 1;
-        DeskTop -> OpenProtocol();
-      }
-    }
-    //!!!fileMenu->setItemEnabled(nSaveGameID,TRUE);
-    DeskTop -> runGame();
-  }
-*/
-  if (DeskTop) {
-    delete DeskTop;
+  if (mDesktop) {
+    delete mDesktop;
     delete mDeskView;
     mDeskView = new DeskView(width(), height());
-    DeskTop = new PrefDesktop();
-    DeskTop->mDeskView = mDeskView;
-    optMaxPool = 10; //k8:!!!
+    mDesktop = new PrefDesktop();
+    mDesktop->mDeskView = mDeskView;
+    optMaxPool = 6; //k8:!!!
     g61stalingrad = true; //k8:!!!
     g10vist = false; //k8:!!!
     globvist = true; //k8:!!!
-    connect(DeskTop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
+    connect(mDesktop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
     connect(mDeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
-    //mDeskView->ClearScreen();
   }
-  //!!!fileMenu->setItemEnabled(nSaveGameID,TRUE);
-  DeskTop->runGame();
+  mDesktop->runGame();
 }
 
 
 void Kpref::mouseMoveEvent (QMouseEvent *event) {
   if (mInMouseMoveEvent) return;
   mInMouseMoveEvent = true;
-  Player *plr = DeskTop->currentPlayer();
+  Player *plr = mDesktop->currentPlayer();
   if (plr) plr->hilightCard(event->x(), event->y());
   mInMouseMoveEvent = false;
 }
@@ -189,7 +158,7 @@ void Kpref::mousePressEvent (QMouseEvent *event) {
   mWaitingMouseUp = true;
   if (event->button() == Qt::LeftButton) {
     mDeskView->Event = 1;
-    Player *plr = DeskTop->currentPlayer();
+    Player *plr = mDesktop->currentPlayer();
     if (plr) {
       plr->mClickX = event->x();
       plr->mClickY = event->y();

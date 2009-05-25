@@ -474,7 +474,7 @@ void PrefDesktop::runGame () {
     for (int f = 0; f < 15; f++) {
       if (f == 3) {
         // talion
-        tNo = tPos; 
+        tNo = tPos;
         mCardsOnDesk[0] = mDeck.at(tPos++);
         draw(); mDeskView->aniSleep(40);
         mCardsOnDesk[1] = mDeck.at(tPos++);

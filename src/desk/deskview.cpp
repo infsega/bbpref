@@ -25,11 +25,6 @@
 #include "prfconst.h"
 
 
-static QHash<QString, QImage *> cardI;
-static QImage *bidIcons[106]; // wasted!
-static bool cardsLoaded = false;
-
-
 // change white to yellow
 static void yellowize (QImage *im, QRgb newColor=qRgb(255, 255, 0)) {
   for (int y = im->height()-1; y >= 0; y--) {
@@ -43,9 +38,8 @@ static void yellowize (QImage *im, QRgb newColor=qRgb(255, 255, 0)) {
 }
 
 
-static bool loadCards () {
+bool DeskView::loadCards () {
   //qDebug() << SLOT(slotPushButtonClick95());
-  if (cardsLoaded) return true;
   for (int f = 0; f < 106; f++) bidIcons[f] = 0;
   // load cards from resources
   for (int face = 7; face <= 14; face++) {
@@ -73,12 +67,18 @@ static bool loadCards () {
     }
   }
   // done
-  cardsLoaded = true;
   return true;
 }
 
 
-static QImage *GetXpmByNameI (const char *name) {
+void DeskView::freeCards () {
+  for (int f = 0; f < 106; f++) { if (bidIcons[f]) delete bidIcons[f]; bidIcons[f] = 0; }
+  foreach (QImage *i, cardI) if (i) delete i;
+  cardI.clear();
+}
+
+
+QImage *DeskView::GetXpmByNameI (const char *name) {
   if (!cardI.contains(name)) cardI["empty"];
   return cardI[name];
 }
@@ -93,9 +93,7 @@ DeskView::DeskView (int aW, int aH) : mDeskBmp(0) {
   yellowize(mKeyBmp[1], qRgb(127, 127, 127));
   mIMoveBmp = new QImage(QString(":/pics/imove.png"));
 
-  if (!cardsLoaded) {
-    if (!loadCards()) abort();
-  }
+  if (!loadCards()) abort();
 
   Event = 0;
   CardWidht = CARDWIDTH;
@@ -111,6 +109,7 @@ DeskView::DeskView (int aW, int aH) : mDeskBmp(0) {
 
 DeskView::~DeskView () {
   if (mDeskBmp) delete mDeskBmp;
+  freeCards();
   delete mIMoveBmp;
   delete mKeyBmp[0];
   delete mKeyBmp[1];

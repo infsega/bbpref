@@ -3,16 +3,17 @@
 #ifndef DESKVIEW_H
 #define DESKVIEW_H
 
-#include <QString>
-#include <QMainWindow>
-#include <QPixmap>
 #include <QApplication>
-#include <QMessageBox>
+#include <QHash>
 #include <QImage>
+#include <QMainWindow>
+#include <QMessageBox>
 #include <QPainter>
+#include <QPixmap>
+#include <QString>
 
-#include "prfconst.h"
 #include "card.h"
+#include "prfconst.h"
 
 
 class DeskView : public QObject {
@@ -81,6 +82,15 @@ private:
 
 private:
   int bidBmpX, bidBmpY;
+
+private:
+  bool loadCards ();
+  void freeCards ();
+  QImage *GetXpmByNameI (const char *name);
+
+private:
+  QHash<QString, QImage *> cardI;
+  QImage *bidIcons[106]; // wasted!
 };
 
 

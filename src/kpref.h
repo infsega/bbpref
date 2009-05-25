@@ -56,7 +56,7 @@ private:
   QAction *actQuit;
 
 public:
-  PrefDesktop *DeskTop;
+  PrefDesktop *mDesktop;
   DeskView *mDeskView;
   bool mWaitingMouseUp;
   bool mInMouseMoveEvent;
