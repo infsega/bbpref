@@ -68,9 +68,8 @@ void PrefDesktop::closePool () {
   WrapCounter counter(1, 1, 3);
   int mb = INT_MAX, mm = INT_MAX, i;
   tScores R[4];
-  Player *G;
   for (i = 1; i <= 3; i++) {
-    G = player(i);
+    Player *G = player(i);
     R[i].mount = G->mScore.mountain();
     R[i].pool = G->mScore.pool();
     R[i].leftWh = G->mScore.leftWhists();
@@ -112,7 +111,7 @@ void PrefDesktop::closePool () {
     i1 = counter.nValue;
     ++counter;
     i2 = counter.nValue;
-    player(i)->mScore.setWhists(R[i].leftWh + R[i].rightWh - R[i1].rightWh - R[i2].leftWh);
+    player(i)->mScore.setWhists(R[i].leftWh+R[i].rightWh-R[i1].rightWh-R[i2].leftWh);
   }
 }
 
@@ -124,7 +123,7 @@ Player *PrefDesktop::addPlayer (Player *plr) {
 
 
 Card *PrefDesktop::PipeMakemove (Card *lMove, Card *rMove) {
-  return (player(nCurrentMove.nValue))->
+  return (player(nCurrentMove))->
     moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)));
 }
 
@@ -134,7 +133,7 @@ Card *PrefDesktop::PipeMakemove (Card *lMove, Card *rMove) {
 // ежели номер 1 и игра пас и не сетевая игра то порождаем Player
 Card *PrefDesktop::ControlingMakemove (Card *lMove, Card *rMove) {
   Card *RetVal = 0;
-  Player *Now = player(nCurrentMove.nValue);
+  Player *Now = player(nCurrentMove);
 
   if ((player(1)->mMyGame == vist || player(1)->mMyGame == g86catch) &&
       Now->mPlayerNo != 1 && (Now->mMyGame == gtPass || Now->mMyGame == g86catch)) {
@@ -223,6 +222,42 @@ static void dumpCardList (char *dest, const CardList &lst) {
 }
 
 
+void PrefDesktop::animateDeskToPlayer (int plrNo) {
+  static const int steps = 10;
+  Card *cAni[4];
+  int left, top;
+
+  if (!mDeskView) return;
+  Player *plr = player(plrNo);
+  if (!plr) return;
+  plr->getLeftTop(&left, &top);
+  for (int f = 0; f < 4; f++) {
+    cAni[f] = mCardsOnDesk[f];
+    mCardsOnDesk[f] = 0;
+  }
+  for (int f = 0; f <= steps; f++) {
+    draw(false);
+    for (int c = 0; c <= 3; c++) {
+      if (!cAni[c]) continue;
+      int x, y;
+      inGameCardLeftTop(c, &x, &y);
+      x = x+((int)((double)(left-x)/steps*f));
+      y = y+((int)((double)(top-y)/steps*f));
+      mDeskView->drawCard(cAni[c], x, y, 1, 0);
+      //emitRepaint();
+    }
+    mDeskView->aniSleep(20);
+  }
+/*
+  for (int f = 0; f < 4; f++) {
+    cAni[f] = mCardsOnDesk[f];
+    mCardsOnDesk[f] = 0;
+  }
+*/
+  draw();
+}
+
+
 void PrefDesktop::runGame () {
   eGameBid playerBids[4], bids4win[4];
   //char *filename;
@@ -250,7 +285,7 @@ void PrefDesktop::runGame () {
       dbgD.close();
       int pos = 0;
       if (!mDeck.unserialize(ba, &pos)) abort();
-    } else {
+    } else if (allowDebugLog) {
       QString fns(QString::number(roundNo++));
       while (fns.length() < 2) fns.prepend('0');
       QFile fl(fns);
@@ -269,22 +304,16 @@ void PrefDesktop::runGame () {
     mShowPool = false;
     // сдаём карты
     for (int i = 0; i < CARDINCOLODA-2; i++) {
-      Player *tmpGamer = player(GamersCounter.nValue);
+      Player *tmpGamer = player(GamersCounter);
       if (!(mDeck.at(i))) mDeskView->MessageBox("Card = 0", "Error!!!");
       tmpGamer->dealCard(mDeck.at(i));
       ++GamersCounter;
     }
-/*
-    for (int f = 0; f < 2; f++) {
-      Player *plr = player(f);
-      plr->sortCards();
-    }
-*/
     dlogf("=========================================");
     dlogf("player %i moves...", nCurrentStart.nValue);
     char xxBuf[1024];
     for (int f = 1; f <= 3; f++) {
-      Player *plr = player(nCurrentStart.nValue); ++nCurrentStart;
+      Player *plr = player(nCurrentStart); ++nCurrentStart;
       xxBuf[0] = 0;
       dumpCardList(xxBuf, plr->mCards);
       dlogf("hand %i:%s", plr->mPlayerNo, xxBuf);
@@ -374,7 +403,8 @@ void PrefDesktop::runGame () {
           // запихиваем ему прикуп
           tmpg->dealCard(mDeck.at(30));
           tmpg->dealCard(mDeck.at(31));
-          mCardsOnDesk[2] = mCardsOnDesk[3] = 0;
+          animateDeskToPlayer(mPlayerActive);
+          //!.!mCardsOnDesk[2] = mCardsOnDesk[3] = 0;
           //mDeskView->ClearScreen();
           //tmpg->sortCards();
           draw();
@@ -427,7 +457,7 @@ void PrefDesktop::runGame () {
 
           // попёрли выбирать: пас или вист?
           ++tmpGamersCounter;
-          PassOrVistGamers = player(tmpGamersCounter.nValue);
+          PassOrVistGamers = player(tmpGamersCounter);
           PassOrVistGamers->mMyGame = undefined;
           //PassOrVistGamers->sortCards();
           draw();
@@ -476,7 +506,7 @@ void PrefDesktop::runGame () {
             mDeskView->drawMessageWindow(x, y, "thinking...");
             if (nextPW != 1) mDeskView->mySleep(2);
           }
-          PassOrVistGamers = player(tmpGamersCounter.nValue);
+          PassOrVistGamers = player(tmpGamersCounter);
           PassOrVistGamers->mMyGame = undefined;
           //draw(tmpGamersCounter.nValue);
           //draw();
@@ -558,7 +588,7 @@ void PrefDesktop::runGame () {
 
       dlogf("------------------------\nmove #%i", i);
       for (int f = 1; f <= 3; f++) {
-        Player *plr = player(nCurrentMove.nValue); ++nCurrentMove;
+        Player *plr = player(nCurrentMove); ++nCurrentMove;
         xxBuf[0] = 0;
         dumpCardList(xxBuf, plr->mCards);
         dlogf("hand %i:%s", plr->mPlayerNo, xxBuf);
@@ -606,12 +636,14 @@ void PrefDesktop::runGame () {
       //draw(nCurrentMove.nValue);
       draw();
       //!!!drawInGameCard(nCurrentMove.nValue,mThirdCard);
-      mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = 0;
+      //!.!mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = 0;
       ++nCurrentMove;
       mDeskView->mySleep(-1);
       nPl = whoseTrick(mFirstCard, mSecondCard, mThirdCard, playerBids[0]-(playerBids[0]/10)*10)-1;
       nCurrentMove = nCurrentMove+nPl;
-      tmpg = mPlayers[nCurrentMove.nValue];
+      animateDeskToPlayer(nCurrentMove.nValue);
+      //!.!mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = 0;
+      tmpg = player(nCurrentMove);
       tmpg->mTricksTaken++;
       mCardsOnDesk[0] = 0;
       //mDeskView->ClearScreen();
@@ -726,6 +758,11 @@ Player *PrefDesktop::player (int num) {
 }
 
 
+Player *PrefDesktop::player (const WrapCounter &cnt) {
+  return player(cnt.nValue);
+}
+
+
 bool PrefDesktop::loadGame (const QString &name)  {
   QFile fl(name);
   if (!fl.open(QIODevice::ReadOnly)) return false;
@@ -748,11 +785,10 @@ bool PrefDesktop::saveGame (const QString &name)  {
 
 
 // draw ingame card (the card that is in game, not in hand)
-void PrefDesktop::drawInGameCard (int mPlayerNo, Card *card) {
-  if (!card) return;
+void PrefDesktop::inGameCardLeftTop (int mCardNo, int *left, int *top) {
   int w = mDeskView->DesktopWidth/2, h = mDeskView->DesktopHeight/2;
   int x = w, y = h;
-  switch (mPlayerNo) {
+  switch (mCardNo) {
     case 0:
       x -= CARDWIDTH*2+8;
       y -= CARDHEIGHT/2;
@@ -769,6 +805,14 @@ void PrefDesktop::drawInGameCard (int mPlayerNo, Card *card) {
       break;
     default: return;
   }
+  *left = x; *top = y;
+}
+
+
+void PrefDesktop::drawInGameCard (int mCardNo, Card *card) {
+  if (!card) return;
+  int x, y;
+  inGameCardLeftTop(mCardNo, &x, &y);
   mDeskView->drawCard(card, x, y, 1, 0);
 }
 

@@ -6,6 +6,7 @@
 
 #include "card.h"
 #include "deck.h"
+#include "ncounter.h"
 #include "player.h"
 
 
@@ -51,10 +52,13 @@ public:
 private:
   void internalInit ();
   Player *player (int);
+  Player *player (const WrapCounter &cnt);
   Card *ControlingMakemove (Card *, Card *);
   Card *PipeMakemove (Card *lMove, Card *rMove);
 
-  void drawInGameCard (int mPlayerNo, Card *card);
+  void drawInGameCard (int mCardNo, Card *card);
+  void inGameCardLeftTop (int mCardNo, int *left, int *top);
+  void animateDeskToPlayer (int plrNo);
 
 private:
   void drawBidWindows (const eGameBid *bids, int curPlr);

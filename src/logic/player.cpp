@@ -1651,7 +1651,7 @@ int Player::buildHandXOfs (int *dest, int startX, bool opened) {
 int Player::cardAt (int lx, int ly, bool opened) {
   int res = -1, ofs[28];
   int left, top;
-  getLeftTop(mPlayerNo, &left, &top);
+  getLeftTop(&left, &top);
   buildHandXOfs(ofs, left, opened);
   for (int f = 0; ofs[f] >= 0; f += 2) {
     int x1 = ofs[f], y1 = top;//+mDeskView->yBorder;
@@ -1662,10 +1662,10 @@ int Player::cardAt (int lx, int ly, bool opened) {
 }
 
 
-void Player::getLeftTop (int playerNo, int *left, int *top) {
+void Player::getLeftTop (int *left, int *top) {
   *left = 0; *top = 0;
   if (!mDeskView) return;
-  switch (playerNo) {
+  switch (mPlayerNo) {
     case 1:
       *left = (mDeskView->DesktopWidth-(mDeskView->DesktopWidth/2-2*mDeskView->xBorder))/2;
       *top = mDeskView->DesktopHeight-(mDeskView->yBorder)-mDeskView->CardHeight-10;
@@ -1705,7 +1705,7 @@ void Player::drawAt (DeskView *aDeskView, int left, int top, int selNo) {
 void Player::draw () {
   int left, top;
   if (!mDeskView) return;
-  getLeftTop(mPlayerNo, &left, &top);
+  getLeftTop(&left, &top);
   drawAt(mDeskView, left, top, mPrevHiCardIdx);
 }
 
@@ -1719,7 +1719,7 @@ void Player::hilightCard (int lx, int ly) {
 void Player::clearCardArea () {
   int left, top, ofs[28];
   if (!mDeskView) return;
-  getLeftTop(mPlayerNo, &left, &top);
+  getLeftTop(&left, &top);
   int cnt = buildHandXOfs(ofs, left, !mInvisibleHand);
   if (!cnt) return;
   for (int f = 0; ofs[f] >= 0; f += 2) {

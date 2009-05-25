@@ -39,7 +39,7 @@ public:
   // result: ofs, cardNo, ..., -1
   int buildHandXOfs (int *dest, int startX, bool opened);
   int cardAt (int lx, int ly, bool opened=true);
-  void getLeftTop (int playerNo, int *left, int *top);
+  void getLeftTop (int *left, int *top);
 
   void sortCards ();
 

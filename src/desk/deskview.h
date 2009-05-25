@@ -22,6 +22,7 @@ public:
   ~DeskView ();
 
   void mySleep (int seconds);
+  void aniSleep (int milliseconds);
 
   void ClearScreen ();
   void ClearBox (int x1, int y1, int x2, int y2);

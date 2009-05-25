@@ -1,3 +1,5 @@
+#include <unistd.h>
+
 #include "baser.h"
 
 
@@ -21,4 +23,27 @@ bool unserializeInt (QByteArray &ba, int *pos, int *i) {
     *i |= buf[f];
   }
   return true;
+}
+
+
+void msSleep (int ms) {
+  // 1sec=1000000
+
+  // seconds
+  while (ms >= 1000) {
+    usleep(1000000/2);
+    usleep(1000000/2);
+    ms -= 1000;
+  }
+  // milliseconds
+  int sec = (ms*1000); // nseconds
+  while (sec > 0) {
+    if (sec >= 1000000/2) {
+      usleep(1000000/2);
+      sec -= 1000000/2;
+    } else {
+      usleep(sec);
+      sec = 0;
+    }
+  }
 }

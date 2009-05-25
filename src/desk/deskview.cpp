@@ -11,17 +11,18 @@
 #include <QPixmap>
 #include <QImage>
 #include <QPainter>
-#include "formbid.h"
 #include <QTimer>
 #include <QDialog>
 #include <QObject>
 #include <QHash>
 
-#include "kpref.h"
-
-#include "prfconst.h"
 #include "deskview.h"
+
+#include "baser.h"
 #include "card.h"
+#include "formbid.h"
+#include "kpref.h"
+#include "prfconst.h"
 
 
 static QHash<QString, QImage *> cardI;
@@ -268,7 +269,8 @@ void DeskView::mySleep (int seconds) {
     if (seconds > 0) {
       if (difftime(time(0), tStart) >= seconds) Event = 3;
     }
-    usleep(10000); //1000000
+    //usleep(10000); //1000000
+    msSleep(40);
     if (seconds == 0) break;
     if (seconds < 0) {
       if (seconds == -1) {
@@ -281,6 +283,28 @@ void DeskView::mySleep (int seconds) {
   if (timer) delete timer;
   drawPKeyBmp(false);
   emitRepaint();
+}
+
+
+void DeskView::aniSleep (int milliseconds) {
+  emitRepaint();
+  do {
+    qApp->processEvents(QEventLoop::WaitForMoreEvents);
+    qApp->sendPostedEvents();
+    qApp->flush();
+    //qApp->processEvents(QEventLoop::AllEvents | QEventLoop::WaitForMoreEvents, 900);
+    if (milliseconds > 0) {
+      if (milliseconds > 100) {
+        msSleep(100);
+        milliseconds -= 100;
+      } else {
+        msSleep(milliseconds);
+        milliseconds = 0;
+      }
+    }
+  } while (milliseconds > 0);
+  Event = 0;
+  //emitRepaint();
 }
 
 
