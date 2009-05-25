@@ -223,10 +223,13 @@ void PrefDesktop::animateDeskToPlayer (int plrNo) {
   Player *plr = player(plrNo);
   if (!plr) return;
   plr->getLeftTop(&left, &top);
+  if (plrNo == 3) left -= CARDWIDTH-4;
+
   for (int f = 0; f < 4; f++) {
     cAni[f] = mCardsOnDesk[f];
     mCardsOnDesk[f] = 0;
   }
+
   for (int f = 0; f <= steps; f++) {
     draw(false);
     for (int c = 0; c <= 3; c++) {

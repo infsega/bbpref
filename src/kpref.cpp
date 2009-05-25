@@ -134,7 +134,7 @@ void Kpref::slotNewSingleGame () {
     mDeskView = new DeskView(width(), height());
     mDesktop = new PrefDesktop();
     mDesktop->mDeskView = mDeskView;
-    optMaxPool = 6; //k8:!!!
+    optMaxPool = 10; //k8:!!!
     g61stalingrad = true; //k8:!!!
     g10vist = false; //k8:!!!
     globvist = true; //k8:!!!
