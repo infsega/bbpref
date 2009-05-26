@@ -84,7 +84,7 @@ Card *HumanPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
   draw();
   while (!RetVal) {
     if (mDeskView) mDeskView->mySleep(-2);
-    int cNo = cardAt(mClickX, mClickY, !mInvisibleHand);
+    int cNo = cardAt(mClickX, mClickY, !isInvisibleHand());
     if (cNo == -1) {
       mClickX = mClickY = 0;
       //draw();
@@ -192,7 +192,7 @@ void HumanPlayer::hilightCard (int lx, int ly) {
     if (mPrevHiCardIdx == -1) return; // nothing selected --> nothing to redraw
     mPrevHiCardIdx = -1;
   } else {
-    int cNo = cardAt(lx, ly, !mInvisibleHand);
+    int cNo = cardAt(lx, ly, !isInvisibleHand());
     if (cNo == mPrevHiCardIdx) return; // same selected --> nothing to redraw
     //qDebug() << "mPrevHiCardIdx:" << mPrevHiCardIdx << "cNo:" << cNo;
     mPrevHiCardIdx = cNo;

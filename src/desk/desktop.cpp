@@ -9,6 +9,7 @@
 #include <limits.h>
 #include <stdlib.h>
 
+#include "aialphabeta.h"
 #include "baser.h"
 #include "debug.h"
 #include "deskview.h"
@@ -36,8 +37,12 @@ void PrefDesktop::internalInit () {
   //addPlayer(new Player(1));
   // I Hate This Game :)
   addPlayer(new HumanPlayer(1, mDeskView));
+/*
   addPlayer(new Player(2, mDeskView));
   addPlayer(new Player(3, mDeskView));
+*/
+  addPlayer(new CheatPlayer(2, mDeskView));
+  addPlayer(new CheatPlayer(3, mDeskView));
   mShowPool = false;
   mOnDeskClosed = false;
   optMaxPool = 21;
@@ -126,25 +131,25 @@ Player *PrefDesktop::addPlayer (Player *plr) {
 // ежели номер 1 и игра пас и не сетевая игра то порождаем Player
 Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove) {
   Card *res = 0;
-  Player *Now = player(nCurrentMove);
+  Player *curPlr = player(nCurrentMove);
 
   if ((player(1)->mMyGame == vist || player(1)->mMyGame == g86catch) &&
-      Now->mPlayerNo != 1 && (Now->mMyGame == gtPass || Now->mMyGame == g86catch)) {
-    HumanPlayer *NewHuman = new HumanPlayer(nCurrentMove.nValue, mDeskView);
-    *NewHuman = *Now;
-    mPlayers[nCurrentMove.nValue] = NewHuman;
-    res = NewHuman->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)));
-    *Now = *NewHuman;
-    mPlayers[nCurrentMove.nValue] = Now;
-    delete NewHuman;
-  } else if (Now->mPlayerNo == 1 && Now->mMyGame == gtPass) {
-    Player *NewHuman = new Player(nCurrentMove.nValue, mDeskView);
-    *NewHuman = *Now;
-    mPlayers[nCurrentMove.nValue] = NewHuman;
-    res = NewHuman->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)));
-    *Now = *NewHuman;
-    mPlayers[nCurrentMove.nValue] = Now;
-    delete NewHuman;
+      curPlr->mPlayerNo != 1 && (curPlr->mMyGame == gtPass || curPlr->mMyGame == g86catch)) {
+    HumanPlayer *hPlr = new HumanPlayer(nCurrentMove.nValue, mDeskView);
+    *hPlr = *curPlr;
+    mPlayers[nCurrentMove.nValue] = hPlr;
+    res = hPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)));
+    *curPlr = *hPlr;
+    mPlayers[nCurrentMove.nValue] = curPlr;
+    delete hPlr;
+  } else if (curPlr->mPlayerNo == 1 && curPlr->mMyGame == gtPass) {
+    Player *aiPlr = new CheatPlayer(nCurrentMove.nValue, mDeskView);
+    *aiPlr = *curPlr;
+    mPlayers[nCurrentMove.nValue] = aiPlr;
+    res = aiPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)));
+    *curPlr = *aiPlr;
+    mPlayers[nCurrentMove.nValue] = curPlr;
+    delete aiPlr;
   } else {
     res =
       (player(nCurrentMove))->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)));
@@ -460,8 +465,10 @@ void PrefDesktop::runGame () {
       int pos = 0;
       if (!mDeck.unserialize(ba, &pos)) abort();
       nCurrentStart.nValue = 1;
+    //} else if (allowDebugLog) {
     } else if (allowDebugLog) {
-      QString fns(QString::number(roundNo++));
+      QString fns(QString::number(roundNo));
+      //roundNo++
       while (fns.length() < 2) fns.prepend('0');
       QFile fl(fns);
       if (fl.open(QIODevice::WriteOnly)) {
@@ -620,8 +627,8 @@ void PrefDesktop::runGame () {
           } else {
             // показать все карты
             int tempint = nCurrentMove.nValue;
-            int nVisibleState = tmpg->mInvisibleHand;
-            tmpg->mInvisibleHand = 0;
+            int nVisibleState = tmpg->isInvisibleHand();
+            tmpg->mInvisibleHand = false;
             draw();
             if (tmpg->mPlayerNo != 1) {
               int x, y;
@@ -732,7 +739,7 @@ void PrefDesktop::runGame () {
               if (nPassCounter || CurrentGame == g86) {
                 // если не 2 виста
                 if (Gamer4Open->mMyGame == gtPass || Gamer4Open->mMyGame == vist || Gamer4Open->mMyGame == g86catch)
-                  Gamer4Open->mInvisibleHand = 0;
+                  Gamer4Open->mInvisibleHand = false;
               }
             }
           }
@@ -773,7 +780,8 @@ void PrefDesktop::runGame () {
         mCardsOnDesk[0] = tmp4show;
         draw();
         if (nCurrentMove.nValue != 1) mDeskView->mySleep(-1);
-        mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, ptmp4rpass);
+        //!-!mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, ptmp4rpass);
+        mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, 0);
       } else {
         draw();
         mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, 0);

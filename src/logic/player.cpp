@@ -1690,12 +1690,12 @@ void Player::drawAt (DeskView *aDeskView, int left, int top, int selNo) {
   if (!aDeskView) return;
   mDeskView = aDeskView;
 
-  int cnt = buildHandXOfs(ofs, left, !mInvisibleHand);
+  int cnt = buildHandXOfs(ofs, left, !isInvisibleHand());
   if (cnt) left = ofs[0];
   for (int f = 0; ofs[f] >= 0; f += 2) {
     int x = ofs[f], y = top;
     Card *card = mCards.at(ofs[f+1]);
-    aDeskView->drawCard(card, x, y, !mInvisibleHand, ofs[f+1]==selNo);
+    aDeskView->drawCard(card, x, y, !isInvisibleHand(), ofs[f+1]==selNo);
   }
   aDeskView->emitRepaint();
   mDeskView = oDesk;
@@ -1720,10 +1720,15 @@ void Player::clearCardArea () {
   int left, top, ofs[28];
   if (!mDeskView) return;
   getLeftTop(&left, &top);
-  int cnt = buildHandXOfs(ofs, left, !mInvisibleHand);
+  int cnt = buildHandXOfs(ofs, left, !isInvisibleHand());
   if (!cnt) return;
   for (int f = 0; ofs[f] >= 0; f += 2) {
     int x = ofs[f], y = top;
     mDeskView->ClearBox(x, y, CARDWIDTH, CARDHEIGHT);
   }
+}
+
+
+bool Player::isInvisibleHand () {
+  return mInvisibleHand;
 }

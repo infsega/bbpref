@@ -44,6 +44,8 @@ public:
 
   Player &operator = (const Player &pl);
 
+  virtual bool isInvisibleHand ();
+
 public:
   QString mNick;
 
