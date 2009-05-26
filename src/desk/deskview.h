@@ -57,7 +57,7 @@ signals:
 
 public:
   int Event;
-  QPixmap *mDeskBmp;
+  QImage *mDeskBmp;
   QImage *mBidBmp;
   QImage *mIMoveBmp;
   QImage *mKeyBmp[2];

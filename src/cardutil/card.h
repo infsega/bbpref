@@ -2,6 +2,7 @@
 #define CARD_H
 
 #include <QList>
+#include <QString>
 
 
 const int FACE_JACK  = 11;
@@ -17,6 +18,8 @@ public:
   inline bool isValid () const { return mValid; }
 
   int pack () const;
+
+  QString toString () const;
 
   friend int operator > (const Card &c0, const Card &c1);
   friend int operator < (const Card &c0, const Card &c1);
@@ -48,6 +51,8 @@ typedef QList<Card *> QCardList;
 void initCardList ();
 Card *newCard (int aFace, int aSuit);
 Card *newCard (int aPacked);
+
+Card *cardFromName (const char *str);
 
 
 #endif

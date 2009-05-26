@@ -1,5 +1,7 @@
 #include "prfconst.h"
 
+#include <QDebug>
+
 #include <QMainWindow>
 
 #include <stdio.h>
@@ -439,12 +441,25 @@ void PrefDesktop::runGame () {
     mDeck.newDeck();
     mDeck.shuffle();
 
-    QFile dbgD("dbg.mDeck");
-    if (dbgD.open(QIODevice::ReadOnly)) {
+  {
+    QFile dbgD("dbg.deck");
+    QFile dbgDT("dbg.deck.txt");
+    if (dbgDT.open(QIODevice::ReadOnly)) {
+      mDeck.clear();
+      for (int f = 0; f < 32; f++) {
+        QByteArray ba(dbgDT.readLine());
+        Card *c = cardFromName(ba.constData());
+        if (!c) abort();
+        qDebug() << c->toString();
+        mDeck << c;
+        nCurrentStart.nValue = 1;
+      }
+    } else if (dbgD.open(QIODevice::ReadOnly)) {
       QByteArray ba(dbgD.readAll());
       dbgD.close();
       int pos = 0;
       if (!mDeck.unserialize(ba, &pos)) abort();
+      nCurrentStart.nValue = 1;
     } else if (allowDebugLog) {
       QString fns(QString::number(roundNo++));
       while (fns.length() < 2) fns.prepend('0');
@@ -456,6 +471,7 @@ void PrefDesktop::runGame () {
         fl.close();
       }
     }
+  }
 
     player(1)->clear();
     player(2)->clear();
@@ -472,31 +488,31 @@ void PrefDesktop::runGame () {
     }
     */
     {
-    CardList tmpDeck; int cc = succPlayer(nCurrentStart), tPos = 0, tNo = 0;
-    mOnDeskClosed = true;
-    for (int f = 0; f < 15; f++) {
-      if (f == 3) {
-        // talion
-        tNo = tPos;
-        mCardsOnDesk[0] = mDeck.at(tPos++);
+      CardList tmpDeck; int cc = succPlayer(nCurrentStart), tPos = 0, tNo = 0;
+      mOnDeskClosed = true;
+      for (int f = 0; f < 15; f++) {
+        if (f == 4) {
+          // talon
+          tNo = tPos;
+          mCardsOnDesk[0] = mDeck.at(tPos++);
+          draw(); mDeskView->aniSleep(40);
+          mCardsOnDesk[1] = mDeck.at(tPos++);
+          draw(); mDeskView->aniSleep(40);
+        }
+        Player *plr = player(cc); cc = (cc%3)+1;
+        plr->dealCard(mDeck.at(tPos)); tmpDeck << mDeck.at(tPos++);
         draw(); mDeskView->aniSleep(40);
-        mCardsOnDesk[1] = mDeck.at(tPos++);
-        draw(); mDeskView->aniSleep(40);
+        plr->dealCard(mDeck.at(tPos)); tmpDeck << mDeck.at(tPos++);
+        draw(); mDeskView->aniSleep(80);
+        if (f%3 == 2) mDeskView->aniSleep(200);
       }
-      Player *plr = player(cc); cc = (cc%3)+1;
-      plr->dealCard(mDeck.at(tPos)); tmpDeck << mDeck.at(tPos++);
-      draw(); mDeskView->aniSleep(40);
-      plr->dealCard(mDeck.at(tPos)); tmpDeck << mDeck.at(tPos++);
-      draw(); mDeskView->aniSleep(80);
-      if (f%3 == 2) mDeskView->aniSleep(200);
-    }
-    tmpDeck << mDeck.at(tNo++);
-    tmpDeck << mDeck.at(tNo);
-    if (tmpDeck.count() != 32) abort();
-    mDeck = tmpDeck;
-    mOnDeskClosed = false;
-    mCardsOnDesk[0] = mCardsOnDesk[1] = 0;
-    draw(false);
+      tmpDeck << mDeck.at(tNo++);
+      tmpDeck << mDeck.at(tNo);
+      if (tmpDeck.count() != 32) abort();
+      mDeck = tmpDeck;
+      mOnDeskClosed = false;
+      mCardsOnDesk[0] = mCardsOnDesk[1] = 0;
+      draw(false);
     }
 
     dlogf("=========================================");
@@ -511,7 +527,7 @@ void PrefDesktop::runGame () {
     xxBuf[0] = 0;
     cardName(xxBuf, mDeck.at(30));
     cardName(xxBuf, mDeck.at(31));
-    dlogf("talion: %s", xxBuf);
+    dlogf("talon: %s", xxBuf);
 
     plrCounter = nCurrentStart;
     switch (nCurrentStart.nValue) {

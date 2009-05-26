@@ -30,6 +30,32 @@ int Card::compareWith (const Card &c1) const {
 }
 
 
+QString Card::toString () const {
+  QString res("???");
+  if (!mValid) return res;
+  switch (mFace) {
+    case 7: res = " 7"; break;
+    case 8: res = " 8"; break;
+    case 9: res = " 9"; break;
+    case 10: res = "10"; break;
+    case 11: res = " J"; break;
+    case 12: res = " Q"; break;
+    case 13: res = " K"; break;
+    case 14: res = " A"; break;
+    default: return res;
+  }
+  switch (mSuit) {
+    case 1: res += "s"; break;
+    case 2: res += "c"; break;
+    case 3: res += "d"; break;
+    case 4: res += "h"; break;
+    default: res = "???";
+  }
+  return res;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 int operator > (const Card &c0, const Card &c1) {
   return (c0.compareWith(c1) > 0) ? 1 : 0;
 }
@@ -84,4 +110,34 @@ Card *newCard (int aFace, int aSuit) {
   int no = 32;
   if (aFace >= 7 && aFace <= FACE_ACE && aSuit >= 1 && aSuit <= 4) no = (aFace-7)*4+(aSuit-1);
   return cList[no];
+}
+
+
+Card *cardFromName (const char *str) {
+  int face = -1, suit = -1;
+  if (!str) return 0;
+  while (*str && (unsigned char)(*str) <= ' ') str++;
+  switch (*str++) {
+    case '7': face = 7; break;
+    case '8': face = 8; break;
+    case '9': face = 9; break;
+    case '1':
+      if (*str++ != '0') return 0;
+      face = 10;
+      break;
+    case 'J': case 'j': face = 11; break;
+    case 'Q': case 'q': face = 12; break;
+    case 'K': case 'k': face = 13; break;
+    case 'A': case 'a': face = 14; break;
+    default: return 0;
+  }
+  while (*str && (unsigned char)(*str) <= ' ') str++;
+  switch (*str++) {
+    case 'S': case 's': suit = 1; break;
+    case 'C': case 'c': suit = 2; break;
+    case 'D': case 'd': suit = 3; break;
+    case 'H': case 'h': suit = 4; break;
+    default: return 0;
+  }
+  return newCard(face, suit);
 }

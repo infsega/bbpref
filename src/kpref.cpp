@@ -194,7 +194,8 @@ void Kpref::paintEvent (QPaintEvent *event) {
   if (mDeskView && mDeskView->mDeskBmp) {
     QPainter p;
     p.begin(this);
-    p.drawPixmap(0, 0, *(mDeskView->mDeskBmp));
+    //p.drawPixmap(0, 0, *(mDeskView->mDeskBmp));
+    p.drawImage(0, 0, *(mDeskView->mDeskBmp));
     p.end();
   }
   mInPaintEvent = false;
