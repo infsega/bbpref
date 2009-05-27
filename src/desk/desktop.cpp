@@ -37,12 +37,13 @@ void PrefDesktop::internalInit () {
   //addPlayer(new Player(1));
   // I Hate This Game :)
   addPlayer(new HumanPlayer(1, mDeskView));
-/*
-  addPlayer(new Player(2, mDeskView));
-  addPlayer(new Player(3, mDeskView));
-*/
-  addPlayer(new CheatPlayer(2, mDeskView));
-  addPlayer(new CheatPlayer(3, mDeskView));
+  if (gNoAlphaBeta) {
+    addPlayer(new Player(2, mDeskView));
+    addPlayer(new Player(3, mDeskView));
+  } else {
+    addPlayer(new CheatPlayer(2, mDeskView));
+    addPlayer(new CheatPlayer(3, mDeskView));
+  }
   mShowPool = false;
   mOnDeskClosed = false;
   optMaxPool = 21;
@@ -143,7 +144,9 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove) {
     mPlayers[nCurrentMove.nValue] = curPlr;
     delete hPlr;
   } else if (curPlr->mPlayerNo == 1 && curPlr->mMyGame == gtPass) {
-    Player *aiPlr = new CheatPlayer(nCurrentMove.nValue, mDeskView);
+    Player *aiPlr;
+    if (gNoAlphaBeta) aiPlr = new Player(nCurrentMove.nValue, mDeskView);
+    else aiPlr = new CheatPlayer(nCurrentMove.nValue, mDeskView);
     *aiPlr = *curPlr;
     mPlayers[nCurrentMove.nValue] = aiPlr;
     res = aiPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)));

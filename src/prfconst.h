@@ -69,6 +69,7 @@ extern bool g61stalingrad;
 extern bool g10vist;
 extern bool globvist;
 extern int optMaxPool;
+extern bool gNoAlphaBeta;
 extern eGameBid CurrentGame;
 
 

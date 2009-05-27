@@ -47,11 +47,12 @@ static tGameName gameNames[] = {
 };
 
 
-bool g61stalingrad;
-bool g10vist;
-bool globvist;
-int optMaxPool;
+bool g61stalingrad = true;
+bool g10vist = false;
+bool globvist = true;
+int optMaxPool = 10;
 eGameBid CurrentGame;
+bool gNoAlphaBeta = false;
 
 
 int trumpSuit (void) {

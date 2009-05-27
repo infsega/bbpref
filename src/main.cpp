@@ -21,7 +21,7 @@ int main (int argc, char *argv[]) {
       for (int c = f; c < argc; c++) argv[c] = argv[c+1];
       argc--;
       f--;
-    }
+    } else if (!strcmp(argv[f], "-o")) gNoAlphaBeta = true;
   }
 
   qsrand((unsigned)time(0));
