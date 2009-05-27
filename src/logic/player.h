@@ -71,9 +71,15 @@ public:
 
   void draw ();
 
+  inline void setMessage (const QString &msg) { mMessage = msg; }
+  inline const QString &message () const { return mMessage; }
+
+  inline int number () const { return mPlayerNo; }
+
 protected:
   int mPrevHiCardIdx;
   //int flMiser;
+  QString mMessage;
 
 protected:
   void drawAt (DeskView *aDeskView, int left, int top, int selNo=-1);

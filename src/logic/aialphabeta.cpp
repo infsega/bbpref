@@ -394,7 +394,7 @@ doMove:
     hand->faces[crdNo] = crdFace;
     if (crdNo+1 == hand->suitStart[crdSuit]) hand->suitStart[crdSuit]--;
     // проверим, чо нашли
-    if (x == bestx) {
+    if (bestm >= 0 && x == bestx) {
       // we've found an equivalent move
       //if (bestm < 0) abort();
       n++;

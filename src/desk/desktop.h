@@ -51,7 +51,8 @@ public:
 
 private:
   void internalInit ();
-  Player *player (int);
+
+  Player *player (int num);
   Player *player (const WrapCounter &cnt);
   Card *makeGameMove (Card *lMove, Card *rMove);
 
@@ -60,7 +61,7 @@ private:
   void animateDeskToPlayer (int plrNo);
 
 private:
-  void drawBidWindows (const eGameBid *bids, int curPlr);
+  //void drawBidWindows (const eGameBid *bids, int curPlr);
   void getPMsgXY (int plr, int *x, int *y);
 
   int playerWithMaxPool (); // except the players who closed the pool
@@ -71,6 +72,7 @@ private:
   bool mPlayingRound;
   int mPlayerActive; // кто играет (если не распасы и mPlayingRound=true)
   int iMoveX, iMoveY;
+  int mPlayerHi; // подсвеченая мессага
 };
 
 

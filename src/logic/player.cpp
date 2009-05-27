@@ -51,6 +51,7 @@ void Player::clone (const Player *pl) {
     mInvisibleHand = pl->mInvisibleHand;
     mDeskView = pl->mDeskView;
     mCardCarryThru = pl->mCardCarryThru;
+    mMessage = pl->mMessage;
   }
 }
 
@@ -76,6 +77,7 @@ void Player::clear () {
   }
   mInvisibleHand = (mPlayerNo != 1);
   mCardCarryThru = 0;
+  mMessage.clear();
 }
 
 
