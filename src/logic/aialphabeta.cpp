@@ -107,6 +107,9 @@ static int xDeskFaces[3], xDeskSuits[3];
  * b: игрок player+1 набрал максимум вот столько
  * c: игрок player+2 набрал максимум вот столько
  * возврат: то же самое
+ *
+ * идея и псевдокод взяты отсюда: http://clauchau.free.fr/gamma.html
+ * idea and pseudocode was taken from here: http://clauchau.free.fr/gamma.html
  */
 static void abcPrune (
   int turn, int player,
@@ -367,16 +370,12 @@ doMove:
         //abcPrune(newTurn, newPlayer, -c, -a, b, &y, &z, &x, NULL);
         if (who == player) {
           // я же и забрал, снова здорово
-          //abcPrune(0, player, bestx, worsty, worstz, &x, &y, &z, NULL);
-          ///abcPrune(0, player, -bestx, -worsty, worstz, &x, &y, &z, NULL); //???
-          abcPrune(0, player, a, b, c, &x, &y, &z, NULL); //???
+          abcPrune(0, player, a, b, c, &x, &y, &z, NULL);
         } else if (who == newPlayer) {
           // следующий забрал; красота и благолепие
-          ///abcPrune(0, newPlayer, -c, -a, b, &y, &z, &x, NULL);
           abcPrune(0, newPlayer, -c, -a, b, &y, &z, &x, NULL);
         } else {
-          // предыдущий забрал; хуй знает, чо тут писать
-          ///abcPrune(0, who, -b, -c, a, &z, &x, &y, NULL);
+          // предыдущий забрал; вот такие вот параметры вышли; путём трэйсинга, да
           abcPrune(0, who, -b, c, -a, &z, &x, &y, NULL);
         }
       }
