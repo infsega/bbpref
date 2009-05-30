@@ -1,7 +1,5 @@
 #include <string.h>
 #include <stdlib.h>
-#include <time.h>
-
 #include <QDebug>
 
 #include <QApplication>
@@ -304,7 +302,6 @@ void DeskView::drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game
 
 
 void DeskView::mySleep (int seconds) {
-  //time_t tStart = time(0);
   Event = 0;
   SleepEventLoop eloop(this);
   SleepEventFilter efilter(&eloop);
@@ -339,55 +336,10 @@ void DeskView::mySleep (int seconds) {
     drawPKeyBmp(false);
     emitRepaint();
   }
-/*
-  while (!Event) {
-    qApp->processEvents(QEventLoop::WaitForMoreEvents);
-    qApp->sendPostedEvents();
-    //qApp->flush();
-    //qApp->processEvents(QEventLoop::AllEvents | QEventLoop::WaitForMoreEvents, 900);
-    if (seconds > 0) {
-      if (difftime(time(0), tStart) >= seconds) Event = 3;
-    }
-    //usleep(10000); //1000000
-    msSleep(40);
-    if (seconds == 0) break;
-    if (seconds < 0) {
-      if (seconds == -1) {
-        drawPKeyBmp(true);
-        emitRepaint();
-      }
-      if (seconds < -1 && Event == 2) Event = 0;
-    }
-  }
-  if (timer) delete timer;
-  drawPKeyBmp(false);
-  emitRepaint();
-*/
 }
 
 
 void DeskView::aniSleep (int milliseconds) {
-/*
-  emitRepaint();
-  do {
-    qApp->processEvents(QEventLoop::WaitForMoreEvents);
-    qApp->sendPostedEvents();
-    qApp->flush();
-    //qApp->processEvents(QEventLoop::AllEvents | QEventLoop::WaitForMoreEvents, 900);
-    if (milliseconds > 0) {
-      if (milliseconds > 100) {
-        msSleep(100);
-        milliseconds -= 100;
-      } else {
-        msSleep(milliseconds);
-        milliseconds = 0;
-      }
-    }
-    emitRepaint();
-  } while (milliseconds > 0);
-  Event = 0;
-  //emitRepaint();
-*/
   Event = 0;
   SleepEventLoop eloop(this);
   eloop.mIgnoreMouse = true;

@@ -1205,7 +1205,7 @@ eGameBid AiPlayer::moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerVist
   int vz = MyMaxGame/10;
   Answer = (HaveAVist != vist && vz >= gameWhistsMin(MaxGame)) ? vist : gtPass ;
   if (HaveAVist == gtPass && vz < gameWhistsMin(MaxGame)) Answer = gtPass;
-  if (g61stalingrad && MaxGame == g61) Answer = vist; //STALINGRAD !!!
+  if (optStalingrad && MaxGame == g61) Answer = vist; //STALINGRAD !!!
   if (MaxGame == g86) Answer = g86catch; // miser
   mMyGame = Answer;
   return Answer;

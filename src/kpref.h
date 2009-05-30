@@ -37,12 +37,16 @@ public:
 public slots:
   void forceRepaint ();
 
-  void slotNewSingleGame();
-  void slotShowScore();
-  void slotEndSleep();
-  void slotFileOpen();
-  void slotFileSave();
-  void slotHelpAbout();
+  void slotNewSingleGame ();
+  void slotShowScore ();
+  void slotFileOpen ();
+  void slotFileSave ();
+  void slotHelpAbout ();
+  void slotOptions ();
+
+private:
+  void saveOptions ();
+  void loadOptions ();
 
 private:
   QMenu *netgameMenu;
@@ -54,6 +58,7 @@ private:
   QAction *actFileOpen;
   QAction *actFileSave;
   QAction *actQuit;
+  QAction *actOptions;
 
 public:
   PrefDesktop *mDesktop;

@@ -65,12 +65,12 @@ typedef struct {
 } tSuitProbs;
 
 
-extern bool g61stalingrad;
-extern bool g10vist;
-extern bool globvist;
+extern bool optStalingrad;
+extern bool opt10Whist;
+extern bool optWhistGreedy;
 extern int optMaxPool;
-extern bool gNoAlphaBeta;
-extern eGameBid CurrentGame;
+extern bool optNoAlphaBeta;
+extern eGameBid gCurrentGame;
 
 
 int succBid (eGameBid game);

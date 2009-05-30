@@ -37,6 +37,7 @@ public:
 
 signals:
   void deskChanged ();
+  void gameOver ();
 
 public:
   DeskView *mDeskView;

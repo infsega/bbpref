@@ -1,6 +1,7 @@
 #include <time.h>
 
 #include <QApplication>
+#include <QTextCodec>
 
 #include "main.h"
 
@@ -12,6 +13,18 @@
 
 int main (int argc, char *argv[]) {
 #if !defined(WIN32) && !defined(_WIN32)
+  QTextCodec::setCodecForCStrings(QTextCodec::codecForName("koi8-r"));
+  QTextCodec::setCodecForLocale(QTextCodec::codecForName("koi8-r"));
+#else
+  QTextCodec::setCodecForCStrings(QTextCodec::codecForName("windows-1251"));
+  QTextCodec::setCodecForLocale(QTextCodec::codecForName("windows-1251"));
+#endif
+
+  QCoreApplication::setOrganizationName("Vampire Avalon");
+  QCoreApplication::setOrganizationDomain("ketmar.no-ip.org"); // fuck macz
+  QCoreApplication::setApplicationName("OpenPref");
+
+#if !defined(WIN32) && !defined(_WIN32)
   char *e = getenv("DEBUG");
   if (!(!e || !strcmp(e, "0") || !strcasecmp(e, "off") || strcasecmp(e, "ona"))) allowDebugLog = 1;
 #endif
@@ -21,7 +34,7 @@ int main (int argc, char *argv[]) {
       for (int c = f; c < argc; c++) argv[c] = argv[c+1];
       argc--;
       f--;
-    } else if (!strcmp(argv[f], "-o")) gNoAlphaBeta = true;
+    } else if (!strcmp(argv[f], "-o")) optNoAlphaBeta = true;
   }
 
   qsrand((unsigned)time(0));

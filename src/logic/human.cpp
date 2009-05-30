@@ -175,10 +175,10 @@ eGameBid HumanPlayer::moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerV
     mMyGame = g86catch;
   } else {
     // сталинград?
-    if (g61stalingrad && MaxGame == g61) formBid->disableItem(gtPass);
+    if (optStalingrad && MaxGame == g61) formBid->disableItem(gtPass);
     else formBid->enableItem(gtPass);
     formBid->disableAll();
-    formBid->enableItem(gtPass);
+    //formBid->enableItem(gtPass);
     formBid->enableItem(vist);
     mMyGame = mDeskView->selectBid(zerogame, zerogame);
     formBid->enableAll();

@@ -126,7 +126,7 @@ int ScoreBoard::recordScores (
 
   //-------------------------------------------------------------------------
   if (aMyType == gtPass && aGamerType != g86) {
-    if (!globvist && nGameCard-nGamerVz > 0) {
+    if (!optWhistGreedy && nGameCard-nGamerVz > 0) {
       // разыгрывающий без лап(ы)
       score = nGamePrice*((nGameCard-nGamerVz)+nMyVz)+pnCurrent;
     }

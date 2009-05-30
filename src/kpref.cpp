@@ -2,16 +2,18 @@
 #include <QDesktopWidget>
 #include <QMouseEvent>
 #include <QMainWindow>
+#include <QSettings>
 
 #include "kpref.h"
+
 #include "desktop.h"
 #include "deskview.h"
+#include "formbid.h"
+#include "optform.h"
 #include "player.h"
 
-#include "formbid.h"
 
-
-char *documentation; //see bottom this file
+//char *documentation; //see bottom this file
 Kpref *kpref;
 
 
@@ -22,6 +24,8 @@ Kpref::Kpref () {
   mDeskView = 0;
   mDesktop = 0;
   setMouseTracking(true);
+
+  loadOptions();
 
   QDesktopWidget *desk = QApplication::desktop();
   QRect dims(desk->availableGeometry(this));
@@ -63,14 +67,17 @@ void Kpref::initMenuBar () {
   fileMenu = menuBar()->addMenu("&Game");
   actNewGame = fileMenu->addAction(QIcon(QString(":/pics/newgame.png")), "&New game...", this, SLOT(slotNewSingleGame()), Qt::CTRL+Qt::Key_N);
   fileMenu->addSeparator();
-  actFileOpen = fileMenu->addAction(QIcon(QString(":/pics/fileopen.png")),"&Open...", this, SLOT(slotFileOpen()), Qt::CTRL+Qt::Key_O);
-  actFileSave = fileMenu->addAction(QIcon(QString(":/pics/filesave.png")),"&Save", this, SLOT(slotFileSave()), Qt::CTRL+Qt::Key_S);
+  actFileOpen = fileMenu->addAction(QIcon(QString(":/pics/fileopen.png")), "&Open...", this, SLOT(slotFileOpen()), Qt::CTRL+Qt::Key_O);
+  actFileSave = fileMenu->addAction(QIcon(QString(":/pics/filesave.png")), "&Save", this, SLOT(slotFileSave()), Qt::CTRL+Qt::Key_S);
+  fileMenu->addSeparator();
+  actOptions = fileMenu->addAction("&Options", this, SLOT(slotOptions()), Qt::CTRL+Qt::Key_P);
   fileMenu->addSeparator();
   actQuit = fileMenu->addAction("Quit", qApp, SLOT(quit()), Qt::CTRL+Qt::Key_Q);
   actFileSave->setEnabled(false);
+  actOptions->setEnabled(true);
 
   viewMenu = menuBar()->addMenu("&Show");
-  viewMenu->addAction(QIcon(QString(":/pics/paper.png")), "Score...", this, SLOT(slotShowScore()), Qt::CTRL+Qt::Key_P);
+  viewMenu->addAction(QIcon(QString(":/pics/paper.png")), "Score...", this, SLOT(slotShowScore()), Qt::CTRL+Qt::Key_R);
 
   menuBar()->addSeparator();
   helpMenu = menuBar()->addMenu("&Help");
@@ -106,12 +113,6 @@ void Kpref::slotFileQuit() {
 */
 
 
-void Kpref::slotEndSleep () {
-  //QEvent Event(Event_Timer);
-  //qApp->postEvent(this,&Event );
-}
-
-
 void Kpref::slotShowScore () {
   mDesktop->closePool();
   mDesktop->mShowPool = true;
@@ -134,14 +135,14 @@ void Kpref::slotNewSingleGame () {
     mDeskView = new DeskView(width(), height());
     mDesktop = new PrefDesktop();
     mDesktop->mDeskView = mDeskView;
-    optMaxPool = 10; //k8:!!!
-    g61stalingrad = true; //k8:!!!
-    g10vist = false; //k8:!!!
-    globvist = true; //k8:!!!
     connect(mDesktop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
     connect(mDeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
   }
+  actOptions->setEnabled(false);
+  actFileOpen->setEnabled(false);
   mDesktop->runGame();
+  actFileOpen->setEnabled(true);
+  actOptions->setEnabled(true);
 }
 
 
@@ -212,4 +213,40 @@ void Kpref::slotHelpAbout () {
     "Based on kpref (c) Azarniy I.V.\n"
     "Qt4 port and many new bugs by Ketmar"
   );
+}
+
+
+void Kpref::saveOptions () {
+  QSettings st;
+  st.setValue("maxpool", optMaxPool);
+  st.setValue("stalin", optStalingrad);
+  st.setValue("whist10", opt10Whist);
+  st.setValue("whistgreedy", optWhistGreedy);
+}
+
+
+void Kpref::loadOptions () {
+  QSettings st;
+  optMaxPool = st.value("maxpool", 10).toInt();
+  if (optMaxPool < 4) optMaxPool = 4; else if (optMaxPool > 1000) optMaxPool = 1000;
+  optStalingrad = st.value("stalin", true).toBool();
+  opt10Whist = st.value("whist10", false).toBool();
+  optWhistGreedy = st.value("whistgreedy", true).toBool();
+}
+
+
+void Kpref::slotOptions () {
+  OptDialog *dlg = new OptDialog;
+  dlg->sbGame->setValue(optMaxPool);
+  dlg->cbGreedy->setChecked(optWhistGreedy);
+  dlg->cbTenCheck->setChecked(!opt10Whist);
+  dlg->cbStalin->setChecked(optStalingrad);
+  if (dlg->exec() == QDialog::Accepted) {
+    optMaxPool = dlg->sbGame->value();
+    optWhistGreedy = dlg->cbGreedy->isChecked();
+    opt10Whist = !dlg->cbTenCheck->isChecked();
+    optStalingrad = dlg->cbStalin->isChecked();
+    saveOptions();
+  }
+  delete dlg;
 }

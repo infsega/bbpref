@@ -47,16 +47,16 @@ static tGameName gameNames[] = {
 };
 
 
-bool g61stalingrad = true;
-bool g10vist = false;
-bool globvist = true;
+bool optStalingrad = true;
+bool opt10Whist = false;
+bool optWhistGreedy = true;
 int optMaxPool = 10;
-eGameBid CurrentGame;
-bool gNoAlphaBeta = false;
+eGameBid gCurrentGame;
+bool optNoAlphaBeta = false;
 
 
 int trumpSuit (void) {
-  return CurrentGame-(CurrentGame/10)*10;
+  return gCurrentGame-(gCurrentGame/10)*10;
 }
 
 
