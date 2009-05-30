@@ -53,6 +53,10 @@ bool optWhistGreedy = true;
 int optMaxPool = 10;
 eGameBid gCurrentGame;
 bool optNoAlphaBeta = false;
+bool optDebugHands = false;
+
+bool optDealAnim = true;
+bool optTakeAnim = true;
 
 
 int trumpSuit (void) {

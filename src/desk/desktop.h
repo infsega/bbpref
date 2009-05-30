@@ -59,7 +59,7 @@ private:
 
   void drawInGameCard (int mCardNo, Card *card);
   void inGameCardLeftTop (int mCardNo, int *left, int *top);
-  void animateDeskToPlayer (int plrNo);
+  void animateDeskToPlayer (int plrNo, bool doAnim);
 
 private:
   //void drawBidWindows (const eGameBid *bids, int curPlr);

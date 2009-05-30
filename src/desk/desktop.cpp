@@ -228,7 +228,7 @@ static void dumpCardList (char *dest, const CardList &lst) {
 }
 
 
-void PrefDesktop::animateDeskToPlayer (int plrNo) {
+void PrefDesktop::animateDeskToPlayer (int plrNo, bool doAnim) {
   static const int steps = 10;
   Card *cAni[4];
   int left, top;
@@ -244,7 +244,7 @@ void PrefDesktop::animateDeskToPlayer (int plrNo) {
     mCardsOnDesk[f] = 0;
   }
 
-  for (int f = 0; f <= steps; f++) {
+  for (int f = doAnim?0:steps; f <= steps; f++) {
     draw(false);
     for (int c = 0; c <= 3; c++) {
       if (!cAni[c]) continue;
@@ -540,16 +540,18 @@ void PrefDesktop::runGame () {
           // talon
           tNo = tPos;
           mCardsOnDesk[2] = mDeck.at(tPos++);
-          draw(); mDeskView->aniSleep(40);
+          if (optDealAnim) { draw(); mDeskView->aniSleep(40); }
           mCardsOnDesk[3] = mDeck.at(tPos++);
-          draw(); mDeskView->aniSleep(40);
+          if (optDealAnim) { draw(); mDeskView->aniSleep(40); }
         }
         Player *plr = player(cc); cc = (cc%3)+1;
         plr->dealCard(mDeck.at(tPos)); tmpDeck << mDeck.at(tPos++);
-        draw(); mDeskView->aniSleep(40);
+        if (optDealAnim) { draw(); mDeskView->aniSleep(40); }
         plr->dealCard(mDeck.at(tPos)); tmpDeck << mDeck.at(tPos++);
-        draw(); mDeskView->aniSleep(80);
-        if (f%3 == 2) mDeskView->aniSleep(200);
+        if (optDealAnim) { draw(); mDeskView->aniSleep(80); }
+        if (optDealAnim) { 
+          if (f%3 == 2) mDeskView->aniSleep(200);
+        }
       }
       tmpDeck << mDeck.at(tNo++);
       tmpDeck << mDeck.at(tNo);
@@ -560,6 +562,11 @@ void PrefDesktop::runGame () {
       mCardsOnDesk[1] = mCardsOnDesk[2] = 0;
 */
       draw(false);
+    }
+    if (!optDealAnim) {
+      draw();
+      emitRepaint();
+      mDeskView->mySleep(0);
     }
 
     dlogf("=========================================");
@@ -647,7 +654,7 @@ void PrefDesktop::runGame () {
           // запихиваем ему прикуп
           tmpg->dealCard(mDeck.at(30));
           tmpg->dealCard(mDeck.at(31));
-          animateDeskToPlayer(mPlayerActive); // will clear mCardsOnDesk[]
+          animateDeskToPlayer(mPlayerActive, optTakeAnim); // will clear mCardsOnDesk[]
 
           //bids4win[0] = bids4win[1] = bids4win[2] = bids4win[3] = undefined;
           // снос
@@ -846,7 +853,7 @@ void PrefDesktop::runGame () {
 
       nPl = whoseTrick(mFirstCard, mSecondCard, mThirdCard, playerBids[0]-(playerBids[0]/10)*10)-1;
       nCurrentMove = nCurrentMove+nPl;
-      animateDeskToPlayer(nCurrentMove.nValue); // will clear mCardsOnDesk[]
+      animateDeskToPlayer(nCurrentMove.nValue, optTakeAnim); // will clear mCardsOnDesk[]
       tmpg = player(nCurrentMove);
       tmpg->gotTrick();
       draw(false);

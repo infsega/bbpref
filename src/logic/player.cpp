@@ -71,7 +71,7 @@ void Player::clear () {
 
 
 bool Player::invisibleHand () const {
-  return mInvisibleHand;
+  return optDebugHands ? false : mInvisibleHand;
 }
 
 

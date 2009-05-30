@@ -16,8 +16,6 @@ public:
   CheatPlayer (int aMyNumber, DeskView *aDeskView=0);
 
   Card *moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut); //ход
-
-  virtual bool invisibleHand ();
 };
 
 

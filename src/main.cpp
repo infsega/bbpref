@@ -34,6 +34,7 @@ int main (int argc, char *argv[]) {
       for (int c = f; c < argc; c++) argv[c] = argv[c+1];
       argc--;
       f--;
+      allowDebugLog = 1;
     } else if (!strcmp(argv[f], "-o")) optNoAlphaBeta = true;
   }
 

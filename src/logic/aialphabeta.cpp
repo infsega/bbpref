@@ -662,8 +662,3 @@ CheatPlayer &CheatPlayer::operator = (const CheatPlayer &pl) {
   return *this;
 }
 */
-
-
-bool CheatPlayer::invisibleHand () {
-  return allowDebugLog ? false : mInvisibleHand;
-}

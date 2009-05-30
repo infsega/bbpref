@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>276</width>
-    <height>179</height>
+    <width>263</width>
+    <height>294</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -84,6 +84,62 @@
        </property>
       </widget>
      </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="lbDAnim">
+       <property name="text">
+        <string>deal:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="lbTAnim">
+       <property name="text">
+        <string>take:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QCheckBox" name="cbAnimDeal">
+       <property name="text">
+        <string>&amp;animated</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QCheckBox" name="cbAnimTake">
+       <property name="text">
+        <string>a&amp;nimated</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="lbAB">
+       <property name="text">
+        <string>alphabeta:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="lbDbgH">
+       <property name="text">
+        <string>AI cards:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QCheckBox" name="cbAlphaBeta">
+       <property name="text">
+        <string>use &amp;AlphaBeta</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QCheckBox" name="cbDebugHands">
+       <property name="text">
+        <string>sho&amp;w (debug)</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -135,6 +191,18 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>sbGame</tabstop>
+  <tabstop>cbGreedy</tabstop>
+  <tabstop>cbTenCheck</tabstop>
+  <tabstop>cbStalin</tabstop>
+  <tabstop>cbAnimDeal</tabstop>
+  <tabstop>cbAnimTake</tabstop>
+  <tabstop>cbAlphaBeta</tabstop>
+  <tabstop>cbDebugHands</tabstop>
+  <tabstop>btOk</tabstop>
+  <tabstop>btCancel</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

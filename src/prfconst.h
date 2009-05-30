@@ -70,7 +70,11 @@ extern bool opt10Whist;
 extern bool optWhistGreedy;
 extern int optMaxPool;
 extern bool optNoAlphaBeta;
+extern bool optDebugHands;
 extern eGameBid gCurrentGame;
+
+extern bool optDealAnim;
+extern bool optTakeAnim;
 
 
 int succBid (eGameBid game);

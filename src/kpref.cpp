@@ -222,6 +222,11 @@ void Kpref::saveOptions () {
   st.setValue("stalin", optStalingrad);
   st.setValue("whist10", opt10Whist);
   st.setValue("whistgreedy", optWhistGreedy);
+  st.setValue("animdeal", optDealAnim);
+  st.setValue("animtake", optTakeAnim);
+  st.setValue("animtake", optTakeAnim);
+  st.setValue("alphabeta", !optNoAlphaBeta);
+  st.setValue("debughand", optDebugHands);
 }
 
 
@@ -232,6 +237,10 @@ void Kpref::loadOptions () {
   optStalingrad = st.value("stalin", true).toBool();
   opt10Whist = st.value("whist10", false).toBool();
   optWhistGreedy = st.value("whistgreedy", true).toBool();
+  optDealAnim = st.value("animdeal", true).toBool();
+  optTakeAnim = st.value("animtake", true).toBool();
+  optNoAlphaBeta = !(st.value("alphabeta", true).toBool());
+  optDebugHands = st.value("debughand", false).toBool();
 }
 
 
@@ -241,11 +250,19 @@ void Kpref::slotOptions () {
   dlg->cbGreedy->setChecked(optWhistGreedy);
   dlg->cbTenCheck->setChecked(!opt10Whist);
   dlg->cbStalin->setChecked(optStalingrad);
+  dlg->cbAnimDeal->setChecked(optDealAnim);
+  dlg->cbAnimTake->setChecked(optTakeAnim);
+  dlg->cbAlphaBeta->setChecked(!optNoAlphaBeta);
+  dlg->cbDebugHands->setChecked(optDebugHands);
   if (dlg->exec() == QDialog::Accepted) {
     optMaxPool = dlg->sbGame->value();
     optWhistGreedy = dlg->cbGreedy->isChecked();
     opt10Whist = !dlg->cbTenCheck->isChecked();
     optStalingrad = dlg->cbStalin->isChecked();
+    optDealAnim = dlg->cbAnimDeal->isChecked();
+    optTakeAnim = dlg->cbAnimTake->isChecked();
+    optNoAlphaBeta = !dlg->cbAlphaBeta->isChecked();
+    optDebugHands = dlg->cbDebugHands->isChecked();
     saveOptions();
   }
   delete dlg;
