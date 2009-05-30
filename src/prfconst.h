@@ -72,6 +72,8 @@ extern int optMaxPool;
 extern bool optNoAlphaBeta;
 extern bool optDebugHands;
 extern eGameBid gCurrentGame;
+extern bool optAggPass;
+extern int optPassCount;
 
 extern bool optDealAnim;
 extern bool optTakeAnim;

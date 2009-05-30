@@ -54,6 +54,8 @@ int optMaxPool = 10;
 eGameBid gCurrentGame;
 bool optNoAlphaBeta = false;
 bool optDebugHands = false;
+bool optAggPass = true;
+int optPassCount = 0;
 
 bool optDealAnim = true;
 bool optTakeAnim = true;

@@ -1371,7 +1371,18 @@ eGameBid AiPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
     int nMaxMastLen = 0;
     eSuit nMaxMast = SuitNone;
     tSuitProbs LocalMastTable[5];
-    eGameBid MGT = qMax(lMove,rMove);
+/*
+    if (optAggPass && optPassCount > 0) {
+      if (lMove == undefined) lMove = g71;
+      if (rMove == undefined) rMove = g71;
+    }
+*/
+    eGameBid curMaxGame = qMax(lMove, rMove);
+    if (optAggPass && optPassCount > 0) {
+      if (curMaxGame < g71) curMaxGame = g65;
+      if (lMove != gtPass && lMove != undefined && lMove < g65) lMove = g65;
+      if (rMove != gtPass && rMove != undefined && rMove < g65) rMove = g65;
+    }
     LocalMastTable[0].tricks=0;
     LocalMastTable[0].perehvatov=0;
     LocalMastTable[0].sum = 0;
@@ -1381,7 +1392,7 @@ eGameBid AiPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
       LocalMastTable[0].perehvatov +=LocalMastTable[f].perehvatov;
       LocalMastTable[0].sum += LocalMastTable[f].sum;
     }
-    // предполагаемый козырь - самая длинная масть
+    // предполагаемый козырь -- самая длинная масть
     for (f = 1; f <= 4; f++) {
       if (mCards.cardsInSuit(f) > nMaxMastLen) {
         nMaxMastLen = mCards.cardsInSuit(f);
@@ -1395,28 +1406,29 @@ eGameBid AiPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
       }
     }
     // масть и взятки уже посчитали
-    if (MGT <= g75) {
+    if (curMaxGame <= g75) {
       mMyGame = (eGameBid)((LocalMastTable[0].tricks+1)*10+nMaxMast);
     } else {
       mMyGame = (eGameBid)((LocalMastTable[0].tricks)*10+nMaxMast);
     }
     if ((rMove == gtPass || rMove == undefined) && (lMove == gtPass || lMove == undefined)) {
       if (LocalMastTable[0].tricks >= 4) {
-        mMyGame = g61;
+        /*if (optAggPass && optPassCount > 0) mMyGame = g71;
+        else*/ mMyGame = g61;
       } else {
         if (LocalMastTable[0].tricks == 0)  {
           // check for misere !!!
           mMyGame = checkForMisere() ? g86 : gtPass ;
         } else mMyGame = gtPass;
       }
-    } else if (mMyGame >= MGT) {
-      mMyGame = (eGameBid)succBid(MGT);
+    } else if (mMyGame >= curMaxGame) {
+      mMyGame = (eGameBid)succBid(curMaxGame);
     } else {
       mMyGame = gtPass;
     }
 /*
-    if( mMyGame >= MGT  ) {
-        mMyGame = (eGameBid) succBid(MGT);
+    if( mMyGame >= curMaxGame  ) {
+        mMyGame = (eGameBid) succBid(curMaxGame);
     } else {
     }*/
     // это то, что мы можем играть максимально
@@ -1463,6 +1475,11 @@ eGameBid AiPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
         mMyGame = gtPass;
       }
     }*/
+  }
+  //???
+  if (optAggPass && optPassCount > 0 && mMyGame != gtPass && mMyGame < g71) {
+    moveBidding(g71, g71);
+    if (optAggPass && optPassCount > 0 && mMyGame != gtPass && mMyGame < g71) moveBidding(g72, g72);
   }
   return mMyGame;
 }

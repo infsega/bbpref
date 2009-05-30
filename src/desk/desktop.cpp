@@ -623,6 +623,7 @@ void PrefDesktop::runGame () {
     mPlayingRound = true;
     if (playerBids[0] != gtPass) {
       // не распасы
+      optPassCount = 0;
       // узнаем, кто назначил максимальную игру
       for (int i = 1; i <= 3; i++) {
         Player *tmpg = player(i);
@@ -767,6 +768,7 @@ void PrefDesktop::runGame () {
       // раскручиваем распас
       dlogf("game: pass-out");
 
+      optPassCount++;
       mPlayerActive = 0;
       mPlayerHi = 0;
       playerBids[0] = gCurrentGame = raspass;

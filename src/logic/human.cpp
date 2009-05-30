@@ -99,6 +99,10 @@ eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
 
   //fprintf(stderr, "select bid\n");
   formBid->enableAll();
+  if (optAggPass && optPassCount > 0) {
+    if (lMove == undefined) lMove = g71;
+    if (rMove == undefined) rMove = g71;
+  }
   if (qMax(lMove, rMove) != gtPass) formBid->disableLessThan(qMax(lMove, rMove));
   if (mMyGame != undefined) formBid->disableItem(g86);
   formBid->enableItem(gtPass);

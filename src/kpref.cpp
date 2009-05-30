@@ -138,6 +138,7 @@ void Kpref::slotNewSingleGame () {
     connect(mDesktop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
     connect(mDeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
   }
+  optPassCount = 0;
   actOptions->setEnabled(false);
   actFileOpen->setEnabled(false);
   mDesktop->runGame();
@@ -227,6 +228,7 @@ void Kpref::saveOptions () {
   st.setValue("animtake", optTakeAnim);
   st.setValue("alphabeta", !optNoAlphaBeta);
   st.setValue("debughand", optDebugHands);
+  st.setValue("aggpass", optAggPass);
 }
 
 
@@ -241,6 +243,7 @@ void Kpref::loadOptions () {
   optTakeAnim = st.value("animtake", true).toBool();
   optNoAlphaBeta = !(st.value("alphabeta", true).toBool());
   optDebugHands = st.value("debughand", false).toBool();
+  optAggPass = st.value("aggpass", true).toBool();
 }
 
 
@@ -254,6 +257,7 @@ void Kpref::slotOptions () {
   dlg->cbAnimTake->setChecked(optTakeAnim);
   dlg->cbAlphaBeta->setChecked(!optNoAlphaBeta);
   dlg->cbDebugHands->setChecked(optDebugHands);
+  dlg->cbAggPass->setChecked(optAggPass);
   if (dlg->exec() == QDialog::Accepted) {
     optMaxPool = dlg->sbGame->value();
     optWhistGreedy = dlg->cbGreedy->isChecked();
@@ -263,6 +267,7 @@ void Kpref::slotOptions () {
     optTakeAnim = dlg->cbAnimTake->isChecked();
     optNoAlphaBeta = !dlg->cbAlphaBeta->isChecked();
     optDebugHands = dlg->cbDebugHands->isChecked();
+    optAggPass = dlg->cbAggPass->isChecked();
     saveOptions();
   }
   delete dlg;
