@@ -359,9 +359,9 @@ void PrefDesktop::drawPool () {
   for (int i = 1;i<=3;i++) {
     Player *plr = player(i);
     sb = plr->mScore.poolStr();
-    sm = plr->mScore.mountainStr();
-    slw = plr->mScore.leftWhistsStr();
-    srw = plr->mScore.rightWhistsStr();
+    sm = plr->mScore.mountainStr(7);
+    slw = plr->mScore.leftWhistsStr(14);
+    srw = plr->mScore.rightWhistsStr(14);
     tw = plr->mScore.whistsStr();
     mDeskView->showPlayerScore(i, sb, sm, slw, srw, tw);
   }

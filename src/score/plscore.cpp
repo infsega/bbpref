@@ -4,9 +4,12 @@
 #include "prfconst.h"
 
 
-static QString intList2Str (const QIntList &list) {
+static QString intList2Str (const QIntList &list, int maxItems) {
   QString res;
-  for (int f = 1; f < list.size(); f++) {
+  int st = 1, len = list.size();
+  if (maxItems == 0) return QString();
+  if (maxItems > 0 && len > maxItems) st += (maxItems-len);
+  for (int f = st; f < list.size(); f++) {
     //if (!res.isEmpty()) res += '.';
     res += QString::number(list[f]);
     res += '.';
@@ -172,10 +175,10 @@ int ScoreBoard::recordScores (
 }
 
 
-QString ScoreBoard::poolStr () const { return intList2Str(mPool); }
-QString ScoreBoard::mountainStr () const { return intList2Str(mMountain); }
-QString ScoreBoard::leftWhistsStr () const { return intList2Str(mLeftWhists); }
-QString ScoreBoard::rightWhistsStr () const { return intList2Str(mRightWhists); }
+QString ScoreBoard::poolStr (int maxItems) const { return intList2Str(mPool, maxItems); }
+QString ScoreBoard::mountainStr (int maxItems) const { return intList2Str(mMountain, maxItems); }
+QString ScoreBoard::leftWhistsStr (int maxItems) const { return intList2Str(mLeftWhists, maxItems); }
+QString ScoreBoard::rightWhistsStr (int maxItems) const { return intList2Str(mRightWhists, maxItems); }
 
 
 static void serializeIntList (QByteArray &ba, const QIntList &lst) {

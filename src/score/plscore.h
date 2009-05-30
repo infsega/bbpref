@@ -23,10 +23,10 @@ public:
   void mountainDown (int delta);
   void mountainUp (int delta);
 
-  QString poolStr () const;
-  QString mountainStr () const;
-  QString leftWhistsStr () const;
-  QString rightWhistsStr () const;
+  QString poolStr (int maxItems=-1) const;
+  QString mountainStr (int maxItems=-1) const;
+  QString leftWhistsStr (int maxItems=-1) const;
+  QString rightWhistsStr (int maxItems=-1) const;
   inline QString whistsStr () const { return QString::number(mWhists); }
 
   inline int whists () const { return mWhists; }
