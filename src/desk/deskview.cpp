@@ -5,6 +5,7 @@
 #include <QDebug>
 
 #include <QApplication>
+#include <QEventLoop>
 #include <QString>
 #include <QMainWindow>
 #include <QMenuBar>
@@ -15,6 +16,9 @@
 #include <QDialog>
 #include <QObject>
 #include <QHash>
+
+#include <QKeyEvent>
+#include <QMouseEvent>
 
 #include "deskview.h"
 
@@ -81,6 +85,56 @@ void DeskView::freeCards () {
 QImage *DeskView::GetXpmByNameI (const char *name) {
   if (!cardI.contains(name)) cardI["empty"];
   return cardI[name];
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+bool SleepEventFilter::eventFilter (QObject *obj, QEvent *e) {
+  Q_UNUSED(obj)
+  //
+  if (e->type() == QEvent::KeyPress) {
+    QKeyEvent *event = static_cast<QKeyEvent *>(e);
+    mLoop->doEventKey(event);
+  } else if (e->type() == QEvent::MouseButtonPress) {
+    QMouseEvent *event = static_cast<QMouseEvent *>(e);
+    mLoop->doEventMouse(event);
+  }
+  return false; // event is not tasty
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+void SleepEventLoop::doEventKey (QKeyEvent *event) {
+  qDebug() << event->key();
+  if (mIgnoreKey) return;
+  switch (event->key()) {
+    case Qt::Key_Escape:
+    case Qt::Key_Enter:
+    case Qt::Key_Return:
+    case Qt::Key_Space:
+      mKeyPressed = true;
+      quit();
+      break;
+    default: ;
+  }
+}
+
+
+void SleepEventLoop::doEventMouse (QMouseEvent *event) {
+  if (mIgnoreMouse) return;
+  if (event->button() == Qt::LeftButton) {
+    mMousePressed = true;
+    mMouseX = event->x();
+    mMouseY = event->y();
+    qDebug() << "mouse! x:" << mMouseX << "y:" << mMouseY;
+    quit();
+  }
+}
+
+
+void SleepEventLoop::keyPicUpdate () {
+  mDeskView->drawPKeyBmp(true);
+  mDeskView->emitRepaint();
 }
 
 
@@ -245,21 +299,43 @@ void DeskView::drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game
 }
 
 
-void DeskView::timerSlot () {
-}
-
-
 void DeskView::mySleep (int seconds) {
-  time_t tStart = time(0);
+  //time_t tStart = time(0);
   Event = 0;
-  QTimer *timer = 0;
+  SleepEventLoop eloop(this);
+  SleepEventFilter efilter(&eloop);
+  qApp->installEventFilter(&efilter);
+  QTimer *timer = new QTimer(&eloop);
+
+  if (seconds == 0) {
+    drawPKeyBmp(false);
+    emitRepaint();
+    qApp->processEvents(QEventLoop::WaitForMoreEvents);
+    qApp->sendPostedEvents();
+    return;
+  }
+
   if (seconds > 0) {
-    timer = new QTimer();
-    connect(timer, SIGNAL(timeout()), this, SLOT(timerSlot()));
+    connect(timer, SIGNAL(timeout()), &eloop, SLOT(quit()));
     timer->start(seconds*1000);
+  } else if (seconds == -1) {
+    connect(timer, SIGNAL(timeout()), &eloop, SLOT(keyPicUpdate()));
+    timer->start(800);
+  } else if (seconds < -1) {
+    eloop.mIgnoreKey = true;
   }
   drawPKeyBmp(seconds == -1);
+
   emitRepaint();
+  eloop.exec();
+  qApp->removeEventFilter(&efilter);
+
+  Event = (eloop.mMousePressed) ? 1 : (eloop.mKeyPressed ? 2 : 3);
+  if (seconds == -1) {
+    drawPKeyBmp(false);
+    emitRepaint();
+  }
+/*
   while (!Event) {
     qApp->processEvents(QEventLoop::WaitForMoreEvents);
     qApp->sendPostedEvents();
@@ -282,10 +358,12 @@ void DeskView::mySleep (int seconds) {
   if (timer) delete timer;
   drawPKeyBmp(false);
   emitRepaint();
+*/
 }
 
 
 void DeskView::aniSleep (int milliseconds) {
+/*
   emitRepaint();
   do {
     qApp->processEvents(QEventLoop::WaitForMoreEvents);
@@ -305,6 +383,20 @@ void DeskView::aniSleep (int milliseconds) {
   } while (milliseconds > 0);
   Event = 0;
   //emitRepaint();
+*/
+  Event = 0;
+  SleepEventLoop eloop(this);
+  eloop.mIgnoreMouse = true;
+  eloop.mIgnoreKey = true;
+  SleepEventFilter efilter(&eloop);
+  qApp->installEventFilter(&efilter);
+  QTimer *timer = new QTimer(&eloop);
+  connect(timer, SIGNAL(timeout()), &eloop, SLOT(quit()));
+  timer->start(milliseconds);
+
+  emitRepaint();
+  eloop.exec();
+  qApp->removeEventFilter(&efilter);
 }
 
 
