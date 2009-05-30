@@ -1,5 +1,7 @@
 #include <QDebug>
 
+#include <QTime>
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -98,6 +100,7 @@ static tHand xHands[3];
 static int xCardsLeft;
 static int xDeskFaces[3], xDeskSuits[3];
 //static int lastMoveF, lastMoveS;
+static QTime stTime;
 
 
 //#define ABDEBUG
@@ -235,7 +238,11 @@ doMove:
 */
     // проскипаем последовательность из плавно убывающих карт одной масти
     // очевидно, что при таком раскладе похуй, какой из них ходить
-    while (crdNext < 10 && hand->suits[crdNext] == crdSuit && hand->faces[crdNext]+1 == crdFace) crdNext++;
+    int tface = crdFace+1;
+    while (crdNext <= 10 && hand->suits[crdNext] == crdSuit && hand->faces[crdNext] == tface) {
+      crdNext++;
+      tface++;
+    }
     // кидаем карту на стол
     xDeskSuits[turn] = crdSuit;
     xDeskFaces[turn] = crdFace;
@@ -286,13 +293,14 @@ doMove:
       if (!xCardsLeft) {
         // всё, отбомбились, даёшь коэффициенты
         gIterations++;
-/*
         if (gIterations%1000000 == 0) {
-          //cTime = getTimeMs();
-          //fprintf(stderr, "\r%i (%i seconds)\x1b[K", gIterations, (int)((cTime-xStTime)/1000));
-          fprintf(stderr, "\r%i\x1b[K", gIterations);
+          if (stTime.elapsed() >= 5000) {
+            stTime.start();
+            //cTime = getTimeMs();
+            //fprintf(stderr, "\r%i (%i seconds)\x1b[K", gIterations, (int)((cTime-xStTime)/1000));
+            fprintf(stderr, "\r%i\x1b[K", gIterations);
+          }
         }
-*/
 /*
         y = xHands[newPlayer].tricks;
         z = xHands[(newPlayer+1)%3].tricks;
@@ -582,6 +590,7 @@ Card *CheatPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
   }
 
   int a, b, c, move;
+  int me = this->number()-1;
   xCardsLeft = crdLeft;
   gTrumpSuit = trumpSuit;
   gIterations = 0;
@@ -594,11 +603,21 @@ Card *CheatPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
   printHand(&(xHands[2]));
   printDesk(turn);
 
-  abcPrune(turn, this->number()-1, -666, 666, 666, &a, &b, &c, &move);
+  // оптимизации
+/*
+  if (turn > 0) {
+    // можем вообще взять?
+    if (hands[me].suitCount(
+  }
+*/
+
+  stTime = QTime::currentTime();
+  stTime.start();
+  abcPrune(turn, me, -666, 666, 666, &a, &b, &c, &move);
 
   qDebug() <<
-    "face:" << FACE(hands[this->number()-1][move]) <<
-    "suit:" << SUIT(hands[this->number()-1][move])+1 <<
+    "face:" << FACE(hands[me][move]) <<
+    "suit:" << SUIT(hands[me][move])+1 <<
     "move:" << move <<
     "turn:" << turn <<
     "moves:" << crdLeft <<
@@ -608,7 +627,7 @@ Card *CheatPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
 
 /*
   for (int h = 0; h < 3; h++) {
-    fprintf(stderr, (h == this->number()-1)?"*":" ");
+    fprintf(stderr, (h == me)?"*":" ");
     fprintf(stderr, "hand %i:", h);
     for (int f = 0; f < 10; f++) {
       if (hands[h][f]) {
@@ -631,7 +650,7 @@ Card *CheatPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
     abort();
   }
 
-  Card *moveCard = newCard(FACE(hands[this->number()-1][move]), SUIT(hands[this->number()-1][move])+1);
+  Card *moveCard = newCard(FACE(hands[me][move]), SUIT(hands[me][move])+1);
 
   qDebug() << "move:" << moveCard->toString();
 
