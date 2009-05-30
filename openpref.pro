@@ -28,6 +28,7 @@ UI_DIR = _build/uic
 MOC_DIR = _build/moc
 RCC_DIR = _build/rcc
 
+#include($$PWD/src/qtstatemachine/src/qtstatemachine.pri)
 include($$PWD/src/main.pri)
 
 RESOURCES += $$PWD/gfx.qrc

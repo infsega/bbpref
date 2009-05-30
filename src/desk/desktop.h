@@ -54,7 +54,7 @@ private:
 
   Player *player (int num);
   Player *player (const WrapCounter &cnt);
-  Card *makeGameMove (Card *lMove, Card *rMove);
+  Card *makeGameMove (Card *lMove, Card *rMove, bool isPassOut);
 
   void drawInGameCard (int mCardNo, Card *card);
   void inGameCardLeftTop (int mCardNo, int *left, int *top);

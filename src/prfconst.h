@@ -58,7 +58,7 @@ enum eGameBid {
 
 
 typedef struct {
-  int vzatok;
+  int tricks;
   int perehvatov;
   int len;
   int sum;

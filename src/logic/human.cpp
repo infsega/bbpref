@@ -19,6 +19,7 @@
 
 
 HumanPlayer::HumanPlayer (int aMyNumber, DeskView *aDeskView) : Player(aMyNumber, aDeskView) {
+  internalInit();
 }
 
 
@@ -37,79 +38,6 @@ HumanPlayer &HumanPlayer::operator = (const HumanPlayer &pl) {
 void HumanPlayer::clear () {
   Player::clear();
   mInvisibleHand = false;
-}
-
-
-// ход при торговле
-eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
-  eGameBid tmpGamesType;
-  mClickX = mClickY = 0; mWaitingForClick = true;
-
-  //fprintf(stderr, "select bid\n");
-  formBid->enableAll();
-  if (qMax(lMove, rMove) != gtPass) formBid->disableLessThan(qMax(lMove, rMove));
-  if (mMyGame != undefined) formBid->disableItem(g86);
-  formBid->enableItem(gtPass);
-  formBid->disableItem(vist);
-  formBid->showbullet->setEnabled(true);
-  formBid->bgetback->setEnabled(false);
-  do {
-    tmpGamesType = mDeskView->selectBid(lMove, rMove);
-    if (tmpGamesType == 0) {
-      // вернуть снос (если есть) и снести заново
-      clearCardArea();
-      returnDrop();
-      moveSelectCard(0, 0, 0, 0);
-      //mDeskView->mySleep(1);
-      moveSelectCard(0, 0, 0, 0);
-    } else if (tmpGamesType == 1) {
-      // показать пулю
-      kpref->mDesktop->mShowPool = true;
-      kpref->slotShowScore();
-    }
-  } while (tmpGamesType <= 1);
-  mMyGame = tmpGamesType;
-  mWaitingForClick = false;
-  formBid->enableAll();
-  return mMyGame;
-}
-
-
-//ход
-Card *HumanPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer) {
-  Q_UNUSED(aLeftPlayer)
-  Q_UNUSED(aRightPlayer)
-  Card *RetVal = 0;
-  mClickX = mClickY = 0; mWaitingForClick = true;
-  draw();
-  while (!RetVal) {
-    if (mDeskView) mDeskView->mySleep(-2);
-    int cNo = cardAt(mClickX, mClickY, !isInvisibleHand());
-    if (cNo == -1) {
-      mClickX = mClickY = 0;
-      //draw();
-      continue;
-    }
-    //qDebug() << "selected:" << cNo << "mClickX:" << mClickX << "mClickY:" << mClickY;
-    Card *Validator;
-    int koz = trumpSuit();
-    Validator = RetVal = mCards.at(cNo);
-    if (lMove || rMove) {
-      Validator = lMove ? lMove : rMove;
-    }
-    if (!Validator || !RetVal) continue;
-    // пропускаем ход через правила
-    if (!((Validator->suit() == RetVal->suit()) ||
-        (!mCards.minInSuit(Validator->suit()) && (RetVal->suit() == koz || ((!mCards.minInSuit(koz)))))
-       )) RetVal = 0;
-  }
-  clearCardArea();
-  mPrevHiCardIdx = -1;
-  mCards.remove(RetVal);
-  mCardsOut.insert(RetVal);
-  mClickX = mClickY = 0; mWaitingForClick = false;
-  draw();
-  return RetVal;
 }
 
 
@@ -164,6 +92,80 @@ eGameBid HumanPlayer::dropForGame () {
 }
 
 
+// ход при торговле
+eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
+  eGameBid tmpGamesType;
+  mClickX = mClickY = 0; mWaitingForClick = true;
+
+  //fprintf(stderr, "select bid\n");
+  formBid->enableAll();
+  if (qMax(lMove, rMove) != gtPass) formBid->disableLessThan(qMax(lMove, rMove));
+  if (mMyGame != undefined) formBid->disableItem(g86);
+  formBid->enableItem(gtPass);
+  formBid->disableItem(vist);
+  formBid->showbullet->setEnabled(true);
+  formBid->bgetback->setEnabled(false);
+  do {
+    tmpGamesType = mDeskView->selectBid(lMove, rMove);
+    if (tmpGamesType == 0) {
+      // вернуть снос (если есть) и снести заново
+      clearCardArea();
+      returnDrop();
+      moveSelectCard(0, 0, 0, 0);
+      //mDeskView->mySleep(1);
+      moveSelectCard(0, 0, 0, 0);
+    } else if (tmpGamesType == 1) {
+      // показать пулю
+      kpref->mDesktop->mShowPool = true;
+      kpref->slotShowScore();
+    }
+  } while (tmpGamesType <= 1);
+  mMyGame = tmpGamesType;
+  mWaitingForClick = false;
+  formBid->enableAll();
+  return mMyGame;
+}
+
+
+//ход
+Card *HumanPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) {
+  Q_UNUSED(aLeftPlayer)
+  Q_UNUSED(aRightPlayer)
+  Q_UNUSED(isPassOut)
+  Card *res = 0;
+  mClickX = mClickY = 0; mWaitingForClick = true;
+  draw();
+  while (!res) {
+    if (mDeskView) mDeskView->mySleep(-2);
+    int cNo = cardAt(mClickX, mClickY, !invisibleHand());
+    if (cNo == -1) {
+      mClickX = mClickY = 0;
+      //draw();
+      continue;
+    }
+    //qDebug() << "selected:" << cNo << "mClickX:" << mClickX << "mClickY:" << mClickY;
+    Card *Validator;
+    int koz = trumpSuit();
+    Validator = res = mCards.at(cNo);
+    if (lMove || rMove) {
+      Validator = lMove ? lMove : rMove;
+    }
+    if (!Validator || !res) continue;
+    // пропускаем ход через правила
+    if (!((Validator->suit() == res->suit()) ||
+        (!mCards.minInSuit(Validator->suit()) && (res->suit() == koz || ((!mCards.minInSuit(koz)))))
+       )) res = 0;
+  }
+  clearCardArea();
+  mPrevHiCardIdx = -1;
+  mCards.remove(res);
+  mCardsOut.insert(res);
+  mClickX = mClickY = 0; mWaitingForClick = false;
+  draw();
+  return res;
+}
+
+
 eGameBid HumanPlayer::moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerVist) {
   Q_UNUSED(HaveAVist)
   Q_UNUSED(nGamerVist)
@@ -192,7 +194,7 @@ void HumanPlayer::hilightCard (int lx, int ly) {
     if (mPrevHiCardIdx == -1) return; // nothing selected --> nothing to redraw
     mPrevHiCardIdx = -1;
   } else {
-    int cNo = cardAt(lx, ly, !isInvisibleHand());
+    int cNo = cardAt(lx, ly, !invisibleHand());
     if (cNo == mPrevHiCardIdx) return; // same selected --> nothing to redraw
     //qDebug() << "mPrevHiCardIdx:" << mPrevHiCardIdx << "cNo:" << cNo;
     mPrevHiCardIdx = cNo;

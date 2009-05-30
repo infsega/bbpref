@@ -10,6 +10,7 @@
 #include <stdlib.h>
 
 #include "aialphabeta.h"
+#include "aiplayer.h"
 #include "baser.h"
 #include "debug.h"
 #include "deskview.h"
@@ -34,12 +35,12 @@ void PrefDesktop::internalInit () {
   nCurrentStart.nMax = nCurrentMove.nMax = 3;
 
   mPlayers << 0; // 0th player is nobody
-  //addPlayer(new Player(1));
+  //addPlayer(new AiPlayer(1));
   // I Hate This Game :)
   addPlayer(new HumanPlayer(1, mDeskView));
   if (gNoAlphaBeta) {
-    addPlayer(new Player(2, mDeskView));
-    addPlayer(new Player(3, mDeskView));
+    addPlayer(new AiPlayer(2, mDeskView));
+    addPlayer(new AiPlayer(3, mDeskView));
   } else {
     addPlayer(new CheatPlayer(2, mDeskView));
     addPlayer(new CheatPlayer(3, mDeskView));
@@ -130,32 +131,33 @@ Player *PrefDesktop::addPlayer (Player *plr) {
 // ежели номер не 1 и игра пас или (ловля мизера и игрок не сетевой),
 // то пораждаем нового HumanPlayer с номером текущего
 // ежели номер 1 и игра пас и не сетевая игра то порождаем Player
-Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove) {
+Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
   Card *res = 0;
   Player *curPlr = player(nCurrentMove);
 
-  if ((player(1)->mMyGame == vist || player(1)->mMyGame == g86catch) &&
-      curPlr->mPlayerNo != 1 && (curPlr->mMyGame == gtPass || curPlr->mMyGame == g86catch)) {
+  if ((player(1)->myGame() == vist || player(1)->myGame() == g86catch) &&
+      curPlr->number() != 1 && (curPlr->myGame() == gtPass || curPlr->myGame() == g86catch)) {
     HumanPlayer *hPlr = new HumanPlayer(nCurrentMove.nValue, mDeskView);
     *hPlr = *curPlr;
     mPlayers[nCurrentMove.nValue] = hPlr;
-    res = hPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)));
+    res = hPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)), isPassOut);
     *curPlr = *hPlr;
     mPlayers[nCurrentMove.nValue] = curPlr;
     delete hPlr;
-  } else if (curPlr->mPlayerNo == 1 && curPlr->mMyGame == gtPass) {
+  } else if (curPlr->number() == 1 && curPlr->myGame() == gtPass) {
     Player *aiPlr;
-    if (gNoAlphaBeta) aiPlr = new Player(nCurrentMove.nValue, mDeskView);
+    if (gNoAlphaBeta) aiPlr = new AiPlayer(nCurrentMove.nValue, mDeskView);
     else aiPlr = new CheatPlayer(nCurrentMove.nValue, mDeskView);
     *aiPlr = *curPlr;
     mPlayers[nCurrentMove.nValue] = aiPlr;
-    res = aiPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)));
+    res = aiPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)), isPassOut);
     *curPlr = *aiPlr;
     mPlayers[nCurrentMove.nValue] = curPlr;
     delete aiPlr;
   } else {
     res =
-      (player(nCurrentMove))->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)));
+      (player(nCurrentMove))->moveSelectCard(lMove, rMove,
+        player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)), isPassOut);
   }
   return res;
 }
@@ -387,7 +389,7 @@ void PrefDesktop::draw (bool emitSignal) {
     Player *plr2 = player(2);
     Player *plr3 = player(3);
     if (plr1 && plr2 && plr3) {
-      mDeskView->drawBidsBmp(mPlayerActive, plr1->mTricksTaken, plr2->mTricksTaken, plr3->mTricksTaken, CurrentGame);
+      mDeskView->drawBidsBmp(mPlayerActive, plr1->tricksTaken(), plr2->tricksTaken(), plr3->tricksTaken(), CurrentGame);
     }
   }
   if (iMoveX >= 0) mDeskView->drawIMove(iMoveX, iMoveY);
@@ -567,7 +569,7 @@ void PrefDesktop::runGame () {
       Player *plr = player(nCurrentStart); ++nCurrentStart;
       xxBuf[0] = 0;
       dumpCardList(xxBuf, plr->mCards);
-      dlogf("hand %i:%s", plr->mPlayerNo, xxBuf);
+      dlogf("hand %i:%s", plr->number(), xxBuf);
     }
     xxBuf[0] = 0;
     cardName(xxBuf, mDeck.at(30));
@@ -617,7 +619,7 @@ void PrefDesktop::runGame () {
       // узнаем, кто назначил максимальную игру
       for (int i = 1; i <= 3; i++) {
         Player *tmpg = player(i);
-        if (tmpg->mMyGame == playerBids[0]) {
+        if (tmpg->myGame() == playerBids[0]) {
           QString gnS(sGameName(playerBids[0]));
           gnS.prepend("game: ");
           gnS += "; player: ";
@@ -649,7 +651,7 @@ void PrefDesktop::runGame () {
 
           //bids4win[0] = bids4win[1] = bids4win[2] = bids4win[3] = undefined;
           // снос
-          if (tmpg->mMyGame != g86) {
+          if (tmpg->myGame() != g86) {
             // не мизер
             nCurrentMove.nValue = i;
             draw(false);
@@ -659,10 +661,10 @@ void PrefDesktop::runGame () {
           } else {
             // показать все карты
             int tempint = nCurrentMove.nValue;
-            int nVisibleState = tmpg->isInvisibleHand();
-            tmpg->mInvisibleHand = false;
+            int nVisibleState = tmpg->invisibleHand();
+            tmpg->setInvisibleHand(false);
             draw();
-            if (tmpg->mPlayerNo != 1) tmpg->setMessage("Try to remember the cards");
+            if (tmpg->number() != 1) tmpg->setMessage("Try to remember the cards");
             else tmpg->setMessage("Misere");
             // ждать до события
             mDeskView->mySleep(-1);
@@ -675,8 +677,8 @@ void PrefDesktop::runGame () {
               mDeskView->drawMessageWindow(x, y, "Select cards to drop");
             }
 */
-            tmpg->mInvisibleHand = nVisibleState;
-            nCurrentMove.nValue = tmpg->mPlayerNo;
+            tmpg->setInvisibleHand(nVisibleState);
+            nCurrentMove.nValue = tmpg->number();
 
             if (mPlayerActive != 1) mDeskView->mySleep(2);
 
@@ -692,7 +694,7 @@ void PrefDesktop::runGame () {
           ++tmpGamersCounter;
           player(tmpGamersCounter)->setMessage("thinking...");
           PassOrVistGamers = player(tmpGamersCounter);
-          PassOrVistGamers->mMyGame = undefined;
+          PassOrVistGamers->setMyGame(undefined);
           draw(false);
 
           // выбирает первый
@@ -701,11 +703,11 @@ void PrefDesktop::runGame () {
           if (firstPW != 1) mDeskView->mySleep(2);
           PassOrVist = PassOrVistGamers->moveFinalBid(CurrentGame, gtPass, 0);
           nPassOrVist = tmpGamersCounter.nValue;
-          if (PassOrVistGamers->mMyGame == gtPass) {
+          if (PassOrVistGamers->myGame() == gtPass) {
             nPassCounter++;
             player(tmpGamersCounter)->setMessage("PASS");
           } else player(tmpGamersCounter)->setMessage("WHIST");
-          //bids4win[1] = PassOrVistGamers->mMyGame;
+          //bids4win[1] = PassOrVistGamers->myGame();
 
           // выбирает второй
           ++tmpGamersCounter;
@@ -714,13 +716,13 @@ void PrefDesktop::runGame () {
           mPlayerHi = nextPW;
           draw(false);
           PassOrVistGamers = player(tmpGamersCounter);
-          PassOrVistGamers->mMyGame = undefined;
+          PassOrVistGamers->setMyGame(undefined);
           PassOrVistGamers->moveFinalBid(CurrentGame, PassOrVist, nPassOrVist);
-          if (PassOrVistGamers->mMyGame == gtPass) {
+          if (PassOrVistGamers->myGame() == gtPass) {
             nPassCounter++;
             player(tmpGamersCounter)->setMessage("PASS");
           } else player(tmpGamersCounter)->setMessage("WHIST");
-          //bids4win[2] = PassOrVistGamers->mMyGame;
+          //bids4win[2] = PassOrVistGamers->myGame();
           mPlayerHi = 0;
 
           // всё, отвыбирались
@@ -736,7 +738,7 @@ void PrefDesktop::runGame () {
 
           if (nPassCounter == 2) {
             // двое спасовали :)
-            tmpg->mTricksTaken = gameTricks(tmpg->mMyGame);
+            tmpg->gotPassPassTricks(gameTricks(tmpg->myGame()));
             dlogf("clean out!\n");
             goto LabelRecordOnPaper;
           } else {
@@ -746,8 +748,8 @@ void PrefDesktop::runGame () {
               Gamer4Open = player(ntmp);
               if (nPassCounter || CurrentGame == g86) {
                 // если не 2 виста
-                if (Gamer4Open->mMyGame == gtPass || Gamer4Open->mMyGame == vist || Gamer4Open->mMyGame == g86catch)
-                  Gamer4Open->mInvisibleHand = false;
+                if (Gamer4Open->myGame() == gtPass || Gamer4Open->myGame() == vist || Gamer4Open->myGame() == g86catch)
+                  Gamer4Open->setInvisibleHand(false);
               }
             }
           }
@@ -761,9 +763,9 @@ void PrefDesktop::runGame () {
       mPlayerActive = 0;
       mPlayerHi = 0;
       playerBids[0] = CurrentGame = raspass;
-      player(1)->mMyGame = raspass;
-      player(2)->mMyGame = raspass;
-      player(3)->mMyGame = raspass;
+      player(1)->setMyGame(raspass);
+      player(2)->setMyGame(raspass);
+      player(3)->setMyGame(raspass);
       mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = 0;
       mOnDeskClosed = false;
       draw();
@@ -787,7 +789,7 @@ void PrefDesktop::runGame () {
         Player *plr = player(nCurrentMove); ++nCurrentMove;
         xxBuf[0] = 0;
         dumpCardList(xxBuf, plr->mCards);
-        dlogf("hand %i:%s", plr->mPlayerNo, xxBuf);
+        dlogf("hand %i:%s", plr->number(), xxBuf);
       }
 
       mPlayerHi = nCurrentMove.nValue;
@@ -798,13 +800,15 @@ void PrefDesktop::runGame () {
         Card *tmp4show;
         Card *ptmp4rpass;
         tmp4show = mDeck.at(29+i);
-        ptmp4rpass = newCard(1, tmp4show->suit());
+        ptmp4rpass = newCard(6, tmp4show->suit());
         mCardsOnDesk[0] = tmp4show;
+        draw();
+        mDeskView->mySleep(0);
         //if (nCurrentMove.nValue != 1) mDeskView->mySleep(-1);
-        //!-!mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, ptmp4rpass);
-        mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, 0);
+        mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, ptmp4rpass, true);
+        //mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, 0);
       } else {
-        mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, 0);
+        mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, 0, false);
       }
       player(mPlayerHi)->setMessage("");
 
@@ -817,7 +821,7 @@ void PrefDesktop::runGame () {
       player(mPlayerHi)->setMessage("thinking...");
       draw();
       mDeskView->mySleep(0);
-      mCardsOnDesk[nCurrentMove.nValue] = mSecondCard = makeGameMove(0, mFirstCard);
+      mCardsOnDesk[nCurrentMove.nValue] = mSecondCard = makeGameMove(0, mFirstCard, false);
       player(mPlayerHi)->setMessage("");
 
       xxBuf[0] = 0;
@@ -829,7 +833,7 @@ void PrefDesktop::runGame () {
       player(mPlayerHi)->setMessage("thinking...");
       draw();
       mDeskView->mySleep(0);
-      mCardsOnDesk[nCurrentMove.nValue] = mThirdCard = makeGameMove(mFirstCard, mSecondCard);
+      mCardsOnDesk[nCurrentMove.nValue] = mThirdCard = makeGameMove(mFirstCard, mSecondCard, false);
       player(mPlayerHi)->setMessage("");
 
       xxBuf[0] = 0;
@@ -844,7 +848,7 @@ void PrefDesktop::runGame () {
       nCurrentMove = nCurrentMove+nPl;
       animateDeskToPlayer(nCurrentMove.nValue); // will clear mCardsOnDesk[]
       tmpg = player(nCurrentMove);
-      tmpg->mTricksTaken++;
+      tmpg->gotTrick();
       draw(false);
     }
 LabelRecordOnPaper:
@@ -854,8 +858,8 @@ LabelRecordOnPaper:
     for (int i = 1; i <= 3;i++ ) {
       Player *tmpg = player(i);
       Player *plr = player(mPlayerActive);
-      int RetValAddRec = tmpg->mScore.recordScores(CurrentGame, tmpg->mMyGame,
-        plr ? plr->mTricksTaken : 0, tmpg->mTricksTaken, plr ? mPlayerActive : 0,
+      int RetValAddRec = tmpg->mScore.recordScores(CurrentGame, tmpg->myGame(),
+        plr ? plr->tricksTaken() : 0, tmpg->tricksTaken(), plr ? mPlayerActive : 0,
         i, 2-nPassCounter);
       if (RetValAddRec) {
         int index = playerWithMaxPool();
@@ -888,7 +892,7 @@ LabelRecordOnPaper:
         Player *plr = player(f);
         tmplist[f-1] = plr->mCards;
         plr->mCards = plr->mCardsOut;
-        plr->mInvisibleHand = false;
+        plr->setInvisibleHand(false);
       }
     }
     mShowPool = true;

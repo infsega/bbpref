@@ -72,6 +72,7 @@ void xsortCards (card_t *arr, int len) {
 
 
 static int gTrumpSuit; // trump; global var
+static int gPassOutSuit; // нужная масть для первого или второго круга распасов
 //static int gGameBid; // >=6
 //static int gMoves[4][10];
 //static int gTricks[3];
@@ -79,7 +80,7 @@ static int gTrumpSuit; // trump; global var
 //static int gWhoPlays;
 static int gIterations;
 
-static int gTrk = 0;
+//static int gTrk = 0;
 static bool gPassOut;
 
 
@@ -92,7 +93,7 @@ typedef struct {
 } tHand;
 
 
-static long long xStTime, cTime;
+//static long long xStTime, cTime;
 static tHand xHands[3];
 static int xCardsLeft;
 static int xDeskFaces[3], xDeskSuits[3];
@@ -174,7 +175,21 @@ static void abcPrune (
     }
     crdNext = crdNo+1;
     crdSuit = hand->suits[crdNo];
-    if (!turn) goto doMove; // первый ход может быть любой ваще
+    if (!turn) {
+      // первый ход может быть любой ваще, если это не первый и не второй круг распасов
+      if (gPassOutSuit >= 0) {
+        if (crdSuit != gPassOutSuit) {
+          // не, это очень херовая масть, начнём с верной масти
+          tmp = hand->suitStart[gPassOutSuit];
+          if (tmp == crdNo) abort(); // а такого не бывает
+          if (tmp < crdNo) goto doMove; // ну нет у нас такой, кидаем чо попало
+          // скипаем и повторяем выборы
+          crdNo = tmp;
+          continue;
+        }
+      }
+      goto doMove;
+    }
     // check for valid move
     // выход в правильную масть?
     if (crdSuit == xDeskSuits[0]) goto doMove;
@@ -438,7 +453,7 @@ static const char *cFaceS[8] = {" 7"," 8"," 9","10"," J"," Q"," K"," A"};
 static const char *cSuitS[4] = {"s","c","d","h"};
 
 static void printHand (tHand *hand) {
-  int f, z;
+  int z;
   for (z = 0; z < 10; z++) {
     if (hand->faces[z]) {
       printf(" %s%s(%2i)", cFaceS[hand->faces[z]-7], cSuitS[hand->suits[z]], CARD(hand->faces[z], hand->suits[z]));
@@ -470,18 +485,18 @@ static void printDesk (int cnt) {
  * 0, 1th
  * 1th, 2nd
  */
-Card *CheatPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer) {
+Card *CheatPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) {
   card_t hands[3][10];
   card_t desk[3];
   int crdLeft = 0;
   int trumpSuit = 0;
   Player *movePlrObj = 0, *plst[3];
 
-again:
+//again:
   plst[0] = plst[1] = plst[2] = 0;
   plst[mPlayerNo-1] = this;
-  plst[aLeftPlayer->mPlayerNo-1] = aLeftPlayer;
-  plst[aRightPlayer->mPlayerNo-1] = aRightPlayer;
+  plst[aLeftPlayer->number()-1] = aLeftPlayer;
+  plst[aRightPlayer->number()-1] = aRightPlayer;
 
   // build hands
   for (int c = 0; c < 3; c++) {
@@ -508,9 +523,9 @@ again:
   // find game
   eGameBid bid;
   if (mMyGame == gtPass || mMyGame == vist) {
-    bid = aLeftPlayer->mMyGame;
+    bid = aLeftPlayer->myGame();
     if (bid == gtPass || bid == vist) {
-      bid = aRightPlayer->mMyGame;
+      bid = aRightPlayer->myGame();
       movePlrObj = aRightPlayer;
     } else movePlrObj = aLeftPlayer;
   } else {
@@ -530,6 +545,12 @@ again:
   }
   if (trumpSuit < 0) trumpSuit = 4;
 
+  if (isPassOut && rMove) {
+    // это распасы, первый или второй круг, первый ход
+    gPassOutSuit = rMove->suit()-1;
+    rMove = 0;
+  } else gPassOutSuit = -1;
+
   // build desk
   int turn = 0;
   if (lMove) {
@@ -543,7 +564,7 @@ again:
   for (int f = 0; f < 3; f++) {
     xHands[f].suitCount[0] = xHands[f].suitCount[1] = xHands[f].suitCount[2] = xHands[f].suitCount[3] = 0;
     xHands[f].suitStart[0] = xHands[f].suitStart[1] = xHands[f].suitStart[2] = xHands[f].suitStart[3] = 11;
-    xHands[f].tricks = plst[f]->mTricksTaken;
+    xHands[f].tricks = plst[f]->tricksTaken();
     int st;
     for (int z = 0; z < 10; z++) {
       if (hands[f][z]) {
@@ -565,19 +586,19 @@ again:
   gTrumpSuit = trumpSuit;
   gIterations = 0;
 
-  printf("%shand 0:", this->mPlayerNo==0?"*":" ");
+  printf("%shand 0:", this->number()==0?"*":" ");
   printHand(&(xHands[0]));
-  printf("%shand 1:", this->mPlayerNo==1?"*":" ");
+  printf("%shand 1:", this->number()==1?"*":" ");
   printHand(&(xHands[1]));
-  printf("%shand 2:", this->mPlayerNo==2?"*":" ");
+  printf("%shand 2:", this->number()==2?"*":" ");
   printHand(&(xHands[2]));
   printDesk(turn);
 
-  abcPrune(turn, this->mPlayerNo-1, -666, 666, 666, &a, &b, &c, &move);
+  abcPrune(turn, this->number()-1, -666, 666, 666, &a, &b, &c, &move);
 
   qDebug() <<
-    "face:" << FACE(hands[this->mPlayerNo-1][move]) <<
-    "suit:" << SUIT(hands[this->mPlayerNo-1][move])+1 <<
+    "face:" << FACE(hands[this->number()-1][move]) <<
+    "suit:" << SUIT(hands[this->number()-1][move])+1 <<
     "move:" << move <<
     "turn:" << turn <<
     "moves:" << crdLeft <<
@@ -587,7 +608,7 @@ again:
 
 /*
   for (int h = 0; h < 3; h++) {
-    fprintf(stderr, (h == this->mPlayerNo-1)?"*":" ");
+    fprintf(stderr, (h == this->number()-1)?"*":" ");
     fprintf(stderr, "hand %i:", h);
     for (int f = 0; f < 10; f++) {
       if (hands[h][f]) {
@@ -610,7 +631,7 @@ again:
     abort();
   }
 
-  Card *moveCard = newCard(FACE(hands[this->mPlayerNo-1][move]), SUIT(hands[this->mPlayerNo-1][move])+1);
+  Card *moveCard = newCard(FACE(hands[this->number()-1][move]), SUIT(hands[this->number()-1][move])+1);
 
   qDebug() << "move:" << moveCard->toString();
 
@@ -622,11 +643,12 @@ again:
 
 
 ///////////////////////////////////////////////////////////////////////////////
-CheatPlayer::CheatPlayer (int aMyNumber, DeskView *aDeskView) : Player(aMyNumber, aDeskView) {
+CheatPlayer::CheatPlayer (int aMyNumber, DeskView *aDeskView) : AiPlayer(aMyNumber, aDeskView) {
   mInvisibleHand = false;
 }
 
 
+/*
 CheatPlayer &CheatPlayer::operator = (const Player &pl) {
   Player::clone(&pl);
   mInvisibleHand = false;
@@ -639,8 +661,9 @@ CheatPlayer &CheatPlayer::operator = (const CheatPlayer &pl) {
   if (allowDebugLog) mInvisibleHand = false;
   return *this;
 }
+*/
 
 
-bool CheatPlayer::isInvisibleHand () {
+bool CheatPlayer::invisibleHand () {
   return allowDebugLog ? false : mInvisibleHand;
 }
