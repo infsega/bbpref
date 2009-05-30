@@ -124,7 +124,7 @@ void SleepEventLoop::doEventMouse (QMouseEvent *event) {
     mMousePressed = true;
     mMouseX = event->x();
     mMouseY = event->y();
-    qDebug() << "mouse! x:" << mMouseX << "y:" << mMouseY;
+    //qDebug() << "mouse! x:" << mMouseX << "y:" << mMouseY;
     quit();
   }
 }

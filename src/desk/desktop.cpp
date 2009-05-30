@@ -804,10 +804,9 @@ void PrefDesktop::runGame () {
       draw();
       mDeskView->mySleep(0);
       if (gCurrentGame == raspass && (i == 1 || i == 2)) {
-        Card *tmp4show;
-        Card *ptmp4rpass;
+        Card *tmp4show, *ptmp4rpass;
         tmp4show = mDeck.at(29+i);
-        ptmp4rpass = newCard(6, tmp4show->suit());
+        ptmp4rpass = tmp4show;//newCard(6, tmp4show->suit());
         mCardsOnDesk[0] = tmp4show;
         draw();
         mDeskView->mySleep(0);

@@ -1365,6 +1365,7 @@ eGameBid AiPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
     mMyGame=gtPass;
   } else {
 */
+  //mMyGame = gtPass;
   if (mMyGame != gtPass)  {
     int f;
     int nMaxMastLen = 0;

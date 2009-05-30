@@ -177,16 +177,14 @@ static void abcPrune (
     crdSuit = hand->suits[crdNo];
     if (!turn) {
       // первый ход может быть любой ваще, если это не первый и не второй круг распасов
-      if (gPassOutSuit >= 0) {
-        if (crdSuit != gPassOutSuit && hand->suitCount[gPassOutSuit]) {
-          // не, это очень херовая масть, начнём с верной масти
-          tmp = hand->suitStart[gPassOutSuit];
-          if (tmp == crdNo) abort(); // а такого не бывает
-          if (tmp < crdNo) break;; // ну нет у нас такой, и уже всё, что было, проверили
-          // скипаем и повторяем выборы
-          crdNo = tmp;
-          continue;
-        }
+      if (gPassOutSuit >= 0 && crdSuit != gPassOutSuit && hand->suitCount[gPassOutSuit]) {
+        // не, это очень херовая масть, начнём с верной масти
+        tmp = hand->suitStart[gPassOutSuit];
+        if (tmp == crdNo) abort(); // а такого не бывает
+        if (tmp < crdNo) break; // ну нет у нас такой, и уже всё, что было, проверили
+        // скипаем и повторяем выборы
+        crdNo = tmp;
+        continue;
       }
       goto doMove;
     }
@@ -545,9 +543,11 @@ Card *CheatPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
   }
   if (trumpSuit < 0) trumpSuit = 4;
 
-  if (isPassOut && rMove) {
+  fprintf(stderr, "po:%s; lm:%s, rm:%s\n", isPassOut?"y":"n", lMove?"y":"n", rMove?"y":"n");
+  if (isPassOut && rMove && !lMove) {
     // это распасы, первый или второй круг, первый ход
     gPassOutSuit = rMove->suit()-1;
+    fprintf(stderr, "pass-out: %i\n", gPassOutSuit);
     rMove = 0;
   } else gPassOutSuit = -1;
 
