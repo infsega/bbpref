@@ -186,14 +186,18 @@ void DeskView::drawIMove (int x, int y) {
 
 
 void DeskView::drawPKeyBmp (bool show) {
+  static int phase = 0;
   if (!mDeskBmp) return;
+/*
   time_t tt = time(0);
   int phase = tt%2;
+*/
   QImage *i = mKeyBmp[phase];
   if (show) {
     QPainter p(mDeskBmp);
     p.drawImage(4, DesktopHeight-(i->height()+8), *i);
     p.end();
+    phase = 1-phase;
   } else {
     ClearBox(4, DesktopHeight-(i->height()+8), i->width(), i->height());
   }
@@ -320,7 +324,7 @@ void DeskView::mySleep (int seconds) {
     timer->start(seconds*1000);
   } else if (seconds == -1) {
     connect(timer, SIGNAL(timeout()), &eloop, SLOT(keyPicUpdate()));
-    timer->start(800);
+    timer->start(1000);
   } else if (seconds < -1) {
     eloop.mIgnoreKey = true;
   }
