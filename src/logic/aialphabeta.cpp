@@ -238,10 +238,23 @@ doMove:
 */
     // проскипаем последовательность из плавно убывающих карт одной масти
     // очевидно, что при таком раскладе похуй, какой из них ходить
-    int tface = crdFace+1;
-    while (crdNext <= 10 && hand->suits[crdNext] == crdSuit && hand->faces[crdNext] == tface) {
-      crdNext++;
-      tface++;
+    int scnt = hand->suitCount[crdSuit];
+    if (scnt > 1) {
+      // в этой масти есть ещё карты
+      // проверим, есть ли у кого ещё эта масть
+      if (xHands[0].suitCount[crdSuit]+xHands[1].suitCount[crdSuit]+xHands[2].suitCount[crdSuit] <= scnt) {
+        // единственный гордый владелец этой масти; пробуем только одну её карту
+        int tsuit = crdSuit+1;
+        while (tsuit <= 3 && hand->suitCount[tsuit] == 0) tsuit++;
+        crdNext = tsuit>3 ? 11 : hand->suitStart[tsuit];
+      } else {
+        // такая масть есть ещё у кого-то
+        int tface = crdFace+1;
+        while (crdNext <= 10 && hand->suits[crdNext] == crdSuit && hand->faces[crdNext] == tface) {
+          crdNext++;
+          tface++;
+        }
+      }
     }
     // кидаем карту на стол
     xDeskSuits[turn] = crdSuit;

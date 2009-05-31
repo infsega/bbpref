@@ -26,6 +26,7 @@ bool unserializeInt (QByteArray &ba, int *pos, int *i) {
 }
 
 
+/*
 void msSleep (int ms) {
   // 1sec=1000000
 
@@ -47,3 +48,4 @@ void msSleep (int ms) {
     }
   }
 }
+*/
