@@ -72,23 +72,46 @@
      <x>10</x>
      <y>10</y>
      <width>195</width>
-     <height>220</height>
+     <height>105</height>
     </rect>
    </property>
    <property name="title">
-    <string>Players</string>
+    <string>Player 1 (left)</string>
    </property>
-   <widget class="QCheckBox" name="cbAlphaBeta">
+   <widget class="QCheckBox" name="cbAlphaBeta1">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>40</y>
-      <width>106</width>
+      <y>70</y>
+      <width>171</width>
       <height>20</height>
      </rect>
     </property>
     <property name="text">
-     <string>use &amp;AlphaBeta</string>
+     <string>AlphaBeta algorithm</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>52</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Name:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="leName1">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>40</y>
+      <width>113</width>
+      <height>21</height>
+     </rect>
     </property>
    </widget>
   </widget>
@@ -305,6 +328,55 @@
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_4">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>125</y>
+     <width>195</width>
+     <height>105</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Player 2 (right)</string>
+   </property>
+   <widget class="QCheckBox" name="cbAlphaBeta2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>70</y>
+      <width>171</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>AlphaBeta algorithm</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>52</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Name:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="leName2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>40</y>
+      <width>113</width>
+      <height>21</height>
+     </rect>
     </property>
    </widget>
   </widget>

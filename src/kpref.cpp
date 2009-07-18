@@ -162,17 +162,22 @@ void Kpref::slotNewSingleGame () {
 
   NewGameDialog *dlg = new NewGameDialog;
   // Players
-  dlg->cbAlphaBeta->setChecked(!optNoAlphaBeta);
+  dlg->leName1->setText(optPlayerName1);
+  dlg->cbAlphaBeta1->setChecked(optAlphaBeta1);
+  dlg->leName2->setText(optPlayerName2);
+  dlg->cbAlphaBeta2->setChecked(optAlphaBeta2);
   // Conventions
   dlg->sbGame->setValue(optMaxPool);
   dlg->cbGreedy->setChecked(optWhistGreedy);
   dlg->rbTenWhist->setChecked(opt10Whist);
-  //dlg->rbTenCheck->setChecked(!opt10Whist);
   dlg->cbStalin->setChecked(optStalingrad);
   dlg->cbAggPass->setChecked(optAggPass);
   if (dlg->exec() == QDialog::Accepted) {
 	// Players
-    optNoAlphaBeta = !dlg->cbAlphaBeta->isChecked();
+	optPlayerName1 = dlg->leName1->text();
+    optAlphaBeta1 = dlg->cbAlphaBeta1->isChecked();
+	optPlayerName2 = dlg->leName2->text();
+	optAlphaBeta2 = dlg->cbAlphaBeta2->isChecked();
     // Conventions
 	optMaxPool = dlg->sbGame->value();
     optWhistGreedy = dlg->cbGreedy->isChecked();
@@ -286,7 +291,10 @@ void Kpref::saveOptions () {
   st.setValue("whistgreedy", optWhistGreedy);
   st.setValue("animdeal", optDealAnim);
   st.setValue("animtake", optTakeAnim);
-  st.setValue("alphabeta", !optNoAlphaBeta);
+  st.setValue("playername1", optPlayerName1);
+  st.setValue("alphabeta1", optAlphaBeta1);
+  st.setValue("playername2", optPlayerName2);
+  st.setValue("alphabeta2", optAlphaBeta2);
   st.setValue("debughand", optDebugHands);
   st.setValue("aggpass", optAggPass);
   st.value("prefclub", optPrefClub);
@@ -302,7 +310,10 @@ void Kpref::loadOptions () {
   optWhistGreedy = st.value("whistgreedy", true).toBool();
   optDealAnim = st.value("animdeal", true).toBool();
   optTakeAnim = st.value("animtake", true).toBool();
-  optNoAlphaBeta = !(st.value("alphabeta", true).toBool());
+  optPlayerName1 = st.value("playername1", "Player 1").toString();
+  optAlphaBeta1 = (st.value("alphabeta1", true).toBool());
+  optPlayerName2 = st.value("playername2", "Player 2").toString();
+  optAlphaBeta2 = (st.value("alphabeta2", true).toBool());
   optDebugHands = st.value("debughand", false).toBool();
   optAggPass = st.value("aggpass", true).toBool();
   optPrefClub = st.value("prefclub", false).toBool();

@@ -86,13 +86,16 @@ void PrefDesktop::internalInit () {
   //addPlayer(new AiPlayer(1));
   // I Hate This Game :)
   addPlayer(new HumanPlayer(1, (nCurrentStart.nValue==1), mDeskView));
-  if (optNoAlphaBeta) {
+  if (!optAlphaBeta1)
     addPlayer(new AiPlayer(2, (nCurrentStart.nValue==2), mDeskView));
-    addPlayer(new AiPlayer(3, (nCurrentStart.nValue==3), mDeskView));
-  } else {
+  else 
     addPlayer(new CheatPlayer(2, (nCurrentStart.nValue==2), mDeskView));
+  if (!optAlphaBeta2)
+    addPlayer(new AiPlayer(3, (nCurrentStart.nValue==3), mDeskView));
+  else 
     addPlayer(new CheatPlayer(3, (nCurrentStart.nValue==3), mDeskView));
-  }
+
+
   mShowPool = false;
   mOnDeskClosed = false;
   //	optMaxPool = 21;
@@ -194,8 +197,31 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
     delete hPlr;
   } else if (curPlr->number() == 1 && curPlr->myGame() == gtPass) {
     Player *aiPlr;
-    if (optNoAlphaBeta) aiPlr = new AiPlayer(nCurrentMove.nValue, mDeskView);
-    else aiPlr = new CheatPlayer(nCurrentMove.nValue, mDeskView);
+	if (player(2)->myGame() == whist) {
+    	if (!optAlphaBeta1)	{
+			aiPlr = new AiPlayer(nCurrentMove.nValue, mDeskView);
+			printf("AiPlayer (2) moves (you passed)\n");
+		}
+    	else {
+			aiPlr = new CheatPlayer(nCurrentMove.nValue, mDeskView);
+			printf("CheatPlayer (2) moves (you passed)\n");
+		}
+	}
+	else if (player(3)->myGame() == whist) {
+    	if (!optAlphaBeta2)	{
+			aiPlr = new AiPlayer(nCurrentMove.nValue, mDeskView);
+			printf("AiPlayer (3) moves (you passed)\n");
+		}
+    	else {
+			aiPlr = new CheatPlayer(nCurrentMove.nValue, mDeskView);
+			printf("CheatPlayer (3) moves (you passed)\n");
+		}
+	}
+	else
+	{
+		QMessageBox::about(0,"Error","Something went wrong!");
+		printf("Something went wrong!");
+	}
     *aiPlr = *curPlr;
     mPlayers[nCurrentMove.nValue] = aiPlr;
     res = aiPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)), isPassOut);
@@ -481,13 +507,13 @@ bool PrefDesktop::unserialize (QByteArray &ba, int *pos) {
   if (!unserializeInt(ba, pos, &t)) return false;
   nCurrentStart.nValue = t;
   if (!unserializeInt(ba, pos, &t)) return false;
-  optMaxPool = t;
+  optMaxPool = static_cast<bool>(t);
   if (!unserializeInt(ba, pos, &t)) return false;
-  optStalingrad = t;
+  optStalingrad = static_cast<bool>(t);
   if (!unserializeInt(ba, pos, &t)) return false;
-  opt10Whist = t;
+  opt10Whist = static_cast<bool>(t);
   if (!unserializeInt(ba, pos, &t)) return false;
-  optWhistGreedy = t;
+  optWhistGreedy = static_cast<bool>(t);
   return true;
 }
 

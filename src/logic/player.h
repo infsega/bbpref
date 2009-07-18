@@ -24,10 +24,10 @@ public:
 
   virtual void sortCards ();
 
-  virtual void dealCard (Card *aCard); // получить сданную карту
+  virtual void dealCard (Card *aCard); // get dealed card
 
-  virtual Card *moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) = 0; //ход
-  virtual eGameBid moveBidding (eGameBid lMove, eGameBid rMove) = 0; //ход при торговле
+  virtual Card *moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) = 0; //move
+  virtual eGameBid moveBidding (eGameBid lMove, eGameBid rMove) = 0; //
   virtual eGameBid moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerVist) = 0; // после получения игроком прикупа -- пасс или вист
   virtual eGameBid dropForGame () = 0; // сброс для игры
   virtual eGameBid dropForMisere () = 0; // сброс для мизера
@@ -65,10 +65,10 @@ public:
   DeskView *mDeskView;
 
   ScoreBoard mScore;
-  CardList mCards; // мои
-  CardList mLeft;  // Противника слева (предполагаемый или открытые)
-  CardList mRight; // Справа (предполагаемый или открытые)
-  CardList mOut;   // Снос (мой или предполагаемый)
+  CardList mCards; // my cards
+  CardList mLeft;  // cards of left player (supposed or open)
+  CardList mRight; // cards of right player (supposed or open)
+  CardList mOut;   // Сdropped cards (my or supposed)
   CardList mCardsOut; // во взятках мои
   // this part for miser catches
   Card *mCardCarryThru;
@@ -79,7 +79,7 @@ public:
 protected:
   QString mNick;
   QString mMessage;
-  int mPlayerNo; // мой номер
+  int mPlayerNo; // my number
   bool mInvisibleHand;
   eGameBid mMyGame;
   int mTricksTaken;

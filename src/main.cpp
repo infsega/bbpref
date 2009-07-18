@@ -43,7 +43,10 @@ int main (int argc, char *argv[]) {
       argc--;
       f--;
       allowDebugLog = 1;
-    } else if (!strcmp(argv[f], "-o")) optNoAlphaBeta = true;
+    } else if (!strcmp(argv[f], "-o")) {
+		optAlphaBeta1 = false;
+		optAlphaBeta2 = false;
+	}
   }
 
   qsrand((unsigned)time(0));
