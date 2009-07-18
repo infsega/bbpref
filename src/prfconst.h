@@ -8,13 +8,13 @@
 typedef QList<int>  QIntList;
 //typedef QList<int>  QIntList;
 
-/*
+
 #define CARDWIDTH    71
 #define CARDHEIGHT   96
-*/
+/*
 #define CARDWIDTH    56
 #define CARDHEIGHT   67
-
+*/
 #define FONTSIZE 10
 
 #define SUIT_OFFSET         22
