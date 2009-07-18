@@ -19,7 +19,7 @@ public:
 
   void enableAll ();
   void disableAll ();
-  void disableLessThan (eGameBid);
+  void disableLessThan (eGameBid);//(eGameBid);
   void disableItem (eGameBid);
   void enableItem (eGameBid);
 
@@ -28,6 +28,7 @@ public slots:
   void slotPushButtonClick86 ();
   void slotPushButtonClickPass ();
   void slotPushButtonClickVist ();
+  void slotPushButtonClickHalfVist ();
   void slotGetBackSnos ();
   void slotShowBullet ();
 
@@ -42,11 +43,13 @@ public:
   eGameBid _GamesType;
   QPushButton *bgetback;
   QPushButton *showbullet;
-
+  QPushButton *bhalfvist;
+  
 protected:
   QPushButton *b86;
   QPushButton *bpass;
   QPushButton *bvist;
+
 };
 
 extern FormBid *formBid;

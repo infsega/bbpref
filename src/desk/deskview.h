@@ -126,7 +126,7 @@ private:
 private:
   bool loadCards ();
   void freeCards ();
-  QImage *GetXpmByNameI (const char *name);
+  QImage *GetImgByName (const char *name);
 
 private:
   QHash<QString, QImage *> cardI;

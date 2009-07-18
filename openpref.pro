@@ -32,3 +32,5 @@ RCC_DIR = _build/rcc
 include($$PWD/src/main.pri)
 
 RESOURCES += $$PWD/gfx.qrc
+
+TRANSLATIONS = openpref_ru.ts

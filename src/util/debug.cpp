@@ -1,6 +1,8 @@
 #include <QFile>
 
 #include "debug.h"
+#include <cstdlib>
+using namespace std;
 
 
 int allowDebugLog = 0;

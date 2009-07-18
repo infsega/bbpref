@@ -12,7 +12,7 @@
 
 class HumanPlayer : public Player {
 public:
-  HumanPlayer (int aMyNumber, DeskView *aDeskView=0);
+  HumanPlayer (int aMyNumber, bool iStart=false, DeskView *aDeskView=0);
 
   HumanPlayer &operator = (const Player &pl);
   HumanPlayer &operator = (const HumanPlayer &pl);

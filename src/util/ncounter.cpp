@@ -1,4 +1,9 @@
-#include <values.h>
+#ifndef WIN32
+	#include <values.h>
+#else
+	#include <limits.h>
+	#define MAXINT INT_MAX
+#endif
 #include "ncounter.h"
 
 

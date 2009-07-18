@@ -137,7 +137,7 @@ int ScoreBoard::recordScores (
   }
 
   //-------------------------------------------------------------------------
-  if (aMyType == vist && aGamerType != g86)  {
+  if (aMyType == whist && aGamerType != g86)  {
     if (nGameCard-nGamerVz > 0) {
       // разыгрывающий без лап(ы)
       if (nqVist == 2) {

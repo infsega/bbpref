@@ -541,9 +541,9 @@ Card *CheatPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
 
   // find game
   eGameBid bid;
-  if (mMyGame == gtPass || mMyGame == vist) {
+  if (mMyGame == gtPass || mMyGame == whist) {
     bid = aLeftPlayer->myGame();
-    if (bid == gtPass || bid == vist) {
+    if (bid == gtPass || bid == whist) {
       bid = aRightPlayer->myGame();
       movePlrObj = aRightPlayer;
     } else movePlrObj = aLeftPlayer;
@@ -675,7 +675,7 @@ Card *CheatPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
 
 
 ///////////////////////////////////////////////////////////////////////////////
-CheatPlayer::CheatPlayer (int aMyNumber, DeskView *aDeskView) : AiPlayer(aMyNumber, aDeskView) {
+CheatPlayer::CheatPlayer (int aMyNumber, bool iStart, DeskView *aDeskView) : AiPlayer(aMyNumber, iStart, aDeskView) {
   mInvisibleHand = false;
 }
 

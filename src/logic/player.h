@@ -11,7 +11,7 @@
 
 class Player {
 public:
-  Player (int aMyNumber, DeskView *aDeskView=0);
+  Player (int aMyNumber, bool iStart=false, DeskView *aDeskView=0);
   Player (const Player &pl);
   virtual ~Player ();
 
@@ -84,6 +84,7 @@ protected:
   eGameBid mMyGame;
   int mTricksTaken;
   int mPrevHiCardIdx;
+  bool mIStart;
 };
 
 

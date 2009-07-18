@@ -3,7 +3,9 @@
 
 #include <QString>
 
-#define XDEBUG
+#ifndef WIN32
+	#define XDEBUG
+#endif
 
 
 extern int allowDebugLog;

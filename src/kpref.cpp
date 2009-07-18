@@ -5,10 +5,12 @@
 #include <QSettings>
 
 #include "kpref.h"
+#include <QDebug>
 
 #include "desktop.h"
 #include "deskview.h"
 #include "formbid.h"
+#include "newgameform.h"
 #include "optform.h"
 #include "player.h"
 
@@ -18,7 +20,8 @@ Kpref *kpref;
 
 
 Kpref::Kpref () {
-  //!!!setTitle("OpenPref");
+  setWindowTitle("OpenPref");
+  
   initMenuBar();
   mInPaintEvent = mInMouseMoveEvent = mWaitingMouseUp = false;
   mDeskView = 0;
@@ -30,13 +33,30 @@ Kpref::Kpref () {
   QDesktopWidget *desk = QApplication::desktop();
   QRect dims(desk->availableGeometry(this));
   int w = dims.width()-60;
-  w = 528*2;
+  //w = 528*2;
   int h = dims.height()-120;
-  h = 800;
+  //h = 800;
   int x = dims.left()+(dims.width()-w)/2;
   int y = dims.top()+(dims.height()-h)/2;
   move(x, y);
   resize(w, h);
+
+  HintBar = new QStatusBar;
+  /*Hint = new QLabel(tr("Welcome to OpenPref!"), this);
+  Hint->setAlignment(Qt::AlignCenter);
+  //Hint->setForegroundColor("yellow");
+  //Hint->setBackgroundColor("green");
+  //Hint->setFrameShape(QFrame::NoFrame);
+  //Hint->setMidLineWidth(0);
+  //Hint->setLineWidth(0);
+  //Hint->setForegroundRole(QPalette::Link);
+  Hint->palette-> setPaletteBackgroundColor("green");
+  Hint-> setPaletteForegroundColor("yellow");
+  //Hint->setFrameStyle(0);
+  
+  HintBar->addWidget(Hint,1);*/
+  setStatusBar(HintBar);
+  //connect(this, SIGNAL(destroyed()), qApp, SLOT(quit()));
 }
 
 
@@ -54,6 +74,8 @@ Kpref::~Kpref () {
   //!delete formBid;
   delete mDeskView;
   delete mDesktop;
+  delete HintBar;
+  delete Hint;
 }
 
 
@@ -64,24 +86,28 @@ void Kpref::adjustDesk () {
 
 
 void Kpref::initMenuBar () {
-  fileMenu = menuBar()->addMenu("&Game");
-  actNewGame = fileMenu->addAction(QIcon(QString(":/pics/newgame.png")), "&New game...", this, SLOT(slotNewSingleGame()), Qt::CTRL+Qt::Key_N);
+  fileMenu = menuBar()->addMenu(tr("&Game"));
+  actNewGame = fileMenu->addAction(QIcon(QString(":/pics/newgame.png")), tr("&New game..."), this, SLOT(slotNewSingleGame()), Qt::CTRL+Qt::Key_N);
   fileMenu->addSeparator();
-  actFileOpen = fileMenu->addAction(QIcon(QString(":/pics/fileopen.png")), "&Open...", this, SLOT(slotFileOpen()), Qt::CTRL+Qt::Key_O);
-  actFileSave = fileMenu->addAction(QIcon(QString(":/pics/filesave.png")), "&Save", this, SLOT(slotFileSave()), Qt::CTRL+Qt::Key_S);
+  actFileOpen = fileMenu->addAction(QIcon(QString(":/pics/fileopen.png")), tr("&Open..."), this, SLOT(slotFileOpen()), Qt::CTRL+Qt::Key_O);
+  actFileSave = fileMenu->addAction(QIcon(QString(":/pics/filesave.png")), tr("&Save"), this, SLOT(slotFileSave()), Qt::CTRL+Qt::Key_S);
   fileMenu->addSeparator();
-  actOptions = fileMenu->addAction("&Options", this, SLOT(slotOptions()), Qt::CTRL+Qt::Key_P);
+  actOptions = fileMenu->addAction(QIcon(QString(":/pics/tool.png")), tr("&Options..."), this, SLOT(slotOptions()), Qt::CTRL+Qt::Key_P);
   fileMenu->addSeparator();
-  actQuit = fileMenu->addAction("Quit", qApp, SLOT(quit()), Qt::CTRL+Qt::Key_Q);
+  //actQuit = fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), qApp, SLOT(quit()), Qt::CTRL+Qt::Key_Q);
+  actQuit = fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), this, SLOT(slotAbort()), Qt::CTRL+Qt::Key_Q);
   actFileSave->setEnabled(false);
   actOptions->setEnabled(true);
 
-  viewMenu = menuBar()->addMenu("&Show");
-  viewMenu->addAction(QIcon(QString(":/pics/paper.png")), "Score...", this, SLOT(slotShowScore()), Qt::CTRL+Qt::Key_R);
+  viewMenu = menuBar()->addMenu(tr("&Show"));
+  viewMenu->addAction(QIcon(QString(":/pics/paper.png")), tr("S&core..."), this, SLOT(slotShowScore()), Qt::CTRL+Qt::Key_R);
 
   menuBar()->addSeparator();
-  helpMenu = menuBar()->addMenu("&Help");
-  helpMenu->addAction("About", this, SLOT(slotHelpAbout()), 0);
+  helpMenu = menuBar()->addMenu(tr("&Help"));
+  helpMenu->addAction(tr("&Preferans Rules..."), this, SLOT(slotRules()), Qt::Key_F1);
+  helpMenu->addAction(tr("&About OpenPref"), this, SLOT(slotHelpAbout()), 0);
+  actAboutQt = helpMenu->addAction(tr("About &Qt"));
+  connect(actAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }
 
 
@@ -129,6 +155,35 @@ void Kpref::forceRepaint () {
 
 
 void Kpref::slotNewSingleGame () {
+
+  NewGameDialog *dlg = new NewGameDialog;
+  // Players
+  dlg->cbAlphaBeta->setChecked(!optNoAlphaBeta);
+  // Conventions
+  dlg->sbGame->setValue(optMaxPool);
+  dlg->cbGreedy->setChecked(optWhistGreedy);
+  dlg->rbTenWhist->setChecked(opt10Whist);
+  //dlg->rbTenCheck->setChecked(!opt10Whist);
+  dlg->cbStalin->setChecked(optStalingrad);
+  dlg->cbAggPass->setChecked(optAggPass);
+  if (dlg->exec() == QDialog::Accepted) {
+	// Players
+    optNoAlphaBeta = !dlg->cbAlphaBeta->isChecked();
+    // Conventions
+	optMaxPool = dlg->sbGame->value();
+    optWhistGreedy = dlg->cbGreedy->isChecked();
+    opt10Whist = dlg->rbTenWhist->isChecked();
+    optStalingrad = dlg->cbStalin->isChecked();
+    optAggPass = dlg->cbAggPass->isChecked();
+    saveOptions();
+	delete dlg;
+  }
+  else
+  {
+	delete dlg;
+	return;
+  }
+  
   if (mDesktop) {
     delete mDesktop;
     delete mDeskView;
@@ -137,10 +192,11 @@ void Kpref::slotNewSingleGame () {
     mDesktop->mDeskView = mDeskView;
     connect(mDesktop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
     connect(mDeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
-  }
+  }  
+  
   optPassCount = 0;
   actOptions->setEnabled(false);
-  actFileOpen->setEnabled(false);
+  actFileOpen->setEnabled(false);  
   mDesktop->runGame();
   actFileOpen->setEnabled(true);
   actOptions->setEnabled(true);
@@ -205,14 +261,15 @@ void Kpref::paintEvent (QPaintEvent *event) {
 
 
 void Kpref::slotHelpAbout () {
-  QMessageBox::about(this, "About...",
-    "OpenPref\n"
-    "developer version (0.1.1)\n"
+  QMessageBox::about(this, tr("About"),
+    tr("OpenPref\n"
+    "developer version (0.1.2)\n"
     "http://gitorious.org/openprefqt4\n"
     "\n"
     "(c) 2004 Fedotov A.V.\n"
     "Based on kpref (c) Azarniy I.V.\n"
-    "Qt4 port and many new bugs by Ketmar"
+    "Qt4 port and many new bugs by Ketmar\n"
+	"Some bells and whistles by Annulen")
   );
 }
 
@@ -225,10 +282,10 @@ void Kpref::saveOptions () {
   st.setValue("whistgreedy", optWhistGreedy);
   st.setValue("animdeal", optDealAnim);
   st.setValue("animtake", optTakeAnim);
-  st.setValue("animtake", optTakeAnim);
   st.setValue("alphabeta", !optNoAlphaBeta);
   st.setValue("debughand", optDebugHands);
   st.setValue("aggpass", optAggPass);
+  st.value("prefclub", optPrefClub);
 }
 
 
@@ -237,38 +294,50 @@ void Kpref::loadOptions () {
   optMaxPool = st.value("maxpool", 10).toInt();
   if (optMaxPool < 4) optMaxPool = 4; else if (optMaxPool > 1000) optMaxPool = 1000;
   optStalingrad = st.value("stalin", true).toBool();
-  opt10Whist = st.value("whist10", false).toBool();
+  opt10Whist = st.value("whist10", false).toBool();// true => radio button checks 'check' nevertheless!
   optWhistGreedy = st.value("whistgreedy", true).toBool();
   optDealAnim = st.value("animdeal", true).toBool();
   optTakeAnim = st.value("animtake", true).toBool();
   optNoAlphaBeta = !(st.value("alphabeta", true).toBool());
   optDebugHands = st.value("debughand", false).toBool();
   optAggPass = st.value("aggpass", true).toBool();
+  optPrefClub = st.value("prefclub", false).toBool();
 }
 
 
 void Kpref::slotOptions () {
   OptDialog *dlg = new OptDialog;
-  dlg->sbGame->setValue(optMaxPool);
-  dlg->cbGreedy->setChecked(optWhistGreedy);
-  dlg->cbTenCheck->setChecked(!opt10Whist);
-  dlg->cbStalin->setChecked(optStalingrad);
   dlg->cbAnimDeal->setChecked(optDealAnim);
   dlg->cbAnimTake->setChecked(optTakeAnim);
-  dlg->cbAlphaBeta->setChecked(!optNoAlphaBeta);
   dlg->cbDebugHands->setChecked(optDebugHands);
-  dlg->cbAggPass->setChecked(optAggPass);
+  
   if (dlg->exec() == QDialog::Accepted) {
-    optMaxPool = dlg->sbGame->value();
-    optWhistGreedy = dlg->cbGreedy->isChecked();
-    opt10Whist = !dlg->cbTenCheck->isChecked();
-    optStalingrad = dlg->cbStalin->isChecked();
     optDealAnim = dlg->cbAnimDeal->isChecked();
     optTakeAnim = dlg->cbAnimTake->isChecked();
-    optNoAlphaBeta = !dlg->cbAlphaBeta->isChecked();
+	optPrefClub = dlg->cbPrefClub->isChecked();
     optDebugHands = dlg->cbDebugHands->isChecked();
-    optAggPass = dlg->cbAggPass->isChecked();
     saveOptions();
   }
   delete dlg;
+}
+
+void Kpref::slotRules () {
+
+}
+
+void Kpref::slotAbort () {
+	int ret = QMessageBox::question(this, tr("OpenPref"),
+        tr("Do you really want to quit game?"),
+        QMessageBox::Yes | QMessageBox::Default,
+        QMessageBox::No | QMessageBox::Escape);
+	if (ret == QMessageBox::Yes)
+  		abort();
+}
+
+void Kpref::slotAbortBid () {
+	if (formBid->_GamesType != showpool)
+	{
+		slotAbort();
+		formBid->_GamesType = undefined;
+	}
 }

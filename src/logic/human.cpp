@@ -18,7 +18,7 @@
 #include "human.h"
 
 
-HumanPlayer::HumanPlayer (int aMyNumber, DeskView *aDeskView) : Player(aMyNumber, aDeskView) {
+HumanPlayer::HumanPlayer (int aMyNumber, bool iStart, DeskView *aDeskView) : Player(aMyNumber, iStart, aDeskView) {
   internalInit();
 }
 
@@ -63,12 +63,14 @@ eGameBid HumanPlayer::dropForGame () {
   moveSelectCard(0, 0, 0, 0);
 
   formBid->enableAll();
-  formBid->disableItem(vist);
+  formBid->disableItem(whist);
+  //formBid->disableItem(halfwhist);
+  formBid->bhalfvist->setEnabled(false);
   formBid->disableItem(gtPass);
   if (mMyGame != g86) formBid->disableItem(g86);
   formBid->disableLessThan(mMyGame);
-  formBid->showbullet->setEnabled(TRUE);
-  formBid->bgetback->setEnabled(TRUE);
+  formBid->showbullet->setEnabled(true);
+  formBid->bgetback->setEnabled(true);
 
   do {
     tmpGamesType = mDeskView->selectBid(zerogame, zerogame);
@@ -103,10 +105,22 @@ eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
     if (lMove == undefined) lMove = g71;
     if (rMove == undefined) rMove = g71;
   }
-  if (qMax(lMove, rMove) != gtPass) formBid->disableLessThan(qMax(lMove, rMove));
-  if (mMyGame != undefined) formBid->disableItem(g86);
+  if (qMax(lMove, rMove) != gtPass)
+  {
+	
+  	// If HumanPlayer started bid, he can stay
+	if (mIStart)
+		formBid->disableLessThan(qMax(lMove, rMove));
+  	// otherwise he must increase
+	else
+   		formBid->disableLessThan(qMax((eGameBid)succBid(lMove), (eGameBid)succBid(rMove)));
+  }
+  if (mMyGame != undefined)
+    formBid->disableItem(g86);
   formBid->enableItem(gtPass);
-  formBid->disableItem(vist);
+  formBid->disableItem(whist);
+  //formBid->disableItem(halfwhist);
+  formBid->bhalfvist->setEnabled(false);
   formBid->showbullet->setEnabled(true);
   formBid->bgetback->setEnabled(false);
   do {
@@ -119,7 +133,7 @@ eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
       //mDeskView->mySleep(1);
       moveSelectCard(0, 0, 0, 0);
     } else if (tmpGamesType == 1) {
-      // показать пулю
+      // show pool
       kpref->mDesktop->mShowPool = true;
       kpref->slotShowScore();
     }
@@ -131,7 +145,7 @@ eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
 }
 
 
-//ход
+//move
 Card *HumanPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) {
   Q_UNUSED(aLeftPlayer)
   Q_UNUSED(aRightPlayer)
@@ -170,9 +184,9 @@ Card *HumanPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
 }
 
 
-eGameBid HumanPlayer::moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerVist) {
+eGameBid HumanPlayer::moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerPass) {
   Q_UNUSED(HaveAVist)
-  Q_UNUSED(nGamerVist)
+  //Q_UNUSED(nGamerVist)
 
   //fprintf(stderr, "whist/pass\n");
   if (MaxGame == g86) {
@@ -182,8 +196,11 @@ eGameBid HumanPlayer::moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerV
     formBid->disableAll();
     if (optStalingrad && MaxGame == g61) formBid->disableItem(gtPass);
     else formBid->enableItem(gtPass);
+	
     //formBid->enableItem(gtPass);
-    formBid->enableItem(vist);
+    formBid->enableItem(whist);
+	if (nGamerPass == 1)
+		formBid->bhalfvist->setEnabled(true);
     mMyGame = mDeskView->selectBid(zerogame, zerogame);
     formBid->enableAll();
   }

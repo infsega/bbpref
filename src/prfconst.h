@@ -44,10 +44,12 @@ enum eSuit {
 
 enum eGameBid {
   zerogame=0,
+  showpool=1,
   g86catch=56,
   raspass=57,
-  vist=58,
-  undefined=59,
+  whist=58,
+  halfwhist=59,
+  undefined=55,
   gtPass=60,
   g61=61,g62,g63,g64,g65,
   g71=71,g72,g73,g74,g75,
@@ -77,7 +79,7 @@ extern int optPassCount;
 
 extern bool optDealAnim;
 extern bool optTakeAnim;
-
+extern bool optPrefClub;
 
 int succBid (eGameBid game);
 const QString &sGameName (eGameBid game);

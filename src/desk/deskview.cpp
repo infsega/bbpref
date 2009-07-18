@@ -80,7 +80,7 @@ void DeskView::freeCards () {
 }
 
 
-QImage *DeskView::GetXpmByNameI (const char *name) {
+QImage *DeskView::GetImgByName (const char *name) {
   if (!cardI.contains(name)) cardI["empty"];
   return cardI[name];
 }
@@ -131,8 +131,10 @@ void SleepEventLoop::doEventMouse (QMouseEvent *event) {
 
 
 void SleepEventLoop::keyPicUpdate () {
-  mDeskView->drawPKeyBmp(true);
-  mDeskView->emitRepaint();
+  if (optPrefClub == true) {
+    mDeskView->drawPKeyBmp(true);
+    mDeskView->emitRepaint();
+  }
 }
 
 
@@ -308,14 +310,18 @@ void DeskView::mySleep (int seconds) {
   qApp->installEventFilter(&efilter);
   QTimer *timer = new QTimer(&eloop);
 
-  if (seconds == 0) {
+  if (seconds == 0)
+  {
+    if (optPrefClub == false)
+	  seconds=1;
+    else {
     drawPKeyBmp(false);
     emitRepaint();
     qApp->processEvents(QEventLoop::WaitForMoreEvents);
     qApp->sendPostedEvents();
     return;
+    }
   }
-
   if (seconds > 0) {
     connect(timer, SIGNAL(timeout()), &eloop, SLOT(quit()));
     timer->start(seconds*1000);
@@ -325,6 +331,7 @@ void DeskView::mySleep (int seconds) {
   } else if (seconds < -1) {
     eloop.mIgnoreKey = true;
   }
+  if (optPrefClub == true)
   drawPKeyBmp(seconds == -1);
 
   emitRepaint();
@@ -393,10 +400,10 @@ void DeskView::drawCard (Card *card, int x, int y, bool opened, bool hilight) {
     sprintf(cCardName, "%s%i%i", hilight?"q":"", card->face(), card->suit());
     //if (hilight) fprintf(stderr, "SELECTED! [%s]\n", cCardName);
   }
-  QImage *bmp = GetXpmByNameI(cCardName);
+  QImage *bmp = GetImgByName(cCardName);
   if (!bmp) {
     //fprintf(stderr, "not found: [%s]\n", cCardName);
-    bmp = GetXpmByNameI("empty");
+    bmp = GetImgByName("empty");
     if (!bmp) {
       ClearBox(x, y, x+CARDWIDTH, y+CARDHEIGHT);
       return;
@@ -453,6 +460,11 @@ void DeskView::ShowBlankPaper (int optMaxPool) {
   //char buff[16];
   QPainter p(mDeskBmp);
   QRect NewRect = QRect(xDelta, yDelta, PaperWidth, PaperHeight);
+  QBrush shadow(qRgba(0, 0, 0, 128));
+  NewRect.adjust(8, 8, 8, 8);
+  p.fillRect(NewRect, shadow);
+  NewRect.adjust(-8, -8, -8, -8);
+
   QBrush brush(qRgb(255, 255, 255));
   p.fillRect(NewRect, brush);
   QBrush b1(brush);
@@ -541,7 +553,6 @@ void DeskView::showPlayerScore (int i, const QString &sb, const QString &sm, con
   p.end();
 }
 
-
 void DeskView::drawRotatedText (QPainter &p, int x, int y, float angle, const QString &text) {
   p.translate(x, y);
   p.rotate(angle);
@@ -555,7 +566,11 @@ eGameBid DeskView::selectBid (eGameBid lMove, eGameBid rMove) {
   Q_UNUSED(lMove)
   Q_UNUSED(rMove)
   //if (!formBid->exec()) qApp->quit();
-  formBid->exec();
+  connect(formBid, SIGNAL(rejected()), kpref, SLOT(slotAbortBid()));
+  formBid->_GamesType = undefined;
+  do
+  	formBid->exec();
+  while (formBid->_GamesType == undefined);
   return formBid->_GamesType;
 }
 

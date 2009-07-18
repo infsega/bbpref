@@ -7,7 +7,7 @@
 #include "player.h"
 
 
-Player::Player (int aMyNumber, DeskView *aDeskView) : mDeskView(aDeskView), mPlayerNo(aMyNumber) {
+Player::Player (int aMyNumber, bool iStart, DeskView *aDeskView) : mDeskView(aDeskView), mIStart(iStart), mPlayerNo(aMyNumber) {
   internalInit();
 }
 

@@ -8,6 +8,7 @@
 #include <QPixmap>
 #include <QToolButton>
 #include <QApplication>
+#include <QLabel>
 #include <QStatusBar>
 #include <QWhatsThis>
 #include <QMessageBox>
@@ -42,7 +43,11 @@ public slots:
   void slotFileOpen ();
   void slotFileSave ();
   void slotHelpAbout ();
+  void slotRules ();
   void slotOptions ();
+
+  void slotAbort ();
+  void slotAbortBid ();
 
 private:
   void saveOptions ();
@@ -59,6 +64,7 @@ private:
   QAction *actFileSave;
   QAction *actQuit;
   QAction *actOptions;
+  QAction *actAboutQt;
 
 public:
   PrefDesktop *mDesktop;
@@ -66,7 +72,8 @@ public:
   bool mWaitingMouseUp;
   bool mInMouseMoveEvent;
   bool mInPaintEvent;
-  //QStatusBar *StatusBar1;
+  QStatusBar * HintBar;
+  QLabel * Hint;
 
 protected:
   void  paintEvent (QPaintEvent *);
