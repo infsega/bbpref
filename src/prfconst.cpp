@@ -24,7 +24,7 @@ int optPassCount = 0;
 
 bool optDealAnim = true;
 bool optTakeAnim = true;
-bool optPrefClub = false;
+bool optPrefClub = true;
 
 
 int trumpSuit (void) {

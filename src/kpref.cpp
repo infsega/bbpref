@@ -326,7 +326,7 @@ void Kpref::loadOptions () {
   optAlphaBeta2 = (st.value("alphabeta2", true).toBool());
   optDebugHands = st.value("debughand", false).toBool();
   optAggPass = st.value("aggpass", true).toBool();
-  optPrefClub = st.value("prefclub", false).toBool();
+  optPrefClub = st.value("prefclub", true).toBool();
 }
 
 
