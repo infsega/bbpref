@@ -9,19 +9,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>210</width>
+    <width>230</width>
     <height>180</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>210</width>
+    <width>230</width>
     <height>180</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>210</width>
+    <width>230</width>
     <height>180</height>
    </size>
   </property>
@@ -50,6 +50,12 @@
         <height>20</height>
        </rect>
       </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="text">
        <string>Animate &amp;deal</string>
       </property>
@@ -63,19 +69,28 @@
         <height>20</height>
        </rect>
       </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="text">
        <string>Animate &amp;takes</string>
       </property>
      </widget>
-     <zorder>cbAnimDeal</zorder>
-     <zorder>cbAnimTake</zorder>
-     <zorder>cbPrefClub</zorder>
     </widget>
    </item>
    <item>
     <widget class="QCheckBox" name="cbPrefClub">
      <property name="enabled">
       <bool>false</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="text">
       <string>Pref&amp;Club Remix</string>
@@ -87,6 +102,12 @@
    </item>
    <item>
     <widget class="QCheckBox" name="cbDebugHands">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
       <string>Sho&amp;w AI cards (debug)</string>
      </property>

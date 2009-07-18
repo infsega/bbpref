@@ -71,6 +71,7 @@ extern bool optStalingrad;
 extern bool opt10Whist;
 extern bool optWhistGreedy;
 extern int optMaxPool;
+extern QString optHumanName;
 extern QString optPlayerName1;
 extern bool optAlphaBeta1;
 extern QString optPlayerName2;

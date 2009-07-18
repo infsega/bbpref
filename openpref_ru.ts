@@ -197,6 +197,10 @@ Some bells and whistles by Annulen</source>
         <source>Player 2 (right)</source>
         <translation>Игрок 2 (справа)</translation>
     </message>
+    <message>
+        <source>Your name:</source>
+        <translation>Ваше имя:</translation>
+    </message>
 </context>
 <context>
     <name>OptDialog</name>

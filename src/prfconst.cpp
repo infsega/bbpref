@@ -1,21 +1,19 @@
 #include <string.h>
 #include <stdio.h>
-
+#include <stdlib.h>
 #include "prfconst.h"
 #include "card.h"
-
-
-
-
-
-
-
 
 bool optStalingrad = true;
 bool opt10Whist = false;
 bool optWhistGreedy = true;
 int optMaxPool = 10;
 eGameBid gCurrentGame;
+#ifndef WIN32	// May be #ifdef POSIX?
+	QString optHumanName = getenv("USER");
+#else
+	QString optHumanName = "";
+#endif
 QString optPlayerName1 = "Player 1";
 bool optAlphaBeta1 = false;
 QString optPlayerName2 = "Player 2";

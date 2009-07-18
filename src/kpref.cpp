@@ -18,6 +18,8 @@
 #include "player.h"
 
 
+#include <stdlib.h>
+
 //char *documentation; //see bottom this file
 Kpref *kpref;
 
@@ -162,6 +164,7 @@ void Kpref::slotNewSingleGame () {
 
   NewGameDialog *dlg = new NewGameDialog;
   // Players
+  dlg->leHumanName->setText(optHumanName);
   dlg->leName1->setText(optPlayerName1);
   dlg->cbAlphaBeta1->setChecked(optAlphaBeta1);
   dlg->leName2->setText(optPlayerName2);
@@ -174,6 +177,7 @@ void Kpref::slotNewSingleGame () {
   dlg->cbAggPass->setChecked(optAggPass);
   if (dlg->exec() == QDialog::Accepted) {
 	// Players
+	optHumanName = dlg->leHumanName->text();
 	optPlayerName1 = dlg->leName1->text();
     optAlphaBeta1 = dlg->cbAlphaBeta1->isChecked();
 	optPlayerName2 = dlg->leName2->text();
@@ -291,6 +295,7 @@ void Kpref::saveOptions () {
   st.setValue("whistgreedy", optWhistGreedy);
   st.setValue("animdeal", optDealAnim);
   st.setValue("animtake", optTakeAnim);
+  st.setValue("humanname", optHumanName);
   st.setValue("playername1", optPlayerName1);
   st.setValue("alphabeta1", optAlphaBeta1);
   st.setValue("playername2", optPlayerName2);
@@ -310,6 +315,11 @@ void Kpref::loadOptions () {
   optWhistGreedy = st.value("whistgreedy", true).toBool();
   optDealAnim = st.value("animdeal", true).toBool();
   optTakeAnim = st.value("animtake", true).toBool();
+  #ifndef WIN32	// May be #ifdef POSIX?
+  	optHumanName = st.value("humanname", getenv("USER")).toString();
+  #else
+  	optHumanName = st.value("humanname", "").toString();
+  #endif
   optPlayerName1 = st.value("playername1", tr("Player 1")).toString();
   optAlphaBeta1 = (st.value("alphabeta1", true).toBool());
   optPlayerName2 = st.value("playername2", tr("Player 2")).toString();
