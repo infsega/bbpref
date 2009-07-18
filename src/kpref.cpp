@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QSettings>
 
+#include <QTextBrowser>
+
 #include "kpref.h"
 #include <QDebug>
 
@@ -12,6 +14,7 @@
 #include "formbid.h"
 #include "newgameform.h"
 #include "optform.h"
+#include "helpbrowser.h"
 #include "player.h"
 
 
@@ -106,8 +109,9 @@ void Kpref::initMenuBar () {
   helpMenu = menuBar()->addMenu(tr("&Help"));
   helpMenu->addAction(tr("&Preferans Rules..."), this, SLOT(slotRules()), Qt::Key_F1);
   helpMenu->addAction(tr("&About OpenPref"), this, SLOT(slotHelpAbout()), 0);
-  actAboutQt = helpMenu->addAction(tr("About &Qt"));
-  connect(actAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+  helpMenu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
+  //actAboutQt = helpMenu->addAction(tr("About &Qt"));
+  //connect(actAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }
 
 
@@ -322,7 +326,10 @@ void Kpref::slotOptions () {
 }
 
 void Kpref::slotRules () {
-
+  //HelpBrowser *dlg = new HelpBrowser;
+  //dlg->tbHelp->setSearchPaths(QStringList("/home/kostya/projects/Qt/doc/html"));
+  //dlg->tbHelp->loadResource(0, QUrl::fromLocalFile("/home/kostya/projects/Qt/doc/html/index.html"));
+  // delete dlg;
 }
 
 void Kpref::slotAbort () {
