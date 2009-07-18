@@ -35,6 +35,13 @@
     </message>
 </context>
 <context>
+    <name>HelpBrowser</name>
+    <message>
+        <source>Preferans Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Kpref</name>
     <message>
         <source>&amp;Game</source>
@@ -50,7 +57,7 @@
     </message>
     <message>
         <source>&amp;Save</source>
-        <translation type="unfinished">&amp;Сохранить</translation>
+        <translation>&amp;Сохранить</translation>
     </message>
     <message>
         <source>&amp;Options...</source>
@@ -78,7 +85,7 @@
     </message>
     <message>
         <source>&amp;About...</source>
-        <translation>&amp;О программе...</translation>
+        <translation type="obsolete">&amp;О программе...</translation>
     </message>
     <message>
         <source>OpenPref
@@ -91,6 +98,34 @@ Qt4 port and many new bugs by Ketmar
 Some bells and whistles by Annulen</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&amp;Preferans Rules...</source>
+        <translation>&amp;Правила преферанса...</translation>
+    </message>
+    <message>
+        <source>&amp;About OpenPref</source>
+        <translation>О &amp;программе OpenPref</translation>
+    </message>
+    <message>
+        <source>About &amp;Qt</source>
+        <translation>&amp;О Qt</translation>
+    </message>
+    <message>
+        <source>Player 1</source>
+        <translation>Игрок 1</translation>
+    </message>
+    <message>
+        <source>Player 2</source>
+        <translation>Игрок 2</translation>
+    </message>
+    <message>
+        <source>OpenPref</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you really want to quit game?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>NewGameDialog</name>
@@ -100,11 +135,7 @@ Some bells and whistles by Annulen</source>
     </message>
     <message>
         <source>Players</source>
-        <translation>Игроки</translation>
-    </message>
-    <message>
-        <source>use &amp;AlphaBeta</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Игроки</translation>
     </message>
     <message>
         <source>Conventions</source>
@@ -149,6 +180,22 @@ Some bells and whistles by Annulen</source>
     <message>
         <source>6 of spades:</source>
         <translation>6 пик:</translation>
+    </message>
+    <message>
+        <source>Player 1 (left)</source>
+        <translation>Игрок 1 (слева)</translation>
+    </message>
+    <message>
+        <source>AlphaBeta algorithm</source>
+        <translation>Алгоритм АльфаБета</translation>
+    </message>
+    <message>
+        <source>Name:</source>
+        <translation>Имя:</translation>
+    </message>
+    <message>
+        <source>Player 2 (right)</source>
+        <translation>Игрок 2 (справа)</translation>
     </message>
 </context>
 <context>
@@ -240,6 +287,10 @@ Some bells and whistles by Annulen</source>
     <message>
         <source>Sho&amp;w AI cards (debug)</source>
         <translation>&amp;Показать карты компьютера (отладка)</translation>
+    </message>
+    <message>
+        <source>Pref&amp;Club Remix</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -310,9 +310,9 @@ void Kpref::loadOptions () {
   optWhistGreedy = st.value("whistgreedy", true).toBool();
   optDealAnim = st.value("animdeal", true).toBool();
   optTakeAnim = st.value("animtake", true).toBool();
-  optPlayerName1 = st.value("playername1", "Player 1").toString();
+  optPlayerName1 = st.value("playername1", tr("Player 1")).toString();
   optAlphaBeta1 = (st.value("alphabeta1", true).toBool());
-  optPlayerName2 = st.value("playername2", "Player 2").toString();
+  optPlayerName2 = st.value("playername2", tr("Player 2")).toString();
   optAlphaBeta2 = (st.value("alphabeta2", true).toBool());
   optDebugHands = st.value("debughand", false).toBool();
   optAggPass = st.value("aggpass", true).toBool();

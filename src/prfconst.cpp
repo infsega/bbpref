@@ -92,6 +92,7 @@ int gamePoolPrice (eGameBid gType) {
   if (gType == g86) return 10;
   if (gType >= g91 && gType <= 95) return 8;
   if (gType >= g101 && gType <= 105) return 10;
+  if (gType == raspass) return 1;
   return 2;
 }
 
