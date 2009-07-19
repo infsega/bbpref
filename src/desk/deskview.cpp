@@ -194,8 +194,7 @@ void DeskView::drawPKeyBmp (bool show) {
 */
   QImage *i = mKeyBmp[phase];
   if (show) {
-    QPainter p(mDeskBmp);
-	printf("PKey:%d",kpref->HintBar->height());
+    QPainter p(mDeskBmp);	
     p.drawImage(4, DesktopHeight-(i->height()+8+kpref->HintBar->height()), *i);
     p.end();
     phase = 1-phase;
@@ -479,10 +478,13 @@ void DeskView::ShowBlankPaper (int optMaxPool) {
   p.drawLine(xDelta+40, yDelta+0, xDelta+40, yDelta+483);
   p.drawLine(xDelta+40, yDelta+483, xDelta+370, yDelta+483);
   p.drawLine(xDelta+370, yDelta+483, xDelta+370, yDelta+0);
-  p.drawLine(xDelta+370, yDelta+0, xDelta+80, yDelta+0);
-  p.drawLine(xDelta+80, yDelta+0, xDelta+80, yDelta+440);
-  p.drawLine(xDelta+80, yDelta+440, xDelta+330, yDelta+440);
-  p.drawLine(xDelta+330, yDelta+440, xDelta+330, yDelta+0);
+  //p.drawLine(xDelta+370, yDelta+0, xDelta+80, yDelta+0);
+  
+  // Border of mountain
+  p.drawLine(xDelta+80, yDelta+0, xDelta+80, yDelta+436);
+  p.drawLine(xDelta+80, yDelta+436, xDelta+330, yDelta+436);
+  p.drawLine(xDelta+330, yDelta+436, xDelta+330, yDelta+0);
+  
   p.drawLine(xDelta+0, yDelta+255, xDelta+40, yDelta+255);
   p.drawLine(xDelta+410, yDelta+255, xDelta+370, yDelta+255);
   p.drawLine(xDelta+205, yDelta+530, xDelta+205, yDelta+483);
@@ -490,6 +492,12 @@ void DeskView::ShowBlankPaper (int optMaxPool) {
   //p.drawText(xDelta+197, FONTSIZE+yDelta+292, buff);
   //drawText(QString::number(optMaxPool), xDelta+197, yDelta+290);
   p.drawText(xDelta+197, yDelta+300, QString::number(optMaxPool));
+  
+  // Players' names
+  p.setBrush(brush);
+  p.drawText(QRectF(xDelta+150,yDelta+350,110,20),optHumanName,QTextOption(Qt::AlignHCenter));
+  drawRotatedText(p,xDelta+175,yDelta+200,110,20,90,optPlayerName1);
+  drawRotatedText(p,xDelta+235,yDelta+310,110,20,-90,optPlayerName2);
   p.end();
 }
 
@@ -562,6 +570,14 @@ void DeskView::drawRotatedText (QPainter &p, int x, int y, float angle, const QS
   p.translate(-1*x, -1*y);
 }
 
+void DeskView::drawRotatedText (QPainter &p, int x, int y, int width, int height, float angle, const QString &text) {
+  p.translate(x, y);
+  p.rotate(angle);
+  p.drawText(QRectF(0,0,width,height),text,QTextOption(Qt::AlignHCenter));
+  //p.drawRect(0,0,width,height);
+  p.rotate(-1*angle);
+  p.translate(-1*x, -1*y);
+}
 
 eGameBid DeskView::selectBid (eGameBid lMove, eGameBid rMove) {
   Q_UNUSED(lMove)

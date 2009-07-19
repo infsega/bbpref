@@ -79,6 +79,7 @@ public:
   eGameBid selectBid (eGameBid lMove, eGameBid rMove);
   void StatusBar (const QString &text);
   void drawRotatedText (QPainter &p, int x, int y, float angle, const QString &text);
+  void drawRotatedText (QPainter &p, int x, int y, int width, int height, float angle, const QString &text);
 
   void drawPKeyBmp (bool show);
   /* game:
