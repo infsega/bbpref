@@ -277,6 +277,7 @@ void Kpref::slotHelpAbout () {
   QMessageBox::about(this, tr("About"),
     tr("OpenPref\n"
     "developer version (0.1.2)\n"
+	"http://sourceforge.net/projects/openpref\n"
     "http://gitorious.org/openprefqt4\n"
     "\n"
     "(c) 2004 Fedotov A.V.\n"
@@ -347,6 +348,7 @@ void Kpref::slotOptions () {
 }
 
 void Kpref::slotRules () {
+	QMessageBox::about(this, "Sorry", "This feature has not been implemented yet!");
   //HelpBrowser *dlg = new HelpBrowser;
   //dlg->tbHelp->setSearchPaths(QStringList("/home/kostya/projects/Qt/doc/html"));
   //dlg->tbHelp->loadResource(0, QUrl::fromLocalFile("/home/kostya/projects/Qt/doc/html/index.html"));
@@ -355,7 +357,7 @@ void Kpref::slotRules () {
 
 void Kpref::slotAbort () {
 	int ret = QMessageBox::question(this, tr("OpenPref"),
-        tr("Do you really want to quit game?"),
+        tr("Do you really want to quit the game?"),
         QMessageBox::Yes | QMessageBox::Default,
         QMessageBox::No | QMessageBox::Escape);
 	if (ret == QMessageBox::Yes)

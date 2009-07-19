@@ -123,7 +123,7 @@ Some bells and whistles by Annulen</source>
         <translation>OpenPref</translation>
     </message>
     <message>
-        <source>Do you really want to quit game?</source>
+        <source>Do you really want to quit the game?</source>
         <translation>Вы действительно хотите покинуть игру?</translation>
     </message>
     <message>
