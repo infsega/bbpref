@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>455</width>
+    <width>460</width>
     <height>310</height>
    </rect>
   </property>
@@ -27,7 +27,7 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>455</width>
+    <width>460</width>
     <height>310</height>
    </size>
   </property>
@@ -52,7 +52,7 @@
     <rect>
      <x>10</x>
      <y>270</y>
-     <width>401</width>
+     <width>441</width>
      <height>32</height>
     </rect>
    </property>
@@ -87,6 +87,9 @@
       <height>20</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Increase difficulty</string>
+    </property>
     <property name="text">
      <string>AlphaBeta algorithm</string>
     </property>
@@ -113,6 +116,9 @@
       <height>21</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Name of opponent (for chart)</string>
+    </property>
    </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox_2">
@@ -120,7 +126,7 @@
     <rect>
      <x>232</x>
      <y>10</y>
-     <width>215</width>
+     <width>220</width>
      <height>250</height>
     </rect>
    </property>
@@ -148,7 +154,7 @@
      <rect>
       <x>110</x>
       <y>85</y>
-      <width>101</width>
+      <width>111</width>
       <height>20</height>
      </rect>
     </property>
@@ -157,6 +163,9 @@
       <horstretch>0</horstretch>
       <verstretch>0</verstretch>
      </sizepolicy>
+    </property>
+    <property name="toolTip">
+     <string>In six of spades game all opponents must whist</string>
     </property>
     <property name="text">
      <string>&amp;Stalingrad</string>
@@ -304,6 +313,9 @@
       <height>21</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>When all players reach this score in pool the game ends</string>
+    </property>
     <property name="minimum">
      <number>4</number>
     </property>
@@ -352,6 +364,9 @@
       <height>20</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Increase difficulty</string>
+    </property>
     <property name="text">
      <string>AlphaBeta algorithm</string>
     </property>
@@ -378,6 +393,9 @@
       <height>21</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Name of opponent (for chart)</string>
+    </property>
    </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox_5">
@@ -400,6 +418,9 @@
       <width>151</width>
       <height>21</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Your name (to display in chart)</string>
     </property>
    </widget>
   </widget>

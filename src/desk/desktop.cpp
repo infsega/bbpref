@@ -198,24 +198,16 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
   } else if (curPlr->number() == 1 && curPlr->myGame() == gtPass) {
     Player *aiPlr;
 	if (player(2)->myGame() == whist) {
-    	if (!optAlphaBeta1)	{
+    	if (!optAlphaBeta1)	
 			aiPlr = new AiPlayer(nCurrentMove.nValue, mDeskView);
-			printf("AiPlayer (2) moves (you passed)\n");
-		}
-    	else {
+    	else 
 			aiPlr = new CheatPlayer(nCurrentMove.nValue, mDeskView);
-			printf("CheatPlayer (2) moves (you passed)\n");
-		}
 	}
 	else if (player(3)->myGame() == whist) {
-    	if (!optAlphaBeta2)	{
+    	if (!optAlphaBeta2)	
 			aiPlr = new AiPlayer(nCurrentMove.nValue, mDeskView);
-			printf("AiPlayer (3) moves (you passed)\n");
-		}
-    	else {
+    	else 
 			aiPlr = new CheatPlayer(nCurrentMove.nValue, mDeskView);
-			printf("CheatPlayer (3) moves (you passed)\n");
-		}
 	}
 	else
 	{
@@ -739,7 +731,10 @@ void PrefDesktop::runGame () {
           gCurrentGame = playerBids[0];
           draw();
           //drawBidWindows(bids4win, 0);
-          mDeskView->mySleep(-1);
+		  if (tmpg->number() != 1)
+				kpref->HintBar->showMessage(tr("Try to remember the cards"));
+		  mDeskView->mySleep(-1);
+		  kpref->HintBar->clearMessage();
           // запихиваем ему прикуп
           tmpg->dealCard(mDeck.at(30));
           tmpg->dealCard(mDeck.at(31));
@@ -751,10 +746,10 @@ void PrefDesktop::runGame () {
             // not misere
             nCurrentMove.nValue = i;
             draw(false);
-            /*if (mPlayerActive == 1)*/ //tmpg->setMessage(tr("Select cards to drop"));
-			//kpref->Hint->setText(tr("Select cards to drop"));
-			kpref->HintBar->showMessage(tr("Select cards to drop"));
-            if (mPlayerActive != 1) mDeskView->mySleep(2);
+			if (mPlayerActive == 1)
+				kpref->HintBar->showMessage(tr("Select two cards to drop"));
+            else
+				mDeskView->mySleep(2);
             playerBids[0] = gCurrentGame = tmpg->dropForGame();
 			kpref->HintBar->clearMessage();
           } else {
@@ -763,25 +758,19 @@ void PrefDesktop::runGame () {
             int nVisibleState = tmpg->invisibleHand();
             tmpg->setInvisibleHand(false);
             draw();
-            if (tmpg->number() != 1) //tmpg->setMessage(tr("Try to remember the cards"));
+            if (tmpg->number() != 1)
 				kpref->HintBar->showMessage(tr("Try to remember the cards"));
-            else tmpg->setMessage(tr("Misere"));
+            else 
+				tmpg->setMessage(tr("Misere"));
             // wait for event
             mDeskView->mySleep(-1);
             draw(false);
-			
-            kpref->HintBar->showMessage(tr("Select cards to drop"));
-/*
-            if (mPlayerActive == 1) {
-              int x, y;
-              getPMsgXY(mPlayerActive, &x, &y);
-              mDeskView->drawMessageWindow(x, y, "Select cards to drop");
-            }
-*/
+
             tmpg->setInvisibleHand(nVisibleState);
             nCurrentMove.nValue = tmpg->number();
 
-            if (mPlayerActive != 1) mDeskView->mySleep(2);
+            if (mPlayerActive != 1) 
+				mDeskView->mySleep(2);
 
             playerBids[0] = gCurrentGame = tmpg->dropForMisere();
 			kpref->HintBar->clearMessage();

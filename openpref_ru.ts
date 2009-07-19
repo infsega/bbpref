@@ -23,11 +23,11 @@
     </message>
     <message>
         <source>Get &amp;back</source>
-        <translation type="unfinished">&amp;Назад</translation>
+        <translation>&amp;Назад</translation>
     </message>
     <message>
         <source>&amp;HalfWhist</source>
-        <translation type="unfinished">По&amp;лвиста</translation>
+        <translation>По&amp;лвиста</translation>
     </message>
     <message>
         <source>&amp;Halfwhist</source>
@@ -38,7 +38,7 @@
     <name>HelpBrowser</name>
     <message>
         <source>Preferans Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Правила преферанса</translation>
     </message>
 </context>
 <context>
@@ -120,11 +120,19 @@ Some bells and whistles by Annulen</source>
     </message>
     <message>
         <source>OpenPref</source>
-        <translation type="unfinished"></translation>
+        <translation>OpenPref</translation>
     </message>
     <message>
         <source>Do you really want to quit game?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы действительно хотите покинуть игру?</translation>
+    </message>
+    <message>
+        <source>This move is impossible</source>
+        <translation>Этот ход недопустим</translation>
+    </message>
+    <message>
+        <source>Your move</source>
+        <translation>Ваш ход</translation>
     </message>
 </context>
 <context>
@@ -175,7 +183,7 @@ Some bells and whistles by Annulen</source>
     </message>
     <message>
         <source>6-7-7...</source>
-        <translation type="unfinished"></translation>
+        <translation>6-7-7...</translation>
     </message>
     <message>
         <source>6 of spades:</source>
@@ -200,6 +208,26 @@ Some bells and whistles by Annulen</source>
     <message>
         <source>Your name:</source>
         <translation>Ваше имя:</translation>
+    </message>
+    <message>
+        <source>Increase difficulty</source>
+        <translation>Увеличить сложность</translation>
+    </message>
+    <message>
+        <source>Name of opponent (for chart)</source>
+        <translation>Имя противника (для пули)</translation>
+    </message>
+    <message>
+        <source>In six of spades game all opponents must whist</source>
+        <translation>В игре шесть пик оба противника обязаны вистовать</translation>
+    </message>
+    <message>
+        <source>When all players reach this score in pool the game ends</source>
+        <translation>Когда все игроки набирают это количество очков в пуле, игра заканчивается</translation>
+    </message>
+    <message>
+        <source>Your name (to display in chart)</source>
+        <translation>Ваше имя (для пули)</translation>
     </message>
 </context>
 <context>
@@ -294,7 +322,7 @@ Some bells and whistles by Annulen</source>
     </message>
     <message>
         <source>Pref&amp;Club Remix</source>
-        <translation type="unfinished"></translation>
+        <translation>Pref&amp;Club Remix</translation>
     </message>
 </context>
 <context>
@@ -340,16 +368,16 @@ Some bells and whistles by Annulen</source>
         <translation>10 без козыря</translation>
     </message>
     <message>
-        <source>Select cards to drop</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Try to remember the cards</source>
-        <translation type="unfinished"></translation>
+        <translation>Постарайтесь запомнить карты</translation>
     </message>
     <message>
         <source>Misere</source>
         <translation>Мизер</translation>
+    </message>
+    <message>
+        <source>Select two cards to drop</source>
+        <translation>Снесите две карты</translation>
     </message>
 </context>
 </TS>

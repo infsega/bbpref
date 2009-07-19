@@ -152,6 +152,7 @@ Card *HumanPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
   Q_UNUSED(isPassOut)
   Card *res = 0;
   mClickX = mClickY = 0; mWaitingForClick = true;
+  kpref->HintMove();
   draw();
   while (!res) {
     if (mDeskView) mDeskView->mySleep(-2);
@@ -169,16 +170,20 @@ Card *HumanPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
       Validator = lMove ? lMove : rMove;
     }
     if (!Validator || !res) continue;
-    // пропускаем ход через правила
+    // check if move accords with rules
     if (!((Validator->suit() == res->suit()) ||
         (!mCards.minInSuit(Validator->suit()) && (res->suit() == koz || ((!mCards.minInSuit(koz)))))
-       )) res = 0;
+       )) {
+		kpref->MoveImpossible(); 
+		res = 0;
+	}
   }
   clearCardArea();
   mPrevHiCardIdx = -1;
   mCards.remove(res);
   mCardsOut.insert(res);
   mClickX = mClickY = 0; mWaitingForClick = false;
+  kpref->HintBar->clearMessage();
   draw();
   return res;
 }
@@ -192,7 +197,7 @@ eGameBid HumanPlayer::moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerP
   if (MaxGame == g86) {
     mMyGame = g86catch;
   } else {
-    // сталинград?
+    // Stalingrad?
     formBid->disableAll();
     if (optStalingrad && MaxGame == g61) formBid->disableItem(gtPass);
     else formBid->enableItem(gtPass);

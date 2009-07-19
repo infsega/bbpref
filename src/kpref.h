@@ -34,6 +34,10 @@ public:
   //int flthread;
 
   void adjustDesk ();
+  
+  // HintBar actions
+  void MoveImpossible ();
+  void HintMove ();
 
 public slots:
   void forceRepaint ();

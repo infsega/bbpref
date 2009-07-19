@@ -369,3 +369,11 @@ void Kpref::slotAbortBid () {
 		formBid->_GamesType = undefined;
 	}
 }
+
+void Kpref::MoveImpossible () {
+	HintBar->showMessage(tr("This move is impossible"),1);
+}
+
+void Kpref::HintMove () {
+	HintBar->showMessage(tr("Your move"));
+}
