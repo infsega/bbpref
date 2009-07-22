@@ -517,6 +517,7 @@ void PrefDesktop::runGame () {
   int npasscounter;
 
   //mDeskView->ClearScreen();
+  kpref->HintBar->clearMessage();
   // while !end of pool
   int roundNo = 0;
   while (!(player(1)->mScore.pool() >= optMaxPool &&

@@ -35,6 +35,11 @@ Kpref::Kpref () {
 
   loadOptions();
 
+  HintBar = new QStatusBar;
+  HintBar->setSizeGripEnabled(false);
+  setStatusBar(HintBar);
+  HintBar->setFixedHeight(22);
+  
   QDesktopWidget *desk = QApplication::desktop();
   QRect dims(desk->availableGeometry(this));
   int w = dims.width()-60;
@@ -44,9 +49,8 @@ Kpref::Kpref () {
   int x = dims.left()+(dims.width()-w)/2;
   int y = dims.top()+(dims.height()-h)/2;
   move(x, y);
-  resize(w, h);
+  setFixedSize(w, h);
 
-  HintBar = new QStatusBar;
   /*Hint = new QLabel(tr("Welcome to OpenPref!"), this);
   Hint->setAlignment(Qt::AlignCenter);
   //Hint->setForegroundColor("yellow");
@@ -60,17 +64,20 @@ Kpref::Kpref () {
   //Hint->setFrameStyle(0);
   
   HintBar->addWidget(Hint,1);*/
-  setStatusBar(HintBar);
+  
   //connect(this, SIGNAL(destroyed()), qApp, SLOT(quit()));
 }
 
 
 void Kpref::init () {
   //StatusBar1 = new QStatusBar(this);
-  mDeskView = new DeskView(width(), height());
+  mDeskView = new DeskView(width(), height()-22);
   mDesktop = new PrefDesktop(mDeskView);
   connect(mDesktop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
   connect(mDeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
+  HintBar->showMessage(tr("Welcome to OpenPref!"));
+  
+ // resize(width(),height()+HintBar->height());
 }
 
 
@@ -361,7 +368,7 @@ void Kpref::slotAbort () {
         QMessageBox::Yes | QMessageBox::Default,
         QMessageBox::No | QMessageBox::Escape);
 	if (ret == QMessageBox::Yes)
-  		abort();
+  		abort();	// Looks unpleasant on Windows
 }
 
 void Kpref::slotAbortBid () {
