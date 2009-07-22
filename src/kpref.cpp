@@ -20,6 +20,8 @@
 
 #include <stdlib.h>
 
+#define HINTBAR_MAX_HEIGHT 22
+
 //char *documentation; //see bottom this file
 Kpref *kpref;
 
@@ -38,7 +40,7 @@ Kpref::Kpref () {
   HintBar = new QStatusBar;
   HintBar->setSizeGripEnabled(false);
   setStatusBar(HintBar);
-  HintBar->setFixedHeight(22);
+  HintBar->setFixedHeight(HINTBAR_MAX_HEIGHT);
   
   QDesktopWidget *desk = QApplication::desktop();
   QRect dims(desk->availableGeometry(this));
@@ -71,7 +73,7 @@ Kpref::Kpref () {
 
 void Kpref::init () {
   //StatusBar1 = new QStatusBar(this);
-  mDeskView = new DeskView(width(), height()-22);
+  mDeskView = new DeskView(width(), height()-HINTBAR_MAX_HEIGHT);
   mDesktop = new PrefDesktop(mDeskView);
   connect(mDesktop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
   connect(mDeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
@@ -207,7 +209,7 @@ void Kpref::slotNewSingleGame () {
   if (mDesktop) {
     delete mDesktop;
     delete mDeskView;
-    mDeskView = new DeskView(width(), height());
+    mDeskView = new DeskView(width(), height()-HINTBAR_MAX_HEIGHT);
     mDesktop = new PrefDesktop();
     mDesktop->mDeskView = mDeskView;
     connect(mDesktop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
@@ -266,7 +268,7 @@ void Kpref::paintEvent (QPaintEvent *event) {
   if (mInPaintEvent) return;
   mInPaintEvent = true;
   if (mDeskView) {
-    mDeskView->DesktopHeight = height();
+    mDeskView->DesktopHeight = height()-HINTBAR_MAX_HEIGHT;
     mDeskView->DesktopWidth = width();
   }
   if (mDeskView && mDeskView->mDeskBmp) {
