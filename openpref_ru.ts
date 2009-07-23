@@ -88,17 +88,6 @@
         <translation type="obsolete">&amp;О программе...</translation>
     </message>
     <message>
-        <source>OpenPref
-developer version (0.1.2)
-http://gitorious.org/openprefqt4
-
-(c) 2004 Fedotov A.V.
-Based on kpref (c) Azarniy I.V.
-Qt4 port and many new bugs by Ketmar
-Some bells and whistles by Annulen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Preferans Rules...</source>
         <translation>&amp;Правила преферанса...</translation>
     </message>
@@ -133,6 +122,22 @@ Some bells and whistles by Annulen</source>
     <message>
         <source>Your move</source>
         <translation>Ваш ход</translation>
+    </message>
+    <message>
+        <source>Welcome to OpenPref!</source>
+        <translation>Добро пожаловать в OpenPref!</translation>
+    </message>
+    <message>
+        <source>OpenPref
+developer version (0.1.2)
+http://sourceforge.net/projects/openpref
+http://gitorious.org/openprefqt4
+
+(c) 2004 Fedotov A.V.
+Based on kpref (c) Azarniy I.V.
+Qt4 port and many new bugs by Ketmar
+Some bells and whistles by Annulen</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
