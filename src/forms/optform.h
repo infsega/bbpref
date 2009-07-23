@@ -1,4 +1,6 @@
-/* coded by Ketmar // Avalon Group (psyc://ketmar.no-ip.org/~Ketmar)
+/* OpenPref - cross-platform Preferans game
+ * 
+ * coded by Ketmar // Avalon Group (psyc://ketmar.no-ip.org/~Ketmar)
  *
  * This program is free software. It comes without any warranty, to
  * the extent permitted by applicable law. You can redistribute it
