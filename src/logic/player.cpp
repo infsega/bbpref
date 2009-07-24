@@ -45,7 +45,7 @@ Player::~Player () {
 }
 
 
-void Player::internalInit () {
+inline void Player::internalInit () {
   clear();
 }
 
@@ -92,22 +92,22 @@ void Player::clear () {
 }
 
 
-bool Player::invisibleHand () const {
+inline bool Player::invisibleHand () const {
   return optDebugHands ? false : mInvisibleHand;
 }
 
 
-void Player::setInvisibleHand (bool invis) {
+inline void Player::setInvisibleHand (bool invis) {
   mInvisibleHand = invis;
 }
 
 
-void Player::sortCards () {
+inline void Player::sortCards () {
   mCards.mySort();
 }
 
 
-void Player::dealCard (Card *aCard) {
+inline void Player::dealCard (Card *aCard) {
   mCards.insert(aCard);
 }
 
@@ -119,12 +119,12 @@ void Player::returnDrop () {
 }
 
 
-void Player::gotTrick () {
+inline void Player::gotTrick () {
   mTricksTaken++;
 }
 
 
-void Player::gotPassPassTricks (int cnt) {
+inline void Player::gotPassPassTricks (int cnt) {
   mTricksTaken = cnt;
 }
 
@@ -139,7 +139,7 @@ void Player::getLeftTop (int *left, int *top) {
   switch (mPlayerNo) {
     case 1:
       *left = (mDeskView->DesktopWidth-(mDeskView->DesktopWidth/2-2*mDeskView->xBorder))/2;
-      *top = mDeskView->DesktopHeight-(mDeskView->yBorder)-mDeskView->CardHeight-10;
+      *top = mDeskView->DesktopHeight-(mDeskView->yBorder)-mDeskView->CardHeight;//-10;
       break;
     case 2:
       *left = mDeskView->xBorder;

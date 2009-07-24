@@ -217,11 +217,11 @@ void DeskView::drawPKeyBmp (bool show) {
   QImage *i = mKeyBmp[phase];
   if (show) {
     QPainter p(mDeskBmp);	
-    p.drawImage(4, DesktopHeight-(i->height()+8+kpref->HintBar->height()), *i);
+    p.drawImage(4, DesktopHeight-(i->height()+8), *i);
     p.end();
     phase = 1-phase;
   } else {
-    ClearBox(4, DesktopHeight-(i->height()+8+kpref->HintBar->height()), i->width(), i->height());
+    ClearBox(4, DesktopHeight-(i->height()+8), i->width(), i->height());
   }
 }
 
@@ -295,7 +295,7 @@ void DeskView::drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game
   if (!mDeskBmp) return;
   QImage *i = mBidBmp;
   bidBmpX = DesktopWidth-(i->width()+8);
-  bidBmpY = DesktopHeight-(i->height()+8+kpref->HintBar->height());
+  bidBmpY = DesktopHeight-(i->height()+8);
   QPainter p(mDeskBmp);
   p.drawImage(bidBmpX, bidBmpY, *i);
   p.end();
