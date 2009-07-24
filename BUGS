@@ -3,3 +3,5 @@ Known Issues
 1. Misproper behaviour of "thinking" message is sometimes observed
 2. Scores in chart are not ideally centred
 3. AI algorithm for choose of maximum bid is not perfect
+4. Exiting application on Windows during gameplay causes incorrect 
+   termination error message from OS

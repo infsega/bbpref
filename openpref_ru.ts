@@ -139,6 +139,16 @@ Qt4 port and many new bugs by Ketmar
 Some bells and whistles by Annulen</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Preferans Rules</source>
+        <translation>Правила преферанса</translation>
+    </message>
+    <message>
+        <source>Help system has not been implemented yet!
+See http://en.wikipedia.org/wiki/Preferans</source>
+        <translation>Справочная система пока не реализована!
+Смотрите http://ru.wikipedia.org/wiki/Преферанс</translation>
+    </message>
 </context>
 <context>
     <name>NewGameDialog</name>

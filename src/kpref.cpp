@@ -379,7 +379,7 @@ void Kpref::slotOptions () {
 }
 
 void Kpref::slotRules () {
-	QMessageBox::about(this, "Sorry", "This feature has not been implemented yet!");
+	QMessageBox::about(this, tr("Preferans Rules"), tr("Help system has not been implemented yet!\nSee http://en.wikipedia.org/wiki/Preferans"));
   //HelpBrowser *dlg = new HelpBrowser;
   //dlg->tbHelp->setSearchPaths(QStringList("/home/kostya/projects/Qt/doc/html"));
   //dlg->tbHelp->loadResource(0, QUrl::fromLocalFile("/home/kostya/projects/Qt/doc/html/index.html"));
