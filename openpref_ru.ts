@@ -33,6 +33,10 @@
         <source>&amp;Halfwhist</source>
         <translation type="obsolete">Пол&amp;виста</translation>
     </message>
+    <message>
+        <source>Bidding</source>
+        <translation>Торги</translation>
+    </message>
 </context>
 <context>
     <name>HelpBrowser</name>

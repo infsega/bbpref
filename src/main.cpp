@@ -75,7 +75,7 @@ int main (int argc, char *argv[]) {
 
   QApplication a(argc, argv);
   QString translationCode = QLocale::system().name();
-  QString qtFilename = "openpref_" + translationCode + ".qm";
+  QString qtFilename = "./openpref_" + translationCode + ".qm";
   //cout << "Loading translation " << qtFilename << " ...\n";
   QTranslator qtTranslator(0);
   qtTranslator.load(qtFilename);

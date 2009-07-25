@@ -4,7 +4,11 @@ and is portable between may operating systems including Windows and major
 Unix flavours. Some information about game's rules and strategy can be 
 easily found in Wikipedia.
 
-To run OpenPref you nedd QtCore and QtGui libraries (Windows package includes 
+There is an issue with OpenPref: when you exit game clicking on Close button 
+in the main window, it can remain in memory. To prevent it, exit the game 
+via menu Game->Quit (Ctrl-Q) or clicking on Close button in bidding window.
+
+To run OpenPref you need QtCore and QtGui libraries (Windows package includes 
 them). To compile OpenPref from source code you need also Qt4 headers and
 development tools: qmake, moc, uic, lrelease.
 

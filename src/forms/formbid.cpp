@@ -35,6 +35,7 @@ FormBid *formBid;
 
 FormBid::FormBid (QWidget *parent) : QDialog (parent) {
   this->setModal(true);
+  setWindowTitle(tr("Bidding"));
   initDialog();
   //bgetback->setToolTip(tr("You lose without 3 takes and no whists on you"));
   showbullet->setToolTip(tr("Show game table with calculated scores"));
