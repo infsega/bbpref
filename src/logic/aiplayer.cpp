@@ -1451,6 +1451,7 @@ eGameBid AiPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
 			mMyGame = curMaxGame;
 		else
       		mMyGame = (eGameBid)succBid(curMaxGame);
+		if (optAggPass && (optPassCount > 0) && (mMyGame < g71)) mMyGame = g71;
 	}
 	else
       mMyGame = gtPass;

@@ -721,7 +721,7 @@ void PrefDesktop::runGame () {
       if (playerBids[0] < playerBids[i]) playerBids[0] = playerBids[i];
     }
 
-    // deliver prikup and choose final bid (or pass-out if no player)
+    // deliver talon and choose final bid (or pass-out if no player)
     mPlayerActive = 0;
     mPlayingRound = true;
     if (playerBids[0] != gtPass) {
@@ -743,14 +743,15 @@ void PrefDesktop::runGame () {
 
           mPlayerActive = i;
           nPassCounter = 0;
-          // show prikup
+          // show talon
           WrapCounter tmpPlayersCounter(1, 3);
           Player *PassOrVistPlayers;
           int PassOrVist = 0, nPassOrVist = 0;
           mOnDeskClosed = false;
           mCardsOnDesk[2] = mDeck.at(30);
           mCardsOnDesk[3] = mDeck.at(31);
-          // извращение с gCurrentGame -- для того, чтобы показало игру на bidboard
+          
+		  // trick with gCurrentGame - shows game on bidboard
           gCurrentGame = playerBids[0];
           draw();
           //drawBidWindows(bids4win, 0);
@@ -758,7 +759,7 @@ void PrefDesktop::runGame () {
 				kpref->HintBar->showMessage(tr("Try to remember the cards"));
 		  mDeskView->mySleep(-1);
 		  kpref->HintBar->clearMessage();
-          // запихиваем ему прикуп
+          // deal talon
           tmpg->dealCard(mDeck.at(30));
           tmpg->dealCard(mDeck.at(31));
           animateDeskToPlayer(mPlayerActive, optTakeAnim); // will clear mCardsOnDesk[]
@@ -813,14 +814,14 @@ void PrefDesktop::runGame () {
 		else message = sGameName(gCurrentGame);  
           player(tmpPlayersCounter)->setMessage(message);
 
-          // попёрли выбирать: пас или вист?
+          // pass or whist?
           ++tmpPlayersCounter;
           player(tmpPlayersCounter)->setMessage(tr("thinking..."));
           PassOrVistPlayers = player(tmpPlayersCounter);
           PassOrVistPlayers->setMyGame(undefined);
           draw(false);
 
-          // выбирает первый
+          // choice of the first player
           int firstPW = tmpPlayersCounter.nValue;
           mPlayerHi = firstPW;
           if (firstPW != 1) mDeskView->mySleep(2);
@@ -833,7 +834,7 @@ void PrefDesktop::runGame () {
           } else player(tmpPlayersCounter)->setMessage(tr("whist"));
           //bids4win[1] = PassOrVistPlayers->myGame();
 
-          // выбирает второй
+          // choice of the second player
           ++tmpPlayersCounter;
           player(tmpPlayersCounter)->setMessage(tr("thinking..."));
           int nextPW = tmpPlayersCounter.nValue;
