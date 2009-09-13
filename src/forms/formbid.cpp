@@ -68,7 +68,7 @@ void FormBid::slotPushButtonClick86 () { _GamesType = g86; accept(); }
 void FormBid::slotPushButtonClickPass () { _GamesType = gtPass; accept(); }
 void FormBid::slotPushButtonClickVist () { _GamesType = whist; accept(); }
 void FormBid::slotPushButtonClickHalfVist () { _GamesType = halfwhist; accept(); }
-void FormBid::slotGetBackSnos () { _GamesType = (eGameBid)0; reject(); }
+void FormBid::slotWithoutThree () { _GamesType = withoutThree; accept(); }
 void FormBid::slotShowBullet () { _GamesType = (eGameBid)1; reject(); }
 
 
@@ -183,22 +183,22 @@ void FormBid::initDialog () {
   bhalfvist->setIcon(QIcon(QString(":/pics/halfwhist.png")));
 
   showbullet = new QPushButton(this);
-  showbullet->setGeometry(110, 220, 100, 27);
+  showbullet->setGeometry(120, 220, 100, 27);
   showbullet->setMinimumSize(0, 0);
   showbullet->setText(tr("S&core"));
   showbullet->setIcon(QIcon(QString(":/pics/paper.png")));
 
-  bgetback = new QPushButton(this);
-  bgetback->setGeometry(10, 220, 100, 27);
-  bgetback->setMinimumSize(0, 0);
-  bgetback->setText(tr("Get &back"));
-  bgetback->setIcon(QIcon(QString(":/pics/getback.png")));
+  bwithoutthree = new QPushButton(this);
+  bwithoutthree->setGeometry(10, 220, 110, 27);
+  bwithoutthree->setMinimumSize(0, 0);
+  bwithoutthree->setText(tr("Without &Three"));
+  bwithoutthree->setIcon(QIcon(QString(":/pics/cancel.png")));
 
   connect(b86, SIGNAL(clicked()), this, SLOT(slotPushButtonClick86()));
   connect(bpass, SIGNAL(clicked()), this, SLOT(slotPushButtonClickPass()));
   connect(bvist, SIGNAL(clicked()), this, SLOT(slotPushButtonClickVist()));
   connect(bhalfvist, SIGNAL(clicked()), this, SLOT(slotPushButtonClickHalfVist()));
-  connect(bgetback, SIGNAL(clicked()), this, SLOT(slotGetBackSnos()));
+  connect(bwithoutthree, SIGNAL(clicked()), this, SLOT(slotWithoutThree()));
   connect(showbullet, SIGNAL(clicked()), this, SLOT(slotShowBullet()));
 
 }

@@ -92,7 +92,7 @@ eGameBid HumanPlayer::dropForGame () {
   if (mMyGame != g86) formBid->disableItem(g86);
   formBid->disableLessThan(mMyGame);
   formBid->showbullet->setEnabled(true);
-  formBid->bgetback->setEnabled(true);
+  formBid->bwithoutthree->setEnabled(true);
 
   do {
     tmpGamesType = mDeskView->selectBid(zerogame, zerogame);
@@ -108,11 +108,12 @@ eGameBid HumanPlayer::dropForGame () {
       kpref->slotShowScore();
     }
   } while (tmpGamesType <= 1);
-  mMyGame = tmpGamesType;
+  if ( tmpGamesType != withoutThree)
+  	mMyGame = tmpGamesType;
 
   formBid->enableAll();
   mWaitingForClick = false;
-  return mMyGame;
+  return tmpGamesType;
 }
 
 
@@ -147,7 +148,7 @@ eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
   //formBid->disableItem(halfwhist);
   formBid->bhalfvist->setEnabled(false);
   formBid->showbullet->setEnabled(true);
-  formBid->bgetback->setEnabled(false);
+  formBid->bwithoutthree->setEnabled(false);
   do {
     tmpGamesType = mDeskView->selectBid(lMove, rMove);
     if (tmpGamesType == 0) {

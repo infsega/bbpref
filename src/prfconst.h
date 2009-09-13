@@ -74,6 +74,7 @@ enum eGameBid {
   whist=58,
   halfwhist=59,
   undefined=55,
+  withoutThree=54,
   gtPass=60,
   g61=61,g62,g63,g64,g65,
   g71=71,g72,g73,g74,g75,

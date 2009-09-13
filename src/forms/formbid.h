@@ -51,7 +51,7 @@ public slots:
   void slotPushButtonClickPass ();
   void slotPushButtonClickVist ();
   void slotPushButtonClickHalfVist ();
-  void slotGetBackSnos ();
+  void slotWithoutThree ();
   void slotShowBullet ();
 
 protected:
@@ -63,7 +63,7 @@ protected:
 
 public:
   eGameBid _GamesType;
-  QPushButton *bgetback;
+  QPushButton *bwithoutthree;
   QPushButton *showbullet;
   QPushButton *bhalfvist;
   

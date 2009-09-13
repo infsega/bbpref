@@ -22,8 +22,8 @@
         <translation>С&amp;чет</translation>
     </message>
     <message>
-        <source>Get &amp;back</source>
-        <translation>&amp;Назад</translation>
+        <source>Without &amp;Three</source>
+        <translation>&amp;Без трех</translation>
     </message>
     <message>
         <source>&amp;HalfWhist</source>

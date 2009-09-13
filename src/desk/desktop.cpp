@@ -766,6 +766,7 @@ void PrefDesktop::runGame () {
 
           //bids4win[0] = bids4win[1] = bids4win[2] = bids4win[3] = undefined;
           // throw away
+		  eGameBid maxBid = gCurrentGame;
           if (tmpg->myGame() != g86) {
             // not misere
             nCurrentMove.nValue = i;
@@ -799,7 +800,7 @@ void PrefDesktop::runGame () {
             playerBids[0] = gCurrentGame = tmpg->dropForMisere();
 			kpref->HintBar->clearMessage();
             nCurrentMove.nValue = tempint;
-          }
+          }		  	
           tmpPlayersCounter.nValue = i;
 
           // ставка
@@ -811,9 +812,17 @@ void PrefDesktop::runGame () {
 		else if (gCurrentGame == g85) message = tr("8 no trump");
 		else if (gCurrentGame == g95) message = tr("9 no trump");
 		else if (gCurrentGame == g105) message = tr("10 no trump");
+		else if (gCurrentGame == withoutThree) message = tr("whithout three");
 		else message = sGameName(gCurrentGame);  
           player(tmpPlayersCounter)->setMessage(message);
 
+		if (gCurrentGame == withoutThree) {
+			gCurrentGame = maxBid;
+			tmpg->gotPassPassTricks(gameTricks(tmpg->myGame())-3);
+			dlogf("clean out!\n");
+            goto LabelRecordOnPaper;
+		}
+		else {
           // pass or whist?
           ++tmpPlayersCounter;
           player(tmpPlayersCounter)->setMessage(tr("thinking..."));
@@ -882,7 +891,8 @@ void PrefDesktop::runGame () {
           }
           break;
         }
-      } // whose game is maximal?
+	   }
+      } // who made maximal bid
     }  else {
       // pass out
       dlogf("game: pass-out");
