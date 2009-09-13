@@ -183,13 +183,13 @@ void FormBid::initDialog () {
   bhalfvist->setIcon(QIcon(QString(":/pics/halfwhist.png")));
 
   showbullet = new QPushButton(this);
-  showbullet->setGeometry(120, 220, 100, 27);
+  showbullet->setGeometry(116, 220, 94, 27);
   showbullet->setMinimumSize(0, 0);
   showbullet->setText(tr("S&core"));
   showbullet->setIcon(QIcon(QString(":/pics/paper.png")));
 
   bwithoutthree = new QPushButton(this);
-  bwithoutthree->setGeometry(10, 220, 110, 27);
+  bwithoutthree->setGeometry(10, 220, 106, 27);
   bwithoutthree->setMinimumSize(0, 0);
   bwithoutthree->setText(tr("Without &Three"));
   bwithoutthree->setIcon(QIcon(QString(":/pics/cancel.png")));
