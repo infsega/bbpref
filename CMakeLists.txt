@@ -1,0 +1,50 @@
+project(openpref)
+
+include(src/src.cmake)
+
+CMAKE_MINIMUM_REQUIRED( VERSION 2.4.0 )
+SET( CMAKE_COLOR_MAKEFILE ON )
+SET( CMAKE_VERBOSE_MAKEFILE ON )
+SET( CMAKE_INCLUDE_CURRENT_DIR TRUE )
+
+IF( APPLE )
+    SET( PROGNAME OpenPref )
+    SET( MACOSX_BUNDLE_ICON_FILE OpenPref.icns )
+    SET( MACOSX_BUNDLE_SHORT_VERSION_STRING 0.1.3 )
+    SET( MACOSX_BUNDLE_VERSION 0.1.3 )
+    SET( MACOSX_BUNDLE_LONG_VERSION_STRING Version 0.1.3 )
+ELSE( APPLE )
+    SET( PROGNAME openpref )
+ENDIF( APPLE )
+
+if (WIN32)
+  add_definitions( -DWIN32 )
+  # add definitions for OB in WIN32
+  add_definitions( -DUSING_OBDLL -DUSING_DYNAMIC_LIBS )
+endif (WIN32)
+
+IF( MINGW )
+    # resource compilation for MinGW
+    ADD_CUSTOM_COMMAND( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/openprefres.o
+                        COMMAND windres.exe -I${CMAKE_CURRENT_SOURCE_DIR} -i${CMAKE_CURRENT_SOURCE_DIR}/openprefres.rc 
+                             -o ${CMAKE_CURRENT_BINARY_DIR}/openprefres.o )
+    SET( SOURCES ${SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/openprefres.o)
+ELSE( MINGW )
+#    SET( SOURCES ${SOURCES} openprefres.rc)
+ENDIF( MINGW )
+
+SET ( RCS
+	gfx.qrc
+)
+
+FIND_PACKAGE( Qt4 REQUIRED )
+
+INCLUDE( ${QT_USE_FILE} )
+QT4_ADD_RESOURCES( RC_SRCS ${RCS} )
+QT4_WRAP_UI( UI_HEADERS ${UIS})
+QT4_WRAP_CPP( MOC_SRCS ${HEADERS} )
+
+INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR} )
+ADD_EXECUTABLE( openpref ${SOURCES} ${MOC_SRCS} ${RC_SRCS} ${UI_HEADERS} )
+
+TARGET_LINK_LIBRARIES( openpref ${QT_LIBRARIES} )
