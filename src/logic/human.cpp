@@ -253,3 +253,15 @@ void HumanPlayer::hilightCard (int lx, int ly) {
   }
   draw();
 }
+
+bool HumanPlayer::chooseClosedWhist () {
+	qDebug() << "Do you want to whist with opened cards?" << endl;
+	int ret = QMessageBox::question(kpref, "OpenPref",
+        "Do you want to whist with opened cards?",
+        QMessageBox::Yes | QMessageBox::Default,
+        QMessageBox::No | QMessageBox::Escape);
+	if (ret == QMessageBox::Yes)
+		return false;
+	else
+		return true;
+}

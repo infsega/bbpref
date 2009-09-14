@@ -55,6 +55,8 @@ public:
   virtual eGameBid dropForMisere () = 0; // сброс для мизера
   virtual void returnDrop (); // вернуть сброс
 
+  virtual bool chooseClosedWhist () = 0;
+
   virtual void getLeftTop (int *left, int *top);
   virtual void draw ();
   virtual void hilightCard (int lx, int ly); // подсветить карту по данным координатам (и перерисовать руку, если надо)

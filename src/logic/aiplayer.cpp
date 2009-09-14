@@ -23,11 +23,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <QDebug>
 #include <QPixmap>
 #include <QPainter>
 
 #include "aiplayer.h"
 
+#include "debug.h"
 
 AiPlayer::AiPlayer (int aMyNumber, bool iStart, DeskView *aDeskView) : Player(aMyNumber, iStart, aDeskView) {
   internalInit();
@@ -1576,3 +1578,8 @@ void AiPlayer::makestatfill (int nCards, int maxmin) {
   }
 }
 */
+
+bool AiPlayer::chooseClosedWhist () {
+	qDebug() << "AI chooseClosedWhist\n";
+	return false;
+}

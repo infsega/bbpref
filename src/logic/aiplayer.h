@@ -43,6 +43,8 @@ public:
   virtual eGameBid dropForGame ();
   virtual eGameBid dropForMisere ();
 
+  virtual bool chooseClosedWhist ();
+
   virtual void clear ();
 
 protected:

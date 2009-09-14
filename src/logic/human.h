@@ -47,6 +47,8 @@ public:
   virtual eGameBid dropForGame (); // после сноса чего играем
   virtual eGameBid dropForMisere ();
 
+  virtual bool chooseClosedWhist ();
+
   virtual void hilightCard (int lx, int ly);
 };
 

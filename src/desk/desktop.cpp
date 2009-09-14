@@ -43,6 +43,7 @@
 #include "plscore.h"
 #include "human.h"
 
+bool Closed_Whist = false;
 
 typedef struct {
   int mount, pool, leftWh, rightWh;
@@ -208,7 +209,10 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
   Card *res = 0;
   Player *curPlr = player(nCurrentMove);
 
-  if ((player(1)->myGame() == whist || player(1)->myGame() == g86catch) &&
+  // 1. Current player is not human
+  // Human's move if current he whists whith open cards or catches misere, and current player
+  // passes or catches misere
+  if (((player(1)->myGame() == whist && !Closed_Whist) || player(1)->myGame() == g86catch) &&
       curPlr->number() != 1 && (curPlr->myGame() == gtPass || curPlr->myGame() == g86catch)) {
     HumanPlayer *hPlr = new HumanPlayer(nCurrentMove.nValue, (nCurrentStart.nValue==1), mDeskView);
     *hPlr = *curPlr;
@@ -217,8 +221,12 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
     *curPlr = *hPlr;
     mPlayers[nCurrentMove.nValue] = curPlr;
     delete hPlr;
-  } else if (curPlr->number() == 1 && curPlr->myGame() == gtPass) {
-    Player *aiPlr;
+  }
+
+  // 2. Current player is human, he passes
+  // if AI whists with open cards, it makes move instead of human
+  else if (curPlr->number() == 1 && curPlr->myGame() == gtPass && !Closed_Whist) {
+    Player *aiPlr;	
 	if (player(2)->myGame() == whist) {
     	if (!optAlphaBeta1)	
 			aiPlr = new AiPlayer(nCurrentMove.nValue, mDeskView);
@@ -242,7 +250,10 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
     *curPlr = *aiPlr;
     mPlayers[nCurrentMove.nValue] = curPlr;
     delete aiPlr;
-  } else {
+  }
+
+  // 3. No swaps, current player makes move himself
+  else {
     res =
       (player(nCurrentMove))->moveSelectCard(lMove, rMove,
         player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)), isPassOut);
@@ -871,23 +882,57 @@ void PrefDesktop::runGame () {
           gnS += QString::number(mPlayerActive);
           dlogS(gnS);
           //!DUMP OTHERS!
-
+			
           if (nPassCounter == 2) {
             // two players passed
             tmpg->gotPassPassTricks(gameTricks(tmpg->myGame()));
             dlogf("clean out!\n");
             goto LabelRecordOnPaper;
           } else {
+			  
             // Opened or closed cards
-            for (int ntmp = 2 ; ntmp <= 3 ; ntmp++) {
+            /*for (int ntmp = 2 ; ntmp <= 3 ; ntmp++) {
               Player *Gamer4Open;
               Gamer4Open = player(ntmp);
               if (nPassCounter || gCurrentGame == g86) {
                 // if not 2 whists
                 if (Gamer4Open->myGame() == gtPass || Gamer4Open->myGame() == whist || Gamer4Open->myGame() == g86catch)
                   Gamer4Open->setInvisibleHand(false);
-              }
             }
+				  
+            }*/
+
+			// On misere play with opened cards
+			if (gCurrentGame == g86) {
+				player(2)->setInvisibleHand(false);
+				player(3)->setInvisibleHand(false);
+			}
+
+			// If one whist, whister chooses closed or opened cards
+			else if ((nPassCounter == 1)) {
+				//qDebug() << "passcount=" << nPassCounter << endl;
+				Closed_Whist = false;
+				int whistN = 0;
+				for (int n=1; n<=3; n++)
+					if (player(n)->myGame() == whist) {
+						Closed_Whist = player(n)->chooseClosedWhist();
+						whistN = n;
+					}
+
+				// if closed whist chosen, no hand become opened
+				// otherwise, whist and pass players open cards
+				if (!Closed_Whist) {
+					for (int n=2; n<=3; n++)
+						if ((player(n)->myGame() == whist) || (player(n)->myGame() == gtPass))
+							player(n)->setInvisibleHand(false);
+				}
+				/*if (player(2)->myGame() == gtPass)
+					invis = player(3)->chooseClosedWhist();
+				else
+					invis = player(2)->chooseClosedWhist();
+					player(2)->setInvisibleHand(invis);
+					player(3)->setInvisibleHand(invis);*/
+			}
           }
           break;
         }
