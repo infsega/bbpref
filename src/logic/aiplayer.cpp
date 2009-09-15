@@ -1453,7 +1453,8 @@ eGameBid AiPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
 			mMyGame = curMaxGame;
 		else
       		mMyGame = (eGameBid)succBid(curMaxGame);
-		if (optAggPass && (optPassCount > 0) && (mMyGame < g71)) mMyGame = g71;
+		if (optAggPass && (optPassCount > 0) && (mMyGame < g71))
+			mMyGame = g71;
 	}
 	else
       mMyGame = gtPass;
@@ -1509,10 +1510,10 @@ eGameBid AiPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
     }*/
   }
   //???
-  if (optAggPass && optPassCount > 0 && mMyGame != gtPass && mMyGame < g71) {
+  /*if (optAggPass && optPassCount > 0 && mMyGame != gtPass && mMyGame < g71) {
     moveBidding(g71, g71);
     if (optAggPass && optPassCount > 0 && mMyGame != gtPass && mMyGame < g71) moveBidding(g72, g72);
-  }
+  }*/
   return mMyGame;
 }
 

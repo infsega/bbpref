@@ -128,10 +128,12 @@ eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
     if (lMove == undefined) lMove = g71;
     if (rMove == undefined) rMove = g71;
   }*/
+  if (optAggPass && optPassCount > 0)
+	  formBid->disableLessThan(g71);
   
   if (qMax(lMove, rMove) != gtPass)
   {
-	
+	qDebug() << mIStart << endl;
   	// If HumanPlayer started bid, he can stay
 	if (mIStart)
 		formBid->disableLessThan(qMax(lMove, rMove));
@@ -139,8 +141,6 @@ eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
 	else
    		formBid->disableLessThan(qMax((eGameBid)succBid(lMove), (eGameBid)succBid(rMove)));
   }
-  if (optAggPass && optPassCount > 0)
-	  formBid->disableLessThan(g71);
   if (mMyGame != undefined)
     formBid->disableItem(g86);
   formBid->enableItem(gtPass);
@@ -176,6 +176,7 @@ Card *HumanPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
   Q_UNUSED(aLeftPlayer)
   Q_UNUSED(aRightPlayer)
   Q_UNUSED(isPassOut)
+  printf ("HumanPlayer (%d) moves\n", mPlayerNo);
   Card *res = 0;
   mClickX = mClickY = 0; mWaitingForClick = true;
   kpref->HintMove();
