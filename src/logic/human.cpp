@@ -133,7 +133,6 @@ eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
   
   if (qMax(lMove, rMove) != gtPass)
   {
-	qDebug() << mIStart << endl;
   	// If HumanPlayer started bid, he can stay
 	if (mIStart)
 		formBid->disableLessThan(qMax(lMove, rMove));

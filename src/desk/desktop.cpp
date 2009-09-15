@@ -714,6 +714,7 @@ void PrefDesktop::runGame () {
 		else if (bb == g85) message = tr("8 no trump");
 		else if (bb == g95) message = tr("9 no trump");
 		else if (bb == g105) message = tr("10 no trump");
+		else if (gCurrentGame == g86) message = tr("Misere");
 		else message = sGameName(bb);  
         plr->setMessage(message);
         //bids4win[plrCounter] = playerBids[curBidIdx+1];
@@ -796,8 +797,8 @@ void PrefDesktop::runGame () {
             draw();
             if (tmpg->number() != 1)
 				kpref->HintBar->showMessage(tr("Try to remember the cards"));
-            else 
-				tmpg->setMessage(tr("Misere"));
+            /*else 
+				tmpg->setMessage(tr("Misere"));*/
             // wait for event
             mDeskView->mySleep(-1);
             draw(false);
@@ -823,7 +824,7 @@ void PrefDesktop::runGame () {
 		else if (gCurrentGame == g85) message = tr("8 no trump");
 		else if (gCurrentGame == g95) message = tr("9 no trump");
 		else if (gCurrentGame == g105) message = tr("10 no trump");
-		else if (gCurrentGame == withoutThree) message = tr("whithout three");
+		else if (gCurrentGame == withoutThree) message = tr("without three");
 		else message = sGameName(gCurrentGame);  
           player(tmpPlayersCounter)->setMessage(message);
 
@@ -859,9 +860,10 @@ void PrefDesktop::runGame () {
           player(tmpPlayersCounter)->setMessage(tr("thinking..."));
           int nextPW = tmpPlayersCounter.nValue;
           mPlayerHi = nextPW;
-          draw(false);
+		  draw(false);
           PassOrVistPlayers = player(tmpPlayersCounter);
           PassOrVistPlayers->setMyGame(undefined);
+		  if (firstPW != 1) mDeskView->mySleep(2);
           //PassOrVistPlayers->moveFinalBid(gCurrentGame, PassOrVist, nPassOrVist);
 		  //qDebug() << nPassCounter;
 		  PassOrVistPlayers->moveFinalBid(gCurrentGame, PassOrVist, nPassCounter);
@@ -912,11 +914,22 @@ void PrefDesktop::runGame () {
 			else if ((nPassCounter == 1)) {
 				//qDebug() << "passcount=" << nPassCounter << endl;
 				Closed_Whist = false;
-				int whistN = 0;
 				for (int n=1; n<=3; n++)
 					if (player(n)->myGame() == whist) {
+    					player(1)->setMessage("");
+    					player(2)->setMessage("");
+    					player(3)->setMessage("");
+						player(n)->setMessage(tr("thinking..."));
+						draw(false);
+						if (n != 1)
+							mDeskView->mySleep(2);
 						Closed_Whist = player(n)->chooseClosedWhist();
-						whistN = n;
+						if (Closed_Whist)
+							player(n)->setMessage(tr("close"));
+						else
+							player(n)->setMessage(tr("open"));
+						draw(false);
+			          	mDeskView->mySleep(2);
 					}
 
 				// if closed whist chosen, no hand become opened

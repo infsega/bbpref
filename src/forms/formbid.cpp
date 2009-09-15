@@ -37,8 +37,6 @@ FormBid::FormBid (QWidget *parent) : QDialog (parent) {
   this->setModal(true);
   setWindowTitle(tr("Bidding"));
   initDialog();
-  //bgetback->setToolTip(tr("You lose without 3 takes and no whists on you"));
-  showbullet->setToolTip(tr("Show game table with calculated scores"));
 }
 
 
@@ -186,12 +184,14 @@ void FormBid::initDialog () {
   showbullet->setGeometry(116, 220, 94, 27);
   showbullet->setMinimumSize(0, 0);
   showbullet->setText(tr("S&core"));
+  showbullet->setToolTip(tr("Show game table with calculated scores"));
   showbullet->setIcon(QIcon(QString(":/pics/paper.png")));
 
   bwithoutthree = new QPushButton(this);
   bwithoutthree->setGeometry(10, 220, 106, 27);
   bwithoutthree->setMinimumSize(0, 0);
   bwithoutthree->setText(tr("Without &Three"));
+  bwithoutthree->setToolTip(tr("Cancel game with penalty of three untaken tricks. No whists are written"));
   bwithoutthree->setIcon(QIcon(QString(":/pics/cancel.png")));
 
   connect(b86, SIGNAL(clicked()), this, SLOT(slotPushButtonClick86()));
