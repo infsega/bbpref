@@ -864,7 +864,7 @@ Card *AiPlayer::MyGame3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer,
 // whist
 ///////////////////////////////////////////////////////////////////////////////
 // мой вист или пас 1 заход - мой
-Card *AiPlayer::MyVist1 (Player *aLeftPlayer, Player *aRightPlayer) {
+Card *AiPlayer::MyWhist1 (Player *aLeftPlayer, Player *aRightPlayer) {
   // 1 - выбить козыря 2-разиграть масти с перехватами 3-без перехватов 4-???
   Card *cur = 0;
   eGameBid tmpGamesType = mMyGame;
@@ -920,7 +920,7 @@ Card *AiPlayer::MyVist1 (Player *aLeftPlayer, Player *aRightPlayer) {
 
 ///////////////////////////////////////////////////////////////////////////////
 // мой вист или пас 2 заход - мой
-Card *AiPlayer::MyVist2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer) {
+Card *AiPlayer::MyWhist2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer) {
   Card *cur = 0;
   eGameBid tmpGamesType = mMyGame;
   CardList aMaxCardList;
@@ -962,7 +962,7 @@ Card *AiPlayer::MyVist2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPl
 
 ///////////////////////////////////////////////////////////////////////////////
 // мой вист или пас 3 заход - мой
-Card *AiPlayer::MyVist3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer) {
+Card *AiPlayer::MyWhist3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer) {
   Card *cur = 0;
   Card *maxInSuit;
   eGameBid tmpGamesType = mMyGame;
@@ -1192,7 +1192,7 @@ Card *AiPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, P
   Card *cur = 0;
   if (lMove == 0 && rMove == 0) {
     // мой заход - первый
-    if (mMyGame == gtPass || mMyGame == whist) cur = MyVist1(aLeftPlayer, aRightPlayer); // кто-то играет а я как бы вистую
+    if (mMyGame == gtPass || mMyGame == whist) cur = MyWhist1(aLeftPlayer, aRightPlayer); // кто-то играет а я как бы вистую
     else if (mMyGame == g86catch) cur = MiserCatch1(aLeftPlayer, aRightPlayer);
     else if (mMyGame == g86) cur = Miser1(aLeftPlayer,aRightPlayer);
     else if (mMyGame == raspass) cur = MyPass1(rMove, aLeftPlayer, aRightPlayer); // ну типа распасы или мизер
@@ -1200,7 +1200,7 @@ Card *AiPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, P
   }
   if (lMove == 0 && rMove != 0) {
     // мой заход - второй
-    if (mMyGame == gtPass || mMyGame == whist) cur = MyVist2(rMove, aLeftPlayer, aRightPlayer); // кто-то играет а я как бы вистую
+    if (mMyGame == gtPass || mMyGame == whist) cur = MyWhist2(rMove, aLeftPlayer, aRightPlayer); // кто-то играет а я как бы вистую
     else if (mMyGame == g86catch) cur = MiserCatch2(rMove, aLeftPlayer, aRightPlayer);
     else if (mMyGame == g86) cur = Miser2(rMove, aLeftPlayer, aRightPlayer);
     else if (mMyGame == raspass) cur = MyPass2(rMove, aLeftPlayer, aRightPlayer); // ну типа распасы или мизер
@@ -1208,7 +1208,7 @@ Card *AiPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, P
   }
   if (lMove != 0 && rMove != 0) {
     // мой заход - 3
-    if (mMyGame == gtPass || mMyGame == whist ) cur = MyVist3(lMove, rMove, aLeftPlayer, aRightPlayer); // кто-то играет а я как бы вистую
+    if (mMyGame == gtPass || mMyGame == whist ) cur = MyWhist3(lMove, rMove, aLeftPlayer, aRightPlayer); // кто-то играет а я как бы вистую
     else if (mMyGame == g86catch) cur = MiserCatch3(lMove, rMove, aLeftPlayer, aRightPlayer);
     else if (mMyGame == g86) cur = Miser3(lMove, rMove, aLeftPlayer, aRightPlayer);
     else if (mMyGame == raspass) cur = MyPass3(lMove, rMove, aLeftPlayer, aRightPlayer); // ну типа распасы или мизер
@@ -1222,14 +1222,14 @@ Card *AiPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, P
 
 ///////////////////////////////////////////////////////////////////////////////
 // после получения игроком прикупа - пасс или вист
-eGameBid AiPlayer::moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerPass) {
+eGameBid AiPlayer::moveFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerPass) {
   Q_UNUSED(nGamerPass)
   eGameBid Answer;
   eGameBid MyMaxGame = moveCalcDrop();
 
   int vz = MyMaxGame/10;
-  Answer = (HaveAVist != whist && vz >= gameWhistsMin(MaxGame)) ? whist : gtPass ;
-  if (HaveAVist == gtPass && vz < gameWhistsMin(MaxGame)) Answer = gtPass;
+  Answer = (HaveAWhist != whist && vz >= gameWhistsMin(MaxGame)) ? whist : gtPass ;
+  if (HaveAWhist == gtPass && vz < gameWhistsMin(MaxGame)) Answer = gtPass;
   if (optStalingrad && MaxGame == g61) Answer = whist; //STALINGRAD !!!
   if (MaxGame == g86) Answer = g86catch; // miser
   mMyGame = Answer;

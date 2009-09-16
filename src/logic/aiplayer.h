@@ -39,7 +39,7 @@ public:
 public:
   virtual Card *moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut); //ход
   virtual eGameBid moveBidding (eGameBid lMove, eGameBid rMove); //ход при торговле
-  virtual eGameBid moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerVist); // после получения игроком прикупа - пасс или вист
+  virtual eGameBid moveFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerWhist); // после получения игроком прикупа - пасс или вист
   virtual eGameBid dropForGame ();
   virtual eGameBid dropForMisere ();
 
@@ -76,9 +76,9 @@ protected:
   Card *MyGame2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // моя игра 2 заход - мой
   Card *MyGame3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // моя игра 3 заход - мой
 
-  Card *MyVist1 (Player *aLeftPlayer, Player *aRightPlayer); // мой вист или пас 1 заход - мой
-  Card *MyVist2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // мой вист или пас 2 заход - мой
-  Card *MyVist3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // мой вист или пас 3 заход - мой
+  Card *MyWhist1 (Player *aLeftPlayer, Player *aRightPlayer); // мой вист или пас 1 заход - мой
+  Card *MyWhist2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // мой вист или пас 2 заход - мой
+  Card *MyWhist3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // мой вист или пас 3 заход - мой
 
   // А вот и часть отвечающая за распасы и мизер !!!
   Card *MyPass1 (Card *, Player *aLeftPlayer, Player *aRightPlayer);
