@@ -105,6 +105,7 @@ extern bool optDebugHands;
 extern eGameBid gCurrentGame;
 extern bool optAggPass;
 extern int optPassCount;
+extern bool optWithoutThree;
 
 extern bool optDealAnim;
 extern bool optTakeAnim;

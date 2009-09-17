@@ -107,6 +107,7 @@ protected:
   void  mousePressEvent (QMouseEvent *);
   void  mouseMoveEvent (QMouseEvent *);
   void  keyPressEvent (QKeyEvent *);
+  void  closeEvent(QCloseEvent *event);
 };
 
 extern Kpref *kpref;

@@ -92,7 +92,8 @@ eGameBid HumanPlayer::dropForGame () {
   if (mMyGame != g86) formBid->disableItem(g86);
   formBid->disableLessThan(mMyGame);
   formBid->showbullet->setEnabled(true);
-  formBid->bwithoutthree->setEnabled(true);
+  if (optWithoutThree)
+  	formBid->bwithoutthree->setEnabled(true);
 
   do {
     tmpGamesType = mDeskView->selectBid(zerogame, zerogame);

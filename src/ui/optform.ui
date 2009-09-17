@@ -84,7 +84,7 @@
    <item>
     <widget class="QCheckBox" name="cbPrefClub">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">

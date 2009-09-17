@@ -140,18 +140,6 @@
         <translation>Добро пожаловать в OpenPref!</translation>
     </message>
     <message>
-        <source>OpenPref
-developer version (0.1.2)
-http://sourceforge.net/projects/openpref
-http://gitorious.org/openprefqt4
-
-(c) 2004 Fedotov A.V.
-Based on kpref (c) Azarniy I.V.
-Qt4 port and many new bugs by Ketmar
-Some bells and whistles by Annulen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Preferans Rules</source>
         <translation>Правила преферанса</translation>
     </message>
@@ -169,6 +157,12 @@ See http://en.wikipedia.org/wiki/Preferans</source>
         <source>Do you want to whist with opened cards?</source>
         <translation>Вы хотите вистовать с открытыми картами?</translation>
     </message>
+    <message>
+        <source>&lt;h2&gt;OpenPref 0.1.3&lt;/h2&gt;More information on &lt;br/&gt;&lt;a href=&quot;http://sourceforge.net/projects/openpref&quot;&gt;http://sourceforge.net/projects/openpref&lt;/a&gt;&lt;br/&gt;Get latest sources on &lt;br/&gt;&lt;a href=&quot;http://gitorious.org/openprefqt4&quot;&gt;http://gitorious.org/openprefqt4&lt;/a&gt;&lt;br/&gt;
+&lt;br/&gt;Copyright (c) 2000-2009, OpenPref Developers:&lt;br/&gt;I.Azarniy, A.V.Fedotov, Ketmar Dark, K.Tokarev&lt;br/&gt;&lt;br/&gt;OpenPref is free software; you can redistribute it and/or modify&lt;br/&gt;it under the terms of the GNU General Public License (see file&lt;br/&gt;COPYING or &lt;a href=&quot;http://www.gnu.org/licenses&quot;&gt;http://www.gnu.org/licenses&lt;/a&gt;)</source>
+        <translation>&lt;h2&gt;OpenPref 0.1.3&lt;/h2&gt;Больше информации на сайте &lt;br/&gt;&lt;a href=&quot;http://sourceforge.net/projects/openpref&quot;&gt;http://sourceforge.net/projects/openpref&lt;/a&gt;&lt;br/&gt;Получите последние исходники на&lt;br/&gt;&lt;a href=&quot;http://gitorious.org/openprefqt4&quot;&gt;http://gitorious.org/openprefqt4&lt;/a&gt;&lt;br/&gt;(new line)
+&lt;br/&gt;Copyright (c) 2000-2009, Разработчики OpenPref:&lt;br/&gt;I.Azarniy, A.V.Fedotov, Ketmar Dark, K.Tokarev&lt;br/&gt;&lt;br/&gt;OpenPref - это свободное программное обеспечение; вы можете распространять и/или изменять&lt;br/&gt;его согласно GNU General Public License (смотрите файл&lt;br/&gt;COPYING или &lt;a href=&quot;http://www.gnu.org/licenses&quot;&gt;http://www.gnu.org/licenses&lt;/a&gt;)</translation>
+    </message>
 </context>
 <context>
     <name>NewGameDialog</name>
@@ -182,11 +176,11 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     </message>
     <message>
         <source>Conventions</source>
-        <translation>Конвенции</translation>
+        <translation>Соглашения</translation>
     </message>
     <message>
         <source>Whist type:</source>
-        <translation>Тип виста:</translation>
+        <translation type="obsolete">Тип виста:</translation>
     </message>
     <message>
         <source>&amp;Stalingrad</source>
@@ -210,19 +204,19 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     </message>
     <message>
         <source>&amp;greedy</source>
-        <translation>&amp;жлобский</translation>
+        <translation type="obsolete">&amp;жлобский</translation>
     </message>
     <message>
         <source>Pass-out:</source>
-        <translation>Распасы:</translation>
+        <translation type="obsolete">Распасы:</translation>
     </message>
     <message>
         <source>6-7-7...</source>
-        <translation>6-7-7...</translation>
+        <translation type="obsolete">6-7-7...</translation>
     </message>
     <message>
         <source>6 of spades:</source>
-        <translation>6 пик:</translation>
+        <translation type="obsolete">6 пик:</translation>
     </message>
     <message>
         <source>Player 1 (left)</source>
@@ -263,6 +257,26 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     <message>
         <source>Your name (to display in chart)</source>
         <translation>Ваше имя (для пули)</translation>
+    </message>
+    <message>
+        <source>In 10 game whister must take at least one trick</source>
+        <translation>В десятерной вистующий обязуется взять хотя бы одну взятку</translation>
+    </message>
+    <message>
+        <source>&amp;Greedy whist</source>
+        <translation>&amp;Жлобский вист</translation>
+    </message>
+    <message>
+        <source>&amp;Pass-out exit 6-7-7...</source>
+        <translation>&amp;Выход из распасов 6-7-7...</translation>
+    </message>
+    <message>
+        <source>Cancel game with penalty of three untaken tricks. No whists are written</source>
+        <translation>Отменить игру с штрафом в три недобранные взятки. Висты не пишутся</translation>
+    </message>
+    <message>
+        <source>&amp;Without three</source>
+        <translation>&amp;Без трех</translation>
     </message>
 </context>
 <context>
@@ -353,7 +367,7 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     </message>
     <message>
         <source>Sho&amp;w AI cards (debug)</source>
-        <translation>&amp;Показать карты компьютера (отладка)</translation>
+        <translation>&amp;Показать карты компьютера</translation>
     </message>
     <message>
         <source>Pref&amp;Club Remix</source>

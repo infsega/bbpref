@@ -43,6 +43,7 @@ bool optAlphaBeta2 = false;
 bool optDebugHands = false;
 bool optAggPass = true;
 int optPassCount = 0;
+bool optWithoutThree = true;
 
 bool optDealAnim = true;
 bool optTakeAnim = true;

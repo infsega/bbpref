@@ -75,21 +75,7 @@ Kpref::Kpref () {
   move(x, y);
   setFixedSize(w, h);
 
-  /*Hint = new QLabel(tr("Welcome to OpenPref!"), this);
-  Hint->setAlignment(Qt::AlignCenter);
-  //Hint->setForegroundColor("yellow");
-  //Hint->setBackgroundColor("green");
-  //Hint->setFrameShape(QFrame::NoFrame);
-  //Hint->setMidLineWidth(0);
-  //Hint->setLineWidth(0);
-  //Hint->setForegroundRole(QPalette::Link);
-  Hint->palette-> setPaletteBackgroundColor("green");
-  Hint-> setPaletteForegroundColor("yellow");
-  //Hint->setFrameStyle(0);
-  
-  HintBar->addWidget(Hint,1);*/
-  
-  //connect(this, SIGNAL(destroyed()), qApp, SLOT(quit()));
+ //connect(this, SIGNAL(rejected()), qApp, SLOT(quit()));
 }
 
 
@@ -206,6 +192,8 @@ void Kpref::slotNewSingleGame () {
   dlg->rbTenWhist->setChecked(opt10Whist);
   dlg->cbStalin->setChecked(optStalingrad);
   dlg->cbAggPass->setChecked(optAggPass);
+  dlg->cbWithoutThree->setChecked(optWithoutThree);
+  
   if (dlg->exec() == QDialog::Accepted) {
 	// Players
 	optHumanName = dlg->leHumanName->text();
@@ -219,6 +207,7 @@ void Kpref::slotNewSingleGame () {
     opt10Whist = dlg->rbTenWhist->isChecked();
     optStalingrad = dlg->cbStalin->isChecked();
     optAggPass = dlg->cbAggPass->isChecked();
+	optWithoutThree = dlg->cbWithoutThree->isChecked();
     saveOptions();
 	delete dlg;
   }
@@ -303,6 +292,16 @@ void Kpref::paintEvent (QPaintEvent *event) {
   mInPaintEvent = false;
 }
 
+void Kpref::closeEvent(QCloseEvent *event) {
+	 int ret = QMessageBox::question(this, tr("OpenPref"),
+        tr("Do you really want to quit the game?"),
+        QMessageBox::Yes | QMessageBox::Default,
+        QMessageBox::No | QMessageBox::Escape);
+	if (ret == QMessageBox::Yes)
+         exit(0);
+    else
+         event->ignore();
+ }
 
 void Kpref::slotHelpAbout () {
   QMessageBox::about(this, tr("About"),
@@ -315,7 +314,7 @@ void Kpref::slotHelpAbout () {
 	"<br/>"
 	"OpenPref is free software; you can redistribute it and/or modify<br/>"
     "it under the terms of the GNU General Public License (see file<br/>"
-    "COPYING or <a href=\"http://www.gnu.org/licenses\">http://www.gnu.org/licenses</a>.")
+    "COPYING or <a href=\"http://www.gnu.org/licenses\">http://www.gnu.org/licenses</a>)")
   );
 }
 
@@ -334,8 +333,9 @@ void Kpref::saveOptions () {
   st.setValue("playername2", optPlayerName2);
   st.setValue("alphabeta2", optAlphaBeta2);
   st.setValue("debughand", optDebugHands);
+  st.setValue("without3", optWithoutThree);
   st.setValue("aggpass", optAggPass);
-  st.value("prefclub", optPrefClub);
+  st.setValue("prefclub", optPrefClub);
 }
 
 
@@ -343,7 +343,7 @@ void Kpref::loadOptions () {
   QSettings st;
   optMaxPool = st.value("maxpool", 10).toInt();
   if (optMaxPool < 4) optMaxPool = 4; else if (optMaxPool > 1000) optMaxPool = 1000;
-  optStalingrad = st.value("stalin", true).toBool();
+  optStalingrad = st.value("stalin", false).toBool();
   opt10Whist = st.value("whist10", false).toBool();// true => radio button checks 'check' nevertheless!
   optWhistGreedy = st.value("whistgreedy", true).toBool();
   optDealAnim = st.value("animdeal", true).toBool();
@@ -354,12 +354,13 @@ void Kpref::loadOptions () {
   	optHumanName = st.value("humanname", "").toString();
   #endif
   optPlayerName1 = st.value("playername1", tr("Player 1")).toString();
-  optAlphaBeta1 = (st.value("alphabeta1", true).toBool());
+  optAlphaBeta1 = (st.value("alphabeta1", false).toBool());
   optPlayerName2 = st.value("playername2", tr("Player 2")).toString();
-  optAlphaBeta2 = (st.value("alphabeta2", true).toBool());
+  optAlphaBeta2 = (st.value("alphabeta2", false).toBool());
+  optWithoutThree = st.value("without3", true).toBool();
   optDebugHands = st.value("debughand", false).toBool();
-  optAggPass = st.value("aggpass", true).toBool();
-  optPrefClub = st.value("prefclub", true).toBool();
+  optAggPass = st.value("aggpass", false).toBool();
+    optPrefClub = st.value("prefclub", true).toBool();
 }
 
 

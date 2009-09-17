@@ -778,7 +778,10 @@ void PrefDesktop::runGame () {
           //drawBidWindows(bids4win, 0);
 		  if (tmpg->number() != 1)
 				kpref->HintBar->showMessage(tr("Try to remember the cards"));
-		  mDeskView->mySleep(-1);
+		  if (optPrefClub)
+		  	mDeskView->mySleep(-1);
+		  else
+		  	mDeskView->mySleep(2);
 		  kpref->HintBar->clearMessage();
           // deal talon
           tmpg->dealCard(mDeck.at(30));
@@ -809,7 +812,10 @@ void PrefDesktop::runGame () {
             /*else 
 				tmpg->setMessage(tr("Misere"));*/
             // wait for event
-            mDeskView->mySleep(-1);
+			if (optPrefClub)
+            	mDeskView->mySleep(-1);
+			else
+		  		mDeskView->mySleep(2);
             draw(false);
 
             tmpg->setInvisibleHand(nVisibleState);
@@ -885,7 +891,10 @@ void PrefDesktop::runGame () {
 
           // choice made
           draw(false);
-          mDeskView->mySleep(-1);
+		  if (optPrefClub)
+          	mDeskView->mySleep(-1);
+		  else
+		  	mDeskView->mySleep(2);
 		  player(1)->setMessage("");
 		  player(2)->setMessage("");
           player(3)->setMessage("");
@@ -938,7 +947,7 @@ void PrefDesktop::runGame () {
 						else
 							player(n)->setMessage(tr("open"));
 						draw(false);
-			          	mDeskView->mySleep(-1);
+			          	mDeskView->mySleep(2);
 					}
 
 				// if closed whist chosen, no hand become opened
@@ -978,7 +987,10 @@ void PrefDesktop::runGame () {
       mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = 0;
       mOnDeskClosed = false;
       draw();
-      mDeskView->mySleep(-1);
+	  if (optPrefClub)
+	  	mDeskView->mySleep(-1);
+	  else
+		mDeskView->mySleep(2);
     }
 
     player(1)->setMessage("");
@@ -1051,7 +1063,10 @@ void PrefDesktop::runGame () {
 
       ++nCurrentMove;
       draw();
-      mDeskView->mySleep(-1);
+	  if (optPrefClub)
+      	mDeskView->mySleep(-1);
+	  else
+	  	mDeskView->mySleep(2);
 
       nPl = whoseTrick(mFirstCard, mSecondCard, mThirdCard, playerBids[0]-(playerBids[0]/10)*10)-1;
       nCurrentMove = nCurrentMove+nPl;
@@ -1107,7 +1122,10 @@ LabelRecordOnPaper:
     mShowPool = true;
     mPlayingRound = true;
     draw();
-    mDeskView->mySleep(-1);
+	if (optPrefClub)
+    	mDeskView->mySleep(-1);
+	else
+		mDeskView->mySleep(2);
     mPlayingRound = false;
     if (nPassCounter != 2) {
       // была партия
