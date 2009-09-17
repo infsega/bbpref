@@ -37,6 +37,14 @@
         <source>Bidding</source>
         <translation>Торги</translation>
     </message>
+    <message>
+        <source>Cancel game with penalty of three untaken tricks. No whists are written</source>
+        <translation>Отменить игру с штрафом в три недобранные взятки. Висты не пишутся</translation>
+    </message>
+    <message>
+        <source>no trump</source>
+        <translation>без козыря</translation>
+    </message>
 </context>
 <context>
     <name>HelpBrowser</name>
@@ -152,6 +160,14 @@ Some bells and whistles by Annulen</source>
 See http://en.wikipedia.org/wiki/Preferans</source>
         <translation>Справочная система пока не реализована!
 Смотрите http://ru.wikipedia.org/wiki/Преферанс</translation>
+    </message>
+    <message>
+        <source>Choose whist type</source>
+        <translation>Выберите тип виста</translation>
+    </message>
+    <message>
+        <source>Do you want to whist with opened cards?</source>
+        <translation>Вы хотите вистовать с открытыми картами?</translation>
     </message>
 </context>
 <context>
@@ -397,6 +413,18 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     <message>
         <source>Select two cards to drop</source>
         <translation>Снесите две карты</translation>
+    </message>
+    <message>
+        <source>without three</source>
+        <translation>без трех</translation>
+    </message>
+    <message>
+        <source>close</source>
+        <translation>втемную</translation>
+    </message>
+    <message>
+        <source>open</source>
+        <translation>в открытую</translation>
     </message>
 </context>
 </TS>

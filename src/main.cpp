@@ -36,6 +36,12 @@
 #include "kpref.h"
 #include "formbid.h"
 
+#ifndef LOCAL
+	#define i18n_PATH "/usr/share/openpref/i18n"
+#else
+	#define i18n_PATH "."
+#endif
+
 
 using namespace std;
 
@@ -50,8 +56,8 @@ int main (int argc, char *argv[]) {
   QTextCodec::setCodecForLocale(QTextCodec::codecForName("windows-1251"));
 #endif
 */
-  QCoreApplication::setOrganizationName("Vampire Avalon");
-  QCoreApplication::setOrganizationDomain("ketmar.no-ip.org"); // fuck macz
+  QCoreApplication::setOrganizationName("OpenPref");
+  QCoreApplication::setOrganizationDomain("openpref.sourceforge.net"); // fuck macz
   QCoreApplication::setApplicationName("OpenPref");
 
 #if !defined(WIN32) && !defined(_WIN32)
@@ -75,7 +81,7 @@ int main (int argc, char *argv[]) {
 
   QApplication a(argc, argv);
   QString translationCode = QLocale::system().name();
-  QString qtFilename = "./openpref_" + translationCode + ".qm";
+  QString qtFilename = QString(i18n_PATH) + "/openpref_" + translationCode + ".qm";
   //cout << "Loading translation " << qtFilename << " ...\n";
   QTranslator qtTranslator(0);
   qtTranslator.load(qtFilename);
@@ -87,5 +93,6 @@ int main (int argc, char *argv[]) {
   formBid->hide();
   kpref->init();
   kpref->show();
-  return a.exec();
+  bool exitCode = a.exec();
+  return exitCode;
 }

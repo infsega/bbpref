@@ -57,9 +57,10 @@ public:
 
   void adjustDesk ();
   
-  // HintBar actions
+  // Messages
   void MoveImpossible ();
   void HintMove ();
+  bool WhistType ();
 
 public slots:
   void forceRepaint ();

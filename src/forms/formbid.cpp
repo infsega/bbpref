@@ -149,6 +149,8 @@ void FormBid::initDialog () {
       int x = (suit-1)*40+10;
       int bid = face*10+suit;
       QBidButton *b = new QBidButton((eGameBid)bid, x, y, this);
+	  if (suit == 5)
+	  	b->setToolTip(tr("no trump"));
       connect(b, SIGNAL(clicked()), this, SLOT(onBidClick()));
     }
   }

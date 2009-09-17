@@ -108,15 +108,15 @@ void PrefDesktop::internalInit () {
   mPlayers << 0; // 0th player is nobody
   //addPlayer(new AiPlayer(1));
   // I Hate This Game :)
-  addPlayer(new HumanPlayer(1, (nCurrentStart.nValue==1), mDeskView));
+  addPlayer(new HumanPlayer(1, mDeskView));
   if (!optAlphaBeta1)
-    addPlayer(new AiPlayer(2, (nCurrentStart.nValue==2), mDeskView));
+    addPlayer(new AiPlayer(2, mDeskView));
   else 
-    addPlayer(new CheatPlayer(2, (nCurrentStart.nValue==2), mDeskView));
+    addPlayer(new CheatPlayer(2, mDeskView));
   if (!optAlphaBeta2)
-    addPlayer(new AiPlayer(3, (nCurrentStart.nValue==3), mDeskView));
+    addPlayer(new AiPlayer(3, mDeskView));
   else 
-    addPlayer(new CheatPlayer(3, (nCurrentStart.nValue==3), mDeskView));
+    addPlayer(new CheatPlayer(3, mDeskView));
 
 
   mShowPool = false;
@@ -214,7 +214,7 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
   // passes or catches misere
   if (((player(1)->myGame() == whist && !Closed_Whist) || player(1)->myGame() == g86catch) &&
       curPlr->number() != 1 && (curPlr->myGame() == gtPass || curPlr->myGame() == g86catch)) {
-    HumanPlayer *hPlr = new HumanPlayer(nCurrentMove.nValue, (nCurrentStart.nValue==1), mDeskView);
+    HumanPlayer *hPlr = new HumanPlayer(nCurrentMove.nValue, mDeskView);
     *hPlr = *curPlr;
     mPlayers[nCurrentMove.nValue] = hPlr;
     res = hPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)), isPassOut);
@@ -614,8 +614,17 @@ void PrefDesktop::runGame () {
       ++plrCounter;
     }
     */
-    // "I move" icon
+
+	// Starter of bidding
     plrCounter = nCurrentStart;
+	for (int i=1; i<=3; i++) {
+		if (i == nCurrentStart.nValue)
+			player(i)->setCurrentStart(true);
+		else
+			player(i)->setCurrentStart(false);
+	}
+
+	// "I move" icon
     switch (nCurrentStart.nValue) {
       case 1:
         iMoveX = mDeskView->DesktopWidth/2-15;
@@ -863,7 +872,7 @@ void PrefDesktop::runGame () {
 		  draw(false);
           PassOrVistPlayers = player(tmpPlayersCounter);
           PassOrVistPlayers->setMyGame(undefined);
-		  if (firstPW != 1) mDeskView->mySleep(2);
+		  if (nextPW != 1) mDeskView->mySleep(2);
           //PassOrVistPlayers->moveFinalBid(gCurrentGame, PassOrVist, nPassOrVist);
 		  //qDebug() << nPassCounter;
 		  PassOrVistPlayers->moveFinalBid(gCurrentGame, PassOrVist, nPassCounter);
@@ -877,6 +886,9 @@ void PrefDesktop::runGame () {
           // choice made
           draw(false);
           mDeskView->mySleep(-1);
+		  player(1)->setMessage("");
+		  player(2)->setMessage("");
+          player(3)->setMessage("");
 
           gnS = sGameName(gCurrentGame);
           gnS.prepend("game: ");
@@ -916,10 +928,7 @@ void PrefDesktop::runGame () {
 				Closed_Whist = false;
 				for (int n=1; n<=3; n++)
 					if (player(n)->myGame() == whist) {
-    					player(1)->setMessage("");
-    					player(2)->setMessage("");
-    					player(3)->setMessage("");
-						player(n)->setMessage(tr("thinking..."));
+    					player(n)->setMessage(tr("thinking..."));
 						draw(false);
 						if (n != 1)
 							mDeskView->mySleep(2);
@@ -929,7 +938,7 @@ void PrefDesktop::runGame () {
 						else
 							player(n)->setMessage(tr("open"));
 						draw(false);
-			          	mDeskView->mySleep(2);
+			          	mDeskView->mySleep(-1);
 					}
 
 				// if closed whist chosen, no hand become opened
@@ -945,6 +954,10 @@ void PrefDesktop::runGame () {
 					invis = player(2)->chooseClosedWhist();
 					player(2)->setInvisibleHand(invis);
 					player(3)->setInvisibleHand(invis);*/
+				player(1)->setMessage("");
+    			player(2)->setMessage("");
+    			player(3)->setMessage("");
+			
 			}
           }
           break;
@@ -989,8 +1002,9 @@ void PrefDesktop::runGame () {
       }
 
       mPlayerHi = nCurrentMove.nValue;
-      player(mPlayerHi)->setMessage(tr("thinking..."));
-      draw();
+      draw(false);
+	  player(mPlayerHi)->setMessage(tr("thinking..."));
+	  draw();
       mDeskView->mySleep(0);
       if (gCurrentGame == raspass && (i == 1 || i == 2)) {
         Card *tmp4show, *ptmp4rpass;

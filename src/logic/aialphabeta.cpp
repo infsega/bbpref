@@ -699,7 +699,7 @@ Card *CheatPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
 
 
 ///////////////////////////////////////////////////////////////////////////////
-CheatPlayer::CheatPlayer (int aMyNumber, bool iStart, DeskView *aDeskView) : AiPlayer(aMyNumber, iStart, aDeskView) {
+CheatPlayer::CheatPlayer (int aMyNumber, DeskView *aDeskView) : AiPlayer(aMyNumber, aDeskView) {
   mInvisibleHand = false;
 }
 

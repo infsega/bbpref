@@ -40,7 +40,7 @@
 #include "human.h"
 
 
-HumanPlayer::HumanPlayer (int aMyNumber, bool iStart, DeskView *aDeskView) : Player(aMyNumber, iStart, aDeskView) {
+HumanPlayer::HumanPlayer (int aMyNumber, DeskView *aDeskView) : Player(aMyNumber, aDeskView) {
   internalInit();
 }
 
@@ -134,6 +134,8 @@ eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
   if (qMax(lMove, rMove) != gtPass)
   {
   	// If HumanPlayer started bid, he can stay
+	//mIStart = (lMove == undefined && rMove == undefined);
+	qDebug() << mPlayerNo << mIStart;
 	if (mIStart)
 		formBid->disableLessThan(qMax(lMove, rMove));
   	// otherwise he must increase
@@ -255,13 +257,5 @@ void HumanPlayer::hilightCard (int lx, int ly) {
 }
 
 bool HumanPlayer::chooseClosedWhist () {
-	qDebug() << "Do you want to whist with opened cards?" << endl;
-	int ret = QMessageBox::question(kpref, "OpenPref",
-        "Do you want to whist with opened cards?",
-        QMessageBox::Yes | QMessageBox::Default,
-        QMessageBox::No | QMessageBox::Escape);
-	if (ret == QMessageBox::Yes)
-		return false;
-	else
-		return true;
+	return kpref->WhistType();
 }

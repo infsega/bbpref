@@ -33,7 +33,7 @@
 
 class Player {
 public:
-  Player (int aMyNumber, bool iStart=false, DeskView *aDeskView=0);
+  Player (int aMyNumber, DeskView *aDeskView=0);
   Player (const Player &pl);
   virtual ~Player ();
 
@@ -43,6 +43,8 @@ public:
 
   virtual bool invisibleHand () const;
   virtual void setInvisibleHand (bool invis);
+
+  virtual void setCurrentStart (bool start);
 
   virtual void sortCards ();
 

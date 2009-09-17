@@ -5,8 +5,8 @@ QT += gui
 
 CONFIG += qt warn_on
 CONFIG += debug_and_release
-#CONFIG += debug
-#CONFIG += release
+
+QMAKE_CXXFLAGS += -DLOCAL
 
 #QMAKE_CFLAGS_RELEASE ~= s/\-O./-Os
 #QMAKE_CXXFLAGS_RELEASE ~= s/\-O./-Os

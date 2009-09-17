@@ -392,7 +392,7 @@ void Kpref::slotAbort () {
         QMessageBox::Yes | QMessageBox::Default,
         QMessageBox::No | QMessageBox::Escape);
 	if (ret == QMessageBox::Yes)
-  		abort();	// Looks unpleasant on Windows
+  		exit(0);	
 }
 
 void Kpref::slotAbortBid () {
@@ -409,4 +409,15 @@ void Kpref::MoveImpossible () {
 
 void Kpref::HintMove () {
 	HintBar->showMessage(tr("Your move"));
+}
+
+bool Kpref::WhistType () {
+	int ret = QMessageBox::question(kpref, tr("Choose whist type"),
+        tr("Do you want to whist with opened cards?"),
+        QMessageBox::Yes | QMessageBox::Default,
+        QMessageBox::No | QMessageBox::Escape);
+	if (ret == QMessageBox::Yes)
+		return false;
+	else
+		return true;
 }

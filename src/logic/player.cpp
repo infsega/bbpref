@@ -29,7 +29,7 @@
 #include "player.h"
 
 
-Player::Player (int aMyNumber, bool iStart, DeskView *aDeskView) : mDeskView(aDeskView), mIStart(iStart), mPlayerNo(aMyNumber) {
+Player::Player (int aMyNumber, DeskView *aDeskView) : mDeskView(aDeskView), mIStart(false), mPlayerNo(aMyNumber) {
   internalInit();
 }
 
@@ -99,6 +99,10 @@ inline bool Player::invisibleHand () const {
 
 inline void Player::setInvisibleHand (bool invis) {
   mInvisibleHand = invis;
+}
+
+inline void Player::setCurrentStart (bool start) {
+	mIStart = start;
 }
 
 

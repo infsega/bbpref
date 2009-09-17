@@ -34,7 +34,7 @@
 
 class AiPlayer : public Player {
 public:
-  AiPlayer (int aMyNumber, bool iStart=false, DeskView *aDeskView=0);
+  AiPlayer (int aMyNumber, DeskView *aDeskView=0);
 
 public:
   virtual Card *moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut); //ход
