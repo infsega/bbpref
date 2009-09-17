@@ -306,15 +306,16 @@ void Kpref::paintEvent (QPaintEvent *event) {
 
 void Kpref::slotHelpAbout () {
   QMessageBox::about(this, tr("About"),
-    tr("OpenPref\n"
-    "developer version (0.1.2)\n"
-	"http://sourceforge.net/projects/openpref\n"
-    "http://gitorious.org/openprefqt4\n"
-    "\n"
-    "(c) 2004 Fedotov A.V.\n"
-    "Based on kpref (c) Azarniy I.V.\n"
-    "Qt4 port and many new bugs by Ketmar\n"
-	"Some bells and whistles by Annulen")
+    tr("<h2>OpenPref 0.1.3</h2>"
+	"More information on <br/><a href=\"http://sourceforge.net/projects/openpref\">http://sourceforge.net/projects/openpref</a><br/>"
+    "Get latest sources on <br/><a href=\"http://gitorious.org/openprefqt4\">http://gitorious.org/openprefqt4</a><br/>\n"
+    "<br/>"
+    "Copyright (c) 2000-2009, OpenPref Developers:<br/>"
+	"I.Azarniy, A.V.Fedotov, Ketmar Dark, K.Tokarev<br/>"
+	"<br/>"
+	"OpenPref is free software; you can redistribute it and/or modify<br/>"
+    "it under the terms of the GNU General Public License (see file<br/>"
+    "COPYING or <a href=\"http://www.gnu.org/licenses\">http://www.gnu.org/licenses</a>.")
   );
 }
 
