@@ -334,15 +334,15 @@ void DeskView::mySleep (int seconds) {
 
   if (seconds == 0)
   {
-    if (optPrefClub == false)
+    /*if (optPrefClub == false)
 	  seconds=1;
-    else {
+    else {*/
     drawPKeyBmp(false);
     emitRepaint();
     qApp->processEvents(QEventLoop::WaitForMoreEvents);
     qApp->sendPostedEvents();
     return;
-    }
+    //}
   }
   if (seconds > 0) {
     connect(timer, SIGNAL(timeout()), &eloop, SLOT(quit()));

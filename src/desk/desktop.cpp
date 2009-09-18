@@ -940,14 +940,14 @@ void PrefDesktop::runGame () {
     					player(n)->setMessage(tr("thinking..."));
 						draw(false);
 						if (n != 1)
-							mDeskView->mySleep(2);
+							mDeskView->mySleep(1);
 						Closed_Whist = player(n)->chooseClosedWhist();
 						if (Closed_Whist)
 							player(n)->setMessage(tr("close"));
 						else
 							player(n)->setMessage(tr("open"));
 						draw(false);
-			          	mDeskView->mySleep(2);
+			          	mDeskView->mySleep(1);
 					}
 
 				// if closed whist chosen, no hand become opened
@@ -1066,7 +1066,7 @@ void PrefDesktop::runGame () {
 	  if (optPrefClub)
       	mDeskView->mySleep(-1);
 	  else
-	  	mDeskView->mySleep(2);
+	  	mDeskView->mySleep(1);
 
       nPl = whoseTrick(mFirstCard, mSecondCard, mThirdCard, playerBids[0]-(playerBids[0]/10)*10)-1;
       nCurrentMove = nCurrentMove+nPl;
