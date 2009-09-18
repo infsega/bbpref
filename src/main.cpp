@@ -28,7 +28,6 @@
 #include <QLocale>
 #include <QTranslator>
 
-
 #include "main.h"
 
 #include "debug.h"
@@ -37,7 +36,7 @@
 #include "formbid.h"
 
 #ifndef LOCAL
-	#define i18n_PATH "/usr/share/openpref/i18n"
+	#define i18n_PATH QCoreApplication::applicationDirPath()+"/../share/openpref/i18n"
 #else
 	#define i18n_PATH "."
 #endif
@@ -46,18 +45,8 @@
 using namespace std;
 
 int main (int argc, char *argv[]) {
-	/*
-#if !defined(WIN32) && !defined(_WIN32)
-
-  QTextCodec::setCodecForCStrings(QTextCodec::codecForName("koi8-r"));
-  QTextCodec::setCodecForLocale(QTextCodec::codecForName("koi8-r"));
-#else
-  QTextCodec::setCodecForCStrings(QTextCodec::codecForName("windows-1251"));
-  QTextCodec::setCodecForLocale(QTextCodec::codecForName("windows-1251"));
-#endif
-*/
   QCoreApplication::setOrganizationName("OpenPref");
-  QCoreApplication::setOrganizationDomain("openpref.sourceforge.net"); // fuck macz
+  QCoreApplication::setOrganizationDomain("openpref.sourceforge.net");
   QCoreApplication::setApplicationName("OpenPref");
 
 #if !defined(WIN32) && !defined(_WIN32)
@@ -82,7 +71,6 @@ int main (int argc, char *argv[]) {
   QApplication a(argc, argv);
   QString translationCode = QLocale::system().name();
   QString qtFilename = QString(i18n_PATH) + "/openpref_" + translationCode + ".qm";
-  //cout << "Loading translation " << qtFilename << " ...\n";
   QTranslator qtTranslator(0);
   qtTranslator.load(qtFilename);
   a.installTranslator(&qtTranslator);
