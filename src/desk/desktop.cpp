@@ -781,7 +781,7 @@ void PrefDesktop::runGame () {
 		  if (optPrefClub)
 		  	mDeskView->mySleep(-1);
 		  else
-		  	mDeskView->mySleep(2);
+		  	mDeskView->mySleep(4);
 		  kpref->HintBar->clearMessage();
           // deal talon
           tmpg->dealCard(mDeck.at(30));
@@ -791,7 +791,7 @@ void PrefDesktop::runGame () {
           //bids4win[0] = bids4win[1] = bids4win[2] = bids4win[3] = undefined;
           // throw away
 		  eGameBid maxBid = gCurrentGame;
-          if (tmpg->myGame() != g86) {
+          if (tmpg->myGame() != g86) {		//  not misere
             // not misere
             nCurrentMove.nValue = i;
             draw(false);
@@ -801,7 +801,7 @@ void PrefDesktop::runGame () {
 				mDeskView->mySleep(2);
             playerBids[0] = gCurrentGame = tmpg->dropForGame();
 			kpref->HintBar->clearMessage();
-          } else {
+          } else {	// playing misere
             // show all cards
             int tempint = nCurrentMove.nValue;
             int nVisibleState = tmpg->invisibleHand();
@@ -815,7 +815,7 @@ void PrefDesktop::runGame () {
 			if (optPrefClub)
             	mDeskView->mySleep(-1);
 			else
-		  		mDeskView->mySleep(2);
+		  		mDeskView->mySleep(4);
             draw(false);
 
             tmpg->setInvisibleHand(nVisibleState);
@@ -1125,7 +1125,7 @@ LabelRecordOnPaper:
 	if (optPrefClub)
     	mDeskView->mySleep(-1);
 	else
-		mDeskView->mySleep(2);
+		mDeskView->mySleep(4);
     mPlayingRound = false;
     if (nPassCounter != 2) {
       // была партия
