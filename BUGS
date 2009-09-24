@@ -1,7 +1,8 @@
 Known Issues
 
 1. Misproper behaviour of "thinking" message is sometimes observed
-2. Scores in chart are not ideally centred
+2. Cards in hands and scores in chart are not ideally centred
 3. AI algorithm for choose of maximum bid is not perfect
-4. Exiting application on Windows during gameplay causes incorrect 
-   termination error message from OS
+4. Alphabeta AI can be very slow sometimes
+5. Halfwhist button works like Whist
+6. Options can't be changed during gameplay
