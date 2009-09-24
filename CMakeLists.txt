@@ -31,7 +31,7 @@ IF( MINGW )
                              -o ${CMAKE_CURRENT_BINARY_DIR}/openprefres.o )
     SET( SOURCES ${SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/openprefres.o)
 ELSE( MINGW )
-#    SET( SOURCES ${SOURCES} openprefres.rc)
+#    SET( SOURCES ${SOURCES} openpref.rc)
 ENDIF( MINGW )
 
 SET ( RCS
