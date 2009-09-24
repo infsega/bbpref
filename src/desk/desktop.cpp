@@ -400,7 +400,10 @@ Player *PrefDesktop::player (const WrapCounter &cnt) {
 
 bool PrefDesktop::loadGame (const QString &name)  {
   QFile fl(name);
-  if (!fl.open(QIODevice::ReadOnly)) return false;
+  if (!fl.open(QIODevice::ReadOnly)) {
+      printf("Load failed\n");
+	  return false;
+  }
   QByteArray ba(fl.readAll());
   fl.close();
   int pos = 0;
@@ -410,7 +413,10 @@ bool PrefDesktop::loadGame (const QString &name)  {
 
 bool PrefDesktop::saveGame (const QString &name)  {
   QFile fl(name);
-  if (!fl.open(QIODevice::WriteOnly)) return false;
+  if (!fl.open(QIODevice::WriteOnly)) {
+      printf("Save failed\n");
+	  return false;
+  }
   QByteArray ba;
   serialize(ba);
   fl.write(ba);

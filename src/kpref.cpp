@@ -228,11 +228,11 @@ void Kpref::slotNewSingleGame () {
   }  
   
   optPassCount = 0;
-  actOptions->setEnabled(false);
-  actFileOpen->setEnabled(false);  
+  actFileOpen->setEnabled(false);
+  actFileSave->setEnabled(true); 
   mDesktop->runGame();
   actFileOpen->setEnabled(true);
-  actOptions->setEnabled(true);
+  actFileSave->setEnabled(false);
 }
 
 
@@ -401,7 +401,7 @@ void Kpref::slotAbortBid () {
 	if (formBid->_GamesType != showpool)
 	{
 		slotAbort();
-		formBid->_GamesType = undefined;
+		formBid->_GamesType = showpool;
 	}
 }
 
