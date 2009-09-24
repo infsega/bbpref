@@ -1,0 +1,13 @@
+For OpenPref 0.1.4:
+
+* Improve bidding algorithm
+* Find bug in alphabeta
+* Make main window resizable
+* Add help system
+
+
+For future versions:
+
+* P2p network game
+* Different AI's with their own bidding schemes
+* Network game for two humans and one bot

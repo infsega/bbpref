@@ -1,0 +1,61 @@
+Contents:
+  1. Prerequisites
+  3. QMake build
+  4. CMake build
+
+1. Prerequisites:
+
+You'll need to have these libraries (with equivalent devel versions) to build OpenPref:
+	QtCore4
+	QtGui4
+
+Also you need set of Qt4 build tools: 
+	moc
+	uic
+	qmake or cmake
+
+
+2. QMake build
+
+To build OpenPref with QMake:
+
+ $ qmake openpref.pro
+ $ make
+
+If both Qt3 and Qt4 are installed, make sure you are using QMake from Qt4! If compilation 
+fails, try qmake-qt4 instead of qmake.
+
+By default, QMake builds executable and translations in top of source tree. It could be
+run without installation. To install OpenPref system-wide, copy executable and translations
+in the same folder, e.g. /usr/local/openpref, or use CMake.
+
+3. CMake build
+
+To build with cmake, you need cmake >= 2.4-patch 8 . You can get cmake at 
+http://www.cmake.org .
+
+There are two ways to build OpenPref with cmake: Inside the source tree or outside.
+Out of source builds have the advantage that you can have builds with different options
+from one source directory.
+
+To build OpenPref out of source:
+
+ $ mkdir build 
+ $ cd build
+ $ cmake ..
+ $ make
+ $ make install
+
+To build OpenPref in the source directory:
+
+ $ cmake .
+ $ make
+ $ make install
+
+To change build options, you can either pass the options on the command line:
+
+ $ cmake .. -DOPTION=value
+
+or use the ccmake frontend which displays all options with their cached values.
+
+ $ ccmake ..
