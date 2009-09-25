@@ -671,13 +671,15 @@ Card *AiPlayer::MiserCatch3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPla
     loadLists(aRightPlayer, aRightPlayer, aMaxCardList);
     Naparnik = &(aLeftPlayer->mCards);
     Side = RightHand;
+	printf("right is enemy");
   } else {
     loadLists(aLeftPlayer, aLeftPlayer, aMaxCardList);
     Naparnik = &(aRightPlayer->mCards);
     Side = LeftHand;
+	printf("left is enemy");
   }
   recalcPassOutTables(aMaxCardList, 23);
-  if (Side == LeftHand) {
+  if (Side == LeftHand) {	// Right player is my friend
     if (mCards.cardsInSuit(aLeftCard->suit())) {
       // у меня есть карты  в данной масти
       //Card *MyMax = mCards.maxInSuit(aLeftCard->suit());
@@ -706,18 +708,17 @@ Card *AiPlayer::MiserCatch3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPla
         if (!cur) cur = mCards.maxFace();
       }
     }
-  } else { // RightHand - my friend
+  } else { // Left player is my friend
     Card *MyMax = mCards.maxInSuit(aLeftCard->suit());
     Card *MyMin = mCards.minInSuit(aLeftCard->suit());
     if (MyMax) {
-      if (*MyMin < *aLeftCard) {
-        // есть возможность всунуть
-        Card *NapMin = Naparnik->lesserInSuit(aLeftCard);
-        if (NapMin) cur = mCards.lesserInSuit(aLeftCard);
-        else cur = MyMax; // кому передать код ?
+	  if ((*MyMin < *aRightCard) && (aLeftCard->suit()==aRightCard->suit())) {
+        // push lesser card than enemy
+        cur = mCards.lesserInSuit(aRightCard);
+		if (!cur) cur = MyMax;
       } else cur = MyMax; // грохать ее самой большой
     } else {
-      // а у меня нет масти
+      // have no car of this suit
       cur = GetMaxCardPere();
       if (!cur) cur = mCards.maxFace();
     }
