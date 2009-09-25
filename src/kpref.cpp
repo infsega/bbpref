@@ -73,7 +73,8 @@ Kpref::Kpref () {
   int x = dims.left()+(dims.width()-w)/2;
   int y = dims.top()+(dims.height()-h)/2;
   move(x, y);
-  setFixedSize(w, h);
+  //setFixedSize(w, h);
+  resize(w, h);
 
  //connect(this, SIGNAL(rejected()), qApp, SLOT(quit()));
 }
@@ -88,6 +89,13 @@ void Kpref::init () {
   HintBar->showMessage(tr("Welcome to OpenPref!"));
   
  // resize(width(),height()+HintBar->height());
+}
+
+void Kpref::resizeEvent(QResizeEvent *event) {
+  mDeskView->DesktopWidth=width();
+  mDeskView->DesktopHeight=height()-HINTBAR_MAX_HEIGHT;
+  mDesktop->draw();
+  forceRepaint();
 }
 
 
