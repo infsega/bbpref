@@ -73,8 +73,8 @@ public slots:
   void slotRules ();
   void slotOptions ();
 
-  void slotAbort ();
-  void slotAbortBid ();
+  void slotQuit ();
+  //void slotAbortBid ();
 
 private:
   void saveOptions ();

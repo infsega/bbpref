@@ -22,6 +22,7 @@
 
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QMessageBox>
 #include <QObject>
 #include <QToolTip>
 
@@ -61,6 +62,16 @@ void FormBid::showEvent (QShowEvent *event) {
   move(x, y);
 }
 
+void FormBid::closeEvent(QCloseEvent *event) {
+	int ret = QMessageBox::question(this, tr("OpenPref"),
+        tr("Do you really want to quit the game?"),
+        QMessageBox::Yes | QMessageBox::Default,
+        QMessageBox::No | QMessageBox::Escape);
+	if (ret == QMessageBox::Yes)
+         exit(0);
+    else
+         event->ignore();
+}
 
 void FormBid::slotPushButtonClick86 () { _GamesType = g86; accept(); }
 void FormBid::slotPushButtonClickPass () { _GamesType = gtPass; accept(); }

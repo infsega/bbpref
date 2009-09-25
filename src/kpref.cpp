@@ -117,7 +117,7 @@ void Kpref::initMenuBar () {
   actOptions = fileMenu->addAction(QIcon(QString(":/pics/tool.png")), tr("&Options..."), this, SLOT(slotOptions()), Qt::CTRL+Qt::Key_P);
   fileMenu->addSeparator();
   //actQuit = fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), qApp, SLOT(quit()), Qt::CTRL+Qt::Key_Q);
-  actQuit = fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), this, SLOT(slotAbort()), Qt::CTRL+Qt::Key_Q);
+  actQuit = fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), this, SLOT(slotQuit()), Qt::CTRL+Qt::Key_Q);
   actFileSave->setEnabled(false);
   actOptions->setEnabled(true);
 
@@ -388,7 +388,7 @@ void Kpref::slotRules () {
   // delete dlg;
 }
 
-void Kpref::slotAbort () {
+void Kpref::slotQuit () {
 	int ret = QMessageBox::question(this, tr("OpenPref"),
         tr("Do you really want to quit the game?"),
         QMessageBox::Yes | QMessageBox::Default,
@@ -397,13 +397,13 @@ void Kpref::slotAbort () {
   		exit(0);	
 }
 
-void Kpref::slotAbortBid () {
-	if (formBid->_GamesType != showpool)
+/*void Kpref::slotAbortBid () {
+	if ((formBid->_GamesType != showpool) && (formBid->_GamesType != zerogame))
 	{
 		slotAbort();
-		formBid->_GamesType = showpool;
+		formBid->_GamesType = zerogame;
 	}
-}
+}*/
 
 void Kpref::MoveImpossible () {
 	HintBar->showMessage(tr("This move is impossible"),1);

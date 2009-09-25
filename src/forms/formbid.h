@@ -23,6 +23,7 @@
 #ifndef FORMBID_H
 #define FORMBID_H
 
+#include <QCloseEvent>
 #include <QDialog>
 #include <QList>
 #include <QPushButton>
@@ -60,6 +61,7 @@ protected:
   QList<QBidButton *> bidButtonList ();
 
   void showEvent (QShowEvent *event);
+  void closeEvent(QCloseEvent *event);
 
 public:
   eGameBid _GamesType;
