@@ -418,6 +418,7 @@ void Kpref::MoveImpossible () {
 }
 
 void Kpref::HintMove () {
+	qDebug() << mDesktop->mBiddingDone;
 	if (mDesktop->mBiddingDone)
 		HintBar->showMessage(tr("Your move"));
 	else

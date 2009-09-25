@@ -1,6 +1,7 @@
 project(openpref)
 
 include(src/src.cmake)
+include(CPack)
 
 CMAKE_MINIMUM_REQUIRED( VERSION 2.4.0 )
 SET( CMAKE_COLOR_MAKEFILE ON )
@@ -20,8 +21,6 @@ ENDIF( APPLE )
 
 if (WIN32)
   add_definitions( -DWIN32 )
-  # add definitions for OB in WIN32
-  add_definitions( -DUSING_OBDLL -DUSING_DYNAMIC_LIBS )
 endif (WIN32)
 
 IF( MINGW )

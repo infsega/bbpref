@@ -25,6 +25,10 @@ To build OpenPref with QMake:
 If both Qt3 and Qt4 are installed, make sure you are using QMake from Qt4! If compilation 
 fails, try qmake-qt4 instead of qmake.
 
+To generate translations:
+
+ $ lrelease openpref.pro
+
 By default, QMake builds executable and translations in top of source tree. It could be
 run without installation. To install OpenPref system-wide, copy executable and translations
 in the same folder, e.g. /usr/local/openpref, or use CMake.
