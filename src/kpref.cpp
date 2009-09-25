@@ -41,8 +41,12 @@
 
 
 #include <stdlib.h>
+#include <string>
+using std::string;
 
 #define HINTBAR_MAX_HEIGHT 22
+
+const char * GenName(string str, string ext);
 
 //char *documentation; //see bottom this file
 Kpref *kpref;
@@ -60,7 +64,7 @@ Kpref::Kpref () {
   loadOptions();
 
   HintBar = new QStatusBar;
-  HintBar->setSizeGripEnabled(false);
+  HintBar->setSizeGripEnabled(true);
   setStatusBar(HintBar);
   HintBar->setFixedHeight(HINTBAR_MAX_HEIGHT);
   
@@ -158,7 +162,10 @@ void Kpref::slotFileOpen () {
 void Kpref::slotFileSave () {
   if (mDesktop) {
     QString fn = QFileDialog::getSaveFileName(this, "Select file to save the current game", "", "*.prf");
-    if (!fn.isEmpty()) mDesktop->saveGame(fn);
+    if (!fn.isEmpty()) {
+		fn = GenName(fn.toStdString(), "prf");
+		mDesktop->saveGame(fn);
+	}
   }
 }
 
@@ -434,4 +441,17 @@ bool Kpref::WhistType () {
 		return false;
 	else
 		return true;
+}
+
+const char * GenName(string str, string ext)
+{
+	size_t dot_pos=str.rfind('.');
+	if (dot_pos!=string::npos)
+		str.replace(dot_pos+1,str.length()-dot_pos,ext);
+	else
+	{
+		str += ".";
+		str += ext;
+	}
+	return str.c_str();
 }
