@@ -418,7 +418,10 @@ void Kpref::MoveImpossible () {
 }
 
 void Kpref::HintMove () {
-	HintBar->showMessage(tr("Your move"));
+	if (mDesktop->mBiddingDone)
+		HintBar->showMessage(tr("Your move"));
+	else
+		HintBar->showMessage(tr("Select two cards to drop"));
 }
 
 bool Kpref::WhistType () {

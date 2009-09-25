@@ -44,6 +44,15 @@
 #include "human.h"
 
 bool Closed_Whist = false;
+bool gameRunning = false;
+
+/*enum GameStage {
+	Bidding,
+	Drop,
+	Game
+}
+
+GameStage gameStage = Bidding;*/
 
 typedef struct {
   int mount, pool, leftWh, rightWh;
@@ -476,6 +485,25 @@ void PrefDesktop::drawPool () {
 void PrefDesktop::draw (bool emitSignal) {
   if (!mDeskView) return;
   mDeskView->ClearScreen();
+
+  if (gameRunning) {
+	// "I move" icon
+    switch (nCurrentStart.nValue) {
+      case 1:
+        iMoveX = mDeskView->DesktopWidth/2-15;
+        iMoveY = mDeskView->DesktopHeight-mDeskView->yBorder-CARDHEIGHT-40;
+        break;
+      case 2:
+        iMoveX = mDeskView->xBorder+20;
+        iMoveY = mDeskView->yBorder+CARDHEIGHT+40;
+        break;
+      case 3:
+        iMoveX = mDeskView->DesktopWidth-mDeskView->xBorder-20;
+        iMoveY = mDeskView->yBorder+CARDHEIGHT+40;
+        break;
+      default: iMoveX = iMoveY = -1; break;
+    }
+  }
   // repaint players
   for (int f = 1; f <= 3; f++) {
     Player *plr = player(f);
@@ -555,6 +583,9 @@ void PrefDesktop::runGame () {
   //Card *mFirstCard, *mSecondCard, *mThirdCard;
   int npasscounter;
 
+  gameRunning = true;
+  mBiddingDone = false;
+
   //mDeskView->ClearScreen();
   kpref->HintBar->clearMessage();
   // while !end of pool
@@ -630,22 +661,6 @@ void PrefDesktop::runGame () {
 			player(i)->setCurrentStart(false);
 	}
 
-	// "I move" icon
-    switch (nCurrentStart.nValue) {
-      case 1:
-        iMoveX = mDeskView->DesktopWidth/2-15;
-        iMoveY = mDeskView->DesktopHeight-mDeskView->yBorder-CARDHEIGHT-40;
-        break;
-      case 2:
-        iMoveX = mDeskView->xBorder+20;
-        iMoveY = mDeskView->yBorder+CARDHEIGHT+40;
-        break;
-      case 3:
-        iMoveX = mDeskView->DesktopWidth-mDeskView->xBorder-20;
-        iMoveY = mDeskView->yBorder+CARDHEIGHT+40;
-        break;
-      default: iMoveX = iMoveY = -1; break;
-    }
     draw();
     {
       CardList tmpDeck; int cc = succPlayer(nCurrentStart), tPos = 0, tNo = 0;
@@ -836,7 +851,7 @@ void PrefDesktop::runGame () {
           }		  	
           tmpPlayersCounter.nValue = i;
 
-          // ставка
+          // bid
 		  QString message;
 		if (gCurrentGame == whist) message = tr("whist");
 		else if (gCurrentGame == gtPass) message = tr("pass");
@@ -1004,7 +1019,8 @@ void PrefDesktop::runGame () {
     player(3)->setMessage("");
     draw(false);
 
-    // партия (10 ходов)
+    // game (10 moves)
+	mBiddingDone = true;
     nCurrentMove = nCurrentStart;
     for (int i = 1; i <= 10; i++) {
       Player *tmpg;
@@ -1146,4 +1162,6 @@ LabelRecordOnPaper:
   drawPool();
   emitRepaint();
   emit gameOver();
+
+  gameRunning = false;
 }

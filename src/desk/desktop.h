@@ -71,6 +71,7 @@ public:
 
   bool mShowPool;
   bool mOnDeskClosed;
+  bool mBiddingDone;
 
 private:
   void internalInit ();
