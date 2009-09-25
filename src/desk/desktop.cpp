@@ -744,7 +744,7 @@ void PrefDesktop::runGame () {
 		else if (bb == g85) message = tr("8 no trump");
 		else if (bb == g95) message = tr("9 no trump");
 		else if (bb == g105) message = tr("10 no trump");
-		else if (gCurrentGame == g86) message = tr("Misere");
+		else if (bb == g86) message = tr("Misere");
 		else message = sGameName(bb);  
         plr->setMessage(message);
         //bids4win[plrCounter] = playerBids[curBidIdx+1];
@@ -860,6 +860,7 @@ void PrefDesktop::runGame () {
 		else if (gCurrentGame == g85) message = tr("8 no trump");
 		else if (gCurrentGame == g95) message = tr("9 no trump");
 		else if (gCurrentGame == g105) message = tr("10 no trump");
+		else if (gCurrentGame == g86) message = tr("Misere");
 		else if (gCurrentGame == withoutThree) message = tr("without three");
 		else message = sGameName(gCurrentGame);  
           player(tmpPlayersCounter)->setMessage(message);
@@ -873,7 +874,6 @@ void PrefDesktop::runGame () {
 		else {
           // pass or whist?
           ++tmpPlayersCounter;
-          player(tmpPlayersCounter)->setMessage(tr("thinking..."));
           PassOrVistPlayers = player(tmpPlayersCounter);
           PassOrVistPlayers->setMyGame(undefined);
           draw(false);
@@ -881,32 +881,43 @@ void PrefDesktop::runGame () {
           // choice of the first player
           int firstPW = tmpPlayersCounter.nValue;
           mPlayerHi = firstPW;
-          if (firstPW != 1) mDeskView->mySleep(2);
+		  if (gCurrentGame != g86) {
+			player(tmpPlayersCounter)->setMessage(tr("thinking..."));
+          	if (firstPW != 1) mDeskView->mySleep(2);
+		  }
           //PassOrVist = PassOrVistPlayers->moveFinalBid(gCurrentGame, gtPass, 0);
 		  PassOrVist = PassOrVistPlayers->moveFinalBid(gCurrentGame, gtPass, nPassCounter);
           nPassOrVist = tmpPlayersCounter.nValue;
           if (PassOrVistPlayers->myGame() == gtPass) {
             nPassCounter++;
             player(tmpPlayersCounter)->setMessage(tr("pass"));
-          } else player(tmpPlayersCounter)->setMessage(tr("whist"));
+          } else if (PassOrVistPlayers->myGame() == g86catch)
+		    player(tmpPlayersCounter)->setMessage("");
+		  else
+		    player(tmpPlayersCounter)->setMessage(tr("whist"));
           //bids4win[1] = PassOrVistPlayers->myGame();
 
           // choice of the second player
           ++tmpPlayersCounter;
-          player(tmpPlayersCounter)->setMessage(tr("thinking..."));
           int nextPW = tmpPlayersCounter.nValue;
           mPlayerHi = nextPW;
 		  draw(false);
           PassOrVistPlayers = player(tmpPlayersCounter);
           PassOrVistPlayers->setMyGame(undefined);
-		  if (nextPW != 1) mDeskView->mySleep(2);
+		  if (gCurrentGame != g86) {
+			player(tmpPlayersCounter)->setMessage(tr("thinking..."));
+		  	if (nextPW != 1) mDeskView->mySleep(2);
+		  }
           //PassOrVistPlayers->moveFinalBid(gCurrentGame, PassOrVist, nPassOrVist);
 		  //qDebug() << nPassCounter;
 		  PassOrVistPlayers->moveFinalBid(gCurrentGame, PassOrVist, nPassCounter);
           if (PassOrVistPlayers->myGame() == gtPass) {
             nPassCounter++;
             player(tmpPlayersCounter)->setMessage(tr("pass"));
-          } else player(tmpPlayersCounter)->setMessage(tr("whist"));
+          } else if (PassOrVistPlayers->myGame() == g86catch)
+		    player(tmpPlayersCounter)->setMessage("");
+		  else
+		    player(tmpPlayersCounter)->setMessage(tr("whist"));
           //bids4win[2] = PassOrVistPlayers->myGame();
           mPlayerHi = 0;
 
