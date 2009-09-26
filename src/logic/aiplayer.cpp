@@ -1584,6 +1584,8 @@ void AiPlayer::makestatfill (int nCards, int maxmin) {
 */
 
 bool AiPlayer::chooseClosedWhist () {
-	qDebug() << "AI chooseClosedWhist\n";
-	return false;
+	if (qrand()%4 == 0)
+		return true;
+	else
+		return false;
 }
