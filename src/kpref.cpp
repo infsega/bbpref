@@ -77,6 +77,11 @@ Kpref::Kpref () {
   int x = dims.left()+(dims.width()-w)/2;
   int y = dims.top()+(dims.height()-h)/2;
   move(x, y);
+  setMinimumWidth(CARDWIDTH*14.42);
+  if (CARDHEIGHT*6 > 570)
+  	setMinimumHeight(CARDHEIGHT*6);
+  else
+  	setMinimumHeight(570);
   //setFixedSize(w, h);
   resize(w, h);
 
@@ -406,6 +411,11 @@ void Kpref::slotOptions () {
 void Kpref::slotDeckChanged () {
 	mDeskView->freeCards();
 	mDeskView->loadCards();
+	setMinimumWidth(CARDWIDTH*14.42);
+  	if (CARDHEIGHT*6 > 570)
+  		setMinimumHeight(CARDHEIGHT*6);
+  	else
+  		setMinimumHeight(570);
 	mDesktop->draw();
 	forceRepaint();
 }
