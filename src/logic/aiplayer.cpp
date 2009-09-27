@@ -527,9 +527,22 @@ Card *AiPlayer::MiserCatch1 (Player *aLeftPlayer, Player *aRightPlayer) {
     Side = LeftHand;
   }
   recalcPassOutTables(aMaxCardList, 1);
-  //if (Side == LeftHand) {
-  // 1. Пытаемся всунуть
-  for (int m = 1; m <= 4; m++) {
+
+  // Randomization
+  int suit[4];
+  int s;
+  for (int i=0; i<4; i++) {
+	s=0;
+	while (s==0) {
+		s = qrand()%4+1;
+		for (int j=0; j<i; j++)
+			if (s==suit[j]) s=0;
+	}
+	suit[i]=s;
+  }  
+  
+  for (int i = 0; i < 4; i++) {
+	int m = suit[i];	// Random order of suits
     Card *EnemyMin = aMaxCardList.minInSuit(m);
     Card *NaparnikMin = Naparnik->minInSuit(m);
     Card *MyMin = mCards.minInSuit(m);
@@ -574,14 +587,17 @@ Card *AiPlayer::MiserCatch1 (Player *aLeftPlayer, Player *aRightPlayer) {
     }
   }
 
-  //2 отгребаем свое
-  if (!cur) cur = GetMaxCardWithOutPere();
-  if (Side == LeftHand) {
-    // под мизирящегося надо заходить по другому !!!
+  
+  if ((Side == LeftHand) && (!cur)) 
+	// if we didn't choose anything wise, move lesser card
+	cur = mCards.minFace();
+  else {
+  	//2 отгребаем свое
+  	if (!cur) cur = GetMaxCardWithOutPere();	  
+  	// 3 пытаемс
+  	if (!cur) cur = GetMaxCardWithOutPere();
+  	if (!cur) cur = mCards.minFace();
   }
-  // 3 пытаемс
-  if (!cur) cur = GetMaxCardWithOutPere();
-  if (!cur) cur = mCards.minFace();
 //  } else { //Side == LeftHand
 //  }
 badlabel:
@@ -607,7 +623,7 @@ Card *AiPlayer::MiserCatch2 (Card *aRightCard, Player *aLeftPlayer, Player *aRig
   }
   recalcPassOutTables(aMaxCardList, 23);
   if (Side == LeftHand) {
-    // ход под меня, противник справа
+    // enemy is left
     if (mCards.cardsInSuit(aRightCard->suit())) {
       // у меня есть карты в данной масти
       Card *MyMax = mCards.maxInSuit(aRightCard->suit());
@@ -643,10 +659,14 @@ Card *AiPlayer::MiserCatch2 (Card *aRightCard, Player *aLeftPlayer, Player *aRig
     Card *MyMin = mCards.minInSuit(aRightCard->suit());
     if (MyMax) {
       if (*MyMin < *aRightCard) {
-        //есть возможность всунуть
+        // if we both have lesser card in suit, or friend has nothing in
+		// this suit, enemy will take the trick
         Card *NapMin = Naparnik->lesserInSuit(aRightCard);
-        if (NapMin) cur = mCards.lesserInSuit(aRightCard);
-        else cur = MyMax; // кому передать код ?
+		Card *NapMax = Naparnik->greaterInSuit(aRightCard);
+        if (NapMin || !NapMax)
+			cur = mCards.lesserInSuit(aRightCard);
+        else
+			cur = MyMax; // кому передать код ?
       } else cur = MyMax; // грохать ее самой большой
     } else {
       // а у меня нет масти
