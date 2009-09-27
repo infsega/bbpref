@@ -143,7 +143,7 @@ void Player::getLeftTop (int *left, int *top) {
   switch (mPlayerNo) {
     case 1:
       *left = (mDeskView->DesktopWidth-(mDeskView->DesktopWidth/2-2*mDeskView->xBorder))/2;
-      *top = mDeskView->DesktopHeight-(mDeskView->yBorder)-mDeskView->CardHeight;//-10;
+      *top = mDeskView->DesktopHeight-(mDeskView->yBorder)-CARDHEIGHT;//mDeskView->CardHeight;//-10;
       break;
     case 2:
       *left = mDeskView->xBorder;
