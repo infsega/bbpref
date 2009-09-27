@@ -118,6 +118,9 @@ public:
 
   void emitRepaint ();
 
+  bool loadCards ();
+  void freeCards ();
+
 signals:
   void deskChanged ();
 
@@ -147,8 +150,6 @@ private:
   int bidBmpX, bidBmpY;
 
 private:
-  bool loadCards ();
-  void freeCards ();
   QImage *GetImgByName (const char *name);
 
 private:

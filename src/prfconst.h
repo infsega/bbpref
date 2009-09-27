@@ -32,13 +32,19 @@ typedef QList<int>  QIntList;
 
 //  choose card size:
 // standard deck
+/*
 #define CARDWIDTH    71
 #define CARDHEIGHT   96
+*/
 /*
 // PrefClub deck
 #define CARDWIDTH    56
 #define CARDHEIGHT   67
 */
+
+extern int CARDWIDTH;
+extern int CARDHEIGHT;
+
 #define FONTSIZE 10
 
 #define SUIT_OFFSET         22

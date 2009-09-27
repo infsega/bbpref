@@ -26,6 +26,8 @@
 #include "prfconst.h"
 #include "card.h"
 
+
+
 bool optStalingrad = true;
 bool opt10Whist = false;
 bool optWhistGreedy = true;
@@ -47,8 +49,10 @@ bool optWithoutThree = true;
 
 bool optDealAnim = true;
 bool optTakeAnim = true;
-bool optPrefClub = true;
+bool optPrefClub = false;
 
+int CARDWIDTH = 71;
+int CARDHEIGHT = 96;
 
 int trumpSuit (void) {
   return gCurrentGame-(gCurrentGame/10)*10;

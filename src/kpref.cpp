@@ -96,6 +96,7 @@ void Kpref::init () {
 }
 
 void Kpref::resizeEvent(QResizeEvent *event) {
+  Q_UNUSED(event)
   mDeskView->DesktopWidth=width();
   mDeskView->DesktopHeight=height()-HINTBAR_MAX_HEIGHT;
   mDesktop->draw();
@@ -375,15 +376,19 @@ void Kpref::loadOptions () {
   optWithoutThree = st.value("without3", true).toBool();
   optDebugHands = st.value("debughand", false).toBool();
   optAggPass = st.value("aggpass", false).toBool();
-    optPrefClub = st.value("prefclub", true).toBool();
+  optPrefClub = st.value("prefclub", true).toBool();
 }
 
 
 void Kpref::slotOptions () {
+  bool oldPrefClub = optPrefClub;
+  
   OptDialog *dlg = new OptDialog;
+  //connect(dlg->cbPrefClub, SIGNAL(clicked()), this, SLOT(slotDeckChanged()));
   dlg->cbAnimDeal->setChecked(optDealAnim);
   dlg->cbAnimTake->setChecked(optTakeAnim);
   dlg->cbDebugHands->setChecked(optDebugHands);
+  dlg->cbPrefClub->setChecked(optPrefClub);
   
   if (dlg->exec() == QDialog::Accepted) {
     optDealAnim = dlg->cbAnimDeal->isChecked();
@@ -393,6 +398,16 @@ void Kpref::slotOptions () {
     saveOptions();
   }
   delete dlg;
+
+  if (optPrefClub != oldPrefClub)
+  	slotDeckChanged();
+}
+
+void Kpref::slotDeckChanged () {
+	mDeskView->freeCards();
+	mDeskView->loadCards();
+	mDesktop->draw();
+	forceRepaint();
 }
 
 void Kpref::slotRules () {

@@ -72,6 +72,7 @@ public slots:
   void slotHelpAbout ();
   void slotRules ();
   void slotOptions ();
+  void slotDeckChanged ();
 
   void slotQuit ();
   //void slotAbortBid ();

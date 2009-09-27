@@ -66,11 +66,22 @@ bool DeskView::loadCards () {
   //qDebug() << SLOT(slotPushButtonClick95());
   for (int f = 0; f < 106; f++) bidIcons[f] = 0;
   // load cards from resources
+  QString deckPath;
+  if (optPrefClub) {
+  	deckPath = "prefclub/";
+	CARDWIDTH = 56;
+	CARDHEIGHT = 67;
+  }
+  else {
+  	deckPath = "classic/";
+	CARDWIDTH = 71;
+	CARDHEIGHT = 96;
+  }	
   for (int face = 7; face <= 14; face++) {
     for (int suit = 1; suit <= 4; suit++) {
       QString fname, resname;
       resname.sprintf("%i%i", face, suit);
-      fname.sprintf(":/pics/cards/%i%i.png", face, suit);
+      fname.sprintf(QString(":/pics/cards/"+deckPath+"%i%i.png").toAscii(), face, suit);
       cardI[resname] = new QImage(fname);
       // build highlighted image
       QImage *im = new QImage(fname);
@@ -80,8 +91,8 @@ bool DeskView::loadCards () {
     }
   }
   // load cardback
-  cardI["1000"] = new QImage(QString(":/pics/cards/1000.png"));
-  cardI["empty"] = new QImage(QString(":/pics/cards/empty.png"));
+  cardI["1000"] = new QImage(QString(":/pics/cards/"+deckPath+"1000.png"));
+  cardI["empty"] = new QImage(QString(":/pics/cards/"+deckPath+"empty.png"));
   // load bid icons
   for (int f = 6; f <= 10; f++) {
     for (int s = 1; s <= 5; s++) {
