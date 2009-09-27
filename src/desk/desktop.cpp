@@ -486,7 +486,9 @@ void PrefDesktop::draw (bool emitSignal) {
   if (!mDeskView) return;
   mDeskView->ClearScreen();
 
-  if (gameRunning) {
+  if (!gameRunning)
+  	return;
+	
 	// "I move" icon
     switch (nCurrentStart.nValue) {
       case 1:
@@ -503,7 +505,7 @@ void PrefDesktop::draw (bool emitSignal) {
         break;
       default: iMoveX = iMoveY = -1; break;
     }
-  }
+  
   // repaint players
   for (int f = 1; f <= 3; f++) {
     Player *plr = player(f);
