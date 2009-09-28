@@ -410,7 +410,7 @@ void DeskView::ClearBox (int x1, int y1, int x2, int y2) {
   if (!mDeskBmp) return;
   QPainter p(mDeskBmp);
   //QBrush brush(qRgb(0, 128, 0));
-  QBrush brush(QImage("pics/cloth.png"));
+  QBrush brush(QImage(":/pics/cloth.png"));
   QRect NewRect = QRect(x1, y1, x2, y2);
   p.fillRect(NewRect, brush);
   p.end();
