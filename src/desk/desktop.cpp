@@ -586,8 +586,6 @@ void PrefDesktop::runGame () {
   int npasscounter;
 
   gameRunning = true;
-  mBiddingDone = false;
-
   //mDeskView->ClearScreen();
   kpref->HintBar->clearMessage();
   // while !end of pool
@@ -597,6 +595,7 @@ void PrefDesktop::runGame () {
            player(3)->mScore.pool() >= optMaxPool)) {
     WrapCounter plrCounter(1, 1, 3);
     mPlayingRound = false;
+	mBiddingDone = false;
     int nPl;
     int nPassCounter = 0; // number of passes
     playerBids[3] = playerBids[2] = playerBids[1] = playerBids[0] = undefined;
@@ -878,7 +877,7 @@ void PrefDesktop::runGame () {
           ++tmpPlayersCounter;
           PassOrVistPlayers = player(tmpPlayersCounter);
           PassOrVistPlayers->setMyGame(undefined);
-          draw(false);
+          
 
           // choice of the first player
           int firstPW = tmpPlayersCounter.nValue;
@@ -886,9 +885,10 @@ void PrefDesktop::runGame () {
 		  if (gCurrentGame != g86) {
 			player(tmpPlayersCounter)->setMessage(tr("thinking..."));
           	if (firstPW != 1) mDeskView->mySleep(2);
+			draw(false);
 		  }
           //PassOrVist = PassOrVistPlayers->moveFinalBid(gCurrentGame, gtPass, 0);
-		  PassOrVist = PassOrVistPlayers->moveFinalBid(gCurrentGame, gtPass, nPassCounter);
+		  PassOrVist = PassOrVistPlayers->moveFinalBid(gCurrentGame, whist, nPassCounter);
           nPassOrVist = tmpPlayersCounter.nValue;
           if (PassOrVistPlayers->myGame() == gtPass) {
             nPassCounter++;
@@ -897,6 +897,7 @@ void PrefDesktop::runGame () {
 		    player(tmpPlayersCounter)->setMessage("");
 		  else
 		    player(tmpPlayersCounter)->setMessage(tr("whist"));
+		  draw(false);
           //bids4win[1] = PassOrVistPlayers->myGame();
 
           // choice of the second player
@@ -908,7 +909,8 @@ void PrefDesktop::runGame () {
           PassOrVistPlayers->setMyGame(undefined);
 		  if (gCurrentGame != g86) {
 			player(tmpPlayersCounter)->setMessage(tr("thinking..."));
-		  	if (nextPW != 1) mDeskView->mySleep(2);
+			draw(false);
+		  	if (nextPW != 1) mDeskView->mySleep(2);			
 		  }
           //PassOrVistPlayers->moveFinalBid(gCurrentGame, PassOrVist, nPassOrVist);
 		  //qDebug() << nPassCounter;
@@ -918,9 +920,35 @@ void PrefDesktop::runGame () {
             player(tmpPlayersCounter)->setMessage(tr("pass"));
           } else if (PassOrVistPlayers->myGame() == g86catch)
 		    player(tmpPlayersCounter)->setMessage("");
+		  else if (PassOrVistPlayers->myGame() == halfwhist) 
+		    player(tmpPlayersCounter)->setMessage(tr("halfwhist"));
 		  else
 		    player(tmpPlayersCounter)->setMessage(tr("whist"));
+		  draw(false);
           //bids4win[2] = PassOrVistPlayers->myGame();
+
+		  // if halfwhist, choice of the first player again
+		  if (player(nextPW)->myGame() == halfwhist) {
+			--tmpPlayersCounter;
+		  	mPlayerHi = firstPW;
+			PassOrVistPlayers = player(firstPW);
+			PassOrVistPlayers->setMessage(tr("thinking..."));
+			draw(false);			
+          	if (firstPW != 1) mDeskView->mySleep(2);
+		  	PassOrVist = PassOrVistPlayers->moveFinalBid(gCurrentGame, gtPass, 0);	// no more halfwhists!
+          	//nPassOrVist = tmpPlayersCounter.nValue;
+          	if (PassOrVistPlayers->myGame() == gtPass) {
+            	//nPassCounter++;
+            	player(firstPW)->setMessage(tr("pass"));
+          	}
+		  	else {
+		    	player(firstPW)->setMessage(tr("whist"));
+				//wasHalfWhist = false;
+				player(nextPW)->setMyGame(gtPass);
+			}
+			draw(false);
+		  }
+		  
           mPlayerHi = 0;
 
           // choice made
@@ -939,7 +967,18 @@ void PrefDesktop::runGame () {
           gnS += QString::number(mPlayerActive);
           dlogS(gnS);
           //!DUMP OTHERS!
-			
+
+		  if (player(nextPW)->myGame() == halfwhist) {
+            tmpg->gotPassPassTricks(gameTricks(tmpg->myGame()));
+			int n = gameWhists(tmpg->myGame());
+			if (n > 1){
+				player(nextPW)->gotPassPassTricks(n/2);
+				dlogf("halfwhist!\n");
+            	goto LabelRecordOnPaper;
+			}
+				
+            
+		  }
           if (nPassCounter == 2) {
             // two players passed
             tmpg->gotPassPassTricks(gameTricks(tmpg->myGame()));

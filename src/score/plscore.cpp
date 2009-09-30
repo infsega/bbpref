@@ -158,6 +158,11 @@ int ScoreBoard::recordScores (
     if (score) dList->append(score);
   }
 
+  if (aMyType == halfwhist && aGamerType != g86) {
+	  score = nGamePrice*nMyVz+pnCurrent;
+	  if (score) dList->append(score);
+  }
+
   //-------------------------------------------------------------------------
   if (aMyType == whist && aGamerType != g86)  {
     if (nGameCard-nGamerVz > 0) {

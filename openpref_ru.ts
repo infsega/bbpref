@@ -45,6 +45,14 @@
         <source>no trump</source>
         <translation>без козыря</translation>
     </message>
+    <message>
+        <source>OpenPref</source>
+        <translation>OpenPref</translation>
+    </message>
+    <message>
+        <source>Do you really want to quit the game?</source>
+        <translation>Вы действительно хотите покинуть игру?</translation>
+    </message>
 </context>
 <context>
     <name>HelpBrowser</name>
@@ -162,6 +170,10 @@ See http://en.wikipedia.org/wiki/Preferans</source>
 &lt;br/&gt;Copyright (c) 2000-2009, OpenPref Developers:&lt;br/&gt;I.Azarniy, A.V.Fedotov, Ketmar Dark, K.Tokarev&lt;br/&gt;&lt;br/&gt;OpenPref is free software; you can redistribute it and/or modify&lt;br/&gt;it under the terms of the GNU General Public License (see file&lt;br/&gt;COPYING or &lt;a href=&quot;http://www.gnu.org/licenses&quot;&gt;http://www.gnu.org/licenses&lt;/a&gt;)</source>
         <translation>&lt;h2&gt;OpenPref 0.1.3&lt;/h2&gt;Больше информации на сайте &lt;br/&gt;&lt;a href=&quot;http://sourceforge.net/projects/openpref&quot;&gt;http://sourceforge.net/projects/openpref&lt;/a&gt;&lt;br/&gt;Получите последние исходники на&lt;br/&gt;&lt;a href=&quot;http://gitorious.org/openprefqt4&quot;&gt;http://gitorious.org/openprefqt4&lt;/a&gt;&lt;br/&gt;(new line)
 &lt;br/&gt;Copyright (c) 2000-2009, Разработчики OpenPref:&lt;br/&gt;I.Azarniy, A.V.Fedotov, Ketmar Dark, K.Tokarev&lt;br/&gt;&lt;br/&gt;OpenPref - это свободное программное обеспечение; вы можете распространять и/или изменять&lt;br/&gt;его согласно GNU General Public License (смотрите файл&lt;br/&gt;COPYING или &lt;a href=&quot;http://www.gnu.org/licenses&quot;&gt;http://www.gnu.org/licenses&lt;/a&gt;)</translation>
+    </message>
+    <message>
+        <source>Select two cards to drop</source>
+        <translation>Снесите две карты</translation>
     </message>
 </context>
 <context>
@@ -439,6 +451,10 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     <message>
         <source>open</source>
         <translation>в открытую</translation>
+    </message>
+    <message>
+        <source>halfwhist</source>
+        <translation>полвиста</translation>
     </message>
 </context>
 </TS>

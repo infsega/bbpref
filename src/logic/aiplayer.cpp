@@ -1242,17 +1242,35 @@ Card *AiPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, P
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// после получения игроком прикупа - пасс или вист
+// Pass or Whist or Halfwhist
 eGameBid AiPlayer::moveFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerPass) {
   Q_UNUSED(nGamerPass)
   eGameBid Answer;
   eGameBid MyMaxGame = moveCalcDrop();
-
   int vz = MyMaxGame/10;
-  Answer = (HaveAWhist != whist && vz >= gameWhistsMin(MaxGame)) ? whist : gtPass ;
-  if (HaveAWhist == gtPass && vz < gameWhistsMin(MaxGame)) Answer = gtPass;
-  if (optStalingrad && MaxGame == g61) Answer = whist; //STALINGRAD !!!
-  if (MaxGame == g86) Answer = g86catch; // miser
+
+  if (MaxGame == g86) {
+  	Answer = g86catch; // Misere
+	goto myGame;
+  }
+  if (optStalingrad && MaxGame == g61) {
+  	Answer = whist; // Stalingrad  
+	goto myGame;
+  }  
+
+  
+  if (HaveAWhist == gtPass)
+	  Answer = (vz > gameWhistsMin(MaxGame)) ? whist : gtPass;
+  else
+  	  Answer = (vz > gameWhists(MaxGame)) ? whist : gtPass;
+      
+  //Answer = (HaveAWhist != whist && vz >= gameWhistsMin(MaxGame)) ? whist : gtPass ;
+  //if (HaveAWhist == gtPass && vz < gameWhistsMin(MaxGame)) Answer = gtPass;
+
+myGame:  
+  if ((Answer == gtPass) && (nGamerPass == 1))
+  	Answer = halfwhist;
+	
   mMyGame = Answer;
   return Answer;
 }
