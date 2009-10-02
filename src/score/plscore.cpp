@@ -79,6 +79,12 @@ void ScoreBoard::mountainDown (int delta) {
   }
 }
 
+void ScoreBoard::mountainAmnesty (int delta) {
+	mMountain.last() -= delta;
+	if (mMountain.last() == 0)
+		mMountain.removeLast();
+}
+
 
 void ScoreBoard::mountainUp (int delta) {
   int score = mountain();

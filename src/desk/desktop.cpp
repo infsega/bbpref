@@ -163,13 +163,13 @@ void PrefDesktop::closePool () {
     R[i].pool = G->mScore.pool();
     R[i].leftWh = G->mScore.leftWhists();
     R[i].rightWh = G->mScore.rightWhists();
-    if (R[i].mount < mm) mm = R[i].mount;
-    if (R[i].pool < mb) mb = R[i].pool;
+    //if (R[i].mount < mm) mm = R[i].mount;
+    //if (R[i].pool < mb) mb = R[i].pool;
   }
   // Amnistiya gori
-  for (i = 1; i <= 3; i++) R[i].mount -= mm;
+  //for (i = 1; i <= 3; i++) R[i].mount -= mm;
   // Amnistiya puli
-  for (i = 1; i <= 3; i++) R[i].pool -= mb;
+  //for (i = 1; i <= 3; i++) R[i].pool -= mb;
   // svou pulu sebe v visti
   for (i = 1; i <= 3;i++) {
     //R[i].leftWh += R[i].pool*10/2;
@@ -921,7 +921,7 @@ void PrefDesktop::runGame () {
           } else if (PassOrVistPlayers->myGame() == g86catch)
 		    player(tmpPlayersCounter)->setMessage("");
 		  else if (PassOrVistPlayers->myGame() == halfwhist) 
-		    player(tmpPlayersCounter)->setMessage(tr("halfwhist"));
+		    player(tmpPlayersCounter)->setMessage(tr("half of whist"));
 		  else
 		    player(tmpPlayersCounter)->setMessage(tr("whist"));
 		  draw(false);
@@ -1150,6 +1150,7 @@ void PrefDesktop::runGame () {
       draw(false);
     }
 LabelRecordOnPaper:
+				
     mPlayingRound = false;
     ++nCurrentStart;
     // записи по сдаче
@@ -1179,7 +1180,20 @@ LabelRecordOnPaper:
         }
       }
     }
-    closePool();
+	
+	//amnesty for pass out (don't matter for score)
+	if (gCurrentGame == raspass) {
+		int mm=10;
+		int m=0;
+		for (int i=1; i<=3; i++) {			
+			m = player(i)->tricksTaken();
+			if (m<mm) mm = m;
+		}
+		if (mm !=0) 
+			for (int i=1; i<=3; i++) 				
+				player(i)->mScore.mountainAmnesty(mm);
+	}
+	closePool();
     // если сетевая игра -- передаем на сервер результаты круга и кто след. заходит
 
     // после игры -- перевернуть карты и показать их

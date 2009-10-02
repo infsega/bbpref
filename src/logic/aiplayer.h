@@ -48,7 +48,7 @@ public:
   virtual void clear ();
 
 protected:
-  int checkForMisere ();
+  bool checkForMisere ();
   eGameBid moveCalcDrop (); //для расчета сноса
   tSuitProbs countGameTricks (eSuit, int a23);
   tSuitProbs countTricks (eSuit, CardList &, int a23);

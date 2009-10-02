@@ -43,6 +43,7 @@ public:
   int poolAdd (int delta);
   void whistsAdd (int index, int myNumber, int delta);
   void mountainDown (int delta);
+  void mountainAmnesty (int delta);
   void mountainUp (int delta);
 
   QString poolStr (int maxItems=-1) const;

@@ -164,7 +164,7 @@ tSuitProbs AiPlayer::countPassTricks (eSuit Mast, CardList &aMaxCardList) {
 }
 
 
-int AiPlayer::checkForMisere () {
+bool AiPlayer::checkForMisere () {
   int cur = 0;
   for (int Mast = SuitSpades; Mast <= SuitHearts; Mast++) {
     if (mCards.exists(7, Mast) && (mCards.exists(9, Mast) || mCards.exists(8, Mast)) &&
@@ -172,8 +172,8 @@ int AiPlayer::checkForMisere () {
       cur++;
     }
   }
-  if (cur == 4) return 1;
-  return 0;
+  if (cur == 4) return true;
+  return false;
 }
 
 
@@ -1145,7 +1145,7 @@ Card *AiPlayer::MyPass2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPl
   /////////////////////////////////////////////////////////
   if (tmpGamesType == raspass || tmpGamesType == g86) {
     // распасы/мизер
-    cur = mCards.maxInSuit(mast); // !!!!!!!!!!!! здеся обышка
+    cur = mCards.maxInSuit(mast); 
     if (!cur) {
       // Нет Масти
       // во шара !!! Льем мах в масти где есть 100% взятки
