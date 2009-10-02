@@ -454,6 +454,10 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     </message>
     <message>
         <source>halfwhist</source>
+        <translation type="obsolete">полвиста</translation>
+    </message>
+    <message>
+        <source>half of whist</source>
         <translation>полвиста</translation>
     </message>
 </context>
