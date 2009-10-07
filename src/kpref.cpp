@@ -314,7 +314,10 @@ void Kpref::paintEvent (QPaintEvent *event) {
 }
 
 void Kpref::closeEvent(QCloseEvent *event) {
-	 int ret = QMessageBox::question(this, tr("OpenPref"),
+	 int ret;
+	if (!mDesktop->mGameRunning)
+		exit(0);	 
+	 ret = QMessageBox::question(this, tr("OpenPref"),
         tr("Do you really want to quit the game?"),
         QMessageBox::Yes | QMessageBox::Default,
         QMessageBox::No | QMessageBox::Escape);
@@ -427,7 +430,10 @@ void Kpref::slotRules () {
 }
 
 void Kpref::slotQuit () {
-	int ret = QMessageBox::question(this, tr("OpenPref"),
+	int ret;
+	if (!mDesktop->mGameRunning)
+		exit(0);
+	ret = QMessageBox::question(this, tr("OpenPref"),
         tr("Do you really want to quit the game?"),
         QMessageBox::Yes | QMessageBox::Default,
         QMessageBox::No | QMessageBox::Escape);

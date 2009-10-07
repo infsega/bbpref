@@ -44,7 +44,6 @@
 #include "human.h"
 
 bool Closed_Whist = false;
-bool gameRunning = false;
 
 /*enum GameStage {
 	Bidding,
@@ -130,6 +129,7 @@ void PrefDesktop::internalInit () {
 
   mShowPool = false;
   mOnDeskClosed = false;
+  
   //	optMaxPool = 21;
   iMoveX = iMoveY = -1;
 }
@@ -137,6 +137,7 @@ void PrefDesktop::internalInit () {
 
 PrefDesktop::PrefDesktop (DeskView *aDeskView) : QObject(0) {
   mPlayingRound = false;
+  mGameRunning = false;
   internalInit();
   mDeskView = aDeskView;
 }
@@ -155,7 +156,7 @@ void PrefDesktop::emitRepaint () {
 
 void PrefDesktop::closePool () {
   WrapCounter counter(1, 1, 3);
-  int mb = INT_MAX, mm = INT_MAX, i;
+  int i;
   tScores R[4];
   for (i = 1; i <= 3; i++) {
     Player *G = player(i);
@@ -486,7 +487,7 @@ void PrefDesktop::draw (bool emitSignal) {
   if (!mDeskView) return;
   mDeskView->ClearScreen();
 
-  if (!gameRunning)
+  if (!mGameRunning)
   	return;
 	
 	// "I move" icon
@@ -585,7 +586,7 @@ void PrefDesktop::runGame () {
   //Card *mFirstCard, *mSecondCard, *mThirdCard;
   int npasscounter;
 
-  gameRunning = true;
+  mGameRunning = true;
   //mDeskView->ClearScreen();
   kpref->HintBar->clearMessage();
   // while !end of pool
@@ -1229,5 +1230,5 @@ LabelRecordOnPaper:
   emitRepaint();
   emit gameOver();
 
-  gameRunning = false;
+  mGameRunning = false;
 }
