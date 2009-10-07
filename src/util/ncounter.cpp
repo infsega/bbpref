@@ -26,7 +26,7 @@
 
 WrapCounter::WrapCounter () {
   nMin = nValue = 0;
-  nMax = MAXINT;
+  nMax = INT_MAX;
 }
 
 
