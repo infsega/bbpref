@@ -1,13 +1,31 @@
 project(openpref)
 
+set(openpref_VERSION_MAJOR 0)
+set(openpref_VERSION_MINOR 1)
+set(openpref_VERSION_PATCH 3)
+set(openpref_VERSION "${openpref_VERSION_MAJOR}.${openpref_VERSION_MINOR}")
+set(openpref_VERSION_FULL "${openpref_VERSION}.${openpref_VERSION_PATCH}")
+
 include(src/src.cmake)
-include(CPack)
 
 CMAKE_MINIMUM_REQUIRED( VERSION 2.4.0 )
 SET( CMAKE_COLOR_MAKEFILE ON )
 SET( CMAKE_VERBOSE_MAKEFILE ON )
 SET( CMAKE_INCLUDE_CURRENT_DIR TRUE )
 SET( CMAKE_MODULE_PATH ${openpref_SOURCE_DIR}/cmake )
+
+SET(CPACK_PACKAGE_CONTACT "annulen@users.sourceforge.net")
+SET(CPACK_SOURCE_IGNORE_FILES "/.git/;/build/;_build/")
+set (CPACK_PACKAGE_VERSION_MAJOR ${openpref_VERSION_MAJOR})
+set (CPACK_PACKAGE_VERSION_MINOR ${openpref_VERSION_MINOR})
+set (CPACK_PACKAGE_VERSION_PATCH ${openpref_VERSION_PATCH})
+set (CPACK_PACKAGE_VERSION ${openpref_VERSION_MAJOR}.${openpref_VERSION_MINOR}.${openpref_VERSION_PATCH})
+set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING")
+
+IF( UNIX AND NOT APPLE )
+	SET(CPACK_BINARY_DEB ON)
+	SET(CPACK_BINARY_RPM ON)
+ENDIF( UNIX AND NOT APPLE )
 
 IF( APPLE )
     SET( PROGNAME OpenPref )
@@ -22,6 +40,8 @@ ENDIF( APPLE )
 if (WIN32)
   add_definitions( -DWIN32 )
 endif (WIN32)
+
+include(CPack)
 
 IF( MINGW )
     # resource compilation for MinGW
@@ -41,8 +61,9 @@ SET ( QM_SRCS
 	openpref_ru.ts
 )
 
+set(QT_MIN_VERSION "4.4.0")
 FIND_PACKAGE( Qt4 REQUIRED )
-find_package(Linguist REQUIRED)
+find_package(Linguist)
 
 INCLUDE( ${QT_USE_FILE} )
 QT4_ADD_RESOURCES( RC_SRCS ${RCS} )
@@ -57,8 +78,7 @@ ADD_EXECUTABLE( openpref ${SOURCES} ${MOC_SRCS} ${RC_SRCS} ${UI_HEADERS} ${QMS} 
 TARGET_LINK_LIBRARIES( openpref ${QT_LIBRARIES} )
 
 INSTALL (TARGETS openpref DESTINATION "games")
-install(FILES ${QMS} DESTINATION "share/openpref/i18n"
-)
+install(FILES ${QMS} DESTINATION "share/openpref/i18n")
 
 # Add support for an uninstall target
 configure_file(
