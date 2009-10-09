@@ -96,7 +96,7 @@ void xsortCards (card_t *arr, int len) {
 
 
 static int gTrumpSuit; // trump; global var
-static int gPassOutSuit; // нужная масть для первого или второго круга распасов
+static int gPassOutSuit; // п╫я┐п╤п╫п╟я▐ п╪п╟я│я┌я▄ п╢п╩я▐ п©п╣я─п╡п╬пЁп╬ п╦п╩п╦ п╡я┌п╬я─п╬пЁп╬ п╨я─я┐пЁп╟ я─п╟я│п©п╟я│п╬п╡
 //static int gGameBid; // >=6
 //static int gMoves[4][10];
 //static int gTricks[3];
@@ -128,13 +128,13 @@ static QTime stTime;
 //#define ABDEBUG
 //#define ADVANCED_RES
 /*
- * карты должны быть отсортированы по мастям в порядке убывания "морды"
- * a: игрок player набрал максимум вот столько
- * b: игрок player+1 набрал максимум вот столько
- * c: игрок player+2 набрал максимум вот столько
- * возврат: то же самое
+ * п╨п╟я─я┌я▀ п╢п╬п╩п╤п╫я▀ п╠я▀я┌я▄ п╬я┌я│п╬я─я┌п╦я─п╬п╡п╟п╫я▀ п©п╬ п╪п╟я│я┌я▐п╪ п╡ п©п╬я─я▐п╢п╨п╣ я┐п╠я▀п╡п╟п╫п╦я▐ "п╪п╬я─п╢я▀"
+ * a: п╦пЁя─п╬п╨ player п╫п╟п╠я─п╟п╩ п╪п╟п╨я│п╦п╪я┐п╪ п╡п╬я┌ я│я┌п╬п╩я▄п╨п╬
+ * b: п╦пЁя─п╬п╨ player+1 п╫п╟п╠я─п╟п╩ п╪п╟п╨я│п╦п╪я┐п╪ п╡п╬я┌ я│я┌п╬п╩я▄п╨п╬
+ * c: п╦пЁя─п╬п╨ player+2 п╫п╟п╠я─п╟п╩ п╪п╟п╨я│п╦п╪я┐п╪ п╡п╬я┌ я│я┌п╬п╩я▄п╨п╬
+ * п╡п╬п╥п╡я─п╟я┌: я┌п╬ п╤п╣ я│п╟п╪п╬п╣
  *
- * идея и псевдокод взяты отсюда: http://clauchau.free.fr/gamma.html
+ * п╦п╢п╣я▐ п╦ п©я│п╣п╡п╢п╬п╨п╬п╢ п╡п╥я▐я┌я▀ п╬я┌я│я▌п╢п╟: http://clauchau.free.fr/gamma.html
  * idea and pseudocode was taken from here: http://clauchau.free.fr/gamma.html
  */
 static void abcPrune (
@@ -201,56 +201,56 @@ static void abcPrune (
     crdNext = crdNo+1;
     crdSuit = hand->suits[crdNo];
     if (!turn) {
-      // первый ход может быть любой ваще, если это не первый и не второй круг распасов
+      // п©п╣я─п╡я▀п╧ я┘п╬п╢ п╪п╬п╤п╣я┌ п╠я▀я┌я▄ п╩я▌п╠п╬п╧ п╡п╟я┴п╣, п╣я│п╩п╦ я█я┌п╬ п╫п╣ п©п╣я─п╡я▀п╧ п╦ п╫п╣ п╡я┌п╬я─п╬п╧ п╨я─я┐пЁ я─п╟я│п©п╟я│п╬п╡
       if (gPassOutSuit >= 0 && crdSuit != gPassOutSuit && hand->suitCount[gPassOutSuit]) {
-        // не, это очень херовая масть, начнём с верной масти
+        // п╫п╣, я█я┌п╬ п╬я┤п╣п╫я▄ я┘п╣я─п╬п╡п╟я▐ п╪п╟я│я┌я▄, п╫п╟я┤п╫я▒п╪ я│ п╡п╣я─п╫п╬п╧ п╪п╟я│я┌п╦
         tmp = hand->suitStart[gPassOutSuit];
-        if (tmp == crdNo) abort(); // а такого не бывает
-        if (tmp < crdNo) break; // ну нет у нас такой, и уже всё, что было, проверили
-        // скипаем и повторяем выборы
+        if (tmp == crdNo) abort(); // п╟ я┌п╟п╨п╬пЁп╬ п╫п╣ п╠я▀п╡п╟п╣я┌
+        if (tmp < crdNo) break; // п╫я┐ п╫п╣я┌ я┐ п╫п╟я│ я┌п╟п╨п╬п╧, п╦ я┐п╤п╣ п╡я│я▒, я┤я┌п╬ п╠я▀п╩п╬, п©я─п╬п╡п╣я─п╦п╩п╦
+        // я│п╨п╦п©п╟п╣п╪ п╦ п©п╬п╡я┌п╬я─я▐п╣п╪ п╡я▀п╠п╬я─я▀
         crdNo = tmp;
         continue;
       }
       goto doMove;
     }
     // check for valid move
-    // выход в правильную масть?
+    // п╡я▀я┘п╬п╢ п╡ п©я─п╟п╡п╦п╩я▄п╫я┐я▌ п╪п╟я│я┌я▄?
     if (crdSuit == xDeskSuits[0]) goto doMove;
-    // не, не та масть; ну-ка, чо у нас на руках ваще?
-    // нужная масть у нас есть?
+    // п╫п╣, п╫п╣ я┌п╟ п╪п╟я│я┌я▄; п╫я┐-п╨п╟, я┤п╬ я┐ п╫п╟я│ п╫п╟ я─я┐п╨п╟я┘ п╡п╟я┴п╣?
+    // п╫я┐п╤п╫п╟я▐ п╪п╟я│я┌я▄ я┐ п╫п╟я│ п╣я│я┌я▄?
     if (hand->suitCount[xDeskSuits[0]]) {
-      // таки есть, потому это очень хуёвый вариант; ходим сразу с нужной масти
+      // я┌п╟п╨п╦ п╣я│я┌я▄, п©п╬я┌п╬п╪я┐ я█я┌п╬ п╬я┤п╣п╫я▄ я┘я┐я▒п╡я▀п╧ п╡п╟я─п╦п╟п╫я┌; я┘п╬п╢п╦п╪ я│я─п╟п╥я┐ я│ п╫я┐п╤п╫п╬п╧ п╪п╟я│я┌п╦
       tmp = hand->suitStart[xDeskSuits[0]];
-      if (tmp < crdNo) break; // всё, нечего больше искать
+      if (tmp < crdNo) break; // п╡я│я▒, п╫п╣я┤п╣пЁп╬ п╠п╬п╩я▄я┬п╣ п╦я│п╨п╟я┌я▄
       if (tmp > crdNo) {
-        // скипаем
+        // я│п╨п╦п©п╟п╣п╪
         crdNo = tmp;
         continue;
       }
-      // вот этой и ходим
+      // п╡п╬я┌ я█я┌п╬п╧ п╦ я┘п╬п╢п╦п╪
       goto doMove;
     }
-    // не, нужной масти нет
-    // а козырь есть?
+    // п╫п╣, п╫я┐п╤п╫п╬п╧ п╪п╟я│я┌п╦ п╫п╣я┌
+    // п╟ п╨п╬п╥я▀я─я▄ п╣я│я┌я▄?
     if (gTrumpSuit <= 3) {
-      // игра козырная, есть козыри?
+      // п╦пЁя─п╟ п╨п╬п╥я▀я─п╫п╟я▐, п╣я│я┌я▄ п╨п╬п╥я▀я─п╦?
       if (hand->suitCount[gTrumpSuit]) {
-        // таки есть
+        // я┌п╟п╨п╦ п╣я│я┌я▄
         tmp = hand->suitStart[gTrumpSuit];
-        if (tmp < crdNo) break; // всё, нечего больше искать
+        if (tmp < crdNo) break; // п╡я│я▒, п╫п╣я┤п╣пЁп╬ п╠п╬п╩я▄я┬п╣ п╦я│п╨п╟я┌я▄
         if (tmp > crdNo) {
-          // скипаем
+          // я│п╨п╦п©п╟п╣п╪
           crdNo = tmp;
           continue;
         }
-        // вот этой и ходим
+        // п╡п╬я┌ я█я┌п╬п╧ п╦ я┘п╬п╢п╦п╪
         goto doMove;
       } else {
-        // не, и козырей нет, можно кидать чо попало
+        // п╫п╣, п╦ п╨п╬п╥я▀я─п╣п╧ п╫п╣я┌, п╪п╬п╤п╫п╬ п╨п╦п╢п╟я┌я▄ я┤п╬ п©п╬п©п╟п╩п╬
         goto doMove;
       }
     } else {
-      // игра бескозырная, тут любая карта пойдёт, хули
+      // п╦пЁя─п╟ п╠п╣я│п╨п╬п╥я▀я─п╫п╟я▐, я┌я┐я┌ п╩я▌п╠п╟я▐ п╨п╟я─я┌п╟ п©п╬п╧п╢я▒я┌, я┘я┐п╩п╦
       goto doMove;
     }
 doMove:
@@ -258,19 +258,19 @@ doMove:
     movesChecked++;
     if (firstm < 0) firstm = crdNo;
 */
-    // проскипаем последовательность из плавно убывающих карт одной масти
-    // очевидно, что при таком раскладе похуй, какой из них ходить
+    // п©я─п╬я│п╨п╦п©п╟п╣п╪ п©п╬я│п╩п╣п╢п╬п╡п╟я┌п╣п╩я▄п╫п╬я│я┌я▄ п╦п╥ п©п╩п╟п╡п╫п╬ я┐п╠я▀п╡п╟я▌я┴п╦я┘ п╨п╟я─я┌ п╬п╢п╫п╬п╧ п╪п╟я│я┌п╦
+    // п╬я┤п╣п╡п╦п╢п╫п╬, я┤я┌п╬ п©я─п╦ я┌п╟п╨п╬п╪ я─п╟я│п╨п╩п╟п╢п╣ п©п╬я┘я┐п╧, п╨п╟п╨п╬п╧ п╦п╥ п╫п╦я┘ я┘п╬п╢п╦я┌я▄
     int scnt = hand->suitCount[crdSuit];
     if (scnt > 1) {
-      // в этой масти есть ещё карты
-      // проверим, есть ли у кого ещё эта масть
+      // п╡ я█я┌п╬п╧ п╪п╟я│я┌п╦ п╣я│я┌я▄ п╣я┴я▒ п╨п╟я─я┌я▀
+      // п©я─п╬п╡п╣я─п╦п╪, п╣я│я┌я▄ п╩п╦ я┐ п╨п╬пЁп╬ п╣я┴я▒ я█я┌п╟ п╪п╟я│я┌я▄
       if (xHands[0].suitCount[crdSuit]+xHands[1].suitCount[crdSuit]+xHands[2].suitCount[crdSuit] <= scnt) {
-        // единственный гордый владелец этой масти; пробуем только одну её карту
+        // п╣п╢п╦п╫я│я┌п╡п╣п╫п╫я▀п╧ пЁп╬я─п╢я▀п╧ п╡п╩п╟п╢п╣п╩п╣я├ я█я┌п╬п╧ п╪п╟я│я┌п╦; п©я─п╬п╠я┐п╣п╪ я┌п╬п╩я▄п╨п╬ п╬п╢п╫я┐ п╣я▒ п╨п╟я─я┌я┐
         int tsuit = crdSuit+1;
         while (tsuit <= 3 && hand->suitCount[tsuit] == 0) tsuit++;
         crdNext = tsuit>3 ? 11 : hand->suitStart[tsuit];
       } else {
-        // такая масть есть ещё у кого-то
+        // я┌п╟п╨п╟я▐ п╪п╟я│я┌я▄ п╣я│я┌я▄ п╣я┴я▒ я┐ п╨п╬пЁп╬-я┌п╬
         int tface = crdFace+1;
         while (crdNext <= 10 && hand->suits[crdNext] == crdSuit && hand->faces[crdNext] == tface) {
           crdNext++;
@@ -278,10 +278,10 @@ doMove:
         }
       }
     }
-    // кидаем карту на стол
+    // п╨п╦п╢п╟п╣п╪ п╨п╟я─я┌я┐ п╫п╟ я│я┌п╬п╩
     xDeskSuits[turn] = crdSuit;
     xDeskFaces[turn] = crdFace;
-    // убираем карту из руки
+    // я┐п╠п╦я─п╟п╣п╪ п╨п╟я─я┌я┐ п╦п╥ я─я┐п╨п╦
     hand->suitCount[crdSuit]--;
     if (crdNo == hand->suitStart[crdSuit]) hand->suitStart[crdSuit]++;
     hand->faces[crdNo] = 0;
@@ -291,23 +291,23 @@ doMove:
     if (turn == 2) {
       // the turn is done, count tricks
       //who = whoTakes(pdesk, gTrumpSuit);
-      // а кто, собственно, забрал?
+      // п╟ п╨я┌п╬, я│п╬п╠я│я┌п╡п╣п╫п╫п╬, п╥п╟п╠я─п╟п╩?
       if (gTrumpSuit <= 3) {
         // trump game
         if (xDeskSuits[0] == gTrumpSuit) {
-          // нулевой козырнул
+          // п╫я┐п╩п╣п╡п╬п╧ п╨п╬п╥я▀я─п╫я┐п╩
           who = 0; tmp = xDeskFaces[0];
           if (xDeskSuits[1] == xDeskSuits[0] && xDeskFaces[1] > tmp) { tmp = xDeskFaces[1]; who = 1; }
           if (xDeskSuits[2] == xDeskSuits[0] && xDeskFaces[2] > tmp) who = 2;
         } else if (xDeskSuits[1] == gTrumpSuit) {
-          // первый козырнул
+          // п©п╣я─п╡я▀п╧ п╨п╬п╥я▀я─п╫я┐п╩
           who = 1; tmp = xDeskFaces[0];
           if (xDeskSuits[2] == xDeskSuits[1] && xDeskFaces[2] > tmp) who = 2;
         } else if (xDeskSuits[2] == gTrumpSuit) {
-          // второй козырнул
+          // п╡я┌п╬я─п╬п╧ п╨п╬п╥я▀я─п╫я┐п╩
           who = 2;
         } else {
-          // никто не козырял
+          // п╫п╦п╨я┌п╬ п╫п╣ п╨п╬п╥я▀я─я▐п╩
           who = 0; tmp = xDeskFaces[0];
           if (xDeskSuits[1] == xDeskSuits[0] && xDeskFaces[1] > tmp) { tmp = xDeskFaces[1]; who = 1; }
           if (xDeskSuits[2] == xDeskSuits[0] && xDeskFaces[2] > tmp) who = 2;
@@ -319,14 +319,14 @@ doMove:
         if (xDeskSuits[2] == xDeskSuits[0] && xDeskFaces[2] > tmp) who = 2;
       }
       who = (who+player+1)%3;
-      xHands[who].tricks++; // прибавили взятку
+      xHands[who].tricks++; // п©я─п╦п╠п╟п╡п╦п╩п╦ п╡п╥я▐я┌п╨я┐
 #ifdef ABDEBUG
       printf("==%i takes; cards left: %i; turn: %i\n", who, xCardsLeft, turn);
       printStatus(turn, player, 1);
 #endif
       if (xCardsLeft < 0) abort();
       if (!xCardsLeft) {
-        // всё, отбомбились, даёшь коэффициенты
+        // п╡я│я▒, п╬я┌п╠п╬п╪п╠п╦п╩п╦я│я▄, п╢п╟я▒я┬я▄ п╨п╬я█я└я└п╦я├п╦п╣п╫я┌я▀
         gIterations++;
         if (gIterations%1000000 == 0) {
           if (stTime.elapsed() >= 5000) {
@@ -351,12 +351,12 @@ doMove:
         }
 #ifdef ADVANCED_RES
         if (player == gWhoPlays) {
-          // я играю; выиграл ли?
+          // я▐ п╦пЁя─п╟я▌; п╡я▀п╦пЁя─п╟п╩ п╩п╦?
           if (x < gGameBid) {
-            // нет, обезлаплен
+            // п╫п╣я┌, п╬п╠п╣п╥п╩п╟п©п╩п╣п╫
             x = -gGameBid-1; /*y = z = 666;*/
           } else {
-            // да, взял своё
+            // п╢п╟, п╡п╥я▐п╩ я│п╡п╬я▒
             x = 20+gGameBid;
 /*
             switch (gGameBid) {
@@ -372,11 +372,11 @@ doMove:
 */
           }
         } else {
-          // я вистую; получилось ли?
+          // я▐ п╡п╦я│я┌я┐я▌; п©п╬п╩я┐я┤п╦п╩п╬я│я▄ п╩п╦?
           if (xHands[gWhoPlays].tricks < gGameBid) {
-            // по любому засадили чувачка
-            //x = 666-(gGameBid-xHands[gWhoPlays].tricks); // на сколько
-            // чувак в жопе
+            // п©п╬ п╩я▌п╠п╬п╪я┐ п╥п╟я│п╟п╢п╦п╩п╦ я┤я┐п╡п╟я┤п╨п╟
+            //x = 666-(gGameBid-xHands[gWhoPlays].tricks); // п╫п╟ я│п╨п╬п╩я▄п╨п╬
+            // я┤я┐п╡п╟п╨ п╡ п╤п╬п©п╣
             if (gWhoPlays == newPlayer) {
               //y = -xHands[gWhoPlays].tricks-1;
               //z = 666;
@@ -385,7 +385,7 @@ doMove:
               //y = 666;
             }
           } else {
-            // нет, чувак, увы, взял своё; а я?
+            // п╫п╣я┌, я┤я┐п╡п╟п╨, я┐п╡я▀, п╡п╥я▐п╩ я│п╡п╬я▒; п╟ я▐?
 /*
             switch (gGameBid) {
               case 6:
@@ -422,33 +422,33 @@ doMove:
 #endif
         //printStatus(2, player, 0);
       } else {
-        // рекурсивно проверяем дальше
+        // я─п╣п╨я┐я─я│п╦п╡п╫п╬ п©я─п╬п╡п╣я─я▐п╣п╪ п╢п╟п╩я▄я┬п╣
         //abcPrune(newTurn, newPlayer, -c, -a, b, &y, &z, &x, NULL);
         if (who == player) {
-          // я же и забрал, снова здорово
+          // я▐ п╤п╣ п╦ п╥п╟п╠я─п╟п╩, я│п╫п╬п╡п╟ п╥п╢п╬я─п╬п╡п╬
           abcPrune(0, player, a, b, c, &x, &y, &z, NULL);
         } else if (who == newPlayer) {
-          // следующий забрал; красота и благолепие
+          // я│п╩п╣п╢я┐я▌я┴п╦п╧ п╥п╟п╠я─п╟п╩; п╨я─п╟я│п╬я┌п╟ п╦ п╠п╩п╟пЁп╬п╩п╣п©п╦п╣
           abcPrune(0, newPlayer, -c, -a, b, &y, &z, &x, NULL);
         } else {
-          // предыдущий забрал; вот такие вот параметры вышли; путём трэйсинга, да
+          // п©я─п╣п╢я▀п╢я┐я┴п╦п╧ п╥п╟п╠я─п╟п╩; п╡п╬я┌ я┌п╟п╨п╦п╣ п╡п╬я┌ п©п╟я─п╟п╪п╣я┌я─я▀ п╡я▀я┬п╩п╦; п©я┐я┌я▒п╪ я┌я─я█п╧я│п╦п╫пЁп╟, п╢п╟
           abcPrune(0, who, -b, c, -a, &z, &x, &y, NULL);
         }
       }
-      // брали взятку? восстановим статус кво
+      // п╠я─п╟п╩п╦ п╡п╥я▐я┌п╨я┐? п╡п╬я│я│я┌п╟п╫п╬п╡п╦п╪ я│я┌п╟я┌я┐я│ п╨п╡п╬
       xHands[who].tricks--;
     } else {
-      // рекурсивно проверяем дальше
+      // я─п╣п╨я┐я─я│п╦п╡п╫п╬ п©я─п╬п╡п╣я─я▐п╣п╪ п╢п╟п╩я▄я┬п╣
       abcPrune(newTurn, newPlayer, -c, -a, b, &y, &z, &x, NULL);
     }
-    // восстановим стол
+    // п╡п╬я│я│я┌п╟п╫п╬п╡п╦п╪ я│я┌п╬п╩
     xDeskFaces[0] = sDeskFaces[0]; xDeskFaces[1] = sDeskFaces[1]; xDeskFaces[2] = sDeskFaces[2];
     xDeskSuits[0] = sDeskSuits[0]; xDeskSuits[1] = sDeskSuits[1]; xDeskSuits[2] = sDeskSuits[2];
-    // вернём в руку карту
+    // п╡п╣я─п╫я▒п╪ п╡ я─я┐п╨я┐ п╨п╟я─я┌я┐
     hand->suitCount[crdSuit]++;
     hand->faces[crdNo] = crdFace;
     if (crdNo+1 == hand->suitStart[crdSuit]) hand->suitStart[crdSuit]--;
-    // проверим, чо нашли
+    // п©я─п╬п╡п╣я─п╦п╪, я┤п╬ п╫п╟я┬п╩п╦
     if (bestm >= 0 && x == bestx) {
       // we've found an equivalent move
       //if (bestm < 0) abort();
@@ -463,10 +463,10 @@ doMove:
       n = 1;
       bestm = crdNo;
       bestx = x; worsty = y; worstz = z;
-      if (x > b || x > c) break; // всё, дальше искать не надо, всё равно мы крутые; goto done;
+      if (x > b || x > c) break; // п╡я│я▒, п╢п╟п╩я▄я┬п╣ п╦я│п╨п╟я┌я▄ п╫п╣ п╫п╟п╢п╬, п╡я│я▒ я─п╟п╡п╫п╬ п╪я▀ п╨я─я┐я┌я▀п╣; goto done;
       if (x > a) a = x;
     }
-    // берём следующую карту
+    // п╠п╣я─я▒п╪ я│п╩п╣п╢я┐я▌я┴я┐я▌ п╨п╟я─я┌я┐
     crdNo = crdNext;
   }
   xDeskFaces[0] = sDeskFaces[0]; xDeskFaces[1] = sDeskFaces[1]; xDeskFaces[2] = sDeskFaces[2];
@@ -557,11 +557,11 @@ Card *CheatPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
     xsortCards(hands[c], pos);
   }
 
-/*
-  if (!lMove && !rMove && crdLeft == 10) {
-    return Player::moveSelectCard(lMove, rMove, aLeftPlayer, aRightPlayer);
+
+  if (!lMove && !rMove && crdLeft == 10) { 
+    return AiPlayer::moveSelectCard(lMove, rMove, aLeftPlayer, aRightPlayer, isPassOut);
   }
-*/
+
 
   // find game
   eGameBid bid;
@@ -590,7 +590,7 @@ Card *CheatPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
 
   fprintf(stderr, "po:%s; lm:%s, rm:%s\n", isPassOut?"y":"n", lMove?"y":"n", rMove?"y":"n");
   if (isPassOut && rMove && !lMove) {
-    // это распасы, первый или второй круг, первый ход
+    // я█я┌п╬ я─п╟я│п©п╟я│я▀, п©п╣я─п╡я▀п╧ п╦п╩п╦ п╡я┌п╬я─п╬п╧ п╨я─я┐пЁ, п©п╣я─п╡я▀п╧ я┘п╬п╢
     gPassOutSuit = rMove->suit()-1;
     fprintf(stderr, "pass-out: %i\n", gPassOutSuit);
     rMove = 0;
@@ -640,10 +640,10 @@ Card *CheatPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
   printHand(&(xHands[2]));
   printDesk(turn);
 
-  // оптимизации
+  // п╬п©я┌п╦п╪п╦п╥п╟я├п╦п╦
 /*
   if (turn > 0) {
-    // можем вообще взять?
+    // п╪п╬п╤п╣п╪ п╡п╬п╬п╠я┴п╣ п╡п╥я▐я┌я▄?
     if (hands[me].suitCount(
   }
 */
