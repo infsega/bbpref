@@ -488,6 +488,11 @@ void DeskView::MessageBox (const QString &text, const QString &caption) {
 void DeskView::ShowBlankPaper (int optMaxPool) {
   int PaperWidth = 410;
   int PaperHeight = 530;
+  // 40
+  // 190
+  // 307
+  // 
+  
   if (!mDeskBmp) return;
   xDelta = (DesktopWidth-PaperWidth)/2;
   yDelta = (DesktopHeight-PaperHeight)/2;
@@ -505,9 +510,15 @@ void DeskView::ShowBlankPaper (int optMaxPool) {
   b1.setColor(qRgb(255, 255, 0));
   p.setBrush(b1);
   p.setPen(qRgb(0, 0, 0));
+
+  p.drawLine(xDelta, yDelta, xDelta+PaperWidth, yDelta);
+  p.drawLine(xDelta, yDelta, xDelta, yDelta+PaperHeight);
+  p.drawLine(xDelta, yDelta+PaperHeight, xDelta+PaperWidth, yDelta+PaperHeight);
+  p.drawLine(xDelta+PaperWidth, yDelta, xDelta+PaperWidth, yDelta+PaperHeight);
+  
   p.drawEllipse(xDelta+188,yDelta+277,35,35);
-  p.drawLine(xDelta+410, yDelta+530, xDelta+220, yDelta+307);
-  p.drawLine(xDelta+0, yDelta+530, xDelta+190, yDelta+307);
+  p.drawLine(xDelta+PaperWidth, yDelta+PaperHeight, xDelta+PaperWidth-190, yDelta+307);
+  p.drawLine(xDelta+0, yDelta+PaperHeight, xDelta+190, yDelta+307);
   p.drawLine(xDelta+205, yDelta+277, xDelta+205, yDelta+0);
   p.drawLine(xDelta+40, yDelta+0, xDelta+40, yDelta+483);
   p.drawLine(xDelta+40, yDelta+483, xDelta+370, yDelta+483);
@@ -520,8 +531,8 @@ void DeskView::ShowBlankPaper (int optMaxPool) {
   p.drawLine(xDelta+330, yDelta+436, xDelta+330, yDelta+0);
   
   p.drawLine(xDelta+0, yDelta+255, xDelta+40, yDelta+255);
-  p.drawLine(xDelta+410, yDelta+255, xDelta+370, yDelta+255);
-  p.drawLine(xDelta+205, yDelta+530, xDelta+205, yDelta+483);
+  p.drawLine(xDelta+PaperWidth, yDelta+255, xDelta+370, yDelta+255);
+  p.drawLine(xDelta+205, yDelta+PaperHeight, xDelta+205, yDelta+483);
   //itoa(optMaxPool, buff, 10);
   //p.drawText(xDelta+197, FONTSIZE+yDelta+292, buff);
   //drawText(QString::number(optMaxPool), xDelta+197, yDelta+290);
