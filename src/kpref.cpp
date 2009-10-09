@@ -388,6 +388,7 @@ void Kpref::loadOptions () {
 
 void Kpref::slotOptions () {
   bool oldPrefClub = optPrefClub;
+  bool oldDebugHands = optDebugHands;
   
   OptDialog *dlg = new OptDialog;
   //connect(dlg->cbPrefClub, SIGNAL(clicked()), this, SLOT(slotDeckChanged()));
@@ -405,7 +406,7 @@ void Kpref::slotOptions () {
   }
   delete dlg;
 
-  if (optPrefClub != oldPrefClub)
+  if ((optPrefClub != oldPrefClub) || (optDebugHands != oldDebugHands))
   	slotDeckChanged();
 }
 
@@ -454,7 +455,6 @@ void Kpref::MoveImpossible () {
 }
 
 void Kpref::HintMove () {
-	qDebug() << mDesktop->mBiddingDone;
 	if (mDesktop->mBiddingDone)
 		HintBar->showMessage(tr("Your move"));
 	else
