@@ -829,7 +829,7 @@ void PrefDesktop::runGame () {
             int tempint = nCurrentMove.nValue;
             int nVisibleState = tmpg->invisibleHand();
             tmpg->setInvisibleHand(false);
-            draw();
+            draw(false);
             if (tmpg->number() != 1)
 				kpref->HintBar->showMessage(tr("Try to remember the cards"));
             /*else 
@@ -885,8 +885,8 @@ void PrefDesktop::runGame () {
           mPlayerHi = firstPW;
 		  if ((gCurrentGame != g86) && !(!opt10Whist && gCurrentGame>=101 && gCurrentGame<=105)) {
 			player(tmpPlayersCounter)->setMessage(tr("thinking..."));
-          	if (firstPW != 1) mDeskView->mySleep(2);
 			draw(false);
+			if (firstPW != 1) mDeskView->mySleep(2);
 		  }
           //PassOrVist = PassOrVistPlayers->moveFinalBid(gCurrentGame, gtPass, 0);
 		  PassOrVist = PassOrVistPlayers->moveFinalBid(gCurrentGame, whist, nPassCounter);
