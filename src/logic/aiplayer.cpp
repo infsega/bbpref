@@ -1256,7 +1256,11 @@ eGameBid AiPlayer::moveFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerPas
   if (optStalingrad && MaxGame == g61) {
   	Answer = whist; // Stalingrad  
 	goto myGame;
-  }  
+  }
+  if (!opt10Whist && MaxGame>=101 && MaxGame<=105) {
+	Answer = whist;
+	goto myGame;
+  }
 
   
   if (HaveAWhist == gtPass)
@@ -1622,6 +1626,7 @@ void AiPlayer::makestatfill (int nCards, int maxmin) {
 */
 
 bool AiPlayer::chooseClosedWhist () {
+	//tSuitProbs countGameTricks((eSuit)f, 1)
 	if (qrand()%4 == 0)
 		return true;
 	else

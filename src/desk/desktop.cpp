@@ -883,7 +883,7 @@ void PrefDesktop::runGame () {
           // choice of the first player
           int firstPW = tmpPlayersCounter.nValue;
           mPlayerHi = firstPW;
-		  if (gCurrentGame != g86) {
+		  if ((gCurrentGame != g86) && !(!opt10Whist && gCurrentGame>=101 && gCurrentGame<=105)) {
 			player(tmpPlayersCounter)->setMessage(tr("thinking..."));
           	if (firstPW != 1) mDeskView->mySleep(2);
 			draw(false);
@@ -908,7 +908,7 @@ void PrefDesktop::runGame () {
 		  draw(false);
           PassOrVistPlayers = player(tmpPlayersCounter);
           PassOrVistPlayers->setMyGame(undefined);
-		  if (gCurrentGame != g86) {
+		  if ((gCurrentGame != g86) && !(!opt10Whist && gCurrentGame>=101 && gCurrentGame<=105)) {
 			player(tmpPlayersCounter)->setMessage(tr("thinking..."));
 			draw(false);
 		  	if (nextPW != 1) mDeskView->mySleep(2);			
@@ -999,8 +999,8 @@ void PrefDesktop::runGame () {
 				  
             }*/
 
-			// On misere play with opened cards
-			if (gCurrentGame == g86) {
+			// On misere or 10 check play with opened cards
+			if ((gCurrentGame == g86)|| (!opt10Whist && gCurrentGame>=101 && gCurrentGame<=105)) {
 				player(2)->setInvisibleHand(false);
 				player(3)->setInvisibleHand(false);
 			}
