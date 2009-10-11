@@ -1455,7 +1455,7 @@ eGameBid AiPlayer::dropForGame () {
 //ход при торговле
 eGameBid AiPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
 //mIStart = (lMove == undefined && rMove == undefined);
-	qDebug() << mPlayerNo << mIStart;
+	//qDebug() << mPlayerNo << mIStart;
 /*
   if ( mMyGame == gtPass )  {
     mMyGame=gtPass;
