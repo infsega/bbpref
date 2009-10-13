@@ -379,10 +379,10 @@ void Kpref::loadOptions () {
   optAlphaBeta1 = (st.value("alphabeta1", false).toBool());
   optPlayerName2 = st.value("playername2", tr("Player 2")).toString();
   optAlphaBeta2 = (st.value("alphabeta2", false).toBool());
-  optWithoutThree = st.value("without3", true).toBool();
+  optWithoutThree = st.value("without3", false).toBool();
   optDebugHands = st.value("debughand", false).toBool();
   optAggPass = st.value("aggpass", false).toBool();
-  optPrefClub = st.value("prefclub", true).toBool();
+  optPrefClub = st.value("prefclub", false).toBool();
 }
 
 
@@ -451,7 +451,7 @@ void Kpref::slotQuit () {
 }*/
 
 void Kpref::MoveImpossible () {
-	HintBar->showMessage(tr("This move is impossible"),1);
+	HintBar->showMessage(tr("This move is impossible"));
 }
 
 void Kpref::HintMove () {

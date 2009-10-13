@@ -136,7 +136,7 @@ eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
   {
   	// If HumanPlayer started bid, he can stay
 	//mIStart = (lMove == undefined && rMove == undefined);
-	qDebug() << mPlayerNo << mIStart;
+	
 	if (mIStart)
 		formBid->disableLessThan(qMax(lMove, rMove));
   	// otherwise he must increase
@@ -257,6 +257,7 @@ void HumanPlayer::hilightCard (int lx, int ly) {
     mPrevHiCardIdx = cNo;
   }
   draw();
+  kpref->HintBar->clearMessage();
 }
 
 bool HumanPlayer::chooseClosedWhist () {
