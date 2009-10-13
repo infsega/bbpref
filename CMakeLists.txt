@@ -14,6 +14,14 @@ SET( CMAKE_VERBOSE_MAKEFILE ON )
 SET( CMAKE_INCLUDE_CURRENT_DIR TRUE )
 SET( CMAKE_MODULE_PATH ${openpref_SOURCE_DIR}/cmake )
 
+if (NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE RelWithDebInfo)
+endif (NOT CMAKE_BUILD_TYPE)
+
+message(STATUS "The build type is ${CMAKE_BUILD_TYPE}")
+
+include (CheckCXXCompilerFlag)
+
 SET(CPACK_PACKAGE_CONTACT "annulen@users.sourceforge.net")
 SET(CPACK_SOURCE_IGNORE_FILES "/.git/;/build/;_build/")
 set (CPACK_PACKAGE_VERSION_MAJOR ${openpref_VERSION_MAJOR})
