@@ -1,7 +1,4 @@
 Known Issues
 
-1. Misproper behaviour of "thinking" message is sometimes observed
-2. AI algorithm for choose of maximum bid is not perfect
-3. Alphabeta AI can be very slow sometimes
-4. Halfwhist button works like Whist
-5. "Save" menu saves only score, not cards in hands
+1. AI algorithm for choose of maximum bid is not perfect
+2. "Save" menu saves only score, not cards in hands

@@ -1,8 +1,9 @@
 For OpenPref 0.1.4:
 
 * Improve bidding algorithm
-* Find bug in alphabeta
+* Refactoring for future network game support
 * Add help system
+* Start micro version for mobile devices
 
 
 For OpenPref 0.2.0:
