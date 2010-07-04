@@ -46,9 +46,9 @@ public:
 
   virtual void setCurrentStart (bool start);
 
-  virtual void sortCards ();
+  void sortCards () { mCards.mySort(); }
 
-  virtual void dealCard (Card *aCard); // get dealed card
+  void dealCard (Card *aCard) { mCards.insert(aCard); } // get dealed card
 
   virtual Card *moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) = 0; //move
   virtual eGameBid moveBidding (eGameBid lMove, eGameBid rMove) = 0; //
@@ -63,17 +63,17 @@ public:
   virtual void draw ();
   virtual void hilightCard (int lx, int ly); // подсветить карту по данным координатам (и перерисовать руку, если надо)
 
-  inline void setMessage (const QString &msg) { mMessage = msg; }
-  inline const QString &message () const { return mMessage; }
+  void setMessage (const QString &msg) { mMessage = msg; }
+  const QString &message () const { return mMessage; }
 
-  inline int number () const { return mPlayerNo; }
+  int number () const { return mPlayerNo; }
 
-  inline eGameBid myGame () const { return mMyGame; }
-  inline void setMyGame (eGameBid game) { mMyGame = game; }
+  eGameBid myGame () const { return mMyGame; }
+  void setMyGame (eGameBid game) { mMyGame = game; }
 
-  inline int tricksTaken () const { return mTricksTaken; }
-  virtual void gotTrick ();
-  virtual void gotPassPassTricks (int cnt);
+  int tricksTaken () const { return mTricksTaken; }
+  void gotTrick () { mTricksTaken++; }
+  void gotPassPassTricks (int cnt) { mTricksTaken = cnt; }
 
 protected:
   virtual void internalInit ();
