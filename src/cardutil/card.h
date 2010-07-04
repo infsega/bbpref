@@ -35,9 +35,9 @@ const int FACE_ACE   = 14;
 
 class Card {
 public:
-  inline int face () const { return mFace; }
-  inline int suit () const { return mSuit; }
-  inline bool isValid () const { return mValid; }
+  int face () const { return mFace; }
+  int suit () const { return mSuit; }
+  bool isValid () const { return mValid; }
 
   int pack () const;
 
