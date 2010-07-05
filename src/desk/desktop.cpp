@@ -227,7 +227,8 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
     HumanPlayer *hPlr = new HumanPlayer(nCurrentMove.nValue, mDeskView);
     *hPlr = *curPlr;
     mPlayers[nCurrentMove.nValue] = hPlr;
-    res = hPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)), isPassOut);
+    res = hPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)),
+      player(previousPlayer(nCurrentMove)), isPassOut);
     *curPlr = *hPlr;
     mPlayers[nCurrentMove.nValue] = curPlr;
     delete hPlr;
@@ -256,7 +257,7 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
 	}
     *aiPlr = *curPlr;
     mPlayers[nCurrentMove.nValue] = aiPlr;
-    res = aiPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)), isPassOut);
+    res = aiPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(previousPlayer(nCurrentMove)), isPassOut);
     *curPlr = *aiPlr;
     mPlayers[nCurrentMove.nValue] = curPlr;
     delete aiPlr;
@@ -266,7 +267,7 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
   else {
     res =
       (player(nCurrentMove))->moveSelectCard(lMove, rMove,
-        player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)), isPassOut);
+        player(succPlayer(nCurrentMove)), player(previousPlayer(nCurrentMove)), isPassOut);
   }
   return res;
 }

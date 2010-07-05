@@ -51,7 +51,7 @@ public:
 
 
 int succPlayer (const WrapCounter &aCurrent);
-int predPlayer (const WrapCounter &aCurrent);
+int previousPlayer (const WrapCounter &aCurrent);
 
 
 #endif
