@@ -34,8 +34,8 @@ public:
   OptDialog (QWidget *parent=0);
   ~OptDialog () { }
 
-protected:
-  void showEvent (QShowEvent *event);
+/*protected:
+  void showEvent (QShowEvent *event);*/
 };
 
 

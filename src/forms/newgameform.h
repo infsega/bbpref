@@ -34,8 +34,8 @@ public:
   NewGameDialog (QWidget *parent=0);
   ~NewGameDialog () { }
 
-protected:
-  void showEvent (QShowEvent *event);
+/*protected:
+  void showEvent (QShowEvent *event);*/
 };
 
 

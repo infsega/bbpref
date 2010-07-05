@@ -32,7 +32,7 @@ NewGameDialog::NewGameDialog (QWidget *parent) : QDialog(parent) {
 }
 
 
-void NewGameDialog::showEvent (QShowEvent *event) {
+/*void NewGameDialog::showEvent (QShowEvent *event) {
   Q_UNUSED(event)
   QWidget *parentObj = dynamic_cast<QWidget *>(parent());
   int x, y;
@@ -47,4 +47,4 @@ void NewGameDialog::showEvent (QShowEvent *event) {
     y = dims.top()+(dims.height()-height())/2;
   }
   move(x, y);
-}
+}*/
