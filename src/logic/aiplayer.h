@@ -36,6 +36,8 @@ class AiPlayer : public Player {
 public:
   AiPlayer (int aMyNumber, DeskView *aDeskView=0);
 
+  virtual Player * instance(int aMyNumber, DeskView *aDeskView=0);
+
 public:
   virtual Card *moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut); //ход
   virtual eGameBid moveBidding (eGameBid lMove, eGameBid rMove); //ход при торговле

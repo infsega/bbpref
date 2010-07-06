@@ -37,6 +37,8 @@ public:
   Player (const Player &pl);
   virtual ~Player ();
 
+  virtual Player * instance(int aMyNumber, DeskView *aDeskView) = 0;
+
   Player &operator = (const Player &pl);
 
   virtual void clear ();
