@@ -218,61 +218,45 @@ Player *PrefDesktop::addPlayer (Player *plr) {
 Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
   Card *res = 0;
   Player *curPlr = player(nCurrentMove);
-
+  Player *plr = 0;
   // 1. Current player is not human
   // Human's move if current he whists whith open cards or catches misere, and current player
   // passes or catches misere
   if (((player(1)->myGame() == whist && !Closed_Whist) || player(1)->myGame() == g86catch) &&
       curPlr->number() != 1 && (curPlr->myGame() == gtPass || curPlr->myGame() == g86catch)) {
-    //HumanPlayer *hPlr = new HumanPlayer(nCurrentMove.nValue, mDeskView);
-    Player *hPlr = player(1)->instance(nCurrentMove.nValue, mDeskView);
-    *hPlr = *curPlr;
-    mPlayers[nCurrentMove.nValue] = hPlr;
-    res = hPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)),
-      player(previousPlayer(nCurrentMove)), isPassOut);
-    *curPlr = *hPlr;
-    mPlayers[nCurrentMove.nValue] = curPlr;
-    delete hPlr;
+    plr = player(1)->instance(nCurrentMove.nValue, mDeskView);
   }
 
-  // 2. Current player /*is human, he*/ passes
-  // if AI whists with open cards, it makes move instead of human
-  else if (/*curPlr->number() == 1 && */ curPlr->myGame() == gtPass && !Closed_Whist) {
-    Player *aiPlr;
-    qDebug() << "here";
+  // 2. Current player passes
+  // if AI whists with open cards, it makes move instead of human or other AI
+  else if (curPlr->myGame() == gtPass && !Closed_Whist) {
     if (player(2)->myGame() == whist) {
-      aiPlr = player(2)->instance(nCurrentMove.nValue, mDeskView);
-      qDebug() << "2 plays for " << nCurrentMove.nValue;
-    /*	if (!optAlphaBeta1)	
-			aiPlr = new AiPlayer(nCurrentMove.nValue, mDeskView);
-    	else 
-			aiPlr = new CheatPlayer(nCurrentMove.nValue, mDeskView);*/
+      plr = player(2)->instance(nCurrentMove.nValue, mDeskView);
     }
     else if (player(3)->myGame() == whist) {
-      aiPlr = player(3)->instance(nCurrentMove.nValue, mDeskView);
-      qDebug() << "3 plays for " << nCurrentMove.nValue;
-    /*	if (!optAlphaBeta2)	
-			aiPlr = new AiPlayer(nCurrentMove.nValue, mDeskView);
-    	else 
-			aiPlr = new CheatPlayer(nCurrentMove.nValue, mDeskView);*/
+      plr = player(3)->instance(nCurrentMove.nValue, mDeskView);
     }
     else
     {
       QMessageBox::about(0,"Error","Something went wrong!");
       printf("Something went wrong!");
     }
-    *aiPlr = *curPlr;
-    mPlayers[nCurrentMove.nValue] = aiPlr;
-    res = aiPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(previousPlayer(nCurrentMove)), isPassOut);
-    *curPlr = *aiPlr;
-    mPlayers[nCurrentMove.nValue] = curPlr;
-    delete aiPlr;
   }
 
-  // 3. No swaps, current player makes move himself
-  else {
-    res = curPlr->moveSelectCard(lMove, rMove,
-        player(succPlayer(nCurrentMove)), player(previousPlayer(nCurrentMove)), isPassOut);
+  if (plr) {
+    // Do player logic swap
+    *plr = *curPlr;
+    mPlayers[nCurrentMove.nValue] = plr;
+    qDebug() << plr->type() << " plays for " << nCurrentMove.nValue;
+    res = plr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)),
+      player(previousPlayer(nCurrentMove)), isPassOut);
+    *curPlr = *plr;
+    mPlayers[nCurrentMove.nValue] = curPlr;
+    delete plr;
+  } else {
+    // No swaps, current player makes move himself
+    res = curPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)),
+      player(previousPlayer(nCurrentMove)), isPassOut);
   }
   return res;
 }

@@ -36,6 +36,8 @@ class AiPlayer : public Player {
 public:
   AiPlayer (int aMyNumber, DeskView *aDeskView=0);
 
+  virtual QString type() const { return "Original"; }
+
   virtual Player * instance(int aMyNumber, DeskView *aDeskView=0);
 
 public:

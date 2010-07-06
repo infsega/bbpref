@@ -36,6 +36,8 @@ class HumanPlayer : public Player {
 public:
   HumanPlayer (int aMyNumber, DeskView *aDeskView=0);
 
+  virtual QString type() const { return "Human"; }
+
   virtual Player * instance(int aMyNumber, DeskView *aDeskView=0);
 
   HumanPlayer &operator = (const Player &pl);
