@@ -34,13 +34,6 @@
 #include "kpref.h"
 #include "formbid.h"
 
-#ifndef LOCAL
-	#define i18n_PATH QCoreApplication::applicationDirPath()+"/../share/openpref/i18n"
-#else
-	#define i18n_PATH "."
-#endif
-
-
 using namespace std;
 
 int main (int argc, char *argv[]) {
@@ -79,7 +72,7 @@ int main (int argc, char *argv[]) {
 
   // Load translation of OpenPref
   QTranslator openprefTranslator(0);
-  QString openprefFilename = QString(i18n_PATH) + "/openpref_" + translationCode + ".qm";
+  QString openprefFilename = ":/openpref_" + translationCode + ".qm";
   if(openprefTranslator.load(openprefFilename))
   	a.installTranslator(&openprefTranslator);
 

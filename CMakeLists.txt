@@ -88,7 +88,7 @@ ADD_EXECUTABLE( openpref ${SOURCES} ${MOC_SRCS} ${RC_SRCS} ${UI_HEADERS} ${QMS} 
 TARGET_LINK_LIBRARIES( openpref ${QT_LIBRARIES} )
 
 INSTALL (TARGETS openpref DESTINATION "games")
-install(FILES ${QMS} DESTINATION "share/openpref/i18n")
+#install(FILES ${QMS} DESTINATION "share/openpref/i18n")
 
 # Add support for an uninstall target
 configure_file(

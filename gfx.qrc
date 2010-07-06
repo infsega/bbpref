@@ -1,5 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
   <qresource>
+    <file>openpref_ru.qm</file>
     <file>pics/cards/classic/71.png</file>
     <file>pics/cards/classic/72.png</file>
     <file>pics/cards/classic/73.png</file>
