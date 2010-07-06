@@ -96,6 +96,9 @@ void Kpref::init () {
   connect(mDesktop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
   connect(mDeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
   HintBar->showMessage(tr("Welcome to OpenPref!"));
+
+  //show();
+  //slotNewSingleGame(); 
   
  // resize(width(),height()+HintBar->height());
 }
@@ -200,7 +203,7 @@ void Kpref::forceRepaint () {
 
 void Kpref::slotNewSingleGame () {
 
-  NewGameDialog *dlg = new NewGameDialog;
+  NewGameDialog *dlg = new NewGameDialog(this);
   // Players
   dlg->leHumanName->setText(optHumanName);
   dlg->leName1->setText(optPlayerName1);
@@ -390,7 +393,7 @@ void Kpref::slotOptions () {
   bool oldPrefClub = optPrefClub;
   bool oldDebugHands = optDebugHands;
   
-  OptDialog *dlg = new OptDialog;
+  OptDialog *dlg = new OptDialog(this);
   //connect(dlg->cbPrefClub, SIGNAL(clicked()), this, SLOT(slotDeckChanged()));
   dlg->cbAnimDeal->setChecked(optDealAnim);
   dlg->cbAnimTake->setChecked(optTakeAnim);
