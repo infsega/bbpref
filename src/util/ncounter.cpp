@@ -61,7 +61,7 @@ int succPlayer (const WrapCounter &aCurrent) {
   return res;
 }
 
-int predPlayer(const WrapCounter &aCurrent) {
+int previousPlayer(const WrapCounter &aCurrent) {
   int res = aCurrent.nValue-1;
   if (res < aCurrent.nMin) res = aCurrent.nMax;
   return res;

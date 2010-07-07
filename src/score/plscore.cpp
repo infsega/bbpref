@@ -68,6 +68,8 @@ int ScoreBoard::poolAdd (int delta) {
 
 
 void ScoreBoard::mountainDown (int delta) {
+  if (delta == 0)
+  	return;
   int score = mountain()-delta;
   if (score >= 0) {
     mMountain << score;
@@ -80,13 +82,17 @@ void ScoreBoard::mountainDown (int delta) {
 }
 
 void ScoreBoard::mountainAmnesty (int delta) {
+	if (delta == 0)
+		return;
 	mMountain.last() -= delta;
-	if (mMountain.last() == 0)
+	if ((mMountain.last() == 0) || (mMountain.at(mMountain.size()-2) == mMountain.last()))
 		mMountain.removeLast();
 }
 
 
 void ScoreBoard::mountainUp (int delta) {
+  if (delta == 0)
+  	return;
   int score = mountain();
   mMountain << score+delta;
 }

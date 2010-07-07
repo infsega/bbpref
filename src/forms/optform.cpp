@@ -32,7 +32,7 @@ OptDialog::OptDialog (QWidget *parent) : QDialog(parent) {
 }
 
 
-void OptDialog::showEvent (QShowEvent *event) {
+/*void OptDialog::showEvent (QShowEvent *event) {
   Q_UNUSED(event)
   QWidget *parentObj = dynamic_cast<QWidget *>(parent());
   int x, y;
@@ -47,4 +47,4 @@ void OptDialog::showEvent (QShowEvent *event) {
     y = dims.top()+(dims.height()-height())/2;
   }
   move(x, y);
-}
+}*/

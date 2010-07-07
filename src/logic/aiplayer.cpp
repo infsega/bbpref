@@ -1158,7 +1158,6 @@ Card *AiPlayer::MyPass1 (Card *rMove, Player *aLeftPlayer, Player *aRightPlayer)
   return cur;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // my passout second
 Card *AiPlayer::MyPass2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer) {
@@ -1183,7 +1182,8 @@ Card *AiPlayer::MyPass2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPl
       // У меня есть масть
       if (aLeftPlayer->mCards.cardsInSuit(mast)) {
         //У левого есть
-        cur = mCards.lesserInSuit(aLeftPlayer->mCards.maxInSuit(mast));
+        cur = mCards.lesserInSuit(aLeftPlayer->mCards.minInSuit(mast));
+		if (!cur) cur = mCards.lesserInSuit(aRightCard);
         if (!cur) cur = mCards.maxInSuit(mast);
       } else {
         // У левого нет
@@ -1282,7 +1282,11 @@ eGameBid AiPlayer::moveFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerPas
   if (optStalingrad && MaxGame == g61) {
   	Answer = whist; // Stalingrad  
 	goto myGame;
-  }  
+  }
+  if (!opt10Whist && MaxGame>=101 && MaxGame<=105) {
+	Answer = whist;
+	goto myGame;
+  }
 
   
   if (HaveAWhist == gtPass)
@@ -1451,7 +1455,7 @@ eGameBid AiPlayer::dropForGame () {
 //ход при торговле
 eGameBid AiPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
 //mIStart = (lMove == undefined && rMove == undefined);
-	qDebug() << mPlayerNo << mIStart;
+	//qDebug() << mPlayerNo << mIStart;
 /*
   if ( mMyGame == gtPass )  {
     mMyGame=gtPass;
@@ -1648,6 +1652,7 @@ void AiPlayer::makestatfill (int nCards, int maxmin) {
 */
 
 bool AiPlayer::chooseClosedWhist () {
+	//tSuitProbs countGameTricks((eSuit)f, 1)
 	if (qrand()%4 == 0)
 		return true;
 	else

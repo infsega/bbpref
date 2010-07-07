@@ -23,8 +23,7 @@
 #include <time.h>
 
 #include <QApplication>
-#include <QTextCodec>
-
+#include <QLibraryInfo>
 #include <QLocale>
 #include <QTranslator>
 
@@ -70,10 +69,19 @@ int main (int argc, char *argv[]) {
 
   QApplication a(argc, argv);
   QString translationCode = QLocale::system().name();
-  QString qtFilename = QString(i18n_PATH) + "/openpref_" + translationCode + ".qm";
+
+  // Load Qt translations first
+  bool tryLoadingQtTranslations = false;
+  QString qtFilename = "qt_" + translationCode + ".qm";
   QTranslator qtTranslator(0);
-  qtTranslator.load(qtFilename);
-  a.installTranslator(&qtTranslator);
+  if (qtTranslator.load(qtFilename, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
+    a.installTranslator(&qtTranslator);
+
+  // Load translation of OpenPref
+  QTranslator openprefTranslator(0);
+  QString openprefFilename = QString(i18n_PATH) + "/openpref_" + translationCode + ".qm";
+  if(openprefTranslator.load(openprefFilename))
+  	a.installTranslator(&openprefTranslator);
 
   //a.setFont (QFont("helvetica", FONTSIZE));
   kpref = new Kpref();

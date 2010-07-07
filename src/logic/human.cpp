@@ -136,7 +136,7 @@ eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
   {
   	// If HumanPlayer started bid, he can stay
 	//mIStart = (lMove == undefined && rMove == undefined);
-	qDebug() << mPlayerNo << mIStart;
+	
 	if (mIStart)
 		formBid->disableLessThan(qMax(lMove, rMove));
   	// otherwise he must increase
@@ -225,6 +225,8 @@ eGameBid HumanPlayer::moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerP
   //fprintf(stderr, "whist/pass\n");
   if (MaxGame == g86) {
     mMyGame = g86catch;
+  } else if (!opt10Whist && MaxGame>=101 && MaxGame<=105) {
+	mMyGame = whist;
   } else {
     // Stalingrad?
     formBid->disableAll();
@@ -255,6 +257,7 @@ void HumanPlayer::hilightCard (int lx, int ly) {
     mPrevHiCardIdx = cNo;
   }
   draw();
+  kpref->HintBar->clearMessage();
 }
 
 bool HumanPlayer::chooseClosedWhist () {

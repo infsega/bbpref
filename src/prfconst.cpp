@@ -43,7 +43,7 @@ bool optAlphaBeta1 = false;
 QString optPlayerName2 = "Player 2";
 bool optAlphaBeta2 = false;
 bool optDebugHands = false;
-bool optAggPass = true;
+bool optAggPass = false;
 int optPassCount = 0;
 bool optWithoutThree = true;
 
@@ -96,7 +96,12 @@ int gameWhists (eGameBid gType) {
   if (gType >= g81 && gType <= 85) return 1;
   if (gType == g86) return 0;
   if (gType >= g91 && gType <= 95) return 1;
-  if (gType >= g101 && gType <= 105) return 1;
+  if (gType >= g101 && gType <= 105) {
+	  if (opt10Whist)
+	  	return 1;
+	  else
+	  	return 0;
+  }
   return 4;
 }
 

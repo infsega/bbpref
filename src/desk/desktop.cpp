@@ -227,7 +227,8 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
     HumanPlayer *hPlr = new HumanPlayer(nCurrentMove.nValue, mDeskView);
     *hPlr = *curPlr;
     mPlayers[nCurrentMove.nValue] = hPlr;
-    res = hPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)), isPassOut);
+    res = hPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)),
+      player(previousPlayer(nCurrentMove)), isPassOut);
     *curPlr = *hPlr;
     mPlayers[nCurrentMove.nValue] = curPlr;
     delete hPlr;
@@ -256,7 +257,7 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
 	}
     *aiPlr = *curPlr;
     mPlayers[nCurrentMove.nValue] = aiPlr;
-    res = aiPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)), isPassOut);
+    res = aiPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)), player(previousPlayer(nCurrentMove)), isPassOut);
     *curPlr = *aiPlr;
     mPlayers[nCurrentMove.nValue] = curPlr;
     delete aiPlr;
@@ -266,7 +267,7 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
   else {
     res =
       (player(nCurrentMove))->moveSelectCard(lMove, rMove,
-        player(succPlayer(nCurrentMove)), player(predPlayer(nCurrentMove)), isPassOut);
+        player(succPlayer(nCurrentMove)), player(previousPlayer(nCurrentMove)), isPassOut);
   }
   return res;
 }
@@ -829,7 +830,7 @@ void PrefDesktop::runGame () {
             int tempint = nCurrentMove.nValue;
             int nVisibleState = tmpg->invisibleHand();
             tmpg->setInvisibleHand(false);
-            draw();
+            draw(false);
             if (tmpg->number() != 1)
 				kpref->HintBar->showMessage(tr("Try to remember the cards"));
             /*else 
@@ -883,10 +884,10 @@ void PrefDesktop::runGame () {
           // choice of the first player
           int firstPW = tmpPlayersCounter.nValue;
           mPlayerHi = firstPW;
-		  if (gCurrentGame != g86) {
+		  if ((gCurrentGame != g86) && !(!opt10Whist && gCurrentGame>=101 && gCurrentGame<=105)) {
 			player(tmpPlayersCounter)->setMessage(tr("thinking..."));
-          	if (firstPW != 1) mDeskView->mySleep(2);
 			draw(false);
+			if (firstPW != 1) mDeskView->mySleep(2);
 		  }
           //PassOrVist = PassOrVistPlayers->moveFinalBid(gCurrentGame, gtPass, 0);
 		  PassOrVist = PassOrVistPlayers->moveFinalBid(gCurrentGame, whist, nPassCounter);
@@ -908,7 +909,7 @@ void PrefDesktop::runGame () {
 		  draw(false);
           PassOrVistPlayers = player(tmpPlayersCounter);
           PassOrVistPlayers->setMyGame(undefined);
-		  if (gCurrentGame != g86) {
+		  if ((gCurrentGame != g86) && !(!opt10Whist && gCurrentGame>=101 && gCurrentGame<=105)) {
 			player(tmpPlayersCounter)->setMessage(tr("thinking..."));
 			draw(false);
 		  	if (nextPW != 1) mDeskView->mySleep(2);			
@@ -999,8 +1000,8 @@ void PrefDesktop::runGame () {
 				  
             }*/
 
-			// On misere play with opened cards
-			if (gCurrentGame == g86) {
+			// On misere or 10 check play with opened cards
+			if ((gCurrentGame == g86)|| (!opt10Whist && gCurrentGame>=101 && gCurrentGame<=105)) {
 				player(2)->setInvisibleHand(false);
 				player(3)->setInvisibleHand(false);
 			}

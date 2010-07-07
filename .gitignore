@@ -1,7 +1,7 @@
 _*
 *.o
 *.a
+*.qm
 Makefile*
-z*
 openpref
 build

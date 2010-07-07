@@ -106,30 +106,10 @@ inline void Player::setCurrentStart (bool start) {
 }
 
 
-inline void Player::sortCards () {
-  mCards.mySort();
-}
-
-
-inline void Player::dealCard (Card *aCard) {
-  mCards.insert(aCard);
-}
-
-
 void Player::returnDrop () {
   if (mCardsOut.at(0)) mCards.insert(mCardsOut.at(0));
   if (mCardsOut.at(1)) mCards.insert(mCardsOut.at(1));
   mCardsOut.clear();
-}
-
-
-inline void Player::gotTrick () {
-  mTricksTaken++;
-}
-
-
-inline void Player::gotPassPassTricks (int cnt) {
-  mTricksTaken = cnt;
 }
 
 

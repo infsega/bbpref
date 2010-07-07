@@ -488,6 +488,11 @@ void DeskView::MessageBox (const QString &text, const QString &caption) {
 void DeskView::ShowBlankPaper (int optMaxPool) {
   int PaperWidth = 410;
   int PaperHeight = 530;
+  int PoolWidth = 40;
+  // 190
+  // 307
+  // 
+  
   if (!mDeskBmp) return;
   xDelta = (DesktopWidth-PaperWidth)/2;
   yDelta = (DesktopHeight-PaperHeight)/2;
@@ -505,33 +510,51 @@ void DeskView::ShowBlankPaper (int optMaxPool) {
   b1.setColor(qRgb(255, 255, 0));
   p.setBrush(b1);
   p.setPen(qRgb(0, 0, 0));
-  p.drawEllipse(xDelta+188,yDelta+277,35,35);
-  p.drawLine(xDelta+410, yDelta+530, xDelta+220, yDelta+307);
-  p.drawLine(xDelta+0, yDelta+530, xDelta+190, yDelta+307);
-  p.drawLine(xDelta+205, yDelta+277, xDelta+205, yDelta+0);
-  p.drawLine(xDelta+40, yDelta+0, xDelta+40, yDelta+483);
-  p.drawLine(xDelta+40, yDelta+483, xDelta+370, yDelta+483);
+
+  // Draw borders of paper
+  p.drawLine(xDelta, yDelta, xDelta+PaperWidth, yDelta);
+  p.drawLine(xDelta, yDelta, xDelta, yDelta+PaperHeight);
+  p.drawLine(xDelta, yDelta+PaperHeight, xDelta+PaperWidth, yDelta+PaperHeight);
+  p.drawLine(xDelta+PaperWidth, yDelta, xDelta+PaperWidth, yDelta+PaperHeight);
+
+  // Circle with MaxPool value
+  p.drawEllipse(xDelta+PaperWidth/2-18,yDelta+277,36,36);
+
+  // Diagonal lines from bottom corners to circle
+  p.drawLine(xDelta+PaperWidth, yDelta+PaperHeight, xDelta+PaperWidth-190, yDelta+307);
+  p.drawLine(xDelta+0, yDelta+PaperHeight, xDelta+190, yDelta+307);
+
+  // Central vertical line
+  p.drawLine(xDelta+PaperWidth/2, yDelta+277, xDelta+PaperWidth/2, yDelta+0);
+
+  // External border of pool
+  p.drawLine(xDelta+PoolWidth, yDelta+0, xDelta+PoolWidth, yDelta+483);
+  p.drawLine(xDelta+PoolWidth, yDelta+483, xDelta+370, yDelta+483);
   p.drawLine(xDelta+370, yDelta+483, xDelta+370, yDelta+0);
   //p.drawLine(xDelta+370, yDelta+0, xDelta+80, yDelta+0);
   
   // Border of mountain
-  p.drawLine(xDelta+80, yDelta+0, xDelta+80, yDelta+436);
-  p.drawLine(xDelta+80, yDelta+436, xDelta+330, yDelta+436);
+  p.drawLine(xDelta+2*PoolWidth, yDelta+0, xDelta+2*PoolWidth, yDelta+436);
+  p.drawLine(xDelta+2*PoolWidth, yDelta+436, xDelta+330, yDelta+436);
   p.drawLine(xDelta+330, yDelta+436, xDelta+330, yDelta+0);
   
-  p.drawLine(xDelta+0, yDelta+255, xDelta+40, yDelta+255);
-  p.drawLine(xDelta+410, yDelta+255, xDelta+370, yDelta+255);
-  p.drawLine(xDelta+205, yDelta+530, xDelta+205, yDelta+483);
-  //itoa(optMaxPool, buff, 10);
+  p.drawLine(xDelta+0, yDelta+255, xDelta+PoolWidth, yDelta+255);
+  p.drawLine(xDelta+PaperWidth, yDelta+255, xDelta+370, yDelta+255);
+  p.drawLine(xDelta+PaperWidth/2, yDelta+PaperHeight, xDelta+PaperWidth/2, yDelta+483);
+
+  // Draw text
+  
+  // MaxPool
   //p.drawText(xDelta+197, FONTSIZE+yDelta+292, buff);
-  //drawText(QString::number(optMaxPool), xDelta+197, yDelta+290);
-  p.drawText(xDelta+197, yDelta+300, QString::number(optMaxPool));
+  p.drawText(QRect(xDelta+PaperWidth/2-18,yDelta+277,36,36),
+	QString::number(optMaxPool), QTextOption(Qt::AlignCenter));
   
   // Players' names
   p.setBrush(brush);
-  p.drawText(QRectF(xDelta+150,yDelta+350,110,20),optHumanName,QTextOption(Qt::AlignHCenter));
+  p.drawText(QRect(xDelta+150,yDelta+350,110,20),optHumanName,QTextOption(Qt::AlignHCenter));
   drawRotatedText(p,xDelta+175,yDelta+200,110,20,90,optPlayerName1);
   drawRotatedText(p,xDelta+235,yDelta+310,110,20,-90,optPlayerName2);
+  
   p.end();
 }
 

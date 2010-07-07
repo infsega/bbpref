@@ -1,9 +1,15 @@
 OpenPref 0.1.3
 
+New game features:
+* Closed whist
 * Without three
-* Clean exit
-* Options inside game
-* Save/open
-* Resizable window
-* Fixed bug in misere
+* Improved old AI for misere and pass-out
 * Fixed bug in bidding after pass-out
+* Amnesty for pass-out
+
+Other improvements
+* Clean exit without sending abort()
+* Two card decks are available
+* Options (animation and card deck) can be changed game
+* Save/open functionality
+* Resizable window
