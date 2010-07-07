@@ -1105,10 +1105,12 @@ Card *AiPlayer::MyPass1 (Card *rMove, Player *aLeftPlayer, Player *aRightPlayer)
   int doRest = 0;
 
   if (rMove != 0)  {
-    aTmpList.copySuit(&mCards, (eSuit)rMove->suit());
+	cur = mCards.minInSuit(rMove->suit());
+	return cur;
+    /*aTmpList.copySuit(&mCards, (eSuit)rMove->suit());
     aStackStore = mCards;
     mCards = aTmpList;
-    doRest = 1;
+    doRest = 1;*/
     //loadLists(aLeftPlayer, aRightPlayer, aMaxCardList); // !!!!!!!!!
     //recalcPassOutTables(aMaxCardList, 1);
   }
@@ -1116,19 +1118,43 @@ Card *AiPlayer::MyPass1 (Card *rMove, Player *aLeftPlayer, Player *aRightPlayer)
     loadLists(aLeftPlayer, aRightPlayer, aMaxCardList); // !!!!!!!!!
     recalcPassOutTables(aMaxCardList,1);
     // тема такая : 100 % отбери своё, если такового нет - мах в минимально длинной масти
-    cur = GetMaxCardWithOutPere(); // за искл тех случ коды масти уже нет
+    /*cur = GetMaxCardWithOutPere(); // за искл тех случ коды масти уже нет
     if (cur) {
       if (aLeftPlayer->mCards.cardsInSuit(cur->suit()) == 0 &&
           aRightPlayer->mCards.cardsInSuit(cur->suit()) == 0) {
         cur = 0;
       }
-    }
-    if (!cur) cur = GetMaxCardPere(); //масть с перехватами (max)
-    if (!cur) cur = GetMinCardWithOutVz(); // лабуду
+    }*/
+    //if (!cur) cur = GetMaxCardPere(); //масть с перехватами (max)
+    //if (!cur) cur = GetMinCardWithOutVz(); // лабуду
+	
+	// Randomization
+  	int suit[4];
+  	int s;
+  	for (int i=0; i<4; i++) {
+		s=0;
+		while (s==0) {
+			s = qrand()%4+1;
+			for (int j=0; j<i; j++)
+				if (s==suit[j]) s=0;
+		}
+		suit[i]=s;
+  	}
+	
+	for (int i = 0; i < 4; i++) {
+		int m = suit[i];	// Random order of suits
+		cur = mCards.minInSuit(m);
+      	if (aLeftPlayer->mCards.greaterInSuit(cur) != 0 ||
+          aRightPlayer->mCards.greaterInSuit(cur) != 0) 
+		  	return cur;
+		else
+			cur = 0;
+	}
+	
     if (!cur) cur = mCards.minFace();
   }
-  if (doRest) mCards = aStackStore;
-  mMyGame = tmpGamesType;
+  //if (doRest) mCards = aStackStore;
+  //mMyGame = tmpGamesType;
   return cur;
 }
 
