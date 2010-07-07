@@ -14,6 +14,7 @@ SET( CMAKE_VERBOSE_MAKEFILE ON )
 SET( CMAKE_INCLUDE_CURRENT_DIR TRUE )
 SET( CMAKE_MODULE_PATH ${openpref_SOURCE_DIR}/cmake )
 
+# These names are case-insensitive i.e. you can do -DCMAKE_BUILD_TYPE=debug
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE RelWithDebInfo)
 endif (NOT CMAKE_BUILD_TYPE)
