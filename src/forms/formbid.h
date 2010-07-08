@@ -60,7 +60,6 @@ protected:
   QList<QPushButton *> buttonList ();
   QList<QBidButton *> bidButtonList ();
 
-  void showEvent (QShowEvent *event);
   void closeEvent(QCloseEvent *event);
 
 public:

@@ -29,22 +29,9 @@ NewGameDialog::NewGameDialog (QWidget *parent) : QDialog(parent) {
   setupUi(this);
   setAttribute(Qt::WA_QuitOnClose, false);
   setAttribute(Qt::WA_DeleteOnClose, false);
+  connect(cbRounds, SIGNAL(stateChanged(int)), this, SLOT(toggleRounds(int)));
 }
 
-
-/*void NewGameDialog::showEvent (QShowEvent *event) {
-  Q_UNUSED(event)
-  QWidget *parentObj = dynamic_cast<QWidget *>(parent());
-  int x, y;
-  if (parentObj) {
-    QRect dims(parentObj->frameGeometry());
-    x = dims.left()+(dims.width()-width())/2;
-    y = dims.top()+(dims.height()-height())/2;
-  } else {
-    QDesktopWidget *desk = QApplication::desktop();
-    QRect dims(desk->availableGeometry(this));
-    x = dims.left()+(dims.width()-width())/2;
-    y = dims.top()+(dims.height()-height())/2;
-  }
-  move(x, y);
-}*/
+void NewGameDialog::ToggleRounds(int s) {
+  sbRounds->setEnabled(s == Qt::Checked);
+}

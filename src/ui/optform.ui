@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>242</width>
-    <height>200</height>
+    <height>186</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,9 +24,6 @@
    <bool>true</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="sizeConstraint">
-    <enum>QLayout::SetFixedSize</enum>
-   </property>
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
@@ -93,19 +90,6 @@
       <string>Sho&amp;w AI cards (debug)</string>
      </property>
     </widget>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
