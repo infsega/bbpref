@@ -32,6 +32,6 @@ NewGameDialog::NewGameDialog (QWidget *parent) : QDialog(parent) {
   connect(cbRounds, SIGNAL(stateChanged(int)), this, SLOT(toggleRounds(int)));
 }
 
-void NewGameDialog::ToggleRounds(int s) {
+void NewGameDialog::toggleRounds(int s) {
   sbRounds->setEnabled(s == Qt::Checked);
 }
