@@ -35,6 +35,9 @@ const int FACE_ACE   = 14;
 
 class Card {
 public:
+  Card (int aFace, int aSuit);
+  ~Card ();
+  
   int face () const { return mFace; }
   int suit () const { return mSuit; }
   bool isValid () const { return mValid; }
@@ -42,6 +45,8 @@ public:
   int pack () const;
 
   QString toString () const;
+  /// Returns face of card with Unicode symbol of its suite
+  QString toUniString () const;
 
   friend int operator > (const Card &c0, const Card &c1);
   friend int operator < (const Card &c0, const Card &c1);
@@ -57,12 +62,9 @@ private:
   void validate ();
   int compareWith (const Card &c1) const;
 
-  Card (int aFace, int aSuit);
-  ~Card ();
-
 private:
-  int mFace; //от 7,8,9,10,11j,12q,13k,14a
-  int mSuit; //от 1 до 4
+  int mFace; // 7,8,9,10,11j,12q,13k,14a
+  int mSuit; // 1 to 4
   bool mValid;
 };
 

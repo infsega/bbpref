@@ -21,7 +21,7 @@
  */
 
 #include "card.h"
-
+#include <QDebug>
 
 Card::Card (int aFace, int aSuit) {
   mFace = aFace;
@@ -76,6 +76,29 @@ QString Card::toString () const {
   return res;
 }
 
+QString Card::toUniString () const {
+  QString res("???");
+  if (!mValid) return res;
+  switch (mFace) {
+    case 7: res = " 7"; break;
+    case 8: res = " 8"; break;
+    case 9: res = " 9"; break;
+    case 10: res = "10"; break;
+    case 11: res = " J"; break;
+    case 12: res = " Q"; break;
+    case 13: res = " K"; break;
+    case 14: res = " A"; break;
+    default: return res;
+  }
+  switch (mSuit) {
+    case 1: res += QChar(0x2660) /*"s"*/; break;
+    case 2: res += QChar(0x2666) /*"c"*/; break;
+    case 3: res += QChar(0x2663) /*"d"*/; break;
+    case 4: res += QChar(0x2665) /*"h"*/; break;
+    default: res = "???";
+  }
+  return res;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 int operator > (const Card &c0, const Card &c1) {
