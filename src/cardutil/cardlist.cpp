@@ -99,7 +99,8 @@ int CardList::cardsInSuit (int aSuit) const {
 
 int CardList::count () const {
   int res = 0;
-  foreach (Card *c, mList) if (c) res++;
+  foreach (Card *c, mList)
+    if (c) res++;
   return res;
 }
 
