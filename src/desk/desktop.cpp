@@ -224,17 +224,17 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
   // passes or catches misere
   if (((player(1)->myGame() == whist && !Closed_Whist) || player(1)->myGame() == g86catch) &&
       curPlr->number() != 1 && (curPlr->myGame() == gtPass || curPlr->myGame() == g86catch)) {
-    plr = player(1)->instance(nCurrentMove.nValue, mDeskView);
+    plr = player(1)->create(nCurrentMove.nValue, mDeskView);
   }
 
   // 2. Current player passes
   // if AI whists with open cards, it makes move instead of human or other AI
   else if (curPlr->myGame() == gtPass && !Closed_Whist) {
     if (player(2)->myGame() == whist) {
-      plr = player(2)->instance(nCurrentMove.nValue, mDeskView);
+      plr = player(2)->create(nCurrentMove.nValue, mDeskView);
     }
     else if (player(3)->myGame() == whist) {
-      plr = player(3)->instance(nCurrentMove.nValue, mDeskView);
+      plr = player(3)->create(nCurrentMove.nValue, mDeskView);
     }
     else
     {

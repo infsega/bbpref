@@ -703,7 +703,7 @@ CheatPlayer::CheatPlayer (int aMyNumber, DeskView *aDeskView) : AiPlayer(aMyNumb
   mInvisibleHand = false;
 }
 
-Player * CheatPlayer::instance(int aMyNumber, DeskView *aDeskView) {
+Player * CheatPlayer::create(int aMyNumber, DeskView *aDeskView) {
   Player * pl = new CheatPlayer(aMyNumber, aDeskView);
   return pl;
 }

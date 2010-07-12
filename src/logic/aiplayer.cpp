@@ -35,7 +35,7 @@ AiPlayer::AiPlayer (int aMyNumber, DeskView *aDeskView) : Player(aMyNumber, aDes
   internalInit();
 }
 
-Player * AiPlayer::instance(int aMyNumber, DeskView *aDeskView) {
+Player * AiPlayer::create(int aMyNumber, DeskView *aDeskView) {
   Player * pl = new AiPlayer(aMyNumber, aDeskView);
   return pl;
 }

@@ -39,7 +39,7 @@ public:
 
   virtual QString type() const = 0;
 
-  virtual Player * instance(int aMyNumber, DeskView *aDeskView) = 0;
+  virtual Player * create(int aMyNumber, DeskView *aDeskView) = 0;
 
   Player &operator = (const Player &pl);
 

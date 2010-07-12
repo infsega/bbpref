@@ -44,7 +44,7 @@ HumanPlayer::HumanPlayer (int aMyNumber, DeskView *aDeskView) : Player(aMyNumber
   internalInit();
 }
 
-Player * HumanPlayer::instance(int aMyNumber, DeskView *aDeskView) {
+Player * HumanPlayer::create(int aMyNumber, DeskView *aDeskView) {
   Player * pl = new HumanPlayer(aMyNumber, aDeskView);
   return pl;
 }
