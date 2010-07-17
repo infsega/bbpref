@@ -113,7 +113,7 @@ private:
 
 private:
   QHash<QString, QImage *> cardI;
-  QImage *bidIcons[106]; // wasted!
+  QHash<int, QImage *> bidIcons;
 };
 
 

@@ -92,7 +92,6 @@ static void yellowize (QImage *im, QRgb newColor=qRgb(255, 255, 0)) {
 
 bool DeskView::loadCards () {
   //qDebug() << SLOT(slotPushButtonClick95());
-  for (int f = 0; f < 106; f++) bidIcons[f] = 0;
   // load cards from resources
   QString deckPath;
   if (optPrefClub) {
@@ -135,8 +134,12 @@ bool DeskView::loadCards () {
 
 
 void DeskView::freeCards () {
-  for (int f = 0; f < 106; f++) { if (bidIcons[f]) delete bidIcons[f]; bidIcons[f] = 0; }
-  foreach (QImage *i, cardI) if (i) delete i;
+  foreach (QImage *i, bidIcons)
+    if (i) delete i;
+  bidIcons.clear();
+
+  foreach (QImage *i, cardI)
+    if (i) delete i;
   cardI.clear();
 }
 
