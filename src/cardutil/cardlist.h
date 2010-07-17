@@ -50,6 +50,7 @@ public:
 
   bool hasSuit (int aSuit) const;
 
+  /// Returns first card bigger than defined by aFace and aSuit
   Card *greaterInSuit (int aFace, int aSuit) const; //первая больше чем переданная
   Card *lesserInSuit (int aFace, int aSuit) const; //первая меньше чем переданная
   Card *greaterInSuit (Card *card) const; //первая больше чем переданная

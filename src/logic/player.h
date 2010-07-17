@@ -63,6 +63,7 @@ public:
 
   virtual bool chooseClosedWhist () = 0;
 
+  /// @todo Move to view
   virtual void getLeftTop (int *left, int *top);
   virtual void draw ();
   virtual void hilightCard (int lx, int ly); // подсветить карту по данным координатам (и перерисовать руку, если надо)

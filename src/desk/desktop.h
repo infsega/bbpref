@@ -81,12 +81,14 @@ private:
   Player *player (const WrapCounter &cnt);
   Card *makeGameMove (Card *lMove, Card *rMove, bool isPassOut);
 
+  /// @todo Move to view
   void drawInGameCard (int mCardNo, Card *card);
   void inGameCardLeftTop (int mCardNo, int *left, int *top);
   void animateDeskToPlayer (int plrNo, bool doAnim);
 
 private:
   //void drawBidWindows (const eGameBid *bids, int curPlr);
+  /// @todo Move to view
   void getPMsgXY (int plr, int *x, int *y);
 
   int playerWithMaxPool (); // except the players who closed the pool
