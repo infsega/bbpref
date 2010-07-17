@@ -51,7 +51,6 @@ const char * GenName(string str, string ext);
 //char *documentation; //see bottom this file
 Kpref *kpref;
 
-
 Kpref::Kpref () {
   setWindowTitle("OpenPref");
   
@@ -129,29 +128,34 @@ void Kpref::adjustDesk () {
 
 
 void Kpref::initMenuBar () {
-  fileMenu = menuBar()->addMenu(tr("&Game"));
+  QMenu *fileMenu = menuBar()->addMenu(tr("&Game"));
+
   actNewGame = fileMenu->addAction(QIcon(QString(":/pics/newgame.png")), tr("&New game..."), this, SLOT(slotNewSingleGame()), Qt::CTRL+Qt::Key_N);
+
   fileMenu->addSeparator();
+
   actFileOpen = fileMenu->addAction(QIcon(QString(":/pics/fileopen.png")), tr("&Open..."), this, SLOT(slotFileOpen()), Qt::CTRL+Qt::Key_O);
   actFileSave = fileMenu->addAction(QIcon(QString(":/pics/filesave.png")), tr("&Save"), this, SLOT(slotFileSave()), Qt::CTRL+Qt::Key_S);
+
   fileMenu->addSeparator();
-  actOptions = fileMenu->addAction(QIcon(QString(":/pics/tool.png")), tr("&Options..."), this, SLOT(slotOptions()), Qt::CTRL+Qt::Key_P);
+
+  QAction *actOptions = fileMenu->addAction(QIcon(QString(":/pics/tool.png")), tr("&Options..."), this, SLOT(slotOptions()), Qt::CTRL+Qt::Key_P);
   fileMenu->addSeparator();
   //actQuit = fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), qApp, SLOT(quit()), Qt::CTRL+Qt::Key_Q);
-  actQuit = fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), this, SLOT(slotQuit()), Qt::CTRL+Qt::Key_Q);
+  fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), this, SLOT(slotQuit()), Qt::CTRL+Qt::Key_Q);
+  
   actFileSave->setEnabled(false);
   actOptions->setEnabled(true);
 
-  viewMenu = menuBar()->addMenu(tr("&Show"));
+  QMenu *viewMenu = menuBar()->addMenu(tr("&Show"));
   viewMenu->addAction(QIcon(QString(":/pics/paper.png")), tr("S&core..."), this, SLOT(slotShowScore()), Qt::CTRL+Qt::Key_R);
 
   menuBar()->addSeparator();
-  helpMenu = menuBar()->addMenu(tr("&Help"));
+
+  QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
   helpMenu->addAction(tr("&Preferans Rules..."), this, SLOT(slotRules()), Qt::Key_F1);
   helpMenu->addAction(tr("&About OpenPref"), this, SLOT(slotHelpAbout()), 0);
   helpMenu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
-  //actAboutQt = helpMenu->addAction(tr("About &Qt"));
-  //connect(actAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }
 
 

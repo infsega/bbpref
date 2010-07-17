@@ -81,18 +81,9 @@ private:
   void saveOptions ();
   void loadOptions ();
 
-private:
-  QMenu *netgameMenu;
-  QMenu *fileMenu;
-  QMenu *viewMenu;
-  QMenu *helpMenu;
-
   QAction *actNewGame;
   QAction *actFileOpen;
   QAction *actFileSave;
-  QAction *actQuit;
-  QAction *actOptions;
-  QAction *actAboutQt;
 
 public:
   PrefDesktop *mDesktop;

@@ -38,49 +38,6 @@
 #include "card.h"
 #include "prfconst.h"
 
-
-class DeskView;
-class SleepEventLoop;
-
-
-class SleepEventFilter : public QObject {
-  Q_OBJECT
-public:
-  SleepEventFilter (SleepEventLoop *eloop, QObject *parent=0) : QObject(parent) { mLoop = eloop; }
-
-protected:
-  bool eventFilter (QObject *obj, QEvent *e);
-
-private:
-  SleepEventLoop *mLoop;
-};
-
-
-class SleepEventLoop : public QEventLoop {
-  Q_OBJECT
-public:
-  SleepEventLoop (DeskView *aDeskView, QObject *parent=0) : QEventLoop(parent),
-    mDeskView(aDeskView), mKeyPressed(false), mMousePressed(false), mMouseX(0), mMouseY(0),
-    mIgnoreKey(false), mIgnoreMouse(false) { }
-
-  void doEventKey (QKeyEvent *event);
-  void doEventMouse (QMouseEvent *event);
-
-public slots:
-  void keyPicUpdate ();
-
-public:
-  DeskView *mDeskView;
-
-  bool mKeyPressed; // exited due to mouse click?
-  bool mMousePressed; // exited due to mouse click?
-  int mMouseX, mMouseY; // where the click was?
-
-  bool mIgnoreKey; // ignore key events?
-  bool mIgnoreMouse; // ignore mouse events?
-};
-
-
 class DeskView : public QObject {
   Q_OBJECT
 public:
