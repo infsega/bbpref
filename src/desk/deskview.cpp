@@ -101,6 +101,13 @@ bool DeskView::loadCards () {
       bidIcons[f*10+s] = new QPixmap(fname);
     }
   }
+  cardI.squeeze();
+  bidIcons.squeeze();
+  //qDebug() << "cardI.size() = " << cardI.size();
+  //qDebug() << "cardI.capacity() = " << cardI.capacity();  
+  //qDebug() << "bidIcons.size() = " << bidIcons.size();
+  //qDebug() << "bidIcons.capacity() = " << bidIcons.capacity();
+  
   // done
   return true;
 }
