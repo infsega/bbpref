@@ -78,7 +78,7 @@ int main (int argc, char *argv[]) {
 
   //a.setFont (QFont("helvetica", FONTSIZE));
   kpref = new Kpref();
-  formBid = new FormBid(kpref);
+  FormBid *formBid = FormBid::instance(kpref);
   formBid->hide();
   kpref->init();
   kpref->show();

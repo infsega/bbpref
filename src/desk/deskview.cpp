@@ -650,6 +650,7 @@ eGameBid DeskView::selectBid (eGameBid lMove, eGameBid rMove) {
   Q_UNUSED(rMove)
   //if (!formBid->exec()) qApp->quit();
   //connect(formBid, SIGNAL(rejected()), kpref, SLOT(slotAbortBid()));
+  FormBid *formBid = FormBid::instance();
   formBid->_GamesType = undefined;
   do
   	formBid->exec();

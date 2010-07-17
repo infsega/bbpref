@@ -78,6 +78,7 @@ eGameBid HumanPlayer::dropForGame () {
   //!.!mDeskView->mySleep(1);
   moveSelectCard(0, 0, 0, 0);
 
+  FormBid *formBid = FormBid::instance();
   formBid->enableAll();
   formBid->disableItem(whist);
   //formBid->disableItem(halfwhist);
@@ -118,6 +119,7 @@ eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
   mClickX = mClickY = 0; mWaitingForClick = true;
 
   //fprintf(stderr, "select bid\n");
+  FormBid *formBid = FormBid::instance();
   formBid->enableAll();
   /*if (optAggPass && optPassCount > 0) {
     if (lMove == undefined) lMove = g71;
@@ -215,6 +217,8 @@ Card *HumanPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
 eGameBid HumanPlayer::moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerPass) {
   Q_UNUSED(HaveAVist)
   //Q_UNUSED(nGamerVist)
+
+  FormBid *formBid = FormBid::instance();
 
   //fprintf(stderr, "whist/pass\n");
   if (MaxGame == g86) {

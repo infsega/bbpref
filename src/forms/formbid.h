@@ -37,8 +37,7 @@ class FormBid : public QDialog  {
  Q_OBJECT
 
 public:
-  FormBid (QWidget *parent=0);
-  ~FormBid ();
+  static FormBid* instance(QWidget *parent=0);
 
   void enableAll ();
   void disableAll ();
@@ -56,6 +55,9 @@ public slots:
   void slotShowBullet ();
 
 protected:
+  FormBid (QWidget *parent=0);
+  ~FormBid ();
+
   void initDialog ();
   QList<QPushButton *> buttonList ();
   QList<QBidButton *> bidButtonList ();
@@ -74,8 +76,5 @@ protected:
   QPushButton *bvist;
 
 };
-
-extern FormBid *formBid;
-
 
 #endif

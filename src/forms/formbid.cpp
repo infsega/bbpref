@@ -31,9 +31,6 @@
 #include "prfconst.h"
 
 
-FormBid *formBid;
-
-
 FormBid::FormBid (QWidget *parent) : QDialog (parent) {
   this->setModal(true);
   setWindowTitle(tr("Bidding"));
@@ -42,6 +39,16 @@ FormBid::FormBid (QWidget *parent) : QDialog (parent) {
 
 
 FormBid::~FormBid () {
+}
+
+FormBid* FormBid::instance(QWidget *parent)
+{
+  static FormBid *obj = 0;
+
+    if (!obj)
+      obj = new FormBid(parent);
+
+    return obj;
 }
 
 void FormBid::closeEvent(QCloseEvent *event) {
