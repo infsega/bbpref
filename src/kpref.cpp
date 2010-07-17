@@ -1,7 +1,7 @@
 /*
  *      OpenPref - cross-platform Preferans game
  *      
- *      Copyright (C) 2000-2009 OpenPref Developers
+ *      Copyright (C) 2000-2010 OpenPref Developers
  *      (see file AUTHORS for more details)
  *      Contact: annulen@users.sourceforge.net
  *      
@@ -339,7 +339,7 @@ void Kpref::slotHelpAbout () {
     tr("<h2 align=center>&spades; <font color=red>&diams;</font> OpenPref 0.1.3 &clubs; <font color=red>&hearts;</font></h2>"
 	"<p>More information on <br/><a href=\"http://sourceforge.net/projects/openpref\">http://sourceforge.net/projects/openpref</a><br/>"
     "Get latest sources on <br/><a href=\"http://gitorious.org/openprefqt4\">http://gitorious.org/openprefqt4</a><br/></p>\n"
-    "  <br/>Copyright &copy;2000-2009, OpenPref Developers:<br/>I.Azarniy, A.V.Fedotov, Ketmar Dark, K.Tokarev<br/>"
+    "  <br/>Copyright &copy;2000-2010, OpenPref Developers:<br/>I.Azarniy, A.V.Fedotov, Ketmar Dark, K.Tokarev<br/>"
 	"<br/>"
 	"OpenPref is free software; you can redistribute it and/or modify<br/>"
     "it under the terms of the GNU General Public License (see file<br/>"

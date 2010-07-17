@@ -1,7 +1,7 @@
 /*
  *      OpenPref - cross-platform Preferans game
  *      
- *      Copyright (C) 2000-2009 OpenPref Developers
+ *      Copyright (C) 2000-2010 OpenPref Developers
  *      (see file AUTHORS for more details)
  *      Contact: annulen@users.sourceforge.net
  *      
