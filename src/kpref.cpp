@@ -41,12 +41,9 @@
 #include "helpbrowser.h"
 #include "player.h"
 
-#include <string>
-using std::string;
-
 #define HINTBAR_MAX_HEIGHT 22
 
-const char * GenName(string str, string ext);
+inline const char * GenName(QString str, QString ext);
 
 //char *documentation; //see bottom this file
 Kpref *kpref;
@@ -176,7 +173,7 @@ void Kpref::slotFileSave () {
   if (mDesktop) {
     QString fn = QFileDialog::getSaveFileName(this, "Select file to save the current game", "", "*.prf");
     if (!fn.isEmpty()) {
-		fn = GenName(fn.toStdString(), "prf");
+		fn = GenName(fn, ".prf");
 		mDesktop->saveGame(fn);
 	}
   }
@@ -489,15 +486,10 @@ bool Kpref::WhistType () {
 		return true;
 }
 
-const char * GenName(string str, string ext)
+const char * GenName(QString str, QString ext)
 {
-	size_t dot_pos=str.rfind('.');
-	if (dot_pos!=string::npos)
-		str.replace(dot_pos+1,str.length()-dot_pos,ext);
-	else
-	{
-		str += ".";
-		str += ext;
-	}
-	return str.c_str();
+  int dot_pos=str.indexOf(ext);
+  if (dot_pos == -1)
+    str += ext;
+  return str.toLocal8Bit();
 }
