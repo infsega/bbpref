@@ -223,7 +223,7 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
   // Human's move if current he whists whith open cards or catches misere, and current player
   // passes or catches misere
   if (((player(1)->myGame() == whist && !Closed_Whist) || player(1)->myGame() == g86catch) &&
-      curPlr->number() != 1 && (curPlr->myGame() == gtPass || curPlr->myGame() == g86catch)) {
+      !curPlr->isHuman() && (curPlr->myGame() == gtPass || curPlr->myGame() == g86catch)) {
     plr = player(1)->create(nCurrentMove.nValue, mDeskView);
   }
 

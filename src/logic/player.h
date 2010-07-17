@@ -38,6 +38,7 @@ public:
   virtual ~Player ();
 
   virtual QString type() const = 0;
+  virtual bool isHuman() const { return false; }
 
   virtual Player * create(int aMyNumber, DeskView *aDeskView) = 0;
 
