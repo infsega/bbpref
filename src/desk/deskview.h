@@ -25,14 +25,6 @@
 #ifndef DESKVIEW_H
 #define DESKVIEW_H
 
-/*#include <QApplication>
-#include <QEventLoop>
-#include <QMainWindow>
-#include <QMessageBox>
-#include <QPainter>
-#include <QPixmap>
-*/
-
 #include <QHash>
 #include <QPixmap>
 #include <QString>

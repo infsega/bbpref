@@ -23,7 +23,6 @@
 #ifndef DESKTOP_H
 #define DESKTOP_H
 
-#include <QByteArray>
 #include <QObject>
 
 #include "cardlist.h"
