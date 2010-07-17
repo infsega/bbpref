@@ -32,9 +32,14 @@
 #include <QPainter>
 #include <QPixmap>
 */
+
 #include <QHash>
-#include <QImage>
+#include <QPixmap>
 #include <QString>
+
+#include <QEventLoop>
+#include <QKeyEvent>
+#include <QMouseEvent>
 
 #include "prfconst.h"
 
@@ -85,11 +90,11 @@ signals:
 
 public:
   int Event;
-  QImage *mDeskBmp;
-  QImage *mBidBmp;
-  QImage *mIMoveBmp;
-  QImage *mKeyBmp[2];
-  QImage *mDigitsBmp;
+  QPixmap *mDeskBmp;
+  QPixmap *mBidBmp;
+  QPixmap *mIMoveBmp;
+  QPixmap *mKeyBmp[2];
+  QPixmap *mDigitsBmp;
 
   int nSecondStartWait;
   int DesktopWidth, DesktopHeight;
@@ -109,12 +114,35 @@ private:
   int bidBmpX, bidBmpY;
 
 private:
-  QImage *GetImgByName (const char *name);
+  QPixmap *GetImgByName (const char *name);
 
 private:
-  QHash<QString, QImage *> cardI;
-  QHash<int, QImage *> bidIcons;
+  QHash<QString, QPixmap *> cardI;
+  QHash<int, QPixmap *> bidIcons;
 };
 
+class SleepEventLoop : public QEventLoop {
+  Q_OBJECT
+public:
+  SleepEventLoop (DeskView *aDeskView, QObject *parent=0) : QEventLoop(parent),
+    mDeskView(aDeskView), mKeyPressed(false), mMousePressed(false), mMouseX(0), mMouseY(0),
+    mIgnoreKey(false), mIgnoreMouse(false) { }
+
+  void doEventKey (QKeyEvent *event);
+  void doEventMouse (QMouseEvent *event);
+
+public slots:
+  void keyPicUpdate ();
+
+public:
+  DeskView *mDeskView;
+
+  bool mKeyPressed; // exited due to mouse click?
+  bool mMousePressed; // exited due to mouse click?
+  int mMouseX, mMouseY; // where the click was?
+
+  bool mIgnoreKey; // ignore key events?
+  bool mIgnoreMouse; // ignore mouse events?
+};
 
 #endif

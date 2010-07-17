@@ -23,14 +23,10 @@
 #include <QDebug>
 
 #include <QApplication>
-#include <QEventLoop>
 #include <QMessageBox>
 //#include <QPixmap>
 #include <QPainter>
 #include <QTimer>
-
-#include <QKeyEvent>
-#include <QMouseEvent>
 
 #include "deskview.h"
 
@@ -39,7 +35,7 @@
 #include "kpref.h"
 #include "prfconst.h"
 
-class SleepEventLoop;
+//class SleepEventLoop;
 
 class SleepEventFilter : public QObject {
 public:
@@ -50,30 +46,6 @@ protected:
 
 private:
   SleepEventLoop *mLoop;
-};
-
-
-class SleepEventLoop : public QEventLoop {
-public:
-  SleepEventLoop (DeskView *aDeskView, QObject *parent=0) : QEventLoop(parent),
-    mDeskView(aDeskView), mKeyPressed(false), mMousePressed(false), mMouseX(0), mMouseY(0),
-    mIgnoreKey(false), mIgnoreMouse(false) { }
-
-  void doEventKey (QKeyEvent *event);
-  void doEventMouse (QMouseEvent *event);
-
-public slots:
-  void keyPicUpdate ();
-
-public:
-  DeskView *mDeskView;
-
-  bool mKeyPressed; // exited due to mouse click?
-  bool mMousePressed; // exited due to mouse click?
-  int mMouseX, mMouseY; // where the click was?
-
-  bool mIgnoreKey; // ignore key events?
-  bool mIgnoreMouse; // ignore mouse events?
 };
 
 
@@ -103,29 +75,30 @@ bool DeskView::loadCards () {
   	deckPath = "classic/";
 	CARDWIDTH = 71;
 	CARDHEIGHT = 96;
-  }	
+  }
   for (int face = 7; face <= 14; face++) {
     for (int suit = 1; suit <= 4; suit++) {
       QString fname, resname;
       resname.sprintf("%i%i", face, suit);
       fname.sprintf(QString(":/pics/cards/"+deckPath+"%i%i.png").toAscii(), face, suit);
-      cardI[resname] = new QImage(fname);
+      cardI[resname] = new QPixmap(fname);
       // build highlighted image
-      QImage *im = new QImage(fname);
-      yellowize(im);
+      QImage im(fname);
+      yellowize(&im);
       resname.sprintf("q%i%i", face, suit);
-      cardI[resname] = im;
+      //cardI[resname] = new QPixmap;
+      cardI[resname] = new QPixmap(QPixmap::fromImage(im));
     }
   }
   // load cardback
-  cardI["1000"] = new QImage(QString(":/pics/cards/"+deckPath+"1000.png"));
-  cardI["empty"] = new QImage(QString(":/pics/cards/"+deckPath+"empty.png"));
+  cardI["1000"] = new QPixmap(QString(":/pics/cards/"+deckPath+"1000.png"));
+  cardI["empty"] = new QPixmap(QString(":/pics/cards/"+deckPath+"empty.png"));
   // load bid icons
   for (int f = 6; f <= 10; f++) {
     for (int s = 1; s <= 5; s++) {
       QString fname;
       fname.sprintf(":/pics/bids/s%i%i.png", f, s);
-      bidIcons[f*10+s] = new QImage(fname);
+      bidIcons[f*10+s] = new QPixmap(fname);
     }
   }
   // done
@@ -134,17 +107,17 @@ bool DeskView::loadCards () {
 
 
 void DeskView::freeCards () {
-  foreach (QImage *i, bidIcons)
+  foreach (QPixmap *i, bidIcons)
     if (i) delete i;
   bidIcons.clear();
 
-  foreach (QImage *i, cardI)
+  foreach (QPixmap *i, cardI)
     if (i) delete i;
   cardI.clear();
 }
 
 
-QImage *DeskView::GetImgByName (const char *name) {
+QPixmap *DeskView::GetImgByName (const char *name) {
   if (!cardI.contains(name)) cardI["empty"];
   return cardI[name];
 }
@@ -204,12 +177,16 @@ void SleepEventLoop::keyPicUpdate () {
 
 ///////////////////////////////////////////////////////////////////////////////
 DeskView::DeskView (int aW, int aH) : mDeskBmp(0) {
-  mDigitsBmp = new QImage(QString(":/pics/digits/digits.png"));
-  mBidBmp = new QImage(QString(":/pics/bidinfo.png"));
-  mKeyBmp[0] = new QImage(QString(":/pics/presskey.png"));
-  mKeyBmp[1] = new QImage(QString(":/pics/presskey.png"));
-  yellowize(mKeyBmp[1], qRgb(127, 127, 127));
-  mIMoveBmp = new QImage(QString(":/pics/imove.png"));
+  mDigitsBmp = new QPixmap(QString(":/pics/digits/digits.png"));
+  mBidBmp = new QPixmap(QString(":/pics/bidinfo.png"));
+
+  mKeyBmp[0] = new QPixmap(QString(":/pics/presskey.png"));
+  
+  QImage key1(QString(":/pics/presskey.png"));  
+  yellowize(&key1, qRgb(127, 127, 127));
+  mKeyBmp[1] = new QPixmap(QPixmap::fromImage(key1));
+  
+  mIMoveBmp = new QPixmap(QString(":/pics/imove.png"));
 
   if (!loadCards()) abort();
 
@@ -244,7 +221,7 @@ void DeskView::emitRepaint () {
 void DeskView::drawIMove (int x, int y) {
   if (!mDeskBmp) return;
   QPainter p(mDeskBmp);
-  p.drawImage(x, y, *mIMoveBmp);
+  p.drawPixmap(x, y, *mIMoveBmp);
   p.end();
 }
 
@@ -256,10 +233,10 @@ void DeskView::drawPKeyBmp (bool show) {
   time_t tt = time(0);
   int phase = tt%2;
 */
-  QImage *i = mKeyBmp[phase];
+  QPixmap *i = mKeyBmp[phase];
   if (show) {
     QPainter p(mDeskBmp);	
-    p.drawImage(4, DesktopHeight-(i->height()+8), *i);
+    p.drawPixmap(4, DesktopHeight-(i->height()+8), *i);
     p.end();
     phase = 1-phase;
   } else {
@@ -271,7 +248,7 @@ void DeskView::drawPKeyBmp (bool show) {
 void DeskView::drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy) {
   QRect tgt(x0, y0, 8, 14);
   QRect src(cx, cy, 8, 14);
-  p.drawImage(tgt, *mDigitsBmp, src);
+  p.drawPixmap(tgt, *mDigitsBmp, src);
 }
 
 
@@ -305,7 +282,7 @@ void DeskView::drawGameBid (eGameBid game) {
   if (game != raspass && (game < 61 || game > 105)) return; // unknown game
   QPainter p(mDeskBmp);
   int x, y;
-  QImage *i;
+  QPixmap *i;
   switch (game) {
     case raspass:
       drawBmpChar(p, bidBmpX+44-4, bidBmpY+34-7, 80, 0);
@@ -318,7 +295,8 @@ void DeskView::drawGameBid (eGameBid game) {
       if (i) {
         x = 44-(i->width()/2)+3;
         y = 34-(i->height()/2)-1;
-        p.drawImage(bidBmpX+x, bidBmpY+y, *i);
+        //p.drawImage(bidBmpX+x, bidBmpY+y, *i);
+        p.drawPixmap(bidBmpX+x, bidBmpY+y, *i);
       }
       break;
   }
@@ -335,11 +313,11 @@ void DeskView::drawGameBid (eGameBid game) {
  */
 void DeskView::drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game) {
   if (!mDeskBmp) return;
-  QImage *i = mBidBmp;
+  QPixmap *i = mBidBmp;
   bidBmpX = DesktopWidth-(i->width()+8);
   bidBmpY = DesktopHeight-(i->height()+8);
   QPainter p(mDeskBmp);
-  p.drawImage(bidBmpX, bidBmpY, *i);
+  p.drawPixmap(bidBmpX, bidBmpY, *i);
   p.end();
 /*
  * p0t: 10,6 (left top)
@@ -430,8 +408,8 @@ void DeskView::aniSleep (int milliseconds) {
 void DeskView::ClearScreen () {
   if (!mDeskBmp || (mDeskBmp->width() != DesktopWidth || mDeskBmp->height() != DesktopHeight)) {
     if (mDeskBmp) delete mDeskBmp;
-    //mDeskBmp = new QPixmap(DesktopWidth, DesktopHeight);
-    mDeskBmp = new QImage(DesktopWidth, DesktopHeight, QImage::Format_ARGB32);
+    mDeskBmp = new QPixmap(DesktopWidth, DesktopHeight);
+    //mDeskBmp = new QImage(DesktopWidth, DesktopHeight, QImage::Format_ARGB32);
   }
   ClearBox(0, 0, DesktopWidth, DesktopHeight);
 }
@@ -441,7 +419,7 @@ void DeskView::ClearBox (int x1, int y1, int x2, int y2) {
   if (!mDeskBmp) return;
   QPainter p(mDeskBmp);
   //QBrush brush(qRgb(0, 128, 0));
-  QBrush brush(QImage(":/pics/cloth.png"));
+  QBrush brush(QPixmap(":/pics/cloth.png"));
   QRect NewRect = QRect(x1, y1, x2, y2);
   p.fillRect(NewRect, brush);
   p.end();
@@ -465,7 +443,7 @@ void DeskView::drawCard (Card *card, int x, int y, bool opened, bool hilight) {
     sprintf(cCardName, "%s%i%i", hilight?"q":"", card->face(), card->suit());
     //if (hilight) fprintf(stderr, "SELECTED! [%s]\n", cCardName);
   }
-  QImage *bmp = GetImgByName(cCardName);
+  QPixmap *bmp = GetImgByName(cCardName);
   if (!bmp) {
     //fprintf(stderr, "not found: [%s]\n", cCardName);
     bmp = GetImgByName("empty");
@@ -476,7 +454,7 @@ void DeskView::drawCard (Card *card, int x, int y, bool opened, bool hilight) {
   }
   //fprintf(stderr, "found: [%s]\n", cCardName);
   QPainter p(mDeskBmp);
-  p.drawImage(x, y, *bmp);
+  p.drawPixmap(x, y, *bmp);
   p.end();
 }
 
