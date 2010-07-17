@@ -64,7 +64,7 @@ void FormBid::slotShowBullet () { _GamesType = (eGameBid)1; reject(); }
 
 
 void FormBid::onBidClick () {
-  QBidButton *b = dynamic_cast<QBidButton *>(sender());
+  QBidButton *b = static_cast<QBidButton *>(sender());
   if (!b) return;
   _GamesType = b->bid();
   accept();
@@ -75,7 +75,7 @@ QList<QPushButton *> FormBid::buttonList () {
   QList<QPushButton *> res;
   QList<QWidget *> wList = qFindChildren<QWidget *>(this);
   foreach (QWidget *widget, wList) {
-    QPushButton *b = dynamic_cast<QPushButton *>(widget);
+    QPushButton *b = static_cast<QPushButton *>(widget);
     if (b) res << b;
   }
   return res;
@@ -86,7 +86,7 @@ QList<QBidButton *> FormBid::bidButtonList () {
   QList<QBidButton *> res;
   QList<QWidget *> wList = qFindChildren<QWidget *>(this);
   foreach (QWidget *widget, wList) {
-    QBidButton *b = dynamic_cast<QBidButton *>(widget);
+    QBidButton *b = static_cast<QBidButton *>(widget);
     if (b) res << b;
   }
   return res;
