@@ -22,21 +22,11 @@
 
 #include <QDebug>
 
-#include <stdlib.h>
-#include <stdio.h>
-
 #include "prfconst.h"
 
 #include "formbid.h"
 #include "kpref.h"
 
-
-#include "deskview.h"
-#include "player.h"
-#include "card.h"
-#include "cardlist.h"
-#include "ncounter.h"
-#include "plscore.h"
 #include "human.h"
 
 
@@ -216,7 +206,7 @@ Card *HumanPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
   mCards.remove(res);
   mCardsOut.insert(res);
   mClickX = mClickY = 0; mWaitingForClick = false;
-  kpref->HintBar->clearMessage();
+  kpref->clearHint();
   draw();
   return res;
 }
@@ -261,7 +251,7 @@ void HumanPlayer::hilightCard (int lx, int ly) {
     mPrevHiCardIdx = cNo;
   }
   draw();
-  kpref->HintBar->clearMessage();
+  kpref->clearHint();
 }
 
 bool HumanPlayer::chooseClosedWhist () {

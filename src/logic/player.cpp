@@ -20,13 +20,8 @@
  *      http://www.gnu.org/licenses 
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-
-#include <QPixmap>
-#include <QPainter>
-
 #include "player.h"
+#include "deskview.h"
 
 
 Player::Player (int aMyNumber, DeskView *aDeskView) : mDeskView(aDeskView), mIStart(false), mPlayerNo(aMyNumber) {

@@ -25,18 +25,20 @@
 #ifndef DESKVIEW_H
 #define DESKVIEW_H
 
-#include <QApplication>
+/*#include <QApplication>
 #include <QEventLoop>
-#include <QHash>
-#include <QImage>
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QPainter>
 #include <QPixmap>
+*/
+#include <QHash>
+#include <QImage>
 #include <QString>
 
-#include "card.h"
 #include "prfconst.h"
+
+class Card;
 
 class DeskView : public QObject {
   Q_OBJECT

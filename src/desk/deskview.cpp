@@ -20,22 +20,14 @@
  *      http://www.gnu.org/licenses 
  */
 
-#include <string.h>
-#include <stdlib.h>
 #include <QDebug>
 
 #include <QApplication>
 #include <QEventLoop>
-#include <QString>
-#include <QMainWindow>
-#include <QMenuBar>
-#include <QPixmap>
-#include <QImage>
+#include <QMessageBox>
+//#include <QPixmap>
 #include <QPainter>
 #include <QTimer>
-#include <QDialog>
-#include <QObject>
-#include <QHash>
 
 #include <QKeyEvent>
 #include <QMouseEvent>
@@ -43,7 +35,6 @@
 #include "deskview.h"
 
 #include "baser.h"
-#include "card.h"
 #include "formbid.h"
 #include "kpref.h"
 #include "prfconst.h"

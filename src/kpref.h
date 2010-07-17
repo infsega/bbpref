@@ -23,25 +23,10 @@
 #ifndef KPREF_H
 #define KPREF_H
 
-#include <QString>
-#include <QMainWindow>
-#include <QMenuBar>
-#include <QToolBar>
-#include <QPixmap>
-#include <QToolButton>
-#include <QApplication>
-#include <QLabel>
-#include <QStatusBar>
-#include <QWhatsThis>
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QPainter>
-
-//#include <pthread.h>
-
 #include "desktop.h"
 #include "deskview.h"
 
+#include <QMainWindow>
 
 class Kpref : public QMainWindow {
   Q_OBJECT
@@ -84,6 +69,8 @@ private:
   QAction *actNewGame;
   QAction *actFileOpen;
   QAction *actFileSave;
+  QStatusBar * HintBar;
+  //QLabel * Hint;
 
 public:
   PrefDesktop *mDesktop;
@@ -91,8 +78,8 @@ public:
   bool mWaitingMouseUp;
   bool mInMouseMoveEvent;
   bool mInPaintEvent;
-  QStatusBar * HintBar;
-  QLabel * Hint;
+  void showHint(QString hint);
+  void clearHint();
 
 protected:
   void  paintEvent (QPaintEvent *);

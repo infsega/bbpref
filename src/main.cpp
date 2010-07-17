@@ -27,7 +27,7 @@
 #include <QLocale>
 #include <QTranslator>
 
-#include "main.h"
+//#include "main.h"
 
 #include "debug.h"
 #include "prfconst.h"

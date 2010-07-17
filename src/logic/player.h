@@ -24,12 +24,10 @@
 #define PLAYER_H
 
 #include "prfconst.h"
-#include "card.h"
 #include "cardlist.h"
-#include "ncounter.h"
 #include "plscore.h"
-#include "deskview.h"
 
+class DeskView;
 
 class Player {
 public:

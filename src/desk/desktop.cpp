@@ -25,11 +25,8 @@
 #include <QDebug>
 
 #include <QMainWindow>
-
-#include <stdio.h>
-#include <string.h>
-#include <limits.h>
-#include <stdlib.h>
+#include <QMessageBox>
+#include <QFile>
 
 #include "aialphabeta.h"
 #include "aiplayer.h"
@@ -578,7 +575,7 @@ void PrefDesktop::runGame () {
 
   mGameRunning = true;
   //mDeskView->ClearScreen();
-  kpref->HintBar->clearMessage();
+  kpref->clearHint();
   // while !end of pool
   int roundNo = 0;
   while (!(player(1)->mScore.pool() >= optMaxPool &&
@@ -790,12 +787,12 @@ void PrefDesktop::runGame () {
           draw();
           //drawBidWindows(bids4win, 0);
 		  if (tmpg->number() != 1)
-				kpref->HintBar->showMessage(tr("Try to remember the cards"));
+				kpref->showHint(tr("Try to remember the cards"));
 		  if (optPrefClub)
 		  	mDeskView->mySleep(-1);
 		  else
 		  	mDeskView->mySleep(4);
-		  kpref->HintBar->clearMessage();
+		  kpref->clearHint();
           // deal talon
           tmpg->dealCard(mDeck.at(30));
           tmpg->dealCard(mDeck.at(31));
@@ -809,11 +806,11 @@ void PrefDesktop::runGame () {
             nCurrentMove.nValue = i;
             draw(false);
 			if (mPlayerActive == 1)
-				kpref->HintBar->showMessage(tr("Select two cards to drop"));
+				kpref->showHint(tr("Select two cards to drop"));
             else
 				mDeskView->mySleep(2);
             playerBids[0] = gCurrentGame = tmpg->dropForGame();
-			kpref->HintBar->clearMessage();
+			kpref->clearHint();
           } else {	// playing misere
             // show all cards
             int tempint = nCurrentMove.nValue;
@@ -821,7 +818,7 @@ void PrefDesktop::runGame () {
             tmpg->setInvisibleHand(false);
             draw(false);
             if (tmpg->number() != 1)
-				kpref->HintBar->showMessage(tr("Try to remember the cards"));
+				kpref->showHint(tr("Try to remember the cards"));
             /*else 
 				tmpg->setMessage(tr("Misere"));*/
             // wait for event
@@ -838,7 +835,7 @@ void PrefDesktop::runGame () {
 				mDeskView->mySleep(2);
 
             playerBids[0] = gCurrentGame = tmpg->dropForMisere();
-			kpref->HintBar->clearMessage();
+			kpref->clearHint();
             nCurrentMove.nValue = tempint;
           }		  	
           tmpPlayersCounter.nValue = i;

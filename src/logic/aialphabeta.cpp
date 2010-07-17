@@ -24,22 +24,11 @@
 
 #include <QTime>
 
-#include <stdlib.h>
-#include <stdio.h>
-
 #include "prfconst.h"
 
 #include "formbid.h"
 #include "kpref.h"
 
-
-#include "debug.h"
-#include "deskview.h"
-#include "player.h"
-#include "card.h"
-#include "cardlist.h"
-#include "ncounter.h"
-#include "plscore.h"
 #include "aialphabeta.h"
 
 

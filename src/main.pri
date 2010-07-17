@@ -3,8 +3,7 @@ INCLUDEPATH += $$PWD
 
 HEADERS += \
   $$PWD/kpref.h \
-  $$PWD/prfconst.h \
-  $$PWD/main.h
+  $$PWD/prfconst.h
 
 SOURCES += \
   $$PWD/kpref.cpp \

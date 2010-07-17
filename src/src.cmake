@@ -4,8 +4,7 @@ INCLUDE_DIRECTORIES( src )
 
 SET ( HEADERS ${HEADERS}
   src/kpref.h 
-  src/prfconst.h 
-  src/main.h
+  src/prfconst.h
 )
 
 SET ( SOURCES ${SOURCES}

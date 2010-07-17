@@ -23,14 +23,7 @@
 #ifndef HUMAN_H
 #define HUMAN_H
 
-#include "prfconst.h"
-#include "card.h"
-#include "cardlist.h"
-#include "ncounter.h"
-#include "plscore.h"
-#include "deskview.h"
 #include "player.h"
-
 
 class HumanPlayer : public Player {
 public:

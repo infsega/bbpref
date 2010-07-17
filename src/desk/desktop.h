@@ -26,10 +26,11 @@
 #include <QByteArray>
 #include <QObject>
 
-#include "card.h"
+#include "cardlist.h"
 #include "ncounter.h"
-#include "player.h"
 
+class DeskView;
+class Player;
 
 class PrefDesktop : public QObject {
   Q_OBJECT

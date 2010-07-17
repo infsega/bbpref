@@ -20,27 +20,27 @@
  *      http://www.gnu.org/licenses 
  */
 
-#include <QApplication>
+#include "kpref.h"
+
 #include <QDesktopWidget>
-#include <QMouseEvent>
-#include <QMainWindow>
 #include <QSettings>
 
-#include <QTextBrowser>
+//#include <QTextBrowser>
 
-#include "kpref.h"
 #include <QDebug>
 
-#include "desktop.h"
-#include "deskview.h"
+#include <QFileDialog>
+#include <QMenuBar>
+#include <QMessageBox>
+#include <QPainter>
+#include <QStatusBar>
+
 #include "formbid.h"
 #include "newgameform.h"
 #include "optform.h"
 #include "helpbrowser.h"
 #include "player.h"
 
-
-#include <stdlib.h>
 #include <string>
 using std::string;
 
@@ -114,10 +114,10 @@ void Kpref::resizeEvent(QResizeEvent *event) {
 Kpref::~Kpref () {
   //delete StatusBar1;
   //!delete formBid;
-  delete mDeskView;
-  delete mDesktop;
-  delete HintBar;
-  delete Hint;
+  mDeskView->deleteLater();
+  mDesktop->deleteLater();
+  HintBar->deleteLater();
+  //delete Hint;
 }
 
 
@@ -466,6 +466,16 @@ void Kpref::HintMove () {
 		HintBar->showMessage(tr("Your move"));
 	else
 		HintBar->showMessage(tr("Select two cards to drop"));
+}
+
+void Kpref::showHint(QString hint)
+{
+  HintBar->showMessage(hint);
+}
+
+void Kpref::clearHint()
+{
+  HintBar->clearMessage();
 }
 
 bool Kpref::WhistType () {

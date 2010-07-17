@@ -23,14 +23,7 @@
 #ifndef AIPLAYER_H
 #define AIPLAYER_H
 
-#include "prfconst.h"
-#include "card.h"
-#include "cardlist.h"
-#include "ncounter.h"
 #include "player.h"
-#include "plscore.h"
-#include "deskview.h"
-
 
 class AiPlayer : public Player {
 public:
