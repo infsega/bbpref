@@ -14,3 +14,8 @@ SOURCES += \
   $$PWD/helpbrowser.cpp \
   $$PWD/formbid.cpp \
   $$PWD/qbidbutton.cpp
+
+FORMS += \
+  $$PWD/optform.ui \
+  $$PWD/newgameform.ui \
+  $$PWD/helpbrowser.ui

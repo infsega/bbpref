@@ -15,3 +15,9 @@ SET ( SOURCES ${SOURCES}
   src/forms/formbid.cpp 
   src/forms/qbidbutton.cpp
 )
+
+SET ( UIS ${UIS}
+  src/forms/optform.ui 
+  src/forms/newgameform.ui 
+  src/forms/helpbrowser.ui
+)

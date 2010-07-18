@@ -13,12 +13,6 @@ SET ( SOURCES ${SOURCES}
   src/main.cpp
 )
 
-SET ( UIS ${UIS}
-  src/ui/optform.ui 
-  src/ui/newgameform.ui 
-  src/ui/helpbrowser.ui
-)
-
 # tell cmake to process CMakeLists.txt in that subdirectory
 #add_subdirectory(util)
 #add_subdirectory(cardutil)

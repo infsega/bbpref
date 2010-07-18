@@ -10,11 +10,6 @@ SOURCES += \
   $$PWD/prfconst.cpp \
   $$PWD/main.cpp
 
-FORMS += \
-  $$PWD/ui/optform.ui \
-  $$PWD/ui/newgameform.ui \
-  $$PWD/ui/helpbrowser.ui
-
 include($$PWD/util/util.pri)
 include($$PWD/cardutil/cardutil.pri)
 include($$PWD/forms/forms.pri)
