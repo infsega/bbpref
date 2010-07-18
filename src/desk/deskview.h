@@ -36,6 +36,7 @@
 #include "prfconst.h"
 
 class Card;
+class DeskViewPrivate;
 
 class DeskView : public QObject {
   Q_OBJECT
@@ -101,17 +102,17 @@ private:
   void drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy);
   void drawNumber (int x0, int y0, int n, bool red);
   void drawGameBid (eGameBid game);
-
-private:
-  int bidBmpX, bidBmpY;
-
-private:
   QPixmap *GetImgByName (const char *name);
 
 private:
+  Q_DECLARE_PRIVATE(DeskView)
+  DeskViewPrivate * const d_ptr;
+  int bidBmpX, bidBmpY;
   QHash<QString, QPixmap *> cardI;
   QHash<int, QPixmap *> bidIcons;
 };
+
+
 
 class SleepEventLoop : public QEventLoop {
   Q_OBJECT

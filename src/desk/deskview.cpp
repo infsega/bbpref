@@ -61,6 +61,27 @@ static void yellowize (QImage *im, QRgb newColor=qRgb(255, 255, 0)) {
   }
 }
 
+class DeskViewPrivate
+{
+public:
+  DeskViewPrivate(DeskView *parent) : m_eloop(0), m_efilter(0)
+  {
+    m_eloop = new SleepEventLoop(parent);
+    m_efilter = new SleepEventFilter(m_eloop);
+    m_timer = new QTimer(m_eloop);
+  }
+
+  ~DeskViewPrivate()
+  {
+    m_efilter->deleteLater();
+    m_eloop->deleteLater();
+    m_timer->deleteLater();
+  }
+
+  QTimer *m_timer;
+  SleepEventLoop *m_eloop;
+  SleepEventFilter *m_efilter;
+};
 
 bool DeskView::loadCards () {
   //qDebug() << SLOT(slotPushButtonClick95());
@@ -183,7 +204,8 @@ void SleepEventLoop::keyPicUpdate () {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-DeskView::DeskView (int aW, int aH) : mDeskBmp(0) {
+DeskView::DeskView (int aW, int aH) : mDeskBmp(0), d_ptr(new DeskViewPrivate(this))
+{
   mDigitsBmp = new QPixmap(QString(":/pics/digits/digits.png"));
   mBidBmp = new QPixmap(QString(":/pics/bidinfo.png"));
 
@@ -217,6 +239,7 @@ DeskView::~DeskView () {
   delete mKeyBmp[1];
   delete mBidBmp;
   delete mDigitsBmp;
+  delete d_ptr;
 }
 
 
@@ -354,10 +377,7 @@ void DeskView::drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game
 
 void DeskView::mySleep (int seconds) {
   Event = 0;
-  SleepEventLoop eloop(this);
-  SleepEventFilter efilter(&eloop);
-  qApp->installEventFilter(&efilter);
-  QTimer *timer = new QTimer(&eloop);
+  qApp->installEventFilter(d_ptr->m_efilter);
 
   if (seconds == 0)
   {
@@ -372,22 +392,23 @@ void DeskView::mySleep (int seconds) {
     //}
   }
   if (seconds > 0) {
-    connect(timer, SIGNAL(timeout()), &eloop, SLOT(quit()));
-    timer->start(seconds*1000);
+    connect(d_ptr->m_timer, SIGNAL(timeout()), d_ptr->m_eloop, SLOT(quit()));
+    d_ptr->m_timer->start(seconds*1000);
   } else if (seconds == -1) {
-    connect(timer, SIGNAL(timeout()), &eloop, SLOT(keyPicUpdate()));
-    timer->start(1000);
+    connect(d_ptr->m_timer, SIGNAL(timeout()), d_ptr->m_eloop, SLOT(keyPicUpdate()));
+    d_ptr->m_timer->start(1000);
   } else if (seconds < -1) {
-    eloop.mIgnoreKey = true;
+    d_ptr->m_eloop->mIgnoreKey = true;
   }
   if (optPrefClub == true)
   drawPKeyBmp(seconds == -1);
 
   emitRepaint();
-  eloop.exec();
-  qApp->removeEventFilter(&efilter);
+  d_ptr->m_eloop->exec();
+  qApp->removeEventFilter(d_ptr->m_efilter);
+  disconnect(d_ptr->m_timer, SIGNAL(timeout()), 0, 0);
 
-  Event = (eloop.mMousePressed) ? 1 : (eloop.mKeyPressed ? 2 : 3);
+  Event = (d_ptr->m_eloop->mMousePressed) ? 1 : (d_ptr->m_eloop->mKeyPressed ? 2 : 3);
   if (seconds == -1) {
     drawPKeyBmp(false);
     emitRepaint();
@@ -397,18 +418,18 @@ void DeskView::mySleep (int seconds) {
 
 void DeskView::aniSleep (int milliseconds) {
   Event = 0;
-  SleepEventLoop eloop(this);
-  eloop.mIgnoreMouse = true;
-  eloop.mIgnoreKey = true;
-  SleepEventFilter efilter(&eloop);
-  qApp->installEventFilter(&efilter);
-  QTimer *timer = new QTimer(&eloop);
-  connect(timer, SIGNAL(timeout()), &eloop, SLOT(quit()));
-  timer->start(milliseconds);
+  d_ptr->m_eloop->mIgnoreMouse = true;
+  d_ptr->m_eloop->mIgnoreKey = true;
+  qApp->installEventFilter(d_ptr->m_efilter);
+  connect(d_ptr->m_timer, SIGNAL(timeout()), d_ptr->m_eloop, SLOT(quit()));
+  d_ptr->m_timer->start(milliseconds);
 
   emitRepaint();
-  eloop.exec();
-  qApp->removeEventFilter(&efilter);
+  d_ptr->m_eloop->exec();
+  qApp->removeEventFilter(d_ptr->m_efilter);
+  d_ptr->m_eloop->mIgnoreMouse = false;
+  d_ptr->m_eloop->mIgnoreKey = false;
+  disconnect(d_ptr->m_timer, SIGNAL(timeout()), 0, 0);
 }
 
 
