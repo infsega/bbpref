@@ -537,9 +537,9 @@ void DeskView::ShowBlankPaper (int optMaxPool) {
   QPainter p(mDeskBmp);
   QRect NewRect = QRect(xDelta, yDelta, PaperWidth, PaperHeight);
   QBrush shadow(qRgba(0, 0, 0, 128));
-  NewRect.adjust(6, 6, 6, 6);
+  NewRect.adjust(-4, 8, -4, 8);
   p.fillRect(NewRect, shadow);
-  NewRect.adjust(-6, -6, -6, -6);
+  NewRect.adjust(4, -8, 4, -8);
 
   QBrush brush(qRgb(255, 255, 255));
   p.fillRect(NewRect, brush);
