@@ -59,7 +59,7 @@ Kpref::Kpref () {
 
   loadOptions();
 
-  HintBar = new QStatusBar;
+  HintBar = new QStatusBar(this);
   HintBar->setSizeGripEnabled(true);
   setStatusBar(HintBar);
   HintBar->setFixedHeight(HINTBAR_MAX_HEIGHT);
