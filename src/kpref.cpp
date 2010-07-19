@@ -52,7 +52,6 @@ Kpref::Kpref () {
   setWindowTitle("OpenPref");
   
   initMenuBar();
-  mInPaintEvent = mInMouseMoveEvent = mWaitingMouseUp = false;
   mDeskView = 0;
   mDesktop = 0;
   setMouseTracking(true);
@@ -262,30 +261,23 @@ void Kpref::slotNewSingleGame () {
 
 
 void Kpref::mouseMoveEvent (QMouseEvent *event) {
-  if (mInMouseMoveEvent) return;
-  mInMouseMoveEvent = true;
-  Player *plr = mDesktop->currentPlayer();
-  if (plr) plr->highlightCard(event->x(), event->y());
-  mInMouseMoveEvent = false;
+  mDesktop->currentPlayer()->highlightCard(event->x(), event->y());
 }
 
 
 void Kpref::mousePressEvent (QMouseEvent *event) {
-  mWaitingMouseUp = true;
   if (event->button() == Qt::LeftButton) {
     mDeskView->Event = 1;
     Player *plr = mDesktop->currentPlayer();
-    if (plr) {
+    //if (plr) {
       plr->mClickX = event->x();
       plr->mClickY = event->y();
-    }
+    //}
   }
-  mWaitingMouseUp = false;
 }
 
 
 void  Kpref::keyPressEvent (QKeyEvent *event) {
-  if (mDeskView) {
     switch (event->key()) {
       case Qt::Key_Escape:
       case Qt::Key_Enter:
@@ -295,26 +287,17 @@ void  Kpref::keyPressEvent (QKeyEvent *event) {
         break;
       default: ;
     }
-  }
 }
 
 
 void Kpref::paintEvent (QPaintEvent *event) {
   Q_UNUSED(event)
-  if (mInPaintEvent) return;
-  mInPaintEvent = true;
-  if (mDeskView) {
     mDeskView->DesktopHeight = height()-HINTBAR_MAX_HEIGHT;
     mDeskView->DesktopWidth = width();
-  }
-  if (mDeskView && mDeskView->mDeskBmp) {
     QPainter p;
     p.begin(this);
     p.drawPixmap(0, 0, *(mDeskView->mDeskBmp));
-    //p.drawImage(0, 0, *(mDeskView->mDeskBmp));
     p.end();
-  }
-  mInPaintEvent = false;
 }
 
 void Kpref::closeEvent(QCloseEvent *event) {

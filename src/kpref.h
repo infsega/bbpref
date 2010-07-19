@@ -75,19 +75,16 @@ private:
 public:
   PrefDesktop *mDesktop;
   DeskView *mDeskView;
-  bool mWaitingMouseUp;
-  bool mInMouseMoveEvent;
-  bool mInPaintEvent;
   void showHint(QString hint);
   void clearHint();
 
 protected:
   void  paintEvent (QPaintEvent *);
-  void  mousePressEvent (QMouseEvent *);
-  void  mouseMoveEvent (QMouseEvent *);
+  //void  mousePressEvent (QMouseEvent *);
+  //void  mouseMoveEvent (QMouseEvent *);
   void  keyPressEvent (QKeyEvent *);
   void  closeEvent(QCloseEvent *event);
-  void  resizeEvent(QResizeEvent *event);
+  //void  resizeEvent(QResizeEvent *event);
 };
 
 extern Kpref *kpref;
