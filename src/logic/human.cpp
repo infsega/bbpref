@@ -242,7 +242,7 @@ eGameBid HumanPlayer::moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerP
 }
 
 
-void HumanPlayer::hilightCard (int lx, int ly) {
+void HumanPlayer::highlightCard (int lx, int ly) {
   //qDebug() << "lx:" << lx << "ly:" << ly;
   if (!mWaitingForClick) {
     // not in "card selection" mode

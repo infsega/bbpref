@@ -229,7 +229,7 @@ void Player::clearCardArea () {
 }
 
 
-void Player::hilightCard (int lx, int ly) {
+void Player::highlightCard (int lx, int ly) {
   Q_UNUSED(lx)
   Q_UNUSED(ly)
   mPrevHiCardIdx = -1;

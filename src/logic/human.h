@@ -47,7 +47,7 @@ public:
 
   virtual bool chooseClosedWhist ();
 
-  virtual void hilightCard (int lx, int ly);
+  virtual void highlightCard (int lx, int ly);
 };
 
 

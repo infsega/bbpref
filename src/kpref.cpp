@@ -265,7 +265,7 @@ void Kpref::mouseMoveEvent (QMouseEvent *event) {
   if (mInMouseMoveEvent) return;
   mInMouseMoveEvent = true;
   Player *plr = mDesktop->currentPlayer();
-  if (plr) plr->hilightCard(event->x(), event->y());
+  if (plr) plr->highlightCard(event->x(), event->y());
   mInMouseMoveEvent = false;
 }
 

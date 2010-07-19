@@ -65,7 +65,7 @@ public:
   /// @todo Move to view
   virtual void getLeftTop (int *left, int *top);
   virtual void draw ();
-  virtual void hilightCard (int lx, int ly); // подсветить карту по данным координатам (и перерисовать руку, если надо)
+  virtual void highlightCard (int lx, int ly); // подсветить карту по данным координатам (и перерисовать руку, если надо)
 
   void setMessage (const QString &msg) { mMessage = msg; }
   const QString &message () const { return mMessage; }
