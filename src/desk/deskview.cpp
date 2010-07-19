@@ -435,7 +435,7 @@ void DeskView::aniSleep (int milliseconds) {
 
 void DeskView::ClearScreen () {
   if (!mDeskBmp || (mDeskBmp->width() != DesktopWidth || mDeskBmp->height() != DesktopHeight)) {
-    if (mDeskBmp) delete mDeskBmp;
+    delete mDeskBmp;
     mDeskBmp = new QPixmap(DesktopWidth, DesktopHeight);
     //mDeskBmp = new QImage(DesktopWidth, DesktopHeight, QImage::Format_ARGB32);
   }
