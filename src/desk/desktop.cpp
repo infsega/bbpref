@@ -424,7 +424,7 @@ bool PrefDesktop::saveGame (const QString &name)  {
 
 // draw ingame card (the card that is in game, not in hand)
 void PrefDesktop::inGameCardLeftTop (int mCardNo, int *left, int *top) {
-  int w = mDeskView->DesktopWidth/2, h = mDeskView->DesktopHeight/2;
+  int w = mDeskView->width()/2, h = mDeskView->height()/2;
   int x = w, y = h;
   switch (mCardNo) {
     case 0:
@@ -480,15 +480,15 @@ void PrefDesktop::draw (bool emitSignal) {
 	// "I move" icon
     switch (nCurrentStart.nValue) {
       case 1:
-        iMoveX = mDeskView->DesktopWidth/2-15;
-        iMoveY = mDeskView->DesktopHeight-mDeskView->yBorder-CARDHEIGHT-40;
+        iMoveX = mDeskView->width()/2-15;
+        iMoveY = mDeskView->height()-mDeskView->yBorder-CARDHEIGHT-40;
         break;
       case 2:
         iMoveX = mDeskView->xBorder+20;
         iMoveY = mDeskView->yBorder+CARDHEIGHT+40;
         break;
       case 3:
-        iMoveX = mDeskView->DesktopWidth-mDeskView->xBorder-20;
+        iMoveX = mDeskView->width()-mDeskView->xBorder-20;
         iMoveY = mDeskView->yBorder+CARDHEIGHT+40;
         break;
       default: iMoveX = iMoveY = -1; break;
@@ -530,7 +530,7 @@ void PrefDesktop::draw (bool emitSignal) {
   }
   // repaint scoreboard
   if (mShowPool) drawPool();
-  if (emitSignal) emitRepaint();
+  if (emitSignal) mDeskView->update();//emitRepaint();
 }
 
 

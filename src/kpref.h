@@ -79,12 +79,12 @@ public:
   void clearHint();
 
 protected:
-  void  paintEvent (QPaintEvent *);
+  //void  paintEvent (QPaintEvent *);
   //void  mousePressEvent (QMouseEvent *);
   //void  mouseMoveEvent (QMouseEvent *);
   void  keyPressEvent (QKeyEvent *);
   void  closeEvent(QCloseEvent *event);
-  //void  resizeEvent(QResizeEvent *event);
+  void  resizeEvent(QResizeEvent *event);
 };
 
 extern Kpref *kpref;

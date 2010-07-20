@@ -23,6 +23,7 @@
 #include "player.h"
 #include "deskview.h"
 
+#include <QDebug>
 
 Player::Player (int aMyNumber, DeskView *aDeskView) : mDeskView(aDeskView), mIStart(false), mPlayerNo(aMyNumber) {
   internalInit();
@@ -117,15 +118,15 @@ void Player::getLeftTop (int *left, int *top) {
   if (!mDeskView) return;
   switch (mPlayerNo) {
     case 1:
-      *left = (mDeskView->DesktopWidth-(mDeskView->DesktopWidth/2-2*mDeskView->xBorder))/2;
-      *top = mDeskView->DesktopHeight-(mDeskView->yBorder)-CARDHEIGHT;//mDeskView->CardHeight;//-10;
+      *left = (mDeskView->width()-(mDeskView->width()/2-2*mDeskView->xBorder))/2;
+      *top = mDeskView->width()-(mDeskView->yBorder)-CARDHEIGHT;//mDeskView->CardHeight;//-10;
       break;
     case 2:
       *left = mDeskView->xBorder;
       *top = mDeskView->yBorder+20;
       break;
     case 3:
-      *left = mDeskView->DesktopWidth-mDeskView->xBorder;
+      *left = mDeskView->width()-mDeskView->xBorder;
       *top = mDeskView->yBorder+20;
       break;
     default: ;
@@ -212,6 +213,7 @@ void Player::draw () {
   int left, top;
   if (!mDeskView) return;
   getLeftTop(&left, &top);
+  qDebug() << left << top;
   drawAt(mDeskView, left, top, mPrevHiCardIdx);
 }
 

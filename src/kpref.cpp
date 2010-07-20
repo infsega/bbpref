@@ -39,7 +39,7 @@
 #include "newgameform.h"
 #include "optform.h"
 #include "helpbrowser.h"
-#include "player.h"
+//#include "player.h"
 
 #define HINTBAR_MAX_HEIGHT 22
 
@@ -86,7 +86,11 @@ Kpref::Kpref () {
 
 void Kpref::init () {
   //StatusBar1 = new QStatusBar(this);
-  mDeskView = new DeskView(width(), height()-HINTBAR_MAX_HEIGHT);
+  //mDeskView = new DeskView(width(), height()-HINTBAR_MAX_HEIGHT);
+  mDeskView = new DeskView(this);
+  mDeskView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  setCentralWidget(mDeskView);
+  mDeskView->setAutoFillBackground(false);
   mDesktop = new PrefDesktop(mDeskView);
   connect(mDesktop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
   connect(mDeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
@@ -100,8 +104,8 @@ void Kpref::init () {
 
 void Kpref::resizeEvent(QResizeEvent *event) {
   Q_UNUSED(event)
-  mDeskView->DesktopWidth=width();
-  mDeskView->DesktopHeight=height()-HINTBAR_MAX_HEIGHT;
+  //mDeskView->DesktopWidth=width();
+  //mDeskView->DesktopHeight=height()-HINTBAR_MAX_HEIGHT;
   mDesktop->draw();
   forceRepaint();
 }
@@ -119,7 +123,7 @@ Kpref::~Kpref () {
 
 void Kpref::adjustDesk () {
   if (mDeskView) mDeskView->ClearScreen();
-  update();
+  mDeskView->update();
 }
 
 
@@ -197,7 +201,7 @@ void Kpref::slotShowScore () {
 
 
 void Kpref::forceRepaint () {
-  update();
+  mDeskView->update();
 }
 
 
@@ -241,15 +245,18 @@ void Kpref::slotNewSingleGame () {
 	return;
   }
   
-  if (mDesktop) {
+ // if (mDesktop) {
     delete mDesktop;
-    delete mDeskView;
-    mDeskView = new DeskView(width(), height()-HINTBAR_MAX_HEIGHT);
+    //delete mDeskView;
+    //mDeskView = new DeskView(width(), height()-HINTBAR_MAX_HEIGHT);
+    //mDeskView = new DeskView(this);
+    mDeskView->ClearScreen();
     mDesktop = new PrefDesktop();
     mDesktop->mDeskView = mDeskView;
-    connect(mDesktop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
-    connect(mDeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
-  }  
+    //connect(mDesktop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
+    connect(mDesktop, SIGNAL(deskChanged()), mDeskView, SLOT(update()));
+    //connect(mDeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
+  // }  
   
   optPassCount = 0;
   actFileOpen->setEnabled(false);
@@ -259,7 +266,7 @@ void Kpref::slotNewSingleGame () {
   actFileSave->setEnabled(false);
 }
 
-
+/*
 void Kpref::mouseMoveEvent (QMouseEvent *event) {
   mDesktop->currentPlayer()->highlightCard(event->x(), event->y());
 }
@@ -274,7 +281,7 @@ void Kpref::mousePressEvent (QMouseEvent *event) {
       plr->mClickY = event->y();
     //}
   }
-}
+}*/
 
 
 void  Kpref::keyPressEvent (QKeyEvent *event) {
@@ -289,7 +296,7 @@ void  Kpref::keyPressEvent (QKeyEvent *event) {
     }
 }
 
-
+/*
 void Kpref::paintEvent (QPaintEvent *event) {
   Q_UNUSED(event)
     mDeskView->DesktopHeight = height()-HINTBAR_MAX_HEIGHT;
@@ -298,7 +305,7 @@ void Kpref::paintEvent (QPaintEvent *event) {
     p.begin(this);
     p.drawPixmap(0, 0, *(mDeskView->mDeskBmp));
     p.end();
-}
+}*/
 
 void Kpref::closeEvent(QCloseEvent *event) {
 	 int ret;

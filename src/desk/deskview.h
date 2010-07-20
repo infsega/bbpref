@@ -32,16 +32,18 @@
 #include <QEventLoop>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QWidget>
 
 #include "prfconst.h"
 
 class Card;
 class DeskViewPrivate;
 
-class DeskView : public QObject {
+class DeskView : public QWidget {
   Q_OBJECT
 public:
-  DeskView (int aW, int aH);
+  //DeskView (int aW, int aH);
+  DeskView (QWidget * parent = 0, Qt::WindowFlags f = 0);
   ~DeskView ();
 
   void mySleep (int seconds);
@@ -90,13 +92,20 @@ public:
   QPixmap *mDigitsBmp;
 
   int nSecondStartWait;
-  int DesktopWidth, DesktopHeight;
+  //int DesktopWidth, DesktopHeight;
   int CardWidht, CardHeight;
   int xBorder, yBorder;
   //int xLen,yLen;
   int xDelta, yDelta;
 
   int imoveX, imoveY;
+
+protected:
+  void  showEvent (QShowEvent *);
+  void  paintEvent (QPaintEvent *);
+  void  mousePressEvent (QMouseEvent *);
+  void  mouseMoveEvent (QMouseEvent *);
+  //void  resizeEvent(QResizeEvent *event);
 
 private:
   void drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy);

@@ -26,6 +26,7 @@
 #include <QMessageBox>
 //#include <QPixmap>
 #include <QPainter>
+#include <QPalette>
 #include <QTimer>
 
 #include "deskview.h"
@@ -34,7 +35,7 @@
 #include "formbid.h"
 #include "kpref.h"
 #include "prfconst.h"
-
+#include "player.h"
 //class SleepEventLoop;
 
 class SleepEventFilter : public QObject {
@@ -84,6 +85,7 @@ public:
 };
 
 bool DeskView::loadCards () {
+  qDebug() << "load";
   //qDebug() << SLOT(slotPushButtonClick95());
   // load cards from resources
   QString deckPath;
@@ -135,6 +137,7 @@ bool DeskView::loadCards () {
 
 
 void DeskView::freeCards () {
+  qDebug() << "free";
   foreach (QPixmap *i, bidIcons)
     if (i) delete i;
   bidIcons.clear();
@@ -204,7 +207,9 @@ void SleepEventLoop::keyPicUpdate () {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-DeskView::DeskView (int aW, int aH) : mDeskBmp(0), d_ptr(new DeskViewPrivate(this))
+//DeskView::DeskView (int aW, int aH) : mDeskBmp(0), d_ptr(new DeskViewPrivate(this))
+DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), mDeskBmp(0),
+                                                           d_ptr(new DeskViewPrivate(this))
 {
   mDigitsBmp = new QPixmap(QString(":/pics/digits/digits.png"));
   mBidBmp = new QPixmap(QString(":/pics/bidinfo.png"));
@@ -224,15 +229,22 @@ DeskView::DeskView (int aW, int aH) : mDeskBmp(0), d_ptr(new DeskViewPrivate(thi
   CardHeight = CARDHEIGHT;
   xBorder = 20;
   yBorder = 20;
-  DesktopWidth = aW;
-  DesktopHeight = aH;
-  //mDeskBmp = new QPixmap(DesktopWidth, DesktopHeight);
+ /* QPalette palette;
+  palette.setBrush(QPalette::Window, QPixmap(":/pics/cloth.png"));
+  setPalette(palette);*/
+  //DesktopWidth = aW;
+  //DesktopHeight = aH;
+  //qDebug() << width() << height();
+  mDeskBmp = new QPixmap(width(), height());
+  qDebug() << "construct";
   ClearScreen();
+
+  //connect(this, SIGNAL(deskChanged()), this, SLOT(update()));
 }
 
 
 DeskView::~DeskView () {
-  if (mDeskBmp) delete mDeskBmp;
+  delete mDeskBmp;
   freeCards();
   delete mIMoveBmp;
   delete mKeyBmp[0];
@@ -244,7 +256,8 @@ DeskView::~DeskView () {
 
 
 void DeskView::emitRepaint () {
-  emit deskChanged();
+  //emit deskChanged();
+  update();
 }
 
 
@@ -266,11 +279,11 @@ void DeskView::drawPKeyBmp (bool show) {
   QPixmap *i = mKeyBmp[phase];
   if (show) {
     QPainter p(mDeskBmp);	
-    p.drawPixmap(4, DesktopHeight-(i->height()+8), *i);
+    p.drawPixmap(4, height()-(i->height()+8), *i);
     p.end();
     phase = 1-phase;
   } else {
-    ClearBox(4, DesktopHeight-(i->height()+8), i->width(), i->height());
+    ClearBox(4, height()-(i->height()+8), i->width(), i->height());
   }
 }
 
@@ -344,8 +357,8 @@ void DeskView::drawGameBid (eGameBid game) {
 void DeskView::drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game) {
   if (!mDeskBmp) return;
   QPixmap *i = mBidBmp;
-  bidBmpX = DesktopWidth-(i->width()+8);
-  bidBmpY = DesktopHeight-(i->height()+8);
+  bidBmpX = width()-(i->width()+8);
+  bidBmpY = height()-(i->height()+8);
   QPainter p(mDeskBmp);
   p.drawPixmap(bidBmpX, bidBmpY, *i);
   p.end();
@@ -434,12 +447,12 @@ void DeskView::aniSleep (int milliseconds) {
 
 
 void DeskView::ClearScreen () {
-  if (!mDeskBmp || (mDeskBmp->width() != DesktopWidth || mDeskBmp->height() != DesktopHeight)) {
+  if (!mDeskBmp || (mDeskBmp->width() != width() || mDeskBmp->height() != height())) {
     delete mDeskBmp;
-    mDeskBmp = new QPixmap(DesktopWidth, DesktopHeight);
+    mDeskBmp = new QPixmap(width(), height());
     //mDeskBmp = new QImage(DesktopWidth, DesktopHeight, QImage::Format_ARGB32);
   }
-  ClearBox(0, 0, DesktopWidth, DesktopHeight);
+  ClearBox(0, 0, width(), height());
 }
 
 
@@ -457,7 +470,7 @@ void DeskView::ClearBox (int x1, int y1, int x2, int y2) {
 void DeskView::drawCard (Card *card, int x, int y, bool opened, bool hilight) {
   char cCardName[16];
 
-  if (!mDeskBmp) return;
+  //if (!mDeskBmp) return;
 
   cCardName[0] = 0;
   if (!card) {
@@ -513,6 +526,7 @@ void DeskView::drawText (const QString &str, int x, int y, QRgb textColor, QRgb 
   p.setBrush(b);
   p.drawText(x, y, s);
   p.end();
+  
 }
 
 
@@ -530,9 +544,9 @@ void DeskView::ShowBlankPaper (int optMaxPool) {
   // 307
   // 
   
-  if (!mDeskBmp) return;
-  xDelta = (DesktopWidth-PaperWidth)/2;
-  yDelta = (DesktopHeight-PaperHeight)/2;
+  //if (!mDeskBmp) return;
+  xDelta = (width()-PaperWidth)/2;
+  yDelta = (height()-PaperHeight)/2;
   //char buff[16];
   QPainter p(mDeskBmp);
   QRect NewRect = QRect(xDelta, yDelta, PaperWidth, PaperHeight);
@@ -707,10 +721,16 @@ void DeskView::drawMessageWindow (int x0, int y0, const QString &msg, bool dim) 
   // .|.....text.....|.
   int w = boundR.width()+4+4+2+2, h = boundR.height()+2+2+2+2;
   if (x0 < 0) {
-    if (x0 == -666) x0 = (DesktopWidth-w)/2; else x0 += DesktopWidth-w;
+    if (x0 == -666)
+      x0 = (width()-w)/2;
+    else
+      x0 += width()-w;
   }
   if (y0 < 0) {
-    if (y0 == -666) y0 = (DesktopHeight-h)/2; else y0 += DesktopHeight-h;
+    if (y0 == -666)
+      y0 = (height()-h)/2;
+    else
+      y0 += height()-h;
   }
   // draw shadow
   QBrush brush(qRgba(0, 0, 0, 128));
@@ -733,4 +753,65 @@ void DeskView::drawMessageWindow (int x0, int y0, const QString &msg, bool dim) 
   p.drawText(boundR, Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextExpandTabs, s);
   // done
   p.end();
+}
+/*
+void DeskView::resizeEvent(QResizeEvent *event) {
+  Q_UNUSED(event)
+  qDebug() << width() << height();
+  //mDeskView->DesktopWidth=width();
+  //mDeskView->DesktopHeight=height()-HINTBAR_MAX_HEIGHT;
+  //mDesktop->draw();
+  //forceRepaint();
+//  delete mDeskBmp;
+//  mDeskBmp = new QPixmap(width(), height());
+}
+*/
+
+void DeskView::mouseMoveEvent (QMouseEvent *event) {
+  kpref->mDesktop->currentPlayer()->highlightCard(event->x(), event->y());
+}
+
+
+void DeskView::mousePressEvent (QMouseEvent *event) {
+  if (event->button() == Qt::LeftButton) {
+    Event = 1;
+    Player *plr = kpref->mDesktop->currentPlayer();
+    //if (plr) {
+      plr->mClickX = event->x();
+      plr->mClickY = event->y();
+    //}
+  }
+}
+
+/*
+void DeskView::keyPressEvent (QKeyEvent *event) {
+    switch (event->key()) {
+      case Qt::Key_Escape:
+      case Qt::Key_Enter:
+      case Qt::Key_Return:
+      case Qt::Key_Space:
+        Event = 2;
+        break;
+      default: ;
+    }
+}
+*/
+
+void DeskView::showEvent (QShowEvent *event)
+{
+  Q_UNUSED(event)
+  delete mDeskBmp;
+  mDeskBmp = new QPixmap(width(), height());
+  ClearScreen();
+  qDebug() << "show";
+}
+
+void DeskView::paintEvent (QPaintEvent *event) {
+  Q_UNUSED(event)
+    //mDeskView->DesktopHeight = height()-HINTBAR_MAX_HEIGHT;
+    //mDeskView->DesktopWidth = width();
+    QPainter p;
+    p.begin(this);
+    p.drawPixmap(0, 0, *(mDeskBmp));
+    p.end();
 }
