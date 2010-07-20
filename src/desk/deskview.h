@@ -75,6 +75,8 @@ public:
   void drawMessageWindow (int x0, int y0, const QString &msg, bool dim=false);
   void drawIMove (int x, int y);
 
+  void getLeftTop (int player, int & left, int & top);
+
   void emitRepaint ();
 
   bool loadCards ();

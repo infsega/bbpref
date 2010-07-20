@@ -54,7 +54,6 @@ Kpref::Kpref () {
   initMenuBar();
   mDeskView = 0;
   mDesktop = 0;
-  setMouseTracking(true);
 
   loadOptions();
 

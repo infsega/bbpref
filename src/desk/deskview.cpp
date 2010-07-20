@@ -236,14 +236,15 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), mD
   //DesktopHeight = aH;
   //qDebug() << width() << height();
   mDeskBmp = new QPixmap(width(), height());
-  qDebug() << "construct";
   ClearScreen();
+  setMouseTracking(true);
 
   //connect(this, SIGNAL(deskChanged()), this, SLOT(update()));
 }
 
 
 DeskView::~DeskView () {
+  qDebug() << "NO!!!";
   delete mDeskBmp;
   freeCards();
   delete mIMoveBmp;
@@ -754,6 +755,7 @@ void DeskView::drawMessageWindow (int x0, int y0, const QString &msg, bool dim) 
   // done
   p.end();
 }
+
 /*
 void DeskView::resizeEvent(QResizeEvent *event) {
   Q_UNUSED(event)
@@ -803,15 +805,36 @@ void DeskView::showEvent (QShowEvent *event)
   delete mDeskBmp;
   mDeskBmp = new QPixmap(width(), height());
   ClearScreen();
-  qDebug() << "show";
 }
 
 void DeskView::paintEvent (QPaintEvent *event) {
   Q_UNUSED(event)
+  qDebug() << "paintEvent";
     //mDeskView->DesktopHeight = height()-HINTBAR_MAX_HEIGHT;
     //mDeskView->DesktopWidth = width();
     QPainter p;
     p.begin(this);
     p.drawPixmap(0, 0, *(mDeskBmp));
     p.end();
+}
+
+void DeskView::getLeftTop (int player, int & left, int & top)
+{
+  left = 0; top = 0;
+  switch (player) {
+    case 1:
+      left = width()/4 + xBorder; //(DesktopWidth - (width() / 2 - 2 * xBorder)) / 2;
+      top = height() - yBorder - CARDHEIGHT; //DesktopHeight - yBorder - CARDHEIGHT;//mDeskView->CardHeight;//-10;
+      //qDebug() << left << top;
+      break;
+    case 2:
+      left = xBorder;
+      top = yBorder;// + 20;
+      break;
+    case 3:
+      left = width() - xBorder;
+      top = yBorder;// + 20;
+      break;
+    default: ;
+  }
 }

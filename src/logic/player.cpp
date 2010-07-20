@@ -108,32 +108,6 @@ void Player::returnDrop () {
   mCardsOut.clear();
 }
 
-
-///////////////////////////////////////////////////////////////////////////////
-// game graphics
-///////////////////////////////////////////////////////////////////////////////
-
-void Player::getLeftTop (int *left, int *top) {
-  *left = 0; *top = 0;
-  if (!mDeskView) return;
-  switch (mPlayerNo) {
-    case 1:
-      *left = (mDeskView->width()-(mDeskView->width()/2-2*mDeskView->xBorder))/2;
-      *top = mDeskView->width()-(mDeskView->yBorder)-CARDHEIGHT;//mDeskView->CardHeight;//-10;
-      break;
-    case 2:
-      *left = mDeskView->xBorder;
-      *top = mDeskView->yBorder+20;
-      break;
-    case 3:
-      *left = mDeskView->width()-mDeskView->xBorder;
-      *top = mDeskView->yBorder+20;
-      break;
-    default: ;
-  }
-}
-
-
 ///////////////////////////////////////////////////////////////////////////////
 // build array with cards offsets and indicies
 // at least 28 ints (14 int pairs); return # of used ints; the last int is -1
@@ -179,7 +153,7 @@ int Player::buildHandXOfs (int *dest, int startX, bool opened) {
 int Player::cardAt (int lx, int ly, bool opened) {
   int res = -1, ofs[28];
   int left, top;
-  getLeftTop(&left, &top);
+  mDeskView->getLeftTop(mPlayerNo, left, top);
   buildHandXOfs(ofs, left, opened);
   for (int f = 0; ofs[f] >= 0; f += 2) {
     int x1 = ofs[f], y1 = top;//+mDeskView->yBorder;
@@ -212,8 +186,7 @@ void Player::drawAt (DeskView *aDeskView, int left, int top, int selNo) {
 void Player::draw () {
   int left, top;
   if (!mDeskView) return;
-  getLeftTop(&left, &top);
-  qDebug() << left << top;
+  mDeskView->getLeftTop(mPlayerNo, left, top);
   drawAt(mDeskView, left, top, mPrevHiCardIdx);
 }
 
@@ -221,7 +194,7 @@ void Player::draw () {
 void Player::clearCardArea () {
   int left, top, ofs[28];
   if (!mDeskView) return;
-  getLeftTop(&left, &top);
+  mDeskView->getLeftTop(mPlayerNo, left, top);
   int cnt = buildHandXOfs(ofs, left, !invisibleHand());
   if (!cnt) return;
   for (int f = 0; ofs[f] >= 0; f += 2) {

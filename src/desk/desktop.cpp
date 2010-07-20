@@ -332,7 +332,7 @@ void PrefDesktop::animateDeskToPlayer (int plrNo, bool doAnim) {
   if (!mDeskView) return;
   Player *plr = player(plrNo);
   if (!plr) return;
-  plr->getLeftTop(&left, &top);
+  mDeskView->getLeftTop(plrNo, left, top);
   if (plrNo == 3) left -= CARDWIDTH-4;
 
   for (int f = 0; f < 4; f++) {
