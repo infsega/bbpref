@@ -24,6 +24,8 @@
 #define HUMAN_H
 
 #include "player.h"
+#include "desktop.h"
+#include "deskview.h"
 
 class HumanPlayer : public Player {
 public:

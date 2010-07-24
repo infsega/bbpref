@@ -27,10 +27,7 @@
 #include <QLocale>
 #include <QTranslator>
 
-//#include "main.h"
-
 #include "debug.h"
-#include "prfconst.h"
 #include "kpref.h"
 #include "formbid.h"
 

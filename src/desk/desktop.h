@@ -35,7 +35,7 @@ class PrefDesktop : public QObject {
   Q_OBJECT
 
 public:
-  PrefDesktop (DeskView *aDeskView=0);
+  PrefDesktop (DeskView *aDeskView/*=0*/);
   virtual ~PrefDesktop ();
 
   Player *addPlayer (Player *);
@@ -43,19 +43,20 @@ public:
   void runGame ();
 
   void draw (bool emitSignal=true);
-  void drawPool ();
 
   bool saveGame (const QString &name); // don't working!
   bool loadGame (const QString &name); // don't working!
 
   void closePool ();
 
-  inline Player *currentPlayer () const { return mPlayers[nCurrentMove.nValue]; }
-
   void serialize (QByteArray &ba);
   bool unserialize (QByteArray &ba, int *pos);
 
   void emitRepaint ();
+  
+  Player *player (int num);
+  Player *player (const WrapCounter &cnt);
+  Player *currentPlayer () const { return mPlayers[nCurrentMove.nValue]; }
 
 signals:
   void deskChanged ();
@@ -77,20 +78,9 @@ public:
 private:
   void internalInit ();
 
-  Player *player (int num);
-  Player *player (const WrapCounter &cnt);
   Card *makeGameMove (Card *lMove, Card *rMove, bool isPassOut);
 
-  /// @todo Move to view
-  void drawInGameCard (int mCardNo, Card *card);
-  void inGameCardLeftTop (int mCardNo, int *left, int *top);
-  void animateDeskToPlayer (int plrNo, bool doAnim);
-
 private:
-  //void drawBidWindows (const eGameBid *bids, int curPlr);
-  /// @todo Move to view
-  void getPMsgXY (int plr, int *x, int *y);
-
   int playerWithMaxPool (); // except the players who closed the pool
 
   int whoseTrick (Card *p1, Card *p2, Card *p3, int koz);
@@ -98,7 +88,6 @@ private:
 private:
   bool mPlayingRound;
   int mPlayerActive; // who plays (if not raspass and mPlayingRound=true)
-  int iMoveX, iMoveY;
   int mPlayerHi; // подсвеченая мессага
 };
 

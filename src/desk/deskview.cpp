@@ -30,13 +30,16 @@
 #include <QTimer>
 
 #include "deskview.h"
+#include "desktop.h"
 
 #include "baser.h"
 #include "formbid.h"
-#include "kpref.h"
+//#include "kpref.h"
 #include "prfconst.h"
 #include "player.h"
 //class SleepEventLoop;
+
+//#include "scorewidget.h"
 
 class SleepEventFilter : public QObject {
 public:
@@ -49,6 +52,18 @@ private:
   SleepEventLoop *mLoop;
 };
 
+bool SleepEventFilter::eventFilter (QObject *obj, QEvent *e) {
+  Q_UNUSED(obj)
+  //
+  if (e->type() == QEvent::KeyPress) {
+    QKeyEvent *event = static_cast<QKeyEvent *>(e);
+    mLoop->doEventKey(event);
+  } else if (e->type() == QEvent::MouseButtonPress) {
+    QMouseEvent *event = static_cast<QMouseEvent *>(e);
+    mLoop->doEventMouse(event);
+  }
+  return false; // event is not tasty
+}
 
 // change white to yellow
 static void yellowize (QImage *im, QRgb newColor=qRgb(255, 255, 0)) {
@@ -65,7 +80,7 @@ static void yellowize (QImage *im, QRgb newColor=qRgb(255, 255, 0)) {
 class DeskViewPrivate
 {
 public:
-  DeskViewPrivate(DeskView *parent) : m_eloop(0), m_efilter(0)
+  DeskViewPrivate(DeskView *parent) : m_eloop(0), m_efilter(0), m_timer(0)//, m_score(0)
   {
     m_eloop = new SleepEventLoop(parent);
     m_efilter = new SleepEventFilter(m_eloop);
@@ -82,6 +97,7 @@ public:
   QTimer *m_timer;
   SleepEventLoop *m_eloop;
   SleepEventFilter *m_efilter;
+  //ScoreWidget *m_score;
 };
 
 bool DeskView::loadCards () {
@@ -153,22 +169,6 @@ QPixmap *DeskView::GetImgByName (const char *name) {
   return cardI[name];
 }
 
-
-///////////////////////////////////////////////////////////////////////////////
-bool SleepEventFilter::eventFilter (QObject *obj, QEvent *e) {
-  Q_UNUSED(obj)
-  //
-  if (e->type() == QEvent::KeyPress) {
-    QKeyEvent *event = static_cast<QKeyEvent *>(e);
-    mLoop->doEventKey(event);
-  } else if (e->type() == QEvent::MouseButtonPress) {
-    QMouseEvent *event = static_cast<QMouseEvent *>(e);
-    mLoop->doEventMouse(event);
-  }
-  return false; // event is not tasty
-}
-
-
 ///////////////////////////////////////////////////////////////////////////////
 void SleepEventLoop::doEventKey (QKeyEvent *event) {
   qDebug() << event->key();
@@ -209,6 +209,7 @@ void SleepEventLoop::keyPicUpdate () {
 ///////////////////////////////////////////////////////////////////////////////
 //DeskView::DeskView (int aW, int aH) : mDeskBmp(0), d_ptr(new DeskViewPrivate(this))
 DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), mDeskBmp(0),
+                                                           mDesktop(0),
                                                            d_ptr(new DeskViewPrivate(this))
 {
   mDigitsBmp = new QPixmap(QString(":/pics/digits/digits.png"));
@@ -262,8 +263,27 @@ void DeskView::emitRepaint () {
 }
 
 
-void DeskView::drawIMove (int x, int y) {
+void DeskView::drawIMove (/*int x, int y*/) {
+  int x, y;
   if (!mDeskBmp) return;
+  switch (mDesktop->nCurrentStart.nValue) {
+      case 1:
+        x = width()/2-15;
+        y = height() - yBorder - CARDHEIGHT - 30; //- 40;
+        break;
+      case 2:
+        x = xBorder+20;
+        y = yBorder + CARDHEIGHT + 20; //+40;
+        break;
+      case 3:
+        x = width() - xBorder - 20;
+        y = yBorder + CARDHEIGHT + 20; //+40;
+        break;
+      default:
+        qDebug() << "Invalid nCurrentStart.nValue =" << mDesktop->nCurrentStart.nValue;
+        x = y = -1;
+        break;
+  }
   QPainter p(mDeskBmp);
   p.drawPixmap(x, y, *mIMoveBmp);
   p.end();
@@ -391,7 +411,7 @@ void DeskView::drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game
 
 void DeskView::mySleep (int seconds) {
   Event = 0;
-  qApp->installEventFilter(d_ptr->m_efilter);
+  installEventFilter(d_ptr->m_efilter);
 
   if (seconds == 0)
   {
@@ -402,6 +422,7 @@ void DeskView::mySleep (int seconds) {
     emitRepaint();
     qApp->processEvents(QEventLoop::WaitForMoreEvents);
     qApp->sendPostedEvents();
+    removeEventFilter(d_ptr->m_efilter);
     return;
     //}
   }
@@ -413,13 +434,18 @@ void DeskView::mySleep (int seconds) {
     d_ptr->m_timer->start(1000);
   } else if (seconds < -1) {
     d_ptr->m_eloop->mIgnoreKey = true;
+    //d_ptr->m_timer->start(0);
   }
   if (optPrefClub == true)
   drawPKeyBmp(seconds == -1);
 
   emitRepaint();
+  qDebug() << "about to exec";
+  if (d_ptr->m_eloop->isRunning())
+    d_ptr->m_eloop->exit();
   d_ptr->m_eloop->exec();
-  qApp->removeEventFilter(d_ptr->m_efilter);
+  qDebug() << "exec";
+  removeEventFilter(d_ptr->m_efilter);
   disconnect(d_ptr->m_timer, SIGNAL(timeout()), 0, 0);
 
   Event = (d_ptr->m_eloop->mMousePressed) ? 1 : (d_ptr->m_eloop->mKeyPressed ? 2 : 3);
@@ -427,6 +453,7 @@ void DeskView::mySleep (int seconds) {
     drawPKeyBmp(false);
     emitRepaint();
   }
+  //d_ptr->m_eloop->exit();
 }
 
 
@@ -434,13 +461,15 @@ void DeskView::aniSleep (int milliseconds) {
   Event = 0;
   d_ptr->m_eloop->mIgnoreMouse = true;
   d_ptr->m_eloop->mIgnoreKey = true;
-  qApp->installEventFilter(d_ptr->m_efilter);
+  installEventFilter(d_ptr->m_efilter);
   connect(d_ptr->m_timer, SIGNAL(timeout()), d_ptr->m_eloop, SLOT(quit()));
   d_ptr->m_timer->start(milliseconds);
 
   emitRepaint();
+  qDebug() << "ani about to exec";
   d_ptr->m_eloop->exec();
-  qApp->removeEventFilter(d_ptr->m_efilter);
+  qDebug() << "ani exec";
+  removeEventFilter(d_ptr->m_efilter);
   d_ptr->m_eloop->mIgnoreMouse = false;
   d_ptr->m_eloop->mIgnoreKey = false;
   disconnect(d_ptr->m_timer, SIGNAL(timeout()), 0, 0);
@@ -613,7 +642,7 @@ void DeskView::ShowBlankPaper (int optMaxPool) {
 
 void DeskView::StatusBar (const QString &text) {
   qDebug() << text;
-  //kpref->StatusBar1->showMessage(text);
+  //StatusBar1->showMessage(text);
 }
 
 
@@ -701,8 +730,31 @@ eGameBid DeskView::selectBid (eGameBid lMove, eGameBid rMove) {
   return formBid->_GamesType;
 }
 
+void DeskView::drawPlayerMessage (int player, const QString msg, bool dim)
+{
+  int x, y;
+  switch (player) {
+    case 1:
+      x = -666;
+      y = -(yBorder+CARDHEIGHT+40);
+      break;
+    case 2:
+      x = 30;
+      y = 10;
+      break;
+    case 3:
+      x = -30;
+      y = 10;
+      break;
+    default:
+      x = -666;
+      y = -666;
+      break;
+  }
+  drawMessageWindow(x, y, msg, dim);
+}
 
-void DeskView::drawMessageWindow (int x0, int y0, const QString &msg, bool dim) {
+void DeskView::drawMessageWindow (int x0, int y0, const QString msg, bool dim) {
   if (!mDeskBmp) return;
   QPainter p(mDeskBmp);
   // change suits to unicode chars
@@ -756,28 +808,27 @@ void DeskView::drawMessageWindow (int x0, int y0, const QString &msg, bool dim) 
   p.end();
 }
 
-/*
+
 void DeskView::resizeEvent(QResizeEvent *event) {
   Q_UNUSED(event)
-  qDebug() << width() << height();
+//  qDebug() << width() << height();
   //mDeskView->DesktopWidth=width();
   //mDeskView->DesktopHeight=height()-HINTBAR_MAX_HEIGHT;
-  //mDesktop->draw();
-  //forceRepaint();
+    mDesktop->draw();
 //  delete mDeskBmp;
 //  mDeskBmp = new QPixmap(width(), height());
 }
-*/
+
 
 void DeskView::mouseMoveEvent (QMouseEvent *event) {
-  kpref->mDesktop->currentPlayer()->highlightCard(event->x(), event->y());
+  mDesktop->currentPlayer()->highlightCard(event->x(), event->y());
 }
 
 
 void DeskView::mousePressEvent (QMouseEvent *event) {
   if (event->button() == Qt::LeftButton) {
     Event = 1;
-    Player *plr = kpref->mDesktop->currentPlayer();
+    Player *plr = mDesktop->currentPlayer();
     //if (plr) {
       plr->mClickX = event->x();
       plr->mClickY = event->y();
@@ -825,7 +876,6 @@ void DeskView::getLeftTop (int player, int & left, int & top)
     case 1:
       left = width()/4 + xBorder; //(DesktopWidth - (width() / 2 - 2 * xBorder)) / 2;
       top = height() - yBorder - CARDHEIGHT; //DesktopHeight - yBorder - CARDHEIGHT;//mDeskView->CardHeight;//-10;
-      //qDebug() << left << top;
       break;
     case 2:
       left = xBorder;
@@ -837,4 +887,83 @@ void DeskView::getLeftTop (int player, int & left, int & top)
       break;
     default: ;
   }
+}
+
+// draw ingame card (the card that is in game, not in hand)
+void DeskView::inGameCardLeftTop (int mCardNo, int &left, int &top)
+{
+  int x = width()/2, y = height()/2;
+  switch (mCardNo) {
+    case 0:
+      x -= CARDWIDTH*2+8;
+      y -= CARDHEIGHT/2;
+      break;
+    case 1:
+      x -= CARDWIDTH/2;
+      break;
+    case 2:
+      x -= CARDWIDTH;
+      y -= CARDHEIGHT;
+      break;
+    case 3:
+      y -= CARDHEIGHT;
+      break;
+    default: return;
+  }
+  left = x; top = y;
+}
+
+void DeskView::drawInGameCard (int mCardNo, Card *card, bool closed)
+{
+  if (!card) return;
+  int x, y;
+  inGameCardLeftTop(mCardNo, x, y);
+  drawCard(card, x, y, !closed, 0);
+}
+
+void DeskView::animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[], bool doAnim)
+{
+  static const int steps = 10;
+  Card *cAni[4];
+  int left, top;
+
+//  Player *plr = player(plrNo);
+//  if (!plr) return;
+  getLeftTop(plrNo, left, top);
+  if (plrNo == 3) left -= CARDWIDTH-4;
+
+  for (int f = 0; f < 4; f++) {
+    cAni[f] = mCardsOnDesk[f];
+    mCardsOnDesk[f] = 0;
+  }
+
+  for (int f = doAnim?0:steps; f <= steps; f++) {
+    mDesktop->draw(false);
+    for (int c = 0; c <= 3; c++) {
+      if (!cAni[c]) continue;
+      int x, y;
+      inGameCardLeftTop(c, x, y);
+      x = x+((int)((double)(left-x)/steps*f));
+      y = y+((int)((double)(top-y)/steps*f));
+      drawCard(cAni[c], x, y, 1, 0);
+    }
+    aniSleep(20);
+  }
+}
+
+
+void DeskView::drawPool () {
+  QString sb, sm, slw, srw, tw;
+  ShowBlankPaper(optMaxPool);
+  for (int i = 1;i<=3;i++) {
+    Player *plr = mDesktop->player(i);
+    sb = plr->mScore.poolStr();
+    sm = plr->mScore.mountainStr(7);
+    slw = plr->mScore.leftWhistsStr(14);
+    srw = plr->mScore.rightWhistsStr(14);
+    tw = plr->mScore.whistsStr();
+    showPlayerScore(i, sb, sm, slw, srw, tw);
+  }
+//  if (!d_ptr->m_score) d_ptr->m_score = new ScoreWidget(mDesktop);
+  //d_ptr->m_score->show();
 }

@@ -158,7 +158,6 @@ eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
       moveSelectCard(0, 0, 0, 0);
     } else if (tmpGamesType == 1) {
       // show pool
-      kpref->mDesktop->mShowPool = true;
       kpref->slotShowScore();
     }
   } while (tmpGamesType <= 1);

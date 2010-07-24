@@ -30,6 +30,39 @@
 
 #include "prfconst.h"
 
+static eGameBid gameName2Type (const QString s) {
+  if (s == "raspass") return raspass;
+  if (s == "whist") return whist;
+  if (s == "undefined") return undefined;
+  if (s == "pass") return gtPass;
+  if (s == "g61") return g61;
+  if (s == "g62") return g62;
+  if (s == "g63") return g63;
+  if (s == "g64") return g64;
+  if (s == "g65") return g65;
+  if (s == "g71") return g71;
+  if (s == "g72") return g72;
+  if (s == "g73") return g73;
+  if (s == "g74") return g74;
+  if (s == "g75") return g75;
+  if (s == "g81") return g81;
+  if (s == "g82") return g82;
+  if (s == "g83") return g83;
+  if (s == "g84") return g84;
+  if (s == "g85") return g85;
+  if (s == "g86") return g86;
+  if (s == "g91") return g91;
+  if (s == "g92") return g92;
+  if (s == "g93") return g93;
+  if (s == "g94") return g94;
+  if (s == "g95") return g95;
+  if (s == "g101") return g101;
+  if (s == "g102") return g102;
+  if (s == "g103") return g103;
+  if (s == "g104") return g104;
+  if (s == "g105") return g105;
+  return undefined;
+}
 
 FormBid::FormBid (QWidget *parent) : QDialog (parent) {
   this->setModal(true);

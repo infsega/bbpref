@@ -23,10 +23,10 @@
 #ifndef KPREF_H
 #define KPREF_H
 
-#include "desktop.h"
-#include "deskview.h"
-
 #include <QMainWindow>
+
+class PrefDesktop;
+class DeskView;
 
 class Kpref : public QMainWindow {
   Q_OBJECT
@@ -36,9 +36,6 @@ public:
   ~Kpref();
   void init();
   void initMenuBar();
-  //QPainter *p;
-  //pthread_t thread;
-  //int flthread;
 
   void adjustDesk ();
   
@@ -60,7 +57,6 @@ public slots:
   void slotDeckChanged ();
 
   void slotQuit ();
-  //void slotAbortBid ();
 
 private:
   void saveOptions ();
@@ -70,7 +66,6 @@ private:
   QAction *actFileOpen;
   QAction *actFileSave;
   QStatusBar * HintBar;
-  //QLabel * Hint;
 
 public:
   PrefDesktop *mDesktop;
@@ -79,12 +74,8 @@ public:
   void clearHint();
 
 protected:
-  //void  paintEvent (QPaintEvent *);
-  //void  mousePressEvent (QMouseEvent *);
-  //void  mouseMoveEvent (QMouseEvent *);
   void  keyPressEvent (QKeyEvent *);
   void  closeEvent(QCloseEvent *event);
-  void  resizeEvent(QResizeEvent *event);
 };
 
 extern Kpref *kpref;

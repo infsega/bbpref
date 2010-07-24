@@ -54,53 +54,59 @@ typedef struct {
   int mount, pool, leftWh, rightWh;
 } tScores;
 
-typedef struct {
- eGameBid game;
- const QString name;
-} tGameName;
+static QHash<int, const char *> gameNames;
 
-static tGameName gameNames[] = {
-  {g86catch, " "},
-  {raspass, "pass-out"},
-  {undefined, "-----"},
-  {whist, "whist"},
-  {halfwhist, "halfwhist"},
-  {gtPass, "pass"},
-  {g61, "6\1s"},
-  {g62, "6\1c"},
-  {g63, "6\1d"},
-  {g64, "6\1h"},
-  {g65, "6NT"},
-  {g71, "7\1s"},
-  {g72, "7\1c"},
-  {g73, "7\1d"},
-  {g74, "7\1h"},
-  {g75, "7NT"},
-  {g81, "8\1s"},
-  {g82, "8\1c"},
-  {g83, "8\1d"},
-  {g84, "8\1h"},
-  {g85, "8NT"},
-  {g86, "Misere"},
-  {g91, "9\1s"},
-  {g92, "9\1c"},
-  {g93, "9\1d"},
-  {g94, "9\1h"},
-  {g95, "9NT"},
-  {g101, "10\1s"},
-  {g102, "10\1c"},
-  {g103, "10\1d"},
-  {g104, "10\1h"},
-  {g105, "10NT"},
-  {zerogame, 0}
-};
-
-const QString &sGameName (eGameBid game) {
-  static QString empty;
-  for (int i = 0; !gameNames[i].name.isEmpty(); i++) {
-    if (gameNames[i].game == game) return gameNames[i].name;
+static const char * sGameName (eGameBid game) {
+  if(gameNames.isEmpty()) {
+  gameNames[g86catch] = " ";
+  gameNames[raspass] = "pass-out";
+  gameNames[undefined] = "-----";
+  gameNames[whist] = "whist";
+  gameNames[halfwhist] = "halfwhist";
+  gameNames[gtPass] = "pass";
+  gameNames[g61] = "6\1s";
+  gameNames[g62] = "6\1c";
+  gameNames[g63] = "6\1d";
+  gameNames[g64] = "6\1h";
+  gameNames[g65] = "6NT";
+  gameNames[g71] = "7\1s";
+  gameNames[g72] = "7\1c";
+  gameNames[g73] = "7\1d";
+  gameNames[g74] = "7\1h";
+  gameNames[g75] = "7NT";
+  gameNames[g81] = "8\1s";
+  gameNames[g82] = "8\1c";
+  gameNames[g83] = "8\1d";
+  gameNames[g84] = "8\1h";
+  gameNames[g85] = "8NT";
+  gameNames[g86] = "Misere";
+  gameNames[g91] = "9\1s";
+  gameNames[g92] = "9\1c";
+  gameNames[g93] = "9\1d";
+  gameNames[g94] = "9\1h";
+  gameNames[g95] = "9NT";
+  gameNames[g101] = "10\1s";
+  gameNames[g102] = "10\1c";
+  gameNames[g103] = "10\1d";
+  gameNames[g104] = "10\1h";
+  gameNames[g105] = "10NT";
+  gameNames[zerogame] = "";
   }
-  return empty;
+  return gameNames[game];
+}
+
+static const char * bidMessage(eGameBid game)
+{
+		if (game == whist) return "whist";
+		else if (game == gtPass) return "pass";
+		else if (game == g65) return "6 no trump";
+		else if (game == g75) return "7 no trump";
+		else if (game == g85) return "8 no trump";
+		else if (game == g95) return "9 no trump";
+		else if (game == g105) return "10 no trump";
+		else if (game == g86) return "Misere";
+		else if (game == withoutThree) return "without three";
+		else return gameNames.value(game);
 }
 
 void PrefDesktop::internalInit () {
@@ -123,25 +129,21 @@ void PrefDesktop::internalInit () {
   else 
     addPlayer(new CheatPlayer(3, mDeskView));
 
-
   mShowPool = false;
   mOnDeskClosed = false;
-  
-  //	optMaxPool = 21;
-  iMoveX = iMoveY = -1;
 }
 
 
 PrefDesktop::PrefDesktop (DeskView *aDeskView) : QObject(0) {
   mPlayingRound = false;
-  mGameRunning = false;
-  internalInit();
+  mGameRunning = false;  
   mDeskView = aDeskView;
+  internalInit();
 }
 
 
 PrefDesktop::~PrefDesktop () {
-  foreach (Player *p, mPlayers) if (p) delete p;
+  foreach (Player *p, mPlayers) delete p;
   mPlayers.clear();
 }
 
@@ -258,47 +260,6 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
   return res;
 }
 
-
-void PrefDesktop::getPMsgXY (int plr, int *x, int *y) {
-  switch (plr) {
-    case 1:
-      *x = -666;
-      *y = -(mDeskView->yBorder+CARDHEIGHT+50);
-      break;
-    case 2:
-      *x = 30;
-      *y = 30;
-      break;
-    case 3:
-      *x = -30;
-      *y = 30;
-      break;
-    default:
-      *x = -666;
-      *y = -666;
-      break;
-  }
-}
-
-
-/*
-void PrefDesktop::drawBidWindows (const eGameBid *bids, int curPlr) {
-  draw(false);
-  for (int f = 1; f <= 3; f++) {
-    int x, y;
-    getPMsgXY(f, &x, &y);
-    if (f != curPlr) {
-      if (bids[f] != undefined) {
-        mDeskView->drawMessageWindow(x, y, sGameName(bids[f]), true);
-      }
-    } else mDeskView->drawMessageWindow(x, y, QString("thinking..."));
-  }
-  //emitRepaint();
-  //if (curPlr != 3) mDeskView->mySleep(2); else emitRepaint();
-}
-*/
-
-
 static void cardName (char *dest, const Card *c) {
   static const char *faceN[] = {" 7"," 8"," 9","10"," J"," Q"," K"," A"};
   static const char *suitN[] = {"S","C","D","H"};
@@ -321,38 +282,6 @@ static void dumpCardList (char *dest, const CardList &lst) {
     strcat(dest, " ");
     cardName(dest, c);
   }
-}
-
-
-void PrefDesktop::animateDeskToPlayer (int plrNo, bool doAnim) {
-  static const int steps = 10;
-  Card *cAni[4];
-  int left, top;
-
-  if (!mDeskView) return;
-  Player *plr = player(plrNo);
-  if (!plr) return;
-  mDeskView->getLeftTop(plrNo, left, top);
-  if (plrNo == 3) left -= CARDWIDTH-4;
-
-  for (int f = 0; f < 4; f++) {
-    cAni[f] = mCardsOnDesk[f];
-    mCardsOnDesk[f] = 0;
-  }
-
-  for (int f = doAnim?0:steps; f <= steps; f++) {
-    draw(false);
-    for (int c = 0; c <= 3; c++) {
-      if (!cAni[c]) continue;
-      int x, y;
-      inGameCardLeftTop(c, &x, &y);
-      x = x+((int)((double)(left-x)/steps*f));
-      y = y+((int)((double)(top-y)/steps*f));
-      mDeskView->drawCard(cAni[c], x, y, 1, 0);
-    }
-    mDeskView->aniSleep(20);
-  }
-  draw();
 }
 
 
@@ -422,90 +351,21 @@ bool PrefDesktop::saveGame (const QString &name)  {
 }
 
 
-// draw ingame card (the card that is in game, not in hand)
-void PrefDesktop::inGameCardLeftTop (int mCardNo, int *left, int *top) {
-  int w = mDeskView->width()/2, h = mDeskView->height()/2;
-  int x = w, y = h;
-  switch (mCardNo) {
-    case 0:
-      x -= CARDWIDTH*2+8;
-      y -= CARDHEIGHT/2;
-      break;
-    case 1:
-      x -= CARDWIDTH/2;
-      break;
-    case 2:
-      x -= CARDWIDTH;
-      y -= CARDHEIGHT;
-      break;
-    case 3:
-      y -= CARDHEIGHT;
-      break;
-    default: return;
-  }
-  *left = x; *top = y;
-}
-
-
-void PrefDesktop::drawInGameCard (int mCardNo, Card *card) {
-  if (!card) return;
-  int x, y;
-  inGameCardLeftTop(mCardNo, &x, &y);
-  mDeskView->drawCard(card, x, y, !mOnDeskClosed, 0);
-}
-
-
-void PrefDesktop::drawPool () {
-  QString sb, sm, slw, srw, tw;
-  mDeskView->ShowBlankPaper(optMaxPool);
-  for (int i = 1;i<=3;i++) {
-    Player *plr = player(i);
-    sb = plr->mScore.poolStr();
-    sm = plr->mScore.mountainStr(7);
-    slw = plr->mScore.leftWhistsStr(14);
-    srw = plr->mScore.rightWhistsStr(14);
-    tw = plr->mScore.whistsStr();
-    mDeskView->showPlayerScore(i, sb, sm, slw, srw, tw);
-  }
-}
-
-
 void PrefDesktop::draw (bool emitSignal) {
   if (!mDeskView) return;
   mDeskView->ClearScreen();
 
   if (!mGameRunning)
   	return;
-	
-	// "I move" icon
-    switch (nCurrentStart.nValue) {
-      case 1:
-        iMoveX = mDeskView->width()/2-15;
-        iMoveY = mDeskView->height()-mDeskView->yBorder-CARDHEIGHT-40;
-        break;
-      case 2:
-        iMoveX = mDeskView->xBorder+20;
-        iMoveY = mDeskView->yBorder+CARDHEIGHT+40;
-        break;
-      case 3:
-        iMoveX = mDeskView->width()-mDeskView->xBorder-20;
-        iMoveY = mDeskView->yBorder+CARDHEIGHT+40;
-        break;
-      default: iMoveX = iMoveY = -1; break;
-    }
-  
+
   // repaint players
-  for (int f = 1; f <= 3; f++) {
-    Player *plr = player(f);
-    if (plr) {
-      plr->mDeskView = mDeskView;
-      plr->draw();
-    }
-  }
+  for (int f = 1; f <= 3; f++) 
+      mPlayers.at(f)->draw();
+
   // repaint in-game cards
-  for (int f = 0; f <= 3; f++) {
-    if (mCardsOnDesk[f]) drawInGameCard(f, mCardsOnDesk[f]);
-  }
+  for (int f = 0; f <= 3; f++)
+    if (mCardsOnDesk[f]) mDeskView->drawInGameCard(f, mCardsOnDesk[f], mOnDeskClosed);
+
   // draw bidboard
   if (mPlayingRound) {
     Player *plr1 = player(1);
@@ -515,21 +375,17 @@ void PrefDesktop::draw (bool emitSignal) {
       mDeskView->drawBidsBmp(mPlayerActive, plr1->tricksTaken(), plr2->tricksTaken(), plr3->tricksTaken(), gCurrentGame);
     }
   }
-  if (iMoveX >= 0) mDeskView->drawIMove(iMoveX, iMoveY);
+  mDeskView->drawIMove();
   // сообщения
   for (int f = 1; f <= 3; f++) {
     Player *plr = player(f);
-    if (plr) {
       QString msg(plr->message());
       if (!msg.isEmpty()) {
-        int plrmx, plrmy;
-        getPMsgXY(f, &plrmx, &plrmy);
-        mDeskView->drawMessageWindow(plrmx, plrmy, msg, f!=mPlayerHi);
+        mDeskView->drawPlayerMessage(f, msg, f!=mPlayerHi);
       }
-    }
   }
   // repaint scoreboard
-  if (mShowPool) drawPool();
+  if (mShowPool) mDeskView->drawPool();
   if (emitSignal) mDeskView->update();//emitRepaint();
 }
 
@@ -641,14 +497,10 @@ void PrefDesktop::runGame () {
     }
     */
 
-	// Starter of bidding
-    plrCounter = nCurrentStart;
-	for (int i=1; i<=3; i++) {
-		if (i == nCurrentStart.nValue)
-			player(i)->setCurrentStart(true);
-		else
-			player(i)->setCurrentStart(false);
-	}
+  // Starter of bidding
+  plrCounter = nCurrentStart;
+  for (int i=1; i<=3; i++)
+    player(i)->setCurrentStart(i == nCurrentStart.nValue);
 
     draw();
     {
@@ -796,7 +648,8 @@ void PrefDesktop::runGame () {
           // deal talon
           tmpg->dealCard(mDeck.at(30));
           tmpg->dealCard(mDeck.at(31));
-          animateDeskToPlayer(mPlayerActive, optTakeAnim); // will clear mCardsOnDesk[]
+          mDeskView->animateDeskToPlayer(mPlayerActive, mCardsOnDesk, optTakeAnim); // will clear mCardsOnDesk[]
+          draw();
 
           //bids4win[0] = bids4win[1] = bids4win[2] = bids4win[3] = undefined;
           // throw away
@@ -841,18 +694,7 @@ void PrefDesktop::runGame () {
           tmpPlayersCounter.nValue = i;
 
           // bid
-		  QString message;
-		if (gCurrentGame == whist) message = tr("whist");
-		else if (gCurrentGame == gtPass) message = tr("pass");
-		else if (gCurrentGame == g65) message = tr("6 no trump");
-		else if (gCurrentGame == g75) message = tr("7 no trump");
-		else if (gCurrentGame == g85) message = tr("8 no trump");
-		else if (gCurrentGame == g95) message = tr("9 no trump");
-		else if (gCurrentGame == g105) message = tr("10 no trump");
-		else if (gCurrentGame == g86) message = tr("Misere");
-		else if (gCurrentGame == withoutThree) message = tr("without three");
-		else message = sGameName(gCurrentGame);  
-          player(tmpPlayersCounter)->setMessage(message);
+          player(tmpPlayersCounter)->setMessage(tr(bidMessage(gCurrentGame)));
 
 		if (gCurrentGame == withoutThree) {
 			gCurrentGame = maxBid;
@@ -1132,7 +974,8 @@ void PrefDesktop::runGame () {
 
       nPl = whoseTrick(mFirstCard, mSecondCard, mThirdCard, playerBids[0]-(playerBids[0]/10)*10)-1;
       nCurrentMove = nCurrentMove+nPl;
-      animateDeskToPlayer(nCurrentMove.nValue, optTakeAnim); // will clear mCardsOnDesk[]
+      mDeskView->animateDeskToPlayer(nCurrentMove.nValue, mCardsOnDesk, optTakeAnim); // will clear mCardsOnDesk[]
+      draw();
       tmpg = player(nCurrentMove);
       tmpg->gotTrick();
       draw(false);
@@ -1213,7 +1056,7 @@ LabelRecordOnPaper:
     }
   } // end of pool
   mShowPool = true;
-  drawPool();
+  mDeskView->drawPool();
   emitRepaint();
   emit gameOver();
 

@@ -118,13 +118,11 @@ extern bool optTakeAnim;
 extern bool optPrefClub;
 
 int succBid (eGameBid game);
-const QString &sGameName (eGameBid game);
 int trumpSuit ();
 int gameTricks (eGameBid gType);
 int gameWhists (eGameBid gType);
 int gameWhistsMin (eGameBid gType);
 int gamePoolPrice (eGameBid gType);
-eGameBid gameName2Type (const QString &s);
 
 
 #endif

@@ -21,6 +21,8 @@
  */
 
 #include "kpref.h"
+#include "desktop.h"
+#include "deskview.h"
 
 #include <QDesktopWidget>
 #include <QSettings>
@@ -39,11 +41,8 @@
 #include "newgameform.h"
 #include "optform.h"
 #include "helpbrowser.h"
-//#include "player.h"
 
-#define HINTBAR_MAX_HEIGHT 22
-
-inline const char * GenName(QString str, QString ext);
+inline static const char * GenName(QString str, QString ext);
 
 //char *documentation; //see bottom this file
 Kpref *kpref;
@@ -60,7 +59,7 @@ Kpref::Kpref () {
   HintBar = new QStatusBar(this);
   HintBar->setSizeGripEnabled(true);
   setStatusBar(HintBar);
-  HintBar->setFixedHeight(HINTBAR_MAX_HEIGHT);
+  //HintBar->setFixedHeight(HINTBAR_MAX_HEIGHT);
   
   QDesktopWidget *desk = QApplication::desktop();
   QRect dims(desk->availableGeometry(this));
@@ -91,6 +90,7 @@ void Kpref::init () {
   setCentralWidget(mDeskView);
   mDeskView->setAutoFillBackground(false);
   mDesktop = new PrefDesktop(mDeskView);
+  mDeskView->setModel(mDesktop);
   connect(mDesktop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
   connect(mDeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
   HintBar->showMessage(tr("Welcome to OpenPref!"));
@@ -100,14 +100,14 @@ void Kpref::init () {
   
  // resize(width(),height()+HintBar->height());
 }
-
+/*
 void Kpref::resizeEvent(QResizeEvent *event) {
   Q_UNUSED(event)
   //mDeskView->DesktopWidth=width();
   //mDeskView->DesktopHeight=height()-HINTBAR_MAX_HEIGHT;
   mDesktop->draw();
   forceRepaint();
-}
+}*/
 
 
 Kpref::~Kpref () {
@@ -192,8 +192,8 @@ void Kpref::slotFileQuit() {
 void Kpref::slotShowScore () {
   mDesktop->closePool();
   mDesktop->mShowPool = true;
-  mDesktop->drawPool();
-  mDesktop->mDeskView->mySleep(-1);
+  mDeskView->drawPool();
+  mDeskView->mySleep(-1);
   mDesktop->mShowPool = false;
   mDesktop->draw();
 }
@@ -244,18 +244,11 @@ void Kpref::slotNewSingleGame () {
 	return;
   }
   
- // if (mDesktop) {
-    delete mDesktop;
-    //delete mDeskView;
-    //mDeskView = new DeskView(width(), height()-HINTBAR_MAX_HEIGHT);
-    //mDeskView = new DeskView(this);
-    mDeskView->ClearScreen();
-    mDesktop = new PrefDesktop();
-    mDesktop->mDeskView = mDeskView;
-    //connect(mDesktop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
-    connect(mDesktop, SIGNAL(deskChanged()), mDeskView, SLOT(update()));
-    //connect(mDeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
-  // }  
+  mDeskView->ClearScreen();
+  delete mDesktop;
+  mDesktop = new PrefDesktop(mDeskView);    
+  mDeskView->setModel(mDesktop);
+  connect(mDesktop, SIGNAL(deskChanged()), mDeskView, SLOT(update()));
   
   optPassCount = 0;
   actFileOpen->setEnabled(false);

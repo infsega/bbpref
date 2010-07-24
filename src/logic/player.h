@@ -62,7 +62,7 @@ public:
 
   virtual bool chooseClosedWhist () = 0;
 
-  /// @todo Move to view
+  /// @todo Move to view delegate
   virtual void draw ();
   virtual void highlightCard (int lx, int ly); // подсветить карту по данным координатам (и перерисовать руку, если надо)
 
@@ -74,6 +74,7 @@ public:
   eGameBid myGame () const { return mMyGame; }
   void setMyGame (eGameBid game) { mMyGame = game; }
 
+  /// @todo Move to shared score board
   int tricksTaken () const { return mTricksTaken; }
   void gotTrick () { mTricksTaken++; }
   void gotPassPassTricks (int cnt) { mTricksTaken = cnt; }

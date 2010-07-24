@@ -37,6 +37,7 @@
 #include "prfconst.h"
 
 class Card;
+class PrefDesktop;
 class DeskViewPrivate;
 
 class DeskView : public QWidget {
@@ -46,11 +47,16 @@ public:
   DeskView (QWidget * parent = 0, Qt::WindowFlags f = 0);
   ~DeskView ();
 
+  PrefDesktop * model() { return mDesktop; }
+  void setModel(PrefDesktop *desktop) { mDesktop = desktop; }
+
   void mySleep (int seconds);
   void aniSleep (int milliseconds);
 
+  // Background repaint
   void ClearScreen ();
   void ClearBox (int x1, int y1, int x2, int y2);
+  
   void drawCard (Card *card, int x, int y, bool opened, bool hilight);
   void drawText (const QString &str, int x, int y, QRgb textColor=qRgb(255,255,255), QRgb outlineColor=qRgb(0,0,0));
   void MessageBox (const QString &text, const QString &caption);
@@ -63,6 +69,7 @@ public:
   void drawRotatedText (QPainter &p, int x, int y, int width, int height, float angle, const QString &text);
 
   void drawPKeyBmp (bool show);
+  void drawPool ();
   /* game:
    *  <0: none
    *  =0: misere
@@ -72,10 +79,14 @@ public:
    */
   void drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game);
 
-  void drawMessageWindow (int x0, int y0, const QString &msg, bool dim=false);
-  void drawIMove (int x, int y);
+  void drawMessageWindow (int x0, int y0, const QString msg, bool dim=false);
+  void drawPlayerMessage (int player, const QString msg, bool dim=false);
+  void drawIMove ();
 
   void getLeftTop (int player, int & left, int & top);
+  
+  void drawInGameCard (int mCardNo, Card *card, bool closed);
+  void animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[], bool doAnim);
 
   void emitRepaint ();
 
@@ -107,17 +118,19 @@ protected:
   void  paintEvent (QPaintEvent *);
   void  mousePressEvent (QMouseEvent *);
   void  mouseMoveEvent (QMouseEvent *);
-  //void  resizeEvent(QResizeEvent *event);
+  void  resizeEvent(QResizeEvent *event);
 
 private:
+  void inGameCardLeftTop (int mCardNo, int &left, int &top);
+
   void drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy);
   void drawNumber (int x0, int y0, int n, bool red);
   void drawGameBid (eGameBid game);
   QPixmap *GetImgByName (const char *name);
 
 private:
-  Q_DECLARE_PRIVATE(DeskView)
-  DeskViewPrivate * const d_ptr;
+  DeskViewPrivate * const d_ptr;  
+  PrefDesktop *mDesktop;
   int bidBmpX, bidBmpY;
   QHash<QString, QPixmap *> cardI;
   QHash<int, QPixmap *> bidIcons;
