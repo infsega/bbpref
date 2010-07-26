@@ -1,37 +1,23 @@
 project(openpref) 
 
 INCLUDE_DIRECTORIES( src )
-
-SET ( HEADERS ${HEADERS}
-  src/kpref.h 
-  src/prfconst.h
-)
-
-SET ( SOURCES ${SOURCES}
-  src/kpref.cpp 
-  src/prfconst.cpp 
-  src/main.cpp
-)
-
-# tell cmake to process CMakeLists.txt in that subdirectory
-#add_subdirectory(util)
-#add_subdirectory(cardutil)
-#add_subdirectory(forms)
-#add_subdirectory(score)
-#add_subdirectory(logic)
-#add_subdirectory(desk)
-
-include(src/util/util.cmake)
-include(src/cardutil/cardutil.cmake)
-include(src/forms/forms.cmake)
-include(src/score/score.cmake)
-include(src/logic/logic.cmake)
-include(src/desk/desk.cmake)
-
-INCLUDE_DIRECTORIES( src )
-INCLUDE_DIRECTORIES( src/util )
-INCLUDE_DIRECTORIES( src/cardutil )
-INCLUDE_DIRECTORIES( src/forms )
-INCLUDE_DIRECTORIES( src/score )
 INCLUDE_DIRECTORIES( src/logic )
-INCLUDE_DIRECTORIES( src/desk )
+INCLUDE_DIRECTORIES( src/model )
+INCLUDE_DIRECTORIES( src/view )
+
+FILE(GLOB main_SRCS "src/*.cpp")
+FILE(GLOB logic_SRCS "src/logic/*.cpp")
+FILE(GLOB model_SRCS "src/model/*.cpp")
+FILE(GLOB view_SRCS "src/view/*.cpp")
+
+FILE(GLOB main_HDRS "src/*.h")
+FILE(GLOB logic_HDRS "src/logic/*.h")
+FILE(GLOB model_HDRS "src/model/*.h")
+FILE(GLOB view_HDRS "src/view/*.h")
+
+FILE(GLOB UIS "src/view/*.ui")
+
+SET ( HEADERS ${main_HDRS} ${logic_HDRS} ${model_HDRS} ${view_HDRS})
+SET ( SOURCES ${main_SRCS} ${logic_SRCS} ${model_SRCS} ${view_SRCS})
+
+#message("${SOURCES}")

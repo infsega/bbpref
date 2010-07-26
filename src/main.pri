@@ -10,9 +10,6 @@ SOURCES += \
   $$PWD/prfconst.cpp \
   $$PWD/main.cpp
 
-include($$PWD/util/util.pri)
-include($$PWD/cardutil/cardutil.pri)
-include($$PWD/forms/forms.pri)
-include($$PWD/score/score.pri)
+include($$PWD/view/view.pri)
 include($$PWD/logic/logic.pri)
-include($$PWD/desk/desk.pri)
+include($$PWD/model/model.pri)
