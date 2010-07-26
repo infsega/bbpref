@@ -31,6 +31,14 @@
 
 #include "debug.h"
 
+
+enum eHand {
+  LeftHand=0,
+  RightHand,
+  NoHand
+};
+
+
 AiPlayer::AiPlayer (int aMyNumber, DeskView *aDeskView) : Player(aMyNumber, aDeskView) {
   internalInit();
 }
@@ -1107,7 +1115,7 @@ Card *AiPlayer::MyPass1 (Card *rMove, Player *aLeftPlayer, Player *aRightPlayer)
   eGameBid tmpGamesType = mMyGame;
   CardList aMaxCardList;
   CardList aTmpList, aStackStore;
-  int doRest = 0;
+  //int doRest = 0;
 
   if (rMove != 0)  {
 	cur = mCards.minInSuit(rMove->suit());

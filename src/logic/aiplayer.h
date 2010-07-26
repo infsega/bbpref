@@ -25,6 +25,13 @@
 
 #include "player.h"
 
+typedef struct {
+  int tricks;
+  int perehvatov;
+  int len;
+  int sum;
+} tSuitProbs;
+
 class AiPlayer : public Player {
 public:
   AiPlayer (int aMyNumber, DeskView *aDeskView=0);

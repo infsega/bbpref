@@ -58,12 +58,6 @@ extern int CARDHEIGHT;
 #define MAXGAMELEN   1024
 
 
-enum eHand {
-  LeftHand=0,
-  RightHand,
-  NoHand
-};
-
 enum eSuit {
   SuitSpades=1,
   SuitClubs,
@@ -88,14 +82,6 @@ enum eGameBid {
   g91=91,g92,g93,g94,g95,
   g101=101,g102,g103,g104,g105
 };// g86 - miser
-
-
-typedef struct {
-  int tricks;
-  int perehvatov;
-  int len;
-  int sum;
-} tSuitProbs;
 
 
 extern bool optStalingrad;
