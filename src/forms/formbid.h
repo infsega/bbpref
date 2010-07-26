@@ -30,14 +30,14 @@
 #include <QWidget>
 
 #include "prfconst.h"
-#include "qbidbutton.h"
 
+class DeskView;
 
 class FormBid : public QDialog  {
  Q_OBJECT
 
 public:
-  static FormBid* instance(QWidget *parent=0);
+  static FormBid* instance(DeskView *parent=0);
 
   void enableAll ();
   void disableAll ();
@@ -55,12 +55,11 @@ public slots:
   void slotShowBullet ();
 
 protected:
-  FormBid (QWidget *parent=0);
+  FormBid (DeskView *parent=0);
   ~FormBid ();
 
   void initDialog ();
   QList<QPushButton *> buttonList ();
-  QList<QBidButton *> bidButtonList ();
 
   void closeEvent(QCloseEvent *event);
 
@@ -70,11 +69,11 @@ public:
   QPushButton *showbullet;
   QPushButton *bhalfvist;
   
-protected:
+private:
   QPushButton *b86;
   QPushButton *bpass;
   QPushButton *bvist;
-
+  DeskView *m_deskview;
 };
 
 #endif

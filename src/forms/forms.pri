@@ -6,14 +6,12 @@ HEADERS += \
   $$PWD/newgameform.h \
   $$PWD/helpbrowser.h \
   $$PWD/formbid.h \
-  $$PWD/qbidbutton.h
+  $$PWD/scorewidget.h
 
 SOURCES += \
-  $$PWD/optform.cpp \
-  $$PWD/newgameform.cpp \
   $$PWD/helpbrowser.cpp \
   $$PWD/formbid.cpp \
-  $$PWD/qbidbutton.cpp
+  $$PWD/scorewidget.cpp
 
 FORMS += \
   $$PWD/optform.ui \

@@ -27,8 +27,8 @@
 #include <QToolTip>
 
 #include "formbid.h"
-
 #include "prfconst.h"
+#include "deskview.h"
 
 static eGameBid gameName2Type (const QString s) {
   if (s == "raspass") return raspass;
@@ -64,8 +64,32 @@ static eGameBid gameName2Type (const QString s) {
   return undefined;
 }
 
-FormBid::FormBid (QWidget *parent) : QDialog (parent) {
-  this->setModal(true);
+class QBidButton : public QPushButton
+{
+
+public:
+  QBidButton (eGameBid aBid, int x, int y, QWidget *parent=0);
+  eGameBid bid () const { return mBid; }
+
+protected:
+  eGameBid mBid;
+};
+
+QBidButton::QBidButton (eGameBid aBid, int x, int y, QWidget *parent) : QPushButton(parent), mBid(aBid) {
+  QString iName, oName;
+  iName.sprintf(":/pics/bids/s%i.png", aBid);
+  oName.sprintf("g%i", aBid);
+  setObjectName(oName);
+  setGeometry(x, y, 40, 27);
+  setMinimumSize(40, 27);
+  setIconSize(QSize(40, 27));
+  setIcon(QIcon(iName));
+}
+
+
+FormBid::FormBid (DeskView *parent) : QDialog (parent) {
+  //this->setModal(true);
+  m_deskview = parent;
   setWindowTitle(tr("Bidding"));
   initDialog();
 }
@@ -74,7 +98,7 @@ FormBid::FormBid (QWidget *parent) : QDialog (parent) {
 FormBid::~FormBid () {
 }
 
-FormBid* FormBid::instance(QWidget *parent)
+FormBid* FormBid::instance(DeskView *parent)
 {
   static FormBid *obj = 0;
 
@@ -100,7 +124,11 @@ void FormBid::slotPushButtonClickPass () { _GamesType = gtPass; accept(); }
 void FormBid::slotPushButtonClickVist () { _GamesType = whist; accept(); }
 void FormBid::slotPushButtonClickHalfVist () { _GamesType = halfwhist; accept(); }
 void FormBid::slotWithoutThree () { _GamesType = withoutThree; accept(); }
-void FormBid::slotShowBullet () { _GamesType = (eGameBid)1; reject(); }
+
+void FormBid::slotShowBullet ()
+{
+  m_deskview->drawPool();
+}
 
 
 void FormBid::onBidClick () {
@@ -121,16 +149,16 @@ QList<QPushButton *> FormBid::buttonList () {
   return res;
 }
 
-
-QList<QBidButton *> FormBid::bidButtonList () {
-  QList<QBidButton *> res;
+/*
+QList<QPushButton *> FormBid::bidButtonList () {
+  QList<QPushButton *> res;
   QList<QWidget *> wList = qFindChildren<QWidget *>(this);
   foreach (QWidget *widget, wList) {
     QBidButton *b = static_cast<QBidButton *>(widget);
     if (b) res << b;
   }
   return res;
-}
+}*/
 
 
 void FormBid::enableAll () {

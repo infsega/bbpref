@@ -27,15 +27,19 @@
 
 
 #include "ui_newgameform.h"
-class NewGameDialog : public QDialog, public Ui_NewGameDialog {
+class NewGameDialog : public QDialog, public Ui_NewGameDialog
+{
   Q_OBJECT
 
 public:
-  NewGameDialog (QWidget *parent=0);
+  NewGameDialog (QWidget *parent=0) : QDialog(parent) { setupUi(this); }
   ~NewGameDialog () { }
 
 private slots:
-  void toggleRounds(int);
+  void toggleRounds(int checked)
+  {
+    sbRounds->setEnabled(checked == Qt::Checked);
+  }
 };
 
 

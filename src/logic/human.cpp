@@ -232,6 +232,7 @@ eGameBid HumanPlayer::moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerP
 	
     //formBid->enableItem(gtPass);
     formBid->enableItem(whist);
+    formBid->showbullet->setEnabled(true);
 	if (nGamerPass == 1)
 		formBid->bhalfvist->setEnabled(true);
     mMyGame = mDeskView->selectBid(zerogame, zerogame);

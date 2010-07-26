@@ -25,17 +25,15 @@
 
 #include <QDialog>
 
-
 #include "ui_optform.h"
-class OptDialog : public QDialog, public Ui_OptDialog {
+
+class OptDialog : public QDialog, public Ui_OptDialog
+{
   Q_OBJECT
 
 public:
-  OptDialog (QWidget *parent=0);
+  OptDialog (QWidget *parent=0) : QDialog(parent) { setupUi(this); }
   ~OptDialog () { }
-
-/*protected:
-  void showEvent (QShowEvent *event);*/
 };
 
 

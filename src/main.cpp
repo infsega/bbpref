@@ -29,7 +29,7 @@
 
 #include "debug.h"
 #include "kpref.h"
-#include "formbid.h"
+#include "prfconst.h"
 
 using namespace std;
 
@@ -61,7 +61,6 @@ int main (int argc, char *argv[]) {
   QString translationCode = QLocale::system().name();
 
   // Load Qt translations first
-  bool tryLoadingQtTranslations = false;
   QString qtFilename = "qt_" + translationCode + ".qm";
   QTranslator qtTranslator(0);
   if (qtTranslator.load(qtFilename, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
@@ -75,10 +74,11 @@ int main (int argc, char *argv[]) {
 
   //a.setFont (QFont("helvetica", FONTSIZE));
   kpref = new Kpref();
-  FormBid *formBid = FormBid::instance(kpref);
-  formBid->hide();
-  kpref->init();
-  kpref->show();
+  //#ifndef MOBILE
+    kpref->show();
+  //#else
+  //  kpref->showFullScreen();
+  //#endif
   bool exitCode = a.exec();
   return exitCode;
 }
