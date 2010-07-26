@@ -52,8 +52,6 @@ public:
   void serialize (QByteArray &ba);
   bool unserialize (QByteArray &ba, int *pos);
 
-  void emitRepaint ();
-  
   Player *player (int num);
   Player *player (const WrapCounter &cnt);
   Player *currentPlayer () const { return mPlayers[nCurrentMove.nValue]; }
@@ -63,32 +61,27 @@ signals:
   void gameOver ();
 
 public:
-  DeskView *mDeskView;
-  CardList mDeck;
-  QList<Player *> mPlayers;
   WrapCounter nCurrentStart, nCurrentMove;
-  Card *mFirstCard, *mSecondCard, *mThirdCard;
-  Card *mCardsOnDesk[4];
-
-  bool mShowPool;
-  bool mOnDeskClosed;
   bool mGameRunning;
   bool mBiddingDone;
 
 private:
   void internalInit ();
-
   Card *makeGameMove (Card *lMove, Card *rMove, bool isPassOut);
 
 private:
   int playerWithMaxPool (); // except the players who closed the pool
 
-  int whoseTrick (Card *p1, Card *p2, Card *p3, int koz);
-
 private:
+  DeskView *mDeskView;
+  CardList mDeck;
+  QList<Player *> mPlayers;
+  Card *mFirstCard, *mSecondCard, *mThirdCard;
+  Card *mCardsOnDesk[4];
   bool mPlayingRound;
   int mPlayerActive; // who plays (if not raspass and mPlayingRound=true)
   int mPlayerHi; // подсвеченая мессага
+  bool mOnDeskClosed;
 };
 
 

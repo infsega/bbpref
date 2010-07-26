@@ -178,7 +178,8 @@ void Player::drawAt (DeskView *aDeskView, int left, int top, int selNo) {
     Card *card = mCards.at(ofs[f+1]);
     aDeskView->drawCard(card, x, y, !invisibleHand(), ofs[f+1]==selNo);
   }
-  aDeskView->emitRepaint();
+  //aDeskView->emitRepaint();
+  aDeskView->update();
   mDeskView = oDesk;
 }
 

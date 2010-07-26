@@ -78,36 +78,17 @@ Kpref::Kpref () {
   //setFixedSize(w, h);
   resize(w, h);
 
- //connect(this, SIGNAL(rejected()), qApp, SLOT(quit()));
-}
-
-
-void Kpref::init () {
-  //StatusBar1 = new QStatusBar(this);
-  //mDeskView = new DeskView(width(), height()-HINTBAR_MAX_HEIGHT);
   mDeskView = new DeskView(this);
   mDeskView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   setCentralWidget(mDeskView);
   mDeskView->setAutoFillBackground(false);
   mDesktop = new PrefDesktop(mDeskView);
   mDeskView->setModel(mDesktop);
-  connect(mDesktop, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
-  connect(mDeskView, SIGNAL(deskChanged()), this, SLOT(forceRepaint()));
+  connect(mDesktop, SIGNAL(deskChanged()), mDeskView, SLOT(update()));
   HintBar->showMessage(tr("Welcome to OpenPref!"));
-
-  //show();
-  //slotNewSingleGame(); 
-  
- // resize(width(),height()+HintBar->height());
+  FormBid *formBid = FormBid::instance(mDeskView);
+  formBid->hide();
 }
-/*
-void Kpref::resizeEvent(QResizeEvent *event) {
-  Q_UNUSED(event)
-  //mDeskView->DesktopWidth=width();
-  //mDeskView->DesktopHeight=height()-HINTBAR_MAX_HEIGHT;
-  mDesktop->draw();
-  forceRepaint();
-}*/
 
 
 Kpref::~Kpref () {
@@ -191,22 +172,14 @@ void Kpref::slotFileQuit() {
 
 void Kpref::slotShowScore () {
   mDesktop->closePool();
-  mDesktop->mShowPool = true;
   mDeskView->drawPool();
-  mDeskView->mySleep(-1);
-  mDesktop->mShowPool = false;
-  mDesktop->draw();
-}
-
-
-void Kpref::forceRepaint () {
-  mDeskView->update();
 }
 
 
 void Kpref::slotNewSingleGame () {
 
   NewGameDialog *dlg = new NewGameDialog(this);
+  connect(dlg->cbRounds, SIGNAL(stateChanged(int)), dlg, SLOT(toggleRounds(int)));
   // Players
   dlg->leHumanName->setText(optHumanName);
   dlg->leName1->setText(optPlayerName1);
@@ -258,46 +231,10 @@ void Kpref::slotNewSingleGame () {
   actFileSave->setEnabled(false);
 }
 
-/*
-void Kpref::mouseMoveEvent (QMouseEvent *event) {
-  mDesktop->currentPlayer()->highlightCard(event->x(), event->y());
-}
-
-
-void Kpref::mousePressEvent (QMouseEvent *event) {
-  if (event->button() == Qt::LeftButton) {
-    mDeskView->Event = 1;
-    Player *plr = mDesktop->currentPlayer();
-    //if (plr) {
-      plr->mClickX = event->x();
-      plr->mClickY = event->y();
-    //}
-  }
-}*/
-
 
 void  Kpref::keyPressEvent (QKeyEvent *event) {
-    switch (event->key()) {
-      case Qt::Key_Escape:
-      case Qt::Key_Enter:
-      case Qt::Key_Return:
-      case Qt::Key_Space:
-        mDeskView->Event = 2;
-        break;
-      default: ;
-    }
+  qApp->notify(mDeskView, event);
 }
-
-/*
-void Kpref::paintEvent (QPaintEvent *event) {
-  Q_UNUSED(event)
-    mDeskView->DesktopHeight = height()-HINTBAR_MAX_HEIGHT;
-    mDeskView->DesktopWidth = width();
-    QPainter p;
-    p.begin(this);
-    p.drawPixmap(0, 0, *(mDeskView->mDeskBmp));
-    p.end();
-}*/
 
 void Kpref::closeEvent(QCloseEvent *event) {
 	 int ret;
@@ -405,7 +342,6 @@ void Kpref::slotDeckChanged () {
   	else
   		setMinimumHeight(570);
 	mDesktop->draw();
-	forceRepaint();
 }
 
 void Kpref::slotRules () {

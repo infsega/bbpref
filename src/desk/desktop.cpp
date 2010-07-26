@@ -109,6 +109,47 @@ static const char * bidMessage(eGameBid game)
 		else return gameNames.value(game);
 }
 
+
+static int whoseTrick (Card *p1, Card *p2, Card *p3, int trump) {
+  Card *maxC = p1;
+  int res = 1;
+  if ((maxC->suit() == p2->suit() && maxC->face() < p2->face()) || (maxC->suit() != trump && p2->suit() == trump)) {
+    maxC = p2;
+    res = 2;
+  }
+  if ((maxC->suit() == p3->suit() && maxC->face() < p3->face()) || (maxC->suit() != trump && p3->suit() == trump)) {
+    maxC = p3;
+    res = 3;
+  }
+  return res;
+}
+
+
+static void cardName (char *dest, const Card *c) {
+  static const char *faceN[] = {" 7"," 8"," 9","10"," J"," Q"," K"," A"};
+  static const char *suitN[] = {"S","C","D","H"};
+  if (!c) { strcat(dest, "..."); return; }
+  int face = c->face(), suit = c->suit();
+  if (face >= 7 && face <= FACE_ACE && suit >= 1 && suit <= 4) {
+    strcat(dest, faceN[face-7]);
+    strcat(dest, suitN[suit-1]);
+    return;
+  }
+  strcat(dest, "???");
+}
+
+
+static void dumpCardList (char *dest, const CardList &lst) {
+  CardList tmp(lst); tmp.mySort();
+  for (int f = 0; f < tmp.size(); f++) {
+    Card *c = tmp.at(f);
+    if (!c) continue;
+    strcat(dest, " ");
+    cardName(dest, c);
+  }
+}
+
+
 void PrefDesktop::internalInit () {
   mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard=0;
 
@@ -129,7 +170,6 @@ void PrefDesktop::internalInit () {
   else 
     addPlayer(new CheatPlayer(3, mDeskView));
 
-  mShowPool = false;
   mOnDeskClosed = false;
 }
 
@@ -145,11 +185,6 @@ PrefDesktop::PrefDesktop (DeskView *aDeskView) : QObject(0) {
 PrefDesktop::~PrefDesktop () {
   foreach (Player *p, mPlayers) delete p;
   mPlayers.clear();
-}
-
-
-void PrefDesktop::emitRepaint () {
-  emit deskChanged();
 }
 
 
@@ -260,30 +295,6 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
   return res;
 }
 
-static void cardName (char *dest, const Card *c) {
-  static const char *faceN[] = {" 7"," 8"," 9","10"," J"," Q"," K"," A"};
-  static const char *suitN[] = {"S","C","D","H"};
-  if (!c) { strcat(dest, "..."); return; }
-  int face = c->face(), suit = c->suit();
-  if (face >= 7 && face <= FACE_ACE && suit >= 1 && suit <= 4) {
-    strcat(dest, faceN[face-7]);
-    strcat(dest, suitN[suit-1]);
-    return;
-  }
-  strcat(dest, "???");
-}
-
-
-static void dumpCardList (char *dest, const CardList &lst) {
-  CardList tmp(lst); tmp.mySort();
-  for (int f = 0; f < tmp.size(); f++) {
-    Card *c = tmp.at(f);
-    if (!c) continue;
-    strcat(dest, " ");
-    cardName(dest, c);
-  }
-}
-
 
 int PrefDesktop::playerWithMaxPool () {
   int MaxBullet= -1,CurrBullet=-1,res=0;
@@ -293,21 +304,6 @@ int PrefDesktop::playerWithMaxPool () {
         MaxBullet = CurrBullet;
         res = i;
       }
-  }
-  return res;
-}
-
-
-int PrefDesktop::whoseTrick (Card *p1, Card *p2, Card *p3, int trump) {
-  Card *maxC = p1;
-  int res = 1;
-  if ((maxC->suit() == p2->suit() && maxC->face() < p2->face()) || (maxC->suit() != trump && p2->suit() == trump)) {
-    maxC = p2;
-    res = 2;
-  }
-  if ((maxC->suit() == p3->suit() && maxC->face() < p3->face()) || (maxC->suit() != trump && p3->suit() == trump)) {
-    maxC = p3;
-    res = 3;
   }
   return res;
 }
@@ -384,9 +380,7 @@ void PrefDesktop::draw (bool emitSignal) {
         mDeskView->drawPlayerMessage(f, msg, f!=mPlayerHi);
       }
   }
-  // repaint scoreboard
-  if (mShowPool) mDeskView->drawPool();
-  if (emitSignal) mDeskView->update();//emitRepaint();
+  if (emitSignal) mDeskView->update();
 }
 
 
@@ -486,7 +480,6 @@ void PrefDesktop::runGame () {
     player(3)->clear();
     mPlayerHi = 0;
     gCurrentGame = undefined;
-    mShowPool = false;
     // deal cards
     /*
     for (int i = 0; i < CARDINCOLODA-2; i++) {
@@ -541,7 +534,7 @@ void PrefDesktop::runGame () {
     }
     if (!optDealAnim) {
       draw();
-      emitRepaint();
+      mDeskView->update();
       mDeskView->mySleep(0);
     }
 
@@ -573,7 +566,7 @@ void PrefDesktop::runGame () {
         plr->setMessage(tr("thinking..."));
         //drawBidWindows(bids4win, p);
         draw(false);
-        if (plr->number() != 1) mDeskView->mySleep(2); else emitRepaint();
+        if (plr->number() != 1) mDeskView->mySleep(2); else mDeskView->update();
         eGameBid bb;
         bb = playerBids[curBidIdx] = plr->moveBidding(playerBids[curBidIdx%3+1], playerBids[(curBidIdx+1)%3+1]);
         qDebug() << "bid:" << sGameName(bb) << bb;
@@ -1038,13 +1031,13 @@ LabelRecordOnPaper:
         plr->setInvisibleHand(false);
       }
     }
-    mShowPool = true;
     mPlayingRound = true;
     draw();
-	if (optPrefClub)
+    mDeskView->drawPool();
+/*	if (optPrefClub)
     	mDeskView->mySleep(-1);
 	else
-		mDeskView->mySleep(4);
+		mDeskView->mySleep(4);*/
     mPlayingRound = false;
     if (nPassCounter != 2) {
       // была партия
@@ -1055,9 +1048,8 @@ LabelRecordOnPaper:
       }
     }
   } // end of pool
-  mShowPool = true;
   mDeskView->drawPool();
-  emitRepaint();
+  mDeskView->update();
   emit gameOver();
 
   mGameRunning = false;

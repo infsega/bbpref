@@ -43,12 +43,11 @@ class DeskViewPrivate;
 class DeskView : public QWidget {
   Q_OBJECT
 public:
-  //DeskView (int aW, int aH);
   DeskView (QWidget * parent = 0, Qt::WindowFlags f = 0);
   ~DeskView ();
 
   PrefDesktop * model() { return mDesktop; }
-  void setModel(PrefDesktop *desktop) { mDesktop = desktop; }
+  void setModel(PrefDesktop *desktop);
 
   void mySleep (int seconds);
   void aniSleep (int milliseconds);
@@ -60,13 +59,9 @@ public:
   void drawCard (Card *card, int x, int y, bool opened, bool hilight);
   void drawText (const QString &str, int x, int y, QRgb textColor=qRgb(255,255,255), QRgb outlineColor=qRgb(0,0,0));
   void MessageBox (const QString &text, const QString &caption);
-  void ShowBlankPaper (int optMaxPool);
-  void showPlayerScore (int i, const QString &sb, const QString &sm, const QString &slv, const QString &srv, const QString &tv);
   //----------------------------- for human player
   eGameBid selectBid (eGameBid lMove, eGameBid rMove);
   void StatusBar (const QString &text);
-  void drawRotatedText (QPainter &p, int x, int y, float angle, const QString &text);
-  void drawRotatedText (QPainter &p, int x, int y, int width, int height, float angle, const QString &text);
 
   void drawPKeyBmp (bool show);
   void drawPool ();
@@ -88,34 +83,16 @@ public:
   void drawInGameCard (int mCardNo, Card *card, bool closed);
   void animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[], bool doAnim);
 
-  void emitRepaint ();
-
   bool loadCards ();
   void freeCards ();
 
-signals:
-  void deskChanged ();
-
 public:
-  int Event;
-  QPixmap *mDeskBmp;
-  QPixmap *mBidBmp;
-  QPixmap *mIMoveBmp;
-  QPixmap *mKeyBmp[2];
-  QPixmap *mDigitsBmp;
-
-  int nSecondStartWait;
-  //int DesktopWidth, DesktopHeight;
-  int CardWidht, CardHeight;
-  int xBorder, yBorder;
-  //int xLen,yLen;
-  int xDelta, yDelta;
-
   int imoveX, imoveY;
 
 protected:
   void  showEvent (QShowEvent *);
   void  paintEvent (QPaintEvent *);
+  void  keyPressEvent (QKeyEvent *);
   void  mousePressEvent (QMouseEvent *);
   void  mouseMoveEvent (QMouseEvent *);
   void  resizeEvent(QResizeEvent *event);
@@ -129,9 +106,17 @@ private:
   QPixmap *GetImgByName (const char *name);
 
 private:
+  friend class DeskViewPrivate;
   DeskViewPrivate * const d_ptr;  
   PrefDesktop *mDesktop;
+  QPixmap *mDeskBmp;
+  QPixmap *mBidBmp;
+  QPixmap *mIMoveBmp;
+  QPixmap *mKeyBmp[2];
+  QPixmap *mDigitsBmp;
   int bidBmpX, bidBmpY;
+  int xBorder, yBorder;
+  int CardWidht, CardHeight;
   QHash<QString, QPixmap *> cardI;
   QHash<int, QPixmap *> bidIcons;
 };
@@ -150,6 +135,7 @@ public:
 
 public slots:
   void keyPicUpdate ();
+  void quit();
 
 public:
   DeskView *mDeskView;

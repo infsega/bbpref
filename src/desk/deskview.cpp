@@ -28,6 +28,7 @@
 #include <QPainter>
 #include <QPalette>
 #include <QTimer>
+#include <QVBoxLayout>
 
 #include "deskview.h"
 #include "desktop.h"
@@ -39,7 +40,21 @@
 #include "player.h"
 //class SleepEventLoop;
 
-//#include "scorewidget.h"
+#include "scorewidget.h"
+
+
+// change white to yellow
+static void yellowize (QImage *im, QRgb newColor=qRgb(255, 255, 0)) {
+  for (int y = im->height()-1; y >= 0; y--) {
+    for (int x = im->width()-1; x >= 0; x--) {
+      QRgb p = im->pixel(x, y);
+      if (qRed(p) == 255 && qGreen(p) == 255 && qBlue(p) == 255) {
+        im->setPixel(x, y, newColor);
+      }
+    }
+  }
+}
+
 
 class SleepEventFilter : public QObject {
 public:
@@ -65,26 +80,59 @@ bool SleepEventFilter::eventFilter (QObject *obj, QEvent *e) {
   return false; // event is not tasty
 }
 
-// change white to yellow
-static void yellowize (QImage *im, QRgb newColor=qRgb(255, 255, 0)) {
-  for (int y = im->height()-1; y >= 0; y--) {
-    for (int x = im->width()-1; x >= 0; x--) {
-      QRgb p = im->pixel(x, y);
-      if (qRed(p) == 255 && qGreen(p) == 255 && qBlue(p) == 255) {
-        im->setPixel(x, y, newColor);
-      }
-    }
+
+///////////////////////////////////////////////////////////////////////////////
+void SleepEventLoop::doEventKey (QKeyEvent *event) {
+  //qDebug() << "key" << event->key() << mIgnoreKey;
+  if (mIgnoreKey) return;
+  switch (event->key()) {
+    case Qt::Key_Escape:
+    case Qt::Key_Enter:
+    case Qt::Key_Return:
+    case Qt::Key_Space:
+      mKeyPressed = true;
+      quit();
+      break;
+    default: ;
   }
 }
+
+
+void SleepEventLoop::doEventMouse (QMouseEvent *event) {
+  if (mIgnoreMouse) return;
+  if (event->button() == Qt::LeftButton) {
+    mMousePressed = true;
+    mMouseX = event->x();
+    mMouseY = event->y();
+    //qDebug() << "mouse! x:" << mMouseX << "y:" << mMouseY;
+    quit();
+  }
+}
+
+
+void SleepEventLoop::keyPicUpdate () {
+  if (optPrefClub == true) {
+    mDeskView->drawPKeyBmp(true);
+    mDeskView->update();
+  }
+}
+
+void SleepEventLoop::quit () {
+  mIgnoreKey = false;
+  mIgnoreMouse = false;
+  QEventLoop::quit();
+}
+
 
 class DeskViewPrivate
 {
 public:
-  DeskViewPrivate(DeskView *parent) : m_eloop(0), m_efilter(0), m_timer(0)//, m_score(0)
+  DeskViewPrivate(DeskView *parent) : m_eloop(0), m_efilter(0), m_timer(0), m_scorew(0)
   {
     m_eloop = new SleepEventLoop(parent);
     m_efilter = new SleepEventFilter(m_eloop);
     m_timer = new QTimer(m_eloop);
+    m_scorew = new ScoreWidget(parent->mDesktop, parent);
   }
 
   ~DeskViewPrivate()
@@ -94,10 +142,11 @@ public:
     m_timer->deleteLater();
   }
 
-  QTimer *m_timer;
   SleepEventLoop *m_eloop;
   SleepEventFilter *m_efilter;
-  //ScoreWidget *m_score;
+  QTimer *m_timer;
+  ScoreWidget *m_scorew;
+  //QDialog *m_score;
 };
 
 bool DeskView::loadCards () {
@@ -169,48 +218,12 @@ QPixmap *DeskView::GetImgByName (const char *name) {
   return cardI[name];
 }
 
-///////////////////////////////////////////////////////////////////////////////
-void SleepEventLoop::doEventKey (QKeyEvent *event) {
-  qDebug() << event->key();
-  if (mIgnoreKey) return;
-  switch (event->key()) {
-    case Qt::Key_Escape:
-    case Qt::Key_Enter:
-    case Qt::Key_Return:
-    case Qt::Key_Space:
-      mKeyPressed = true;
-      quit();
-      break;
-    default: ;
-  }
-}
-
-
-void SleepEventLoop::doEventMouse (QMouseEvent *event) {
-  if (mIgnoreMouse) return;
-  if (event->button() == Qt::LeftButton) {
-    mMousePressed = true;
-    mMouseX = event->x();
-    mMouseY = event->y();
-    //qDebug() << "mouse! x:" << mMouseX << "y:" << mMouseY;
-    quit();
-  }
-}
-
-
-void SleepEventLoop::keyPicUpdate () {
-  if (optPrefClub == true) {
-    mDeskView->drawPKeyBmp(true);
-    mDeskView->emitRepaint();
-  }
-}
 
 
 ///////////////////////////////////////////////////////////////////////////////
 //DeskView::DeskView (int aW, int aH) : mDeskBmp(0), d_ptr(new DeskViewPrivate(this))
-DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), mDeskBmp(0),
-                                                           mDesktop(0),
-                                                           d_ptr(new DeskViewPrivate(this))
+DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_ptr(new DeskViewPrivate(this)),
+                                                           mDesktop(0), mDeskBmp(0)
 {
   mDigitsBmp = new QPixmap(QString(":/pics/digits/digits.png"));
   mBidBmp = new QPixmap(QString(":/pics/bidinfo.png"));
@@ -225,7 +238,7 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), mD
 
   if (!loadCards()) abort();
 
-  Event = 0;
+  //Event = 0;
   CardWidht = CARDWIDTH;
   CardHeight = CARDHEIGHT;
   xBorder = 20;
@@ -256,10 +269,11 @@ DeskView::~DeskView () {
   delete d_ptr;
 }
 
-
-void DeskView::emitRepaint () {
-  //emit deskChanged();
-  update();
+void DeskView::setModel(PrefDesktop *desktop)
+{
+  mDesktop = desktop;
+  delete d_ptr->m_scorew;
+  d_ptr->m_scorew = new ScoreWidget(desktop, this);
 }
 
 
@@ -410,7 +424,7 @@ void DeskView::drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game
 
 
 void DeskView::mySleep (int seconds) {
-  Event = 0;
+  //Event = 0;
   installEventFilter(d_ptr->m_efilter);
 
   if (seconds == 0)
@@ -419,7 +433,7 @@ void DeskView::mySleep (int seconds) {
 	  seconds=1;
     else {*/
     drawPKeyBmp(false);
-    emitRepaint();
+    update();
     qApp->processEvents(QEventLoop::WaitForMoreEvents);
     qApp->sendPostedEvents();
     removeEventFilter(d_ptr->m_efilter);
@@ -439,39 +453,31 @@ void DeskView::mySleep (int seconds) {
   if (optPrefClub == true)
   drawPKeyBmp(seconds == -1);
 
-  emitRepaint();
-  qDebug() << "about to exec";
+  update();
   if (d_ptr->m_eloop->isRunning())
     d_ptr->m_eloop->exit();
   d_ptr->m_eloop->exec();
-  qDebug() << "exec";
   removeEventFilter(d_ptr->m_efilter);
   disconnect(d_ptr->m_timer, SIGNAL(timeout()), 0, 0);
 
-  Event = (d_ptr->m_eloop->mMousePressed) ? 1 : (d_ptr->m_eloop->mKeyPressed ? 2 : 3);
   if (seconds == -1) {
     drawPKeyBmp(false);
-    emitRepaint();
+    update();
   }
   //d_ptr->m_eloop->exit();
 }
 
 
 void DeskView::aniSleep (int milliseconds) {
-  Event = 0;
   d_ptr->m_eloop->mIgnoreMouse = true;
   d_ptr->m_eloop->mIgnoreKey = true;
   installEventFilter(d_ptr->m_efilter);
   connect(d_ptr->m_timer, SIGNAL(timeout()), d_ptr->m_eloop, SLOT(quit()));
   d_ptr->m_timer->start(milliseconds);
 
-  emitRepaint();
-  qDebug() << "ani about to exec";
+  update();
   d_ptr->m_eloop->exec();
-  qDebug() << "ani exec";
   removeEventFilter(d_ptr->m_efilter);
-  d_ptr->m_eloop->mIgnoreMouse = false;
-  d_ptr->m_eloop->mIgnoreKey = false;
   disconnect(d_ptr->m_timer, SIGNAL(timeout()), 0, 0);
 }
 
@@ -480,7 +486,6 @@ void DeskView::ClearScreen () {
   if (!mDeskBmp || (mDeskBmp->width() != width() || mDeskBmp->height() != height())) {
     delete mDeskBmp;
     mDeskBmp = new QPixmap(width(), height());
-    //mDeskBmp = new QImage(DesktopWidth, DesktopHeight, QImage::Format_ARGB32);
   }
   ClearBox(0, 0, width(), height());
 }
@@ -499,9 +504,6 @@ void DeskView::ClearBox (int x1, int y1, int x2, int y2) {
 
 void DeskView::drawCard (Card *card, int x, int y, bool opened, bool hilight) {
   char cCardName[16];
-
-  //if (!mDeskBmp) return;
-
   cCardName[0] = 0;
   if (!card) {
     ClearBox(x, y, x+CARDWIDTH, y+CARDHEIGHT);
@@ -565,156 +567,9 @@ void DeskView::MessageBox (const QString &text, const QString &caption) {
   mb.exec();
 }
 
-
-void DeskView::ShowBlankPaper (int optMaxPool) {
-  int PaperWidth = 410;
-  int PaperHeight = 530;
-  int PoolWidth = 40;
-  // 190
-  // 307
-  // 
-  
-  //if (!mDeskBmp) return;
-  xDelta = (width()-PaperWidth)/2;
-  yDelta = (height()-PaperHeight)/2;
-  //char buff[16];
-  QPainter p(mDeskBmp);
-  QRect NewRect = QRect(xDelta, yDelta, PaperWidth, PaperHeight);
-  QBrush shadow(qRgba(0, 0, 0, 128));
-  NewRect.adjust(-4, 8, -4, 8);
-  p.fillRect(NewRect, shadow);
-  NewRect.adjust(4, -8, 4, -8);
-
-  QBrush brush(qRgb(255, 255, 255));
-  p.fillRect(NewRect, brush);
-  QBrush b1(brush);
-  b1.setColor(qRgb(255, 255, 0));
-  p.setBrush(b1);
-  p.setPen(qRgb(0, 0, 0));
-
-  // Draw borders of paper
-  p.drawLine(xDelta, yDelta, xDelta+PaperWidth, yDelta);
-  p.drawLine(xDelta, yDelta, xDelta, yDelta+PaperHeight);
-  p.drawLine(xDelta, yDelta+PaperHeight, xDelta+PaperWidth, yDelta+PaperHeight);
-  p.drawLine(xDelta+PaperWidth, yDelta, xDelta+PaperWidth, yDelta+PaperHeight);
-
-  // Circle with MaxPool value
-  p.drawEllipse(xDelta+PaperWidth/2-18,yDelta+277,36,36);
-
-  // Diagonal lines from bottom corners to circle
-  p.drawLine(xDelta+PaperWidth, yDelta+PaperHeight, xDelta+PaperWidth-190, yDelta+307);
-  p.drawLine(xDelta+0, yDelta+PaperHeight, xDelta+190, yDelta+307);
-
-  // Central vertical line
-  p.drawLine(xDelta+PaperWidth/2, yDelta+277, xDelta+PaperWidth/2, yDelta+0);
-
-  // External border of pool
-  p.drawLine(xDelta+PoolWidth, yDelta+0, xDelta+PoolWidth, yDelta+483);
-  p.drawLine(xDelta+PoolWidth, yDelta+483, xDelta+370, yDelta+483);
-  p.drawLine(xDelta+370, yDelta+483, xDelta+370, yDelta+0);
-  //p.drawLine(xDelta+370, yDelta+0, xDelta+80, yDelta+0);
-  
-  // Border of mountain
-  p.drawLine(xDelta+2*PoolWidth, yDelta+0, xDelta+2*PoolWidth, yDelta+436);
-  p.drawLine(xDelta+2*PoolWidth, yDelta+436, xDelta+330, yDelta+436);
-  p.drawLine(xDelta+330, yDelta+436, xDelta+330, yDelta+0);
-  
-  p.drawLine(xDelta+0, yDelta+255, xDelta+PoolWidth, yDelta+255);
-  p.drawLine(xDelta+PaperWidth, yDelta+255, xDelta+370, yDelta+255);
-  p.drawLine(xDelta+PaperWidth/2, yDelta+PaperHeight, xDelta+PaperWidth/2, yDelta+483);
-
-  // Draw text
-  
-  // MaxPool
-  //p.drawText(xDelta+197, FONTSIZE+yDelta+292, buff);
-  p.drawText(QRect(xDelta+PaperWidth/2-18,yDelta+277,36,36),
-	QString::number(optMaxPool), QTextOption(Qt::AlignCenter));
-  
-  // Players' names
-  p.setBrush(brush);
-  p.drawText(QRect(xDelta+150,yDelta+350,110,20),optHumanName,QTextOption(Qt::AlignHCenter));
-  drawRotatedText(p,xDelta+175,yDelta+200,110,20,90,optPlayerName1);
-  drawRotatedText(p,xDelta+235,yDelta+310,110,20,-90,optPlayerName2);
-  
-  p.end();
-}
-
-
 void DeskView::StatusBar (const QString &text) {
   qDebug() << text;
   //StatusBar1->showMessage(text);
-}
-
-
-void DeskView::showPlayerScore (int i, const QString &sb, const QString &sm, const QString &slv, const QString &srv, const QString &tv) {
-  if (!mDeskBmp) return;
-  QPainter p(mDeskBmp);
-  p.setPen(qRgb(0, 0, 0));
-  QFont fnt(p.font());
-  fnt.setBold(false);
-  p.setFont(fnt);
-  switch (i) {
-    case 1:
-      p.setPen(qRgb(0, 128, 0));
-      p.drawText(xDelta+65, FONTSIZE+yDelta+450, sb);
-      p.setPen(qRgb(255, 0, 0));
-      p.drawText(xDelta+105, FONTSIZE+yDelta+420, sm);
-      p.setPen(qRgb(0, 0, 0));
-      p.drawText(xDelta+15, FONTSIZE+yDelta+510, slv);
-      p.drawText(xDelta+220, FONTSIZE+yDelta+510, srv);
-      p.setPen(qRgb(0, 0, 255));
-      fnt.setBold(true);
-      p.setFont(fnt);
-      p.drawText(xDelta+188, FONTSIZE+yDelta+390, tv);
-      break;
-    case 2:
-      p.setPen(qRgb(0, 128, 0));
-      drawRotatedText(p, xDelta+60, FONTSIZE+yDelta+5, 90, sb);
-      p.setPen(qRgb(255, 0, 0));
-      drawRotatedText(p, xDelta+100, FONTSIZE+yDelta+5, 90, sm);
-      p.setPen(qRgb(0, 0, 0));
-      drawRotatedText(p, xDelta+18, FONTSIZE+yDelta+5, 90, slv);
-      drawRotatedText(p, xDelta+18, FONTSIZE+yDelta+270, 90, srv);
-      p.setPen(qRgb(0, 0, 255));
-      fnt.setBold(true);
-      p.setFont(fnt);
-      drawRotatedText(p, xDelta+170, FONTSIZE+yDelta+120, 90, tv);
-      break;
-    case 3:
-      p.setPen(qRgb(0, 128, 0));
-      drawRotatedText(p, xDelta+355, FONTSIZE+yDelta+440, -90, sb);
-      p.setPen(qRgb(255, 0, 0));
-      drawRotatedText(p, xDelta+322, FONTSIZE+yDelta+405, -90, sm);
-      p.setPen(qRgb(0, 0, 0));
-      drawRotatedText(p, xDelta+400, FONTSIZE+yDelta+500, -90, slv);
-      drawRotatedText(p, xDelta+400, FONTSIZE+yDelta+240, -90, srv);
-      p.setPen(qRgb(0, 0, 255));
-      fnt.setBold(true);
-      p.setFont(fnt);
-      drawRotatedText(p, xDelta+250, FONTSIZE+yDelta+120, -90, tv);
-      break;
-    default: ;
-  }
-  fnt.setBold(false);
-  p.setFont(fnt);
-  p.end();
-}
-
-void DeskView::drawRotatedText (QPainter &p, int x, int y, float angle, const QString &text) {
-  p.translate(x, y);
-  p.rotate(angle);
-  p.drawText(0, 0, text);
-  p.rotate(-1*angle);
-  p.translate(-1*x, -1*y);
-}
-
-void DeskView::drawRotatedText (QPainter &p, int x, int y, int width, int height, float angle, const QString &text) {
-  p.translate(x, y);
-  p.rotate(angle);
-  p.drawText(QRectF(0,0,width,height),text,QTextOption(Qt::AlignHCenter));
-  //p.drawRect(0,0,width,height);
-  p.rotate(-1*angle);
-  p.translate(-1*x, -1*y);
 }
 
 eGameBid DeskView::selectBid (eGameBid lMove, eGameBid rMove) {
@@ -811,12 +666,7 @@ void DeskView::drawMessageWindow (int x0, int y0, const QString msg, bool dim) {
 
 void DeskView::resizeEvent(QResizeEvent *event) {
   Q_UNUSED(event)
-//  qDebug() << width() << height();
-  //mDeskView->DesktopWidth=width();
-  //mDeskView->DesktopHeight=height()-HINTBAR_MAX_HEIGHT;
-    mDesktop->draw();
-//  delete mDeskBmp;
-//  mDeskBmp = new QPixmap(width(), height());
+  mDesktop->draw();
 }
 
 
@@ -827,28 +677,26 @@ void DeskView::mouseMoveEvent (QMouseEvent *event) {
 
 void DeskView::mousePressEvent (QMouseEvent *event) {
   if (event->button() == Qt::LeftButton) {
-    Event = 1;
     Player *plr = mDesktop->currentPlayer();
-    //if (plr) {
-      plr->mClickX = event->x();
-      plr->mClickY = event->y();
-    //}
+    plr->mClickX = event->x();
+    plr->mClickY = event->y();
   }
 }
 
-/*
+
 void DeskView::keyPressEvent (QKeyEvent *event) {
     switch (event->key()) {
       case Qt::Key_Escape:
       case Qt::Key_Enter:
       case Qt::Key_Return:
       case Qt::Key_Space:
-        Event = 2;
+//        Event = 2;
+        event->accept();
         break;
       default: ;
     }
 }
-*/
+
 
 void DeskView::showEvent (QShowEvent *event)
 {
@@ -860,7 +708,7 @@ void DeskView::showEvent (QShowEvent *event)
 
 void DeskView::paintEvent (QPaintEvent *event) {
   Q_UNUSED(event)
-  qDebug() << "paintEvent";
+  //qDebug() << "paintEvent";
     //mDeskView->DesktopHeight = height()-HINTBAR_MAX_HEIGHT;
     //mDeskView->DesktopWidth = width();
     QPainter p;
@@ -953,7 +801,7 @@ void DeskView::animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[], bool doAnim
 
 
 void DeskView::drawPool () {
-  QString sb, sm, slw, srw, tw;
+/*  QString sb, sm, slw, srw, tw;
   ShowBlankPaper(optMaxPool);
   for (int i = 1;i<=3;i++) {
     Player *plr = mDesktop->player(i);
@@ -964,6 +812,6 @@ void DeskView::drawPool () {
     tw = plr->mScore.whistsStr();
     showPlayerScore(i, sb, sm, slw, srw, tw);
   }
-//  if (!d_ptr->m_score) d_ptr->m_score = new ScoreWidget(mDesktop);
-  //d_ptr->m_score->show();
+*/
+  d_ptr->m_scorew->exec();
 }

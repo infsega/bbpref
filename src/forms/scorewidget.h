@@ -20,61 +20,26 @@
  *      http://www.gnu.org/licenses 
  */
 
-#ifndef KPREF_H
-#define KPREF_H
-
-#include <QMainWindow>
+#include <QDialog>
 
 class PrefDesktop;
-class DeskView;
+class QPixmap;
 
-class Kpref : public QMainWindow {
+class ScoreWidget : public QDialog
+{
   Q_OBJECT
 
-public:
-  Kpref();
-  ~Kpref();
+  public:
+    ScoreWidget(PrefDesktop *desktop, QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~ScoreWidget();
 
-  // Messages
-  void MoveImpossible ();
-  void HintMove ();
-  bool WhistType ();
+  protected:
+    void keyPressEvent (QKeyEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void paintEvent (QPaintEvent *);
+    void paintBlankPaper();
+    void showPlayerScore (int i, const QString &sb, const QString &sm, const QString &slv, const QString &srv, const QString &tv);
 
-public slots:
-  void slotNewSingleGame ();
-  void slotShowScore ();
-  void slotFileOpen ();
-  void slotFileSave ();
-  void slotHelpAbout ();
-  void slotRules ();
-  void slotOptions ();
-  void slotDeckChanged ();
-
-  void slotQuit ();
-
-private:
-  void adjustDesk ();
-  void initMenuBar();
-  void saveOptions ();
-  void loadOptions ();
-
-  QAction *actNewGame;
-  QAction *actFileOpen;
-  QAction *actFileSave;
-  QStatusBar * HintBar;
-
-public:
-  PrefDesktop *mDesktop;
-  DeskView *mDeskView;
-  void showHint(QString hint);
-  void clearHint();
-
-protected:
-  void  keyPressEvent (QKeyEvent *);
-  void  closeEvent(QCloseEvent *event);
+    QPixmap *m_paperBmp;
+    PrefDesktop *m_desktop;
 };
-
-extern Kpref *kpref;
-
-
-#endif
