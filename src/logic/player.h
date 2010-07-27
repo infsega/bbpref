@@ -32,7 +32,7 @@ class DeskView;
 class Player {
 public:
   Player (int aMyNumber, DeskView *aDeskView=0);
-  Player (const Player &pl);
+  //Player (const Player &pl);
   virtual ~Player ();
 
   virtual QString type() const = 0;
@@ -40,7 +40,7 @@ public:
 
   virtual Player * create(int aMyNumber, DeskView *aDeskView = 0) = 0;
 
-  Player &operator = (const Player &pl);
+  //Player &operator = (const Player &pl);
 
   virtual void clear ();
 
@@ -81,7 +81,7 @@ public:
 
 protected:
   virtual void internalInit ();
-  virtual void clone (const Player *pl);
+  //virtual void clone (const Player *pl);
 
   virtual void drawAt (DeskView *aDeskView, int left, int top, int selNo=-1);
   virtual void clearCardArea ();
@@ -96,9 +96,6 @@ public:
 
   ScoreBoard mScore;
   CardList mCards; // my cards
-  CardList mLeft;  // cards of left player (supposed or open)
-  CardList mRight; // cards of right player (supposed or open)
-  CardList mOut;   // Сdropped cards (my or supposed)
   CardList mCardsOut; // во взятках мои
   // this part for miser catches
   Card *mCardCarryThru;

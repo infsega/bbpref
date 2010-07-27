@@ -55,6 +55,9 @@ void AiPlayer::clear () {
     mSuitProb[f].tricks = 0;
     mSuitProb[f].perehvatov = 0;
   }
+  mLeft.clear();
+  mRight.clear();
+  mOut.clear();
 }
 
 
