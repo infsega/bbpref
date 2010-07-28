@@ -1314,7 +1314,7 @@ eGameBid AiPlayer::moveFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerPas
   //if (HaveAWhist == gtPass && vz < gameWhistsMin(MaxGame)) Answer = gtPass;
 
 myGame:  
-  if ((Answer == gtPass) && (nGamerPass == 1))
+  if ((Answer == gtPass) && (nGamerPass == 1) && MaxGame <= 81)
   	Answer = halfwhist;
 	
   mMyGame = Answer;
