@@ -733,7 +733,7 @@ void PrefDesktop::runGame () {
 		  if ((gCurrentGame != g86) && !(!opt10Whist && gCurrentGame>=101 && gCurrentGame<=105)) {
 			player(tmpPlayersCounter)->setMessage(tr("thinking..."));
 			draw(false);
-		  	if (nextPW != 1) mDeskView->mySleep(2);			
+		  	if (nextPW != 1) mDeskView->mySleep(2);
 		  }
           //PassOrVistPlayers->moveFinalBid(gCurrentGame, PassOrVist, nPassOrVist);
 		  //qDebug() << nPassCounter;

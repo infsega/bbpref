@@ -204,11 +204,11 @@ bool DeskView::loadCards () {
 void DeskView::freeCards () {
   qDebug() << "free";
   foreach (QPixmap *i, bidIcons)
-    if (i) delete i;
+    delete i;
   bidIcons.clear();
 
   foreach (QPixmap *i, cardI)
-    if (i) delete i;
+    delete i;
   cardI.clear();
 }
 
