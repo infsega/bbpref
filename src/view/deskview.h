@@ -107,7 +107,7 @@ private:
 
 private:
   friend class DeskViewPrivate;
-  DeskViewPrivate * const d_ptr;  
+  DeskViewPrivate * d_ptr;  
   PrefDesktop *mDesktop;
   QPixmap *mDeskBmp;
   QPixmap *mBidBmp;

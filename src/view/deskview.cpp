@@ -271,11 +271,12 @@ DeskView::~DeskView () {
   delete d_ptr;
 }
 
+
 void DeskView::setModel(PrefDesktop *desktop)
 {
   mDesktop = desktop;
-  delete d_ptr->m_scorew;
-  d_ptr->m_scorew = new ScoreWidget(desktop, this);
+  delete d_ptr;
+  d_ptr = new DeskViewPrivate(this);
 }
 
 
