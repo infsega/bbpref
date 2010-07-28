@@ -222,18 +222,15 @@ eGameBid HumanPlayer::moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerP
   //fprintf(stderr, "whist/pass\n");
   if (MaxGame == g86) {
     mMyGame = g86catch;
-  } else if (!opt10Whist && MaxGame>=101 && MaxGame<=105) {
+  } else if ((!opt10Whist && MaxGame>=101 && MaxGame<=105)
+      || (optStalingrad && MaxGame == g61)) {
 	mMyGame = whist;
   } else {
-    // Stalingrad?
     formBid->disableAll();
-    if (optStalingrad && MaxGame == g61) formBid->disableItem(gtPass);
-    else formBid->enableItem(gtPass);
-	
-    //formBid->enableItem(gtPass);
+    formBid->enableItem(gtPass);
     formBid->enableItem(whist);
     formBid->showbullet->setEnabled(true);
-	if (nGamerPass == 1)
+    if (nGamerPass == 1 && MaxGame <= 81)
 		formBid->bhalfvist->setEnabled(true);
     mMyGame = mDeskView->selectBid(zerogame, zerogame);
     formBid->enableAll();

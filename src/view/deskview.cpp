@@ -55,6 +55,7 @@ static void yellowize (QImage *im, QRgb newColor=qRgb(255, 255, 0)) {
   }
 }
 
+namespace {
 
 class SleepEventFilter : public QObject {
 public:
@@ -80,6 +81,7 @@ bool SleepEventFilter::eventFilter (QObject *obj, QEvent *e) {
   return false; // event is not tasty
 }
 
+} // end of namespace
 
 ///////////////////////////////////////////////////////////////////////////////
 void SleepEventLoop::doEventKey (QKeyEvent *event) {
@@ -204,11 +206,11 @@ bool DeskView::loadCards () {
 void DeskView::freeCards () {
   qDebug() << "free";
   foreach (QPixmap *i, bidIcons)
-    if (i) delete i;
+    delete i;
   bidIcons.clear();
 
   foreach (QPixmap *i, cardI)
-    if (i) delete i;
+    delete i;
   cardI.clear();
 }
 
