@@ -57,6 +57,8 @@ extern int CARDHEIGHT;
 
 #define MAXGAMELEN   1024
 
+#define OPENPREF_VERSION "0.1.3"
+
 
 enum eSuit {
   SuitSpades=1,
