@@ -29,12 +29,12 @@ Player::Player (int aMyNumber, DeskView *aDeskView) : mDeskView(aDeskView), mISt
   internalInit();
 }
 
-
+/*
 Player::Player (const Player &pl) {
   internalInit();
   clone(&pl);
 }
-
+*/
 
 Player::~Player () {
   clear();
@@ -45,7 +45,7 @@ inline void Player::internalInit () {
   clear();
 }
 
-
+/*
 Player &Player::operator = (const Player &pl) {
   clone(&pl);
   return *this;
@@ -70,13 +70,10 @@ void Player::clone (const Player *pl) {
     mPrevHiCardIdx = pl->mPrevHiCardIdx;
   }
 }
-
+*/
 
 void Player::clear () {
   mCards.clear();
-  mLeft.clear();
-  mRight.clear();
-  mOut.clear();
   mCardsOut.clear();
   mCardCarryThru = 0;
   mMessage.clear();

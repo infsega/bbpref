@@ -95,6 +95,9 @@ protected:
 
 protected:
   tSuitProbs mSuitProb[5];
+  CardList mLeft;  // cards of left player (supposed or open)
+  CardList mRight; // cards of right player (supposed or open)
+  CardList mOut;   // ódropped cards (my or supposed)
 };
 
 

@@ -36,8 +36,8 @@ public:
   virtual Player * create(int aMyNumber, DeskView *aDeskView=0);
   virtual bool isHuman() const { return true; }
 
-  HumanPlayer &operator = (const Player &pl);
-  HumanPlayer &operator = (const HumanPlayer &pl);
+  //HumanPlayer &operator = (const Player &pl);
+  //HumanPlayer &operator = (const HumanPlayer &pl);
 
   virtual void clear ();
 

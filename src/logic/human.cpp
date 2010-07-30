@@ -38,7 +38,7 @@ Player * HumanPlayer::create(int aMyNumber, DeskView *aDeskView) {
   Player * pl = new HumanPlayer(aMyNumber, aDeskView);
   return pl;
 }
-
+/*
 HumanPlayer &HumanPlayer::operator = (const Player &pl) {
   Player::clone(&pl);
   return *this;
@@ -48,7 +48,7 @@ HumanPlayer &HumanPlayer::operator = (const Player &pl) {
 HumanPlayer &HumanPlayer::operator = (const HumanPlayer &pl) {
   Player::clone(&pl);
   return *this;
-}
+}*/
 
 
 void HumanPlayer::clear () {

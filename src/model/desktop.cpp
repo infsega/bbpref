@@ -273,7 +273,8 @@ Card *PrefDesktop::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
     else
     {
       QMessageBox::about(0,"Error","Something went wrong!");
-      printf("Something went wrong!");
+      qDebug() << player(1)->myGame() << player(2)->myGame() << player(3)->myGame();
+      Q_ASSERT(1 == 0);
     }
   }
 
@@ -791,17 +792,14 @@ void PrefDesktop::runGame () {
           dlogS(gnS);
           //!DUMP OTHERS!
 
-		  if (player(nextPW)->myGame() == halfwhist) {
-            tmpg->gotPassPassTricks(gameTricks(tmpg->myGame()));
-			int n = gameWhists(tmpg->myGame());
-			if (n > 1){
-				player(nextPW)->gotPassPassTricks(n/2);
-				dlogf("halfwhist!\n");
-            	goto LabelRecordOnPaper;
-			}
-				
-            
-		  }
+      if (player(nextPW)->myGame() == halfwhist) {
+        tmpg->gotPassPassTricks(gameTricks(tmpg->myGame()));
+        int n = gameWhists(tmpg->myGame());
+        Q_ASSERT(n > 1);  // Half whist on game >= 8 is illegal
+        player(nextPW)->gotPassPassTricks(n/2);
+        dlogf("halfwhist!\n");
+        goto LabelRecordOnPaper;
+      }
           if (nPassCounter == 2) {
             // two players passed
             tmpg->gotPassPassTricks(gameTricks(tmpg->myGame()));
