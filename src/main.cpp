@@ -73,7 +73,7 @@ int main (int argc, char *argv[]) {
   	a.installTranslator(&openprefTranslator);
 
   //a.setFont (QFont("helvetica", FONTSIZE));
-  kpref = new Kpref();
+  kpref = new MainWindow();
   //#ifndef MOBILE
     kpref->show();
   //#else

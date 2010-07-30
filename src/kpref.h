@@ -28,12 +28,12 @@
 class PrefModel;
 class DeskView;
 
-class Kpref : public QMainWindow {
+class MainWindow : public QMainWindow {
   Q_OBJECT
 
 public:
-  Kpref();
-  ~Kpref();
+  MainWindow();
+  ~MainWindow();
 
   // Messages
   void MoveImpossible ();
@@ -74,7 +74,7 @@ protected:
   void  closeEvent(QCloseEvent *event);
 };
 
-extern Kpref *kpref;
+extern MainWindow *kpref;
 
 
 #endif

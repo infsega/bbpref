@@ -45,9 +45,9 @@
 inline static const char * GenName(QString str, QString ext);
 
 //char *documentation; //see bottom this file
-Kpref *kpref;
+MainWindow *kpref;
 
-Kpref::Kpref () {
+MainWindow::MainWindow () {
   setWindowTitle("OpenPref");
   
   initMenuBar();
@@ -91,7 +91,7 @@ Kpref::Kpref () {
 }
 
 
-Kpref::~Kpref () {
+MainWindow::~MainWindow () {
   //delete StatusBar1;
   //!delete formBid;
   mDeskView->deleteLater();
@@ -101,13 +101,13 @@ Kpref::~Kpref () {
 }
 
 
-void Kpref::adjustDesk () {
+void MainWindow::adjustDesk () {
   if (mDeskView) mDeskView->ClearScreen();
   mDeskView->update();
 }
 
 
-void Kpref::initMenuBar () {
+void MainWindow::initMenuBar () {
   QMenu *fileMenu = menuBar()->addMenu(tr("&Game"));
 
   actNewGame = fileMenu->addAction(QIcon(QString(":/pics/newgame.png")), tr("&New game..."), this, SLOT(slotNewSingleGame()), Qt::CTRL+Qt::Key_N);
@@ -142,7 +142,7 @@ void Kpref::initMenuBar () {
 ///////////////////////////////////////////////////////////////////////////////
 // slots
 ///////////////////////////////////////////////////////////////////////////////
-void Kpref::slotFileOpen () {
+void MainWindow::slotFileOpen () {
   QString fileName = QFileDialog::getOpenFileName(this, "Select saved game", "", "*.prf");
   if (!fileName.isEmpty())  {
     m_PrefModel->loadGame(fileName);
@@ -152,7 +152,7 @@ void Kpref::slotFileOpen () {
 }
 
 
-void Kpref::slotFileSave () {
+void MainWindow::slotFileSave () {
   if (m_PrefModel) {
     QString fn = QFileDialog::getSaveFileName(this, "Select file to save the current game", "", "*.prf");
     if (!fn.isEmpty()) {
@@ -170,13 +170,13 @@ void Kpref::slotFileQuit() {
 */
 
 
-void Kpref::slotShowScore () {
+void MainWindow::slotShowScore () {
   m_PrefModel->closePool();
   mDeskView->drawPool();
 }
 
 
-void Kpref::slotNewSingleGame () {
+void MainWindow::slotNewSingleGame () {
 
   NewGameDialog *dlg = new NewGameDialog(this);
   connect(dlg->cbRounds, SIGNAL(stateChanged(int)), dlg, SLOT(toggleRounds(int)));
@@ -232,11 +232,11 @@ void Kpref::slotNewSingleGame () {
 }
 
 
-void  Kpref::keyPressEvent (QKeyEvent *event) {
+void  MainWindow::keyPressEvent (QKeyEvent *event) {
   qApp->notify(mDeskView, event);
 }
 
-void Kpref::closeEvent(QCloseEvent *event) {
+void MainWindow::closeEvent(QCloseEvent *event) {
 	 int ret;
 	if (!m_PrefModel->mGameRunning)
 		exit(0);	 
@@ -250,7 +250,7 @@ void Kpref::closeEvent(QCloseEvent *event) {
          event->ignore();
  }
 
-void Kpref::slotHelpAbout () {
+void MainWindow::slotHelpAbout () {
   QMessageBox::about(this, tr("About"),
     tr("<h2 align=center>&spades; <font color=red>&diams;</font> OpenPref 0.1.3 &clubs; <font color=red>&hearts;</font></h2>"
 	"<p>More information on <br/><a href=\"http://sourceforge.net/projects/openpref\">http://sourceforge.net/projects/openpref</a><br/>"
@@ -264,7 +264,7 @@ void Kpref::slotHelpAbout () {
 }
 
 
-void Kpref::saveOptions () {
+void MainWindow::saveOptions () {
   QSettings st;
   st.setValue("maxpool", optMaxPool);
   st.setValue("stalin", optStalingrad);
@@ -284,7 +284,7 @@ void Kpref::saveOptions () {
 }
 
 
-void Kpref::loadOptions () {
+void MainWindow::loadOptions () {
   QSettings st;
   optMaxPool = st.value("maxpool", 10).toInt();
   if (optMaxPool < 4) optMaxPool = 4; else if (optMaxPool > 1000) optMaxPool = 1000;
@@ -309,7 +309,7 @@ void Kpref::loadOptions () {
 }
 
 
-void Kpref::slotOptions () {
+void MainWindow::slotOptions () {
   bool oldPrefClub = optPrefClub;
   bool oldDebugHands = optDebugHands;
   
@@ -333,7 +333,7 @@ void Kpref::slotOptions () {
   	slotDeckChanged();
 }
 
-void Kpref::slotDeckChanged () {
+void MainWindow::slotDeckChanged () {
 	mDeskView->freeCards();
 	mDeskView->loadCards();
 	setMinimumWidth(CARDWIDTH*14.42);
@@ -344,7 +344,7 @@ void Kpref::slotDeckChanged () {
 	m_PrefModel->draw();
 }
 
-void Kpref::slotRules () {
+void MainWindow::slotRules () {
 	QMessageBox::about(this, tr("Preferans Rules"), tr("Help system has not been implemented yet!\nSee http://en.wikipedia.org/wiki/Preferans"));
   //HelpBrowser *dlg = new HelpBrowser;
   //dlg->tbHelp->setSearchPaths(QStringList("/home/kostya/projects/Qt/doc/html"));
@@ -352,7 +352,7 @@ void Kpref::slotRules () {
   // delete dlg;
 }
 
-void Kpref::slotQuit () {
+void MainWindow::slotQuit () {
 	int ret;
 	if (!m_PrefModel->mGameRunning)
 		exit(0);
@@ -372,28 +372,28 @@ void Kpref::slotQuit () {
 	}
 }*/
 
-void Kpref::MoveImpossible () {
+void MainWindow::MoveImpossible () {
 	HintBar->showMessage(tr("This move is impossible"));
 }
 
-void Kpref::HintMove () {
+void MainWindow::HintMove () {
 	if (m_PrefModel->mBiddingDone)
 		HintBar->showMessage(tr("Your move"));
 	else
 		HintBar->showMessage(tr("Select two cards to drop"));
 }
 
-void Kpref::showHint(QString hint)
+void MainWindow::showHint(QString hint)
 {
   HintBar->showMessage(hint);
 }
 
-void Kpref::clearHint()
+void MainWindow::clearHint()
 {
   HintBar->clearMessage();
 }
 
-bool Kpref::WhistType () {
+bool MainWindow::WhistType () {
 	int ret = QMessageBox::question(kpref, tr("Choose whist type"),
         tr("Do you want to whist with opened cards?"),
         QMessageBox::Yes | QMessageBox::Default,
