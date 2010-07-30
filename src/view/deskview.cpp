@@ -56,31 +56,29 @@ static void yellowize (QImage *im, QRgb newColor=qRgb(255, 255, 0)) {
 }
 
 namespace {
+  class SleepEventFilter : public QObject {
+  public:
+    SleepEventFilter (SleepEventLoop *eloop, QObject *parent=0) : QObject(parent) { mLoop = eloop; }
 
-class SleepEventFilter : public QObject {
-public:
-  SleepEventFilter (SleepEventLoop *eloop, QObject *parent=0) : QObject(parent) { mLoop = eloop; }
+  protected:
+    bool eventFilter (QObject *obj, QEvent *e);
 
-protected:
-  bool eventFilter (QObject *obj, QEvent *e);
+  private:
+    SleepEventLoop *mLoop;
+    };
 
-private:
-  SleepEventLoop *mLoop;
-};
-
-bool SleepEventFilter::eventFilter (QObject *obj, QEvent *e) {
-  Q_UNUSED(obj)
-  //
-  if (e->type() == QEvent::KeyPress) {
-    QKeyEvent *event = static_cast<QKeyEvent *>(e);
-    mLoop->doEventKey(event);
-  } else if (e->type() == QEvent::MouseButtonPress) {
-    QMouseEvent *event = static_cast<QMouseEvent *>(e);
-    mLoop->doEventMouse(event);
+  bool SleepEventFilter::eventFilter (QObject *obj, QEvent *e) {
+    Q_UNUSED(obj)
+    //
+    if (e->type() == QEvent::KeyPress) {
+      QKeyEvent *event = static_cast<QKeyEvent *>(e);
+      mLoop->doEventKey(event);
+    } else if (e->type() == QEvent::MouseButtonPress) {
+      QMouseEvent *event = static_cast<QMouseEvent *>(e);
+      mLoop->doEventMouse(event);
+    }
+    return false; // event is not tasty
   }
-  return false; // event is not tasty
-}
-
 } // end of namespace
 
 ///////////////////////////////////////////////////////////////////////////////
