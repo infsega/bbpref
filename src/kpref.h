@@ -25,7 +25,7 @@
 
 #include <QMainWindow>
 
-class PrefDesktop;
+class PrefModel;
 class DeskView;
 
 class Kpref : public QMainWindow {
@@ -64,7 +64,7 @@ private:
   QStatusBar * HintBar;
 
 public:
-  PrefDesktop *mDesktop;
+  PrefModel *m_PrefModel;
   DeskView *mDeskView;
   void showHint(QString hint);
   void clearHint();

@@ -22,7 +22,7 @@
 
 #include <QDialog>
 
-class PrefDesktop;
+class PrefModel;
 class QPixmap;
 
 class ScoreWidget : public QDialog
@@ -30,7 +30,7 @@ class ScoreWidget : public QDialog
   Q_OBJECT
 
   public:
-    ScoreWidget(PrefDesktop *desktop, QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ScoreWidget(PrefModel *model, QWidget *parent = 0, Qt::WindowFlags f = 0);
     ~ScoreWidget();
 
   protected:
@@ -41,5 +41,5 @@ class ScoreWidget : public QDialog
     void showPlayerScore (int i, const QString &sb, const QString &sm, const QString &slv, const QString &srv, const QString &tv);
 
     QPixmap *m_paperBmp;
-    PrefDesktop *m_desktop;
+    PrefModel *m_model;
 };

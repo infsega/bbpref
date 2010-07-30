@@ -132,7 +132,7 @@ public:
     m_eloop = new SleepEventLoop(parent);
     m_efilter = new SleepEventFilter(m_eloop);
     m_timer = new QTimer(m_eloop);
-    m_scorew = new ScoreWidget(parent->mDesktop, parent);
+    m_scorew = new ScoreWidget(parent->m_model, parent);
   }
 
   ~DeskViewPrivate()
@@ -223,7 +223,7 @@ QPixmap *DeskView::GetImgByName (const char *name) {
 ///////////////////////////////////////////////////////////////////////////////
 //DeskView::DeskView (int aW, int aH) : mDeskBmp(0), d_ptr(new DeskViewPrivate(this))
 DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_ptr(new DeskViewPrivate(this)),
-                                                           mDesktop(0), mDeskBmp(0)
+                                                           m_model(0), mDeskBmp(0)
 {
   mDigitsBmp = new QPixmap(QString(":/pics/digits/digits.png"));
   mBidBmp = new QPixmap(QString(":/pics/bidinfo.png"));
@@ -270,9 +270,9 @@ DeskView::~DeskView () {
 }
 
 
-void DeskView::setModel(PrefDesktop *desktop)
+void DeskView::setModel(PrefModel *desktop)
 {
-  mDesktop = desktop;
+  m_model = desktop;
   delete d_ptr;
   d_ptr = new DeskViewPrivate(this);
 }
@@ -281,7 +281,7 @@ void DeskView::setModel(PrefDesktop *desktop)
 void DeskView::drawIMove (/*int x, int y*/) {
   int x, y;
   if (!mDeskBmp) return;
-  switch (mDesktop->nCurrentStart.nValue) {
+  switch (m_model->nCurrentStart.nValue) {
       case 1:
         x = width()/2-15;
         y = height() - yBorder - CARDHEIGHT - 30; //- 40;
@@ -295,7 +295,7 @@ void DeskView::drawIMove (/*int x, int y*/) {
         y = yBorder + CARDHEIGHT + 20; //+40;
         break;
       default:
-        qDebug() << "Invalid nCurrentStart.nValue =" << mDesktop->nCurrentStart.nValue;
+        qDebug() << "Invalid nCurrentStart.nValue =" << m_model->nCurrentStart.nValue;
         x = y = -1;
         break;
   }
@@ -667,18 +667,18 @@ void DeskView::drawMessageWindow (int x0, int y0, const QString msg, bool dim) {
 
 void DeskView::resizeEvent(QResizeEvent *event) {
   Q_UNUSED(event)
-  mDesktop->draw();
+  m_model->draw();
 }
 
 
 void DeskView::mouseMoveEvent (QMouseEvent *event) {
-  mDesktop->currentPlayer()->highlightCard(event->x(), event->y());
+  m_model->currentPlayer()->highlightCard(event->x(), event->y());
 }
 
 
 void DeskView::mousePressEvent (QMouseEvent *event) {
   if (event->button() == Qt::LeftButton) {
-    Player *plr = mDesktop->currentPlayer();
+    Player *plr = m_model->currentPlayer();
     plr->mClickX = event->x();
     plr->mClickY = event->y();
   }
@@ -787,7 +787,7 @@ void DeskView::animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[], bool doAnim
   }
 
   for (int f = doAnim?0:steps; f <= steps; f++) {
-    mDesktop->draw(false);
+    m_model->draw(false);
     for (int c = 0; c <= 3; c++) {
       if (!cAni[c]) continue;
       int x, y;

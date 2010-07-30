@@ -31,12 +31,12 @@
 class DeskView;
 class Player;
 
-class PrefDesktop : public QObject {
+class PrefModel : public QObject {
   Q_OBJECT
 
 public:
-  PrefDesktop (DeskView *aDeskView/*=0*/);
-  virtual ~PrefDesktop ();
+  PrefModel (DeskView *aDeskView/*=0*/);
+  virtual ~PrefModel ();
 
   Player *addPlayer (Player *);
 

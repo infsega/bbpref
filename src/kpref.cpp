@@ -52,7 +52,7 @@ Kpref::Kpref () {
   
   initMenuBar();
   mDeskView = 0;
-  mDesktop = 0;
+  m_PrefModel = 0;
 
   loadOptions();
 
@@ -82,9 +82,9 @@ Kpref::Kpref () {
   mDeskView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   setCentralWidget(mDeskView);
   mDeskView->setAutoFillBackground(false);
-  mDesktop = new PrefDesktop(mDeskView);
-  mDeskView->setModel(mDesktop);
-  connect(mDesktop, SIGNAL(deskChanged()), mDeskView, SLOT(update()));
+  m_PrefModel = new PrefModel(mDeskView);
+  mDeskView->setModel(m_PrefModel);
+  connect(m_PrefModel, SIGNAL(deskChanged()), mDeskView, SLOT(update()));
   HintBar->showMessage(tr("Welcome to OpenPref!"));
   FormBid *formBid = FormBid::instance(mDeskView);
   formBid->hide();
@@ -95,7 +95,7 @@ Kpref::~Kpref () {
   //delete StatusBar1;
   //!delete formBid;
   mDeskView->deleteLater();
-  mDesktop->deleteLater();
+  m_PrefModel->deleteLater();
   HintBar->deleteLater();
   //delete Hint;
 }
@@ -145,19 +145,19 @@ void Kpref::initMenuBar () {
 void Kpref::slotFileOpen () {
   QString fileName = QFileDialog::getOpenFileName(this, "Select saved game", "", "*.prf");
   if (!fileName.isEmpty())  {
-    mDesktop->loadGame(fileName);
+    m_PrefModel->loadGame(fileName);
     actFileSave->setEnabled(true);
-    mDesktop->runGame();
+    m_PrefModel->runGame();
   }
 }
 
 
 void Kpref::slotFileSave () {
-  if (mDesktop) {
+  if (m_PrefModel) {
     QString fn = QFileDialog::getSaveFileName(this, "Select file to save the current game", "", "*.prf");
     if (!fn.isEmpty()) {
 		fn = GenName(fn, ".prf");
-		mDesktop->saveGame(fn);
+		m_PrefModel->saveGame(fn);
 	}
   }
 }
@@ -171,7 +171,7 @@ void Kpref::slotFileQuit() {
 
 
 void Kpref::slotShowScore () {
-  mDesktop->closePool();
+  m_PrefModel->closePool();
   mDeskView->drawPool();
 }
 
@@ -218,15 +218,15 @@ void Kpref::slotNewSingleGame () {
   }
   
   mDeskView->ClearScreen();
-  delete mDesktop;
-  mDesktop = new PrefDesktop(mDeskView);    
-  mDeskView->setModel(mDesktop);
-  connect(mDesktop, SIGNAL(deskChanged()), mDeskView, SLOT(update()));
+  delete m_PrefModel;
+  m_PrefModel = new PrefModel(mDeskView);    
+  mDeskView->setModel(m_PrefModel);
+  connect(m_PrefModel, SIGNAL(deskChanged()), mDeskView, SLOT(update()));
   
   optPassCount = 0;
   actFileOpen->setEnabled(false);
   actFileSave->setEnabled(true); 
-  mDesktop->runGame();
+  m_PrefModel->runGame();
   actFileOpen->setEnabled(true);
   actFileSave->setEnabled(false);
 }
@@ -238,7 +238,7 @@ void  Kpref::keyPressEvent (QKeyEvent *event) {
 
 void Kpref::closeEvent(QCloseEvent *event) {
 	 int ret;
-	if (!mDesktop->mGameRunning)
+	if (!m_PrefModel->mGameRunning)
 		exit(0);	 
 	 ret = QMessageBox::question(this, tr("OpenPref"),
         tr("Do you really want to quit the game?"),
@@ -341,7 +341,7 @@ void Kpref::slotDeckChanged () {
   		setMinimumHeight(CARDHEIGHT*6);
   	else
   		setMinimumHeight(570);
-	mDesktop->draw();
+	m_PrefModel->draw();
 }
 
 void Kpref::slotRules () {
@@ -354,7 +354,7 @@ void Kpref::slotRules () {
 
 void Kpref::slotQuit () {
 	int ret;
-	if (!mDesktop->mGameRunning)
+	if (!m_PrefModel->mGameRunning)
 		exit(0);
 	ret = QMessageBox::question(this, tr("OpenPref"),
         tr("Do you really want to quit the game?"),
@@ -377,7 +377,7 @@ void Kpref::MoveImpossible () {
 }
 
 void Kpref::HintMove () {
-	if (mDesktop->mBiddingDone)
+	if (m_PrefModel->mBiddingDone)
 		HintBar->showMessage(tr("Your move"));
 	else
 		HintBar->showMessage(tr("Select two cards to drop"));
