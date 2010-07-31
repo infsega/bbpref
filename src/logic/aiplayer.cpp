@@ -66,9 +66,11 @@ void AiPlayer::clear () {
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 // масть с перехватами (max)
-Card *AiPlayer::GetMaxCardWithOutPere () {
+Card *AiPlayer::GetMaxCardWithOutPere (int s0, int s1, int s2) {
   int index = 0, vz = 0, pere = 0;
   for (int f = 1; f <= 4; f++) {
+    if (f == s0 || f == s1 || f == s2) // not possible if suit is left to be default
+      continue;
     if (mSuitProb[f].tricks > vz || (mSuitProb[f].tricks == vz && mSuitProb[f].perehvatov < pere)) {
       index = f;
       vz = mSuitProb[f].tricks;
@@ -82,10 +84,12 @@ Card *AiPlayer::GetMaxCardWithOutPere () {
 
 ///////////////////////////////////////////////////////////////////////////////
 // ???
-Card *AiPlayer::GetMinCardWithOutVz () {
+Card *AiPlayer::GetMinCardWithOutVz (int s0, int s1, int s2) {
   int index = 0;
   double koef = 0, koef1 = 0;
   for (int f = 1; f <= 4; f++) {
+    if (f == s0 || f == s1 || f == s2) // not possible if suit is left to be default
+      continue;
     koef1 = mSuitProb[f].len+8/(1+mSuitProb[f].tricks);
     if ((koef1 > koef && mSuitProb[f].len != 0) || (mSuitProb[f].tricks == 0 && mSuitProb[f].len > 0)) {
       index = f;
@@ -99,9 +103,11 @@ Card *AiPlayer::GetMinCardWithOutVz () {
 
 ///////////////////////////////////////////////////////////////////////////////
 // ???
-Card *AiPlayer::GetMaxCardPere () {
+Card *AiPlayer::GetMaxCardPere (int s0, int s1, int s2) {
   int index = 0, vz = 0, pere = 0;
   for (int f = 1; f <= 4; f++) {
+    if (f == s0 || f == s1 || f == s2) // not possible if suit is left to be default
+      continue;
     if (mSuitProb[f].tricks > vz || (mSuitProb[f].tricks == vz && mSuitProb[f].perehvatov > pere)) {
       index = f;
       vz = mSuitProb[f].tricks;
@@ -455,6 +461,7 @@ Card *AiPlayer::Miser1 (Player *aLeftPlayer, Player *aRightPlayer) {
   if (!cur) cur = mCards.minInSuit(2);
   if (!cur) cur = mCards.minInSuit(3);
   if (!cur) cur = mCards.minInSuit(4);
+  Q_ASSERT(cur != 0);
   return cur;
 }
 
@@ -489,6 +496,7 @@ Card *AiPlayer::Miser2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPla
     if (!cur) cur = GetMinCardWithOutVz(); // лабуду
     if (!cur) cur = mCards.maxFace();
   }
+  Q_ASSERT(cur != 0);
   return cur;
 }
 
@@ -520,6 +528,7 @@ Card *AiPlayer::Miser3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, 
     if (!cur) cur = mCards.minFace();
   }
   mMyGame = tmpGamesType;
+  Q_ASSERT(cur != 0);
   return cur;
 }
 
@@ -617,6 +626,7 @@ Card *AiPlayer::MiserCatch1 (Player *aLeftPlayer, Player *aRightPlayer) {
 //  } else { //Side == LeftHand
 //  }
 badlabel:
+  Q_ASSERT(cur != 0);
   return cur;
 }
 
@@ -692,6 +702,7 @@ Card *AiPlayer::MiserCatch2 (Card *aRightCard, Player *aLeftPlayer, Player *aRig
   }
   mCardCarryThru = 0;
   if (!cur) cur = mCards.minFace();
+  Q_ASSERT(cur != 0);
   return cur;
 }
 
@@ -760,6 +771,7 @@ Card *AiPlayer::MiserCatch3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPla
     }
   }
   mCardCarryThru = 0;
+  Q_ASSERT(cur != 0);
   return cur;
 }
 
@@ -793,6 +805,7 @@ Card *AiPlayer::MyGame1 (Player *aLeftPlayer, Player *aRightPlayer) {
     if (!cur) cur = mCards.maxFace();
   }
   mMyGame = tmpGamesType;
+  Q_ASSERT(cur != 0);
   return cur;
 }
 
@@ -846,6 +859,7 @@ Card *AiPlayer::MyGame2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPl
     }
   }
   mMyGame = tmpGamesType;
+  Q_ASSERT(cur != 0);
   return cur;
 }
 
@@ -893,6 +907,7 @@ Card *AiPlayer::MyGame3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer,
     if (!cur) cur = mCards.minFace();
   }
   mMyGame = tmpGamesType;
+  Q_ASSERT(cur != 0);
   return cur;
 }
 
@@ -907,7 +922,7 @@ Card *AiPlayer::MyWhist1 (Player *aLeftPlayer, Player *aRightPlayer) {
   eGameBid tmpGamesType = mMyGame;
   CardList aMaxCardList;
   Player *aEnemy, *aFriend;
-  int mast;
+  int trump;
   // Кто игрок а кто напарник
   if (aLeftPlayer->myGame() != gtPass && aLeftPlayer->myGame() != whist) {
     aEnemy = aLeftPlayer;
@@ -916,41 +931,105 @@ Card *AiPlayer::MyWhist1 (Player *aLeftPlayer, Player *aRightPlayer) {
     aEnemy = aRightPlayer;
     aFriend = aLeftPlayer;
   }
-  mast = aEnemy->myGame()-(aEnemy->myGame()/10)*10;
-  // набираем списки
+  trump = aEnemy->myGame() % 10; //aEnemy->myGame()-(aEnemy->myGame()/10)*10;
+  Q_ASSERT(trump != 0);
+  int suit = trump;
+  // build lists
   //loadLists(aLeftPlayer,aRightPlayer,aMaxCardList);
   //recalcTables(aMaxCardList,1);
   if (aEnemy == aLeftPlayer) {
     // Слева игрок
     loadLists(aLeftPlayer, aLeftPlayer, aMaxCardList);
     recalcTables(aMaxCardList, 1);
-    if (aLeftPlayer->mCards.cardsInSuit(mast) <= 2) {
-      Card *m = mCards.maxInSuit(mast);
-      if (!m) cur = mCards.minInSuit(aLeftPlayer->mCards.emptySuit (mast));
-      else if (aLeftPlayer->mCards.maxInSuit(mast)->face() < m->face()) cur = mCards.maxInSuit(mast);
-      else cur = mCards.minInSuit(aLeftPlayer->mCards.emptySuit(mast));
-    } else {
-      cur = mCards.minInSuit(aLeftPlayer->mCards.emptySuit (mast));
+    for (int i=1; i<=4; i++) {
+      if ((i == trump) || mCards.cardsInSuit(suit) == 0)
+        continue; // skip trumps and suits I don't own
+
+      if ((aLeftPlayer->mCards.cardsInSuit(i) > 0)
+        && (aRightPlayer->mCards.cardsInSuit(i) == 0)
+        && (aRightPlayer->mCards.cardsInSuit(trump) > 0)) {
+          qDebug() << "1";
+          // Enemy has this suite, but friend doesn't, and friend has a trump
+          return mCards.minInSuit(i);
+      } else if (aLeftPlayer->mCards.cardsInSuit(i) == 0) {
+        if (aLeftPlayer->mCards.cardsInSuit(trump) > 0)
+          continue; // he will beat our suit
+        else {
+                    qDebug() << "2";
+          return mCards.minInSuit(i);}
+      }
     }
-    if (!cur) cur = GetMinCardWithOutVz();
+/*    if (aLeftPlayer->mCards.cardsInSuit(suit) <= 2) {
+      Card *m = mCards.maxInSuit(suit);
+      if (!m) cur = mCards.minInSuit(aLeftPlayer->mCards.emptySuit (suit));
+      else if (aLeftPlayer->mCards.maxInSuit(suit)->face() < m->face()) cur = mCards.maxInSuit(suit);
+      else cur = mCards.minInSuit(aLeftPlayer->mCards.emptySuit(suit));
+    } else {
+      cur = mCards.minInSuit(aLeftPlayer->mCards.emptySuit(suit));
+    }*/
+    int s1=0, s2=0;
+    for (int i=1; i<=4; i++) {
+      if (aLeftPlayer->mCards.cardsInSuit(i) == 0) {
+        if (s1 == 0)
+          s1 = i;
+        else
+          s2 = i;
+      }
+    }
+    qDebug() << "bad suits: " << trump << s1 << s2;
+    if(aLeftPlayer->mCards.cardsInSuit(trump) > 0) {
+      if (!cur) {cur = GetMaxCardPere(trump, s1, s2);           qDebug() << "3";}
+      if (!cur) {cur = GetMaxCardWithOutPere(trump, s1, s2);           qDebug() << "4";}
+      if (!cur) {cur = GetMinCardWithOutVz(trump, s1, s2);           qDebug() << "5";}  // под игрока - с семака
+    } else {
+      if (!cur) {cur = GetMaxCardPere();           qDebug() << "6";}
+      if (!cur) {cur = GetMaxCardWithOutPere();           qDebug() << "7";}
+      if (!cur) {cur = GetMinCardWithOutVz();           qDebug() << "8";}
+    }
 /*
     if ( mCards.exists(FACE_ACE,cur->suit()) || mCards.exists(FACE_KING,cur->suit())) {
       cur = 0;
       cur = mCards.minInSuit(aMaxCardList->emptySuit(0));
     }
 */
-    if (!cur) cur = GetMaxCardWithOutPere();
-    if (!cur) cur = mCards.minInSuit(mast);
-    if (!cur) cur = GetMaxCardPere();
+
+    //if (!cur) cur = mCards.minInSuit(mast);
   } else {
     // слева - напарник
+    // повторить трюк с козырем
     loadLists(aRightPlayer, aRightPlayer, aMaxCardList);
     recalcTables(aMaxCardList, 1);
-    cur = GetMaxCardWithOutPere();
-    if (!cur) cur = GetMaxCardPere();
-    if (!cur) cur = mCards.maxFace();
+
+    int s1=0, s2=0;
+    for (int i=1; i<=4; i++) {
+      if (aRightPlayer->mCards.cardsInSuit(i) == 0) {
+        if (s1 == 0)
+          s1 = i;
+        else
+          s2 = i;
+      }
+    }
+    qDebug() << "bad suits: " << trump << s1 << s2;
+
+    if(aRightPlayer->mCards.cardsInSuit(trump) > 0) {
+      cur = GetMaxCardWithOutPere(trump, s1, s2);           qDebug() << "9";
+      if (!cur) { cur = GetMaxCardPere(trump, s1, s2);           qDebug() << "10";}
+      if (!cur) {
+        for (int f=1; f<=4; f++) {
+          if (f == trump || f == s1 || f == s2) // not possible if suit is left to be default
+            continue;
+          cur = mCards.maxInSuit(f);
+        }
+        if (!cur) cur = mCards.maxFace();
+      }
+    } else {
+      cur = GetMaxCardWithOutPere();           qDebug() << "11";
+      if (!cur) {cur = GetMaxCardPere();           qDebug() << "12";}
+      if (!cur) {cur = mCards.maxFace();           qDebug() << "13";} // под вистующего - с тузующего
+    }
   }
   mMyGame = tmpGamesType;
+  Q_ASSERT(cur != 0);
   return cur;
 }
 
@@ -993,6 +1072,7 @@ Card *AiPlayer::MyWhist2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightP
     if (!cur) cur = GetMinCardWithOutVz(); // Нет масти и козыря
   }
   mMyGame = tmpGamesType;
+  Q_ASSERT(cur != 0);
   return cur;
 }
 
@@ -1105,6 +1185,7 @@ Card *AiPlayer::MyWhist3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer
     if (!cur) cur = mCards.minFace();
   }
   mMyGame = tmpGamesType;
+  Q_ASSERT(cur != 0);
   return cur;
 }
 
@@ -1171,6 +1252,7 @@ Card *AiPlayer::MyPass1 (Card *rMove, Player *aLeftPlayer, Player *aRightPlayer)
   }
   //if (doRest) mCards = aStackStore;
   //mMyGame = tmpGamesType;
+  Q_ASSERT(cur != 0);
   return cur;
 }
 
@@ -1210,6 +1292,7 @@ Card *AiPlayer::MyPass2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPl
   }
   /////////////////////////////////////////////////////////
   mMyGame = tmpGamesType;
+  Q_ASSERT(cur != 0);
   return cur;
 }
 
@@ -1241,6 +1324,7 @@ Card *AiPlayer::MyPass3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer,
     if (!cur) cur = mCards.minFace();
   }
   mMyGame = tmpGamesType;
+  Q_ASSERT(cur != 0);
   return cur;
 }
 
@@ -1279,6 +1363,7 @@ Card *AiPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, P
   }
   mCards.remove(cur);
   mCardsOut.insert(cur);
+  Q_ASSERT(cur != 0);
   return cur;
 }
 
