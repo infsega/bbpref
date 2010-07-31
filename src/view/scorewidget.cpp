@@ -56,7 +56,6 @@ static void paintBlankPaper (QPixmap *paper) {
   const int PoolWidth = 60;
   const int Pool2Width = 85;
   const int maxPoolRadius = 20;
-  
   // if (width() > height()) horizontal
 
   QPainter p(paper);
@@ -125,8 +124,8 @@ static void paintBlankPaper (QPixmap *paper) {
   p.end();
 }
 
-ScoreWidget::ScoreWidget(PrefDesktop *desktop, QWidget *parent, Qt::WindowFlags f)
-    : QDialog(parent, f), m_desktop(desktop), m_paperBmp(0)
+ScoreWidget::ScoreWidget(PrefModel *model, QWidget *parent, Qt::WindowFlags f)
+    : QDialog(parent, f), m_model(model), m_paperBmp(0)
 {
   // TODO: flexible size
   //setFixedSize(410,530);
@@ -170,7 +169,7 @@ void ScoreWidget::paintEvent(QPaintEvent *event)
     p.drawPixmap(0, 0, *(m_paperBmp));
 
   for (int i = 1;i<=3;i++) {
-    Player *plr = m_desktop->player(i);
+    Player *plr = m_model->player(i);
     sb = plr->mScore.poolStr();
     sm = plr->mScore.mountainStr(7);
     slw = plr->mScore.leftWhistsStr(14);

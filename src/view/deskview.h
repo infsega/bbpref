@@ -37,7 +37,7 @@
 #include "prfconst.h"
 
 class Card;
-class PrefDesktop;
+class PrefModel;
 class DeskViewPrivate;
 
 class DeskView : public QWidget {
@@ -46,8 +46,8 @@ public:
   DeskView (QWidget * parent = 0, Qt::WindowFlags f = 0);
   ~DeskView ();
 
-  PrefDesktop * model() { return mDesktop; }
-  void setModel(PrefDesktop *desktop);
+  PrefModel * model() { return m_model; }
+  void setModel(PrefModel *model);
 
   void mySleep (int seconds);
   void aniSleep (int milliseconds);
@@ -108,7 +108,7 @@ private:
 private:
   friend class DeskViewPrivate;
   DeskViewPrivate * d_ptr;  
-  PrefDesktop *mDesktop;
+  PrefModel *m_model;
   QPixmap *mDeskBmp;
   QPixmap *mBidBmp;
   QPixmap *mIMoveBmp;
