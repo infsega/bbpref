@@ -37,8 +37,8 @@ class ScoreWidget : public QDialog
     void keyPressEvent (QKeyEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void paintEvent (QPaintEvent *);
-    void paintBlankPaper();
-    void showPlayerScore (int i, const QString &sb, const QString &sm, const QString &slv, const QString &srv, const QString &tv);
+    void showPlayerScore (int i, const QString scoreBullet, const QString scoreMountain,
+      const QString scoreLeftWhist, const QString scoreRightWhist, const int scoreTotal);
 
     QPixmap *m_paperBmp;
     PrefDesktop *m_desktop;
