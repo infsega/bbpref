@@ -1046,7 +1046,6 @@ LabelRecordOnPaper:
       }
     }
   } // end of pool
-  mDeskView->drawPool();
   mDeskView->update();
   emit gameOver();
 
