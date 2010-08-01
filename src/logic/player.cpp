@@ -130,9 +130,11 @@ int Player::buildHandXOfs (int *dest, int startX, bool opened) {
     *dest++ = startX;
     int idx = mCards.indexOf(cur);
     *dest++ = idx;
-    if (idx < 0) abort();
+    //if (idx < 0) abort();
+    Q_ASSERT(idx >= 0);
     cnt++;
-    if (cnt > 12) abort();
+    //if (cnt > 12) abort();
+    Q_ASSERT(cnt <= 12);
   }
   *dest++ = -1;
   *dest = -1;
