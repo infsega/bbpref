@@ -33,6 +33,9 @@ set (CPACK_PACKAGE_VERSION ${openpref_VERSION_MAJOR}.${openpref_VERSION_MINOR}.$
 set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Preferans game")
 
+set(BIN_INSTALL_DIR      "games"
+    CACHE PATH "Install dir for resulting binary")
+
 IF( UNIX AND NOT APPLE )
 	SET(CPACK_BINARY_DEB ON)
 	SET(CPACK_BINARY_RPM ON)
@@ -100,7 +103,7 @@ ADD_EXECUTABLE(openpref ${SOURCES} ${MOC_SRCS} ${RC_SRCS} ${UI_HEADERS})
 TARGET_LINK_LIBRARIES( openpref ${QT_LIBRARIES} )
 add_dependencies(openpref i18n)
 
-INSTALL (TARGETS openpref DESTINATION "games")
+INSTALL (TARGETS openpref DESTINATION "${BIN_INSTALL_DIR}")
 #install(FILES ${QMS} DESTINATION "share/openpref/i18n")
 
 # Add support for an uninstall target
