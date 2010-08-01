@@ -38,8 +38,6 @@ public:
   PrefModel (DeskView *aDeskView/*=0*/);
   virtual ~PrefModel ();
 
-  Player *addPlayer (Player *);
-
   void runGame ();
 
   void draw (bool emitSignal=true);
@@ -66,10 +64,9 @@ public:
   bool mBiddingDone;
 
 private:
+  Player *addPlayer (Player *);
   void internalInit ();
   Card *makeGameMove (Card *lMove, Card *rMove, bool isPassOut);
-
-private:
   int playerWithMaxPool (); // except the players who closed the pool
 
 private:
