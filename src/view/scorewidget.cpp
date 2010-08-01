@@ -23,12 +23,16 @@
 #include "prfconst.h"
 #include "scorewidget.h"
 
+#include <QDebug>
+
 #include <QBrush>
 #include <QKeyEvent>
 #include <QPainter>
 #include <QPixmap>
 #include <QPoint>
 #include <QRadialGradient>
+#include <QSettings>
+//#include <QStyleOptionSizeGrip>
 
 #include "desktop.h"
 #include "player.h"
@@ -127,25 +131,41 @@ static void paintBlankPaper (QPixmap *paper) {
 ScoreWidget::ScoreWidget(PrefModel *model, QWidget *parent, Qt::WindowFlags f)
     : QDialog(parent, f), m_model(model), m_paperBmp(0)
 {
+  //setSizeGripEnabled(true);
   // TODO: flexible size
   //setFixedSize(410,530);
-  setFixedSize(410,480);
   setWindowTitle(tr("Score"));
-  m_paperBmp = new QPixmap(width(), height());
-  paintBlankPaper(m_paperBmp);
+  setMinimumSize(350, 350);
+  setMaximumSize(500, QWIDGETSIZE_MAX);
+  //m_paperBmp = new QPixmap(width(), height());
+  //paintBlankPaper(m_paperBmp);
+  //resize(410,480);
+  setWindowFlags(Qt::Window);
+  QSettings settings;
+  restoreGeometry(settings.value("score/geometry").toByteArray());
+  //setSizePolicy(QSizePolicy::Preferred);
 }
 
 
 ScoreWidget::~ScoreWidget()
-{}
+{
+}
+
+QSize ScoreWidget::sizeHint() const
+{
+  return QSize(410,480);
+}
 
 void ScoreWidget::keyPressEvent (QKeyEvent *event)
 {
+  QSettings settings;
     switch (event->key()) {
       case Qt::Key_Escape:
       case Qt::Key_Enter:
       case Qt::Key_Return:
       case Qt::Key_Space:
+      //qDebug() << "geom" << QString(saveGeometry());
+        settings.setValue( "score/geometry", saveGeometry());
         hide();
         break;
       default: ;
@@ -178,7 +198,29 @@ void ScoreWidget::paintEvent(QPaintEvent *event)
     showPlayerScore(i, sb, sm, slw, srw, tw);
   }
 
+  /*QStyleOptionSizeGrip *opt = new QStyleOptionSizeGrip();
+  opt->corner = Qt::BottomRightCorner;
+  opt->rect = QRect(width()-20, height()-20, 20, 20);
+  this->style()->drawControl(QStyle::CE_SizeGrip, opt, &p, this );*/
   p.end();
+}
+
+void ScoreWidget::resizeEvent(QResizeEvent *event)
+{
+  if (event->size() != event->oldSize()) {
+    delete m_paperBmp;
+    m_paperBmp = new QPixmap(width(), height());
+    paintBlankPaper(m_paperBmp);
+  }
+}
+
+void ScoreWidget::showEvent(QShowEvent *event)
+{
+  Q_UNUSED(event)
+  QSettings settings;
+  restoreGeometry(settings.value("score/geometry").toByteArray());
+  //adjustSize();
+  //resize(410,480);
 }
 
 void ScoreWidget::showPlayerScore (int i, const QString scoreBullet, const QString scoreMountain,

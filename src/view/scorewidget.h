@@ -32,11 +32,15 @@ class ScoreWidget : public QDialog
   public:
     ScoreWidget(PrefModel *model, QWidget *parent = 0, Qt::WindowFlags f = 0);
     ~ScoreWidget();
+    QSize sizeHint() const;
 
   protected:
     void keyPressEvent (QKeyEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void paintEvent (QPaintEvent *);
+    void resizeEvent (QResizeEvent *);
+    void showEvent(QShowEvent *event);
+
     void showPlayerScore (int i, const QString scoreBullet, const QString scoreMountain,
       const QString scoreLeftWhist, const QString scoreRightWhist, const int scoreTotal);
 
