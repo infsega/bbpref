@@ -34,7 +34,7 @@ set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Preferans game")
 
 set(BIN_INSTALL_DIR      "games"
-    CACHE PATH "Install dir for resulting binary")
+    CACHE STRING "Install dir for resulting binary")
 
 IF( UNIX AND NOT APPLE )
 	SET(CPACK_BINARY_DEB ON)
