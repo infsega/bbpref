@@ -136,7 +136,7 @@ ScoreWidget::ScoreWidget(PrefModel *model, QWidget *parent, Qt::WindowFlags f)
   //setFixedSize(410,530);
   setWindowTitle(tr("Score"));
   setMinimumSize(350, 350);
-  setMaximumSize(500, QWIDGETSIZE_MAX);
+  //setMaximumSize(500, QWIDGETSIZE_MAX);
   //m_paperBmp = new QPixmap(width(), height());
   //paintBlankPaper(m_paperBmp);
   //resize(410,480);
@@ -218,6 +218,7 @@ void ScoreWidget::showEvent(QShowEvent *event)
 {
   Q_UNUSED(event)
   QSettings settings;
+  setMaximumSize(500, (int) (static_cast<QWidget *>(parent())->height()));
   restoreGeometry(settings.value("score/geometry").toByteArray());
   //adjustSize();
   //resize(410,480);
