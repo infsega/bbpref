@@ -292,14 +292,14 @@ Card *PrefModel::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
     *plr = *curPlr;
     mPlayers[nCurrentMove.nValue] = plr;
     qDebug() << plr->type() << " plays for " << nCurrentMove.nValue;
-    res = plr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)),
+    res = plr->moveSelectCard(lMove, rMove, player(nextPlayer(nCurrentMove)),
       player(previousPlayer(nCurrentMove)), isPassOut);
     *curPlr = *plr;
     mPlayers[nCurrentMove.nValue] = curPlr;
     delete plr;
   } else {
     // No swaps, current player makes move himself
-    res = curPlr->moveSelectCard(lMove, rMove, player(succPlayer(nCurrentMove)),
+    res = curPlr->moveSelectCard(lMove, rMove, player(nextPlayer(nCurrentMove)),
       player(previousPlayer(nCurrentMove)), isPassOut);
   }
   return res;
@@ -513,7 +513,7 @@ void PrefModel::runGame () {
 
     draw();
     {
-      CardList tmpDeck; int cc = succPlayer(nCurrentStart), tPos = 0, tNo = 0;
+      CardList tmpDeck; int cc = nextPlayer(nCurrentStart), tPos = 0, tNo = 0;
       mOnDeskClosed = true;
 	  if (optDealAnim)
 	  	player(1)->setInvisibleHand(true);

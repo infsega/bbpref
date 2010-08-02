@@ -50,7 +50,7 @@ public:
 };
 
 
-int succPlayer (const WrapCounter &aCurrent);
+int nextPlayer (const WrapCounter &aCurrent);
 int previousPlayer (const WrapCounter &aCurrent);
 
 

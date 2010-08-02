@@ -55,7 +55,7 @@ WrapCounter &operator + (WrapCounter &c,int n) {
 }
 
 
-int succPlayer (const WrapCounter &aCurrent) {
+int nextPlayer (const WrapCounter &aCurrent) {
   int res = aCurrent.nValue+1;
   if (res > aCurrent.nMax) res = aCurrent.nMin;
   return res;
