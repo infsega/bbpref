@@ -65,14 +65,7 @@ public:
 
   void drawPKeyBmp (bool show);
   void drawPool ();
-  /* game:
-   *  <0: none
-   *  =0: misere
-   * suit:
-   *  =0: nt
-   * plrAct: 0-3
-   */
-  void drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game);
+  void drawBidBoard();
 
   void drawMessageWindow (int x0, int y0, const QString msg, bool dim=false);
   void drawPlayerMessage (int player, const QString msg, bool dim=false);
@@ -98,6 +91,14 @@ protected:
   void  resizeEvent(QResizeEvent *event);
 
 private:
+  /* game:
+   *  <0: none
+   *  =0: misere
+   * suit:
+   *  =0: nt
+   * plrAct: 0-3
+   */
+  void drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game);
   void inGameCardLeftTop (int mCardNo, int &left, int &top);
 
   void drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy);

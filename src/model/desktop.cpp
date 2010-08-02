@@ -358,15 +358,6 @@ bool PrefModel::saveGame (const QString &name)  {
   return true;
 }
 
-void PrefModel::drawBidBoard()
-{
-    Player *plr1 = player(1);
-    Player *plr2 = player(2);
-    Player *plr3 = player(3);
-    Q_ASSERT(plr1 && plr2 && plr3);
-    mDeskView->drawBidsBmp(mPlayerActive, plr1->tricksTaken(), plr2->tricksTaken(), plr3->tricksTaken(), gCurrentGame);
-}
-
 void PrefModel::draw (bool emitSignal) {
   //if (!mDeskView) return;
   Q_ASSERT(mDeskView != 0);
@@ -385,7 +376,7 @@ void PrefModel::draw (bool emitSignal) {
 
   // draw bidboard
   if (mPlayingRound)
-    drawBidBoard();
+    mDeskView->drawBidBoard();
 
   mDeskView->drawIMove();
   // 

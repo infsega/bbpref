@@ -818,3 +818,12 @@ void DeskView::drawPool () {
 */
   d_ptr->m_scorew->exec();
 }
+
+void DeskView::drawBidBoard()
+{
+    Player *plr1 = m_model->player(1);
+    Player *plr2 = m_model->player(2);
+    Player *plr3 = m_model->player(3);
+    Q_ASSERT(plr1 && plr2 && plr3);
+    drawBidsBmp(m_model->activePlayerNumber(), plr1->tricksTaken(), plr2->tricksTaken(), plr3->tricksTaken(), gCurrentGame);
+}

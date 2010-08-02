@@ -53,6 +53,7 @@ public:
   Player *player (int num);
   Player *player (const WrapCounter &cnt);
   Player *currentPlayer () const { return mPlayers[nCurrentMove.nValue]; }
+  int activePlayerNumber () const { return mPlayerActive; }
 
 signals:
   void deskChanged ();
@@ -68,7 +69,6 @@ private:
   void internalInit ();
   Card *makeGameMove (Card *lMove, Card *rMove, bool isPassOut);
   int playerWithMaxPool (); // except the players who closed the pool
-  void drawBidBoard();
 
 private:
   DeskView *mDeskView;
