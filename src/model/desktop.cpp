@@ -319,14 +319,14 @@ int PrefModel::playerWithMaxPool () {
 }
 
 
-Player *PrefModel::player (int num) {
+inline Player *PrefModel::player (int num) {
   //if (num < 1 || num > 3) return 0;
   Q_ASSERT(num >= 1 || num <= 3);
   return mPlayers[num];
 }
 
 
-Player *PrefModel::player (const WrapCounter &cnt) {
+inline Player *PrefModel::player (const WrapCounter &cnt) {
   Q_ASSERT(cnt.nValue >= 1 || cnt.nValue <= 3);
   return player(cnt.nValue);
 }
