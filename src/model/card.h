@@ -35,6 +35,7 @@ const int FACE_ACE   = 14;
 
 class Card {
 public:
+  Card ();
   Card (int aFace, int aSuit);
   ~Card ();
   

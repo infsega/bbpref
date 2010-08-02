@@ -23,6 +23,9 @@
 #include "card.h"
 #include <QDebug>
 
+Card::Card () : mFace(0), mSuit(0), mValid(false)
+{}
+
 Card::Card (int aFace, int aSuit) {
   mFace = aFace;
   mSuit = aSuit;
