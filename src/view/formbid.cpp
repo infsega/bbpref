@@ -120,13 +120,13 @@ void FormBid::closeEvent(QCloseEvent *event) {
          event->ignore();
 }
 
-void FormBid::slotPushButtonClick86 () { _GamesType = g86; accept(); }
-void FormBid::slotPushButtonClickPass () { _GamesType = gtPass; accept(); }
-void FormBid::slotPushButtonClickVist () { _GamesType = whist; accept(); }
-void FormBid::slotPushButtonClickHalfVist () { _GamesType = halfwhist; accept(); }
+void FormBid::misere () { _GamesType = g86; accept(); }
+void FormBid::pass () { _GamesType = gtPass; accept(); }
+void FormBid::slotWhist () { _GamesType = whist; accept(); }
+void FormBid::slotHalfWhist () { _GamesType = halfwhist; accept(); }
 void FormBid::slotWithoutThree () { _GamesType = withoutThree; accept(); }
 
-void FormBid::slotShowBullet ()
+void FormBid::score ()
 {
   m_deskview->drawPool();
 }
@@ -217,52 +217,52 @@ void FormBid::initDialog () {
     }
   }
 
-  b86 = new QPushButton(this);
-  b86->setGeometry(10, 100, 200, 27);
-  b86->setMinimumSize(0,0);
-  b86->setObjectName("g86");
-  b86->setText(tr("&Misere"));
+  btnMisere = new QPushButton(this);
+  btnMisere->setGeometry(10, 100, 200, 27);
+  btnMisere->setMinimumSize(0,0);
+  btnMisere->setObjectName("g86");
+  btnMisere->setText(tr("&Misere"));
   
-  bpass = new QPushButton(this);
-  bpass->setGeometry(10,190,60,30);
-  bpass->setMinimumSize(0,0);
-  bpass->setObjectName("pass");
-  bpass->setText(tr("&Pass"));
-  bpass->setIcon(QIcon(QString(":/pics/pass.png")));
+  btnPass = new QPushButton(this);
+  btnPass->setGeometry(10,190,60,30);
+  btnPass->setMinimumSize(0,0);
+  btnPass->setObjectName("pass");
+  btnPass->setText(tr("&Pass"));
+  btnPass->setIcon(QIcon(QString(":/pics/pass.png")));
 
-  bvist = new QPushButton(this);
-  bvist->setGeometry(150,190,60,30);
-  bvist->setMinimumSize(0,0);
-  bvist->setObjectName("whist");
-  bvist->setText(tr("&Whist"));
-  bvist->setIcon(QIcon(QString(":/pics/whist.png")));
+  btnWhist = new QPushButton(this);
+  btnWhist->setGeometry(150,190,60,30);
+  btnWhist->setMinimumSize(0,0);
+  btnWhist->setObjectName("whist");
+  btnWhist->setText(tr("&Whist"));
+  btnWhist->setIcon(QIcon(QString(":/pics/whist.png")));
 
-  bhalfvist = new QPushButton(this);
-  bhalfvist->setGeometry(70, 190, 80, 30);
-  bhalfvist->setMinimumSize(0,0);
-  bhalfvist->setObjectName("halfwhist");
-  bhalfvist->setText(tr("&HalfWhist"));
-  bhalfvist->setIcon(QIcon(QString(":/pics/halfwhist.png")));
+  btnHalfWhist = new QPushButton(this);
+  btnHalfWhist->setGeometry(70, 190, 80, 30);
+  btnHalfWhist->setMinimumSize(0,0);
+  btnHalfWhist->setObjectName("halfwhist");
+  btnHalfWhist->setText(tr("&HalfWhist"));
+  btnHalfWhist->setIcon(QIcon(QString(":/pics/halfwhist.png")));
 
-  showbullet = new QPushButton(this);
-  showbullet->setGeometry(116, 220, 94, 27);
-  showbullet->setMinimumSize(0, 0);
-  showbullet->setText(tr("S&core"));
-  showbullet->setToolTip(tr("Show game table with calculated scores"));
-  showbullet->setIcon(QIcon(QString(":/pics/paper.png")));
+  btnShowScore = new QPushButton(this);
+  btnShowScore->setGeometry(116, 220, 94, 27);
+  btnShowScore->setMinimumSize(0, 0);
+  btnShowScore->setText(tr("S&core"));
+  btnShowScore->setToolTip(tr("Show game table with calculated scores"));
+  btnShowScore->setIcon(QIcon(QString(":/pics/paper.png")));
 
-  bwithoutthree = new QPushButton(this);
-  bwithoutthree->setGeometry(10, 220, 106, 27);
-  bwithoutthree->setMinimumSize(0, 0);
-  bwithoutthree->setText(tr("Without &Three"));
-  bwithoutthree->setToolTip(tr("Cancel game with penalty of three untaken tricks. No whists are written"));
-  bwithoutthree->setIcon(QIcon(QString(":/pics/cancel.png")));
+  btnWithoutThree = new QPushButton(this);
+  btnWithoutThree->setGeometry(10, 220, 106, 27);
+  btnWithoutThree->setMinimumSize(0, 0);
+  btnWithoutThree->setText(tr("Without &Three"));
+  btnWithoutThree->setToolTip(tr("Cancel game with penalty of three untaken tricks. No whists are written"));
+  btnWithoutThree->setIcon(QIcon(QString(":/pics/cancel.png")));
 
-  connect(b86, SIGNAL(clicked()), this, SLOT(slotPushButtonClick86()));
-  connect(bpass, SIGNAL(clicked()), this, SLOT(slotPushButtonClickPass()));
-  connect(bvist, SIGNAL(clicked()), this, SLOT(slotPushButtonClickVist()));
-  connect(bhalfvist, SIGNAL(clicked()), this, SLOT(slotPushButtonClickHalfVist()));
-  connect(bwithoutthree, SIGNAL(clicked()), this, SLOT(slotWithoutThree()));
-  connect(showbullet, SIGNAL(clicked()), this, SLOT(slotShowBullet()));
+  connect(btnMisere, SIGNAL(clicked()), this, SLOT(misere()));
+  connect(btnPass, SIGNAL(clicked()), this, SLOT(pass()));
+  connect(btnWhist, SIGNAL(clicked()), this, SLOT(slotWhist()));
+  connect(btnHalfWhist, SIGNAL(clicked()), this, SLOT(slotHalfWhist()));
+  connect(btnWithoutThree, SIGNAL(clicked()), this, SLOT(slotWithoutThree()));
+  connect(btnShowScore, SIGNAL(clicked()), this, SLOT(score()));
 
 }

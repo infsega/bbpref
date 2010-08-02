@@ -45,14 +45,14 @@ public:
   void disableItem (eGameBid);
   void enableItem (eGameBid);
 
-public slots:
+private slots:
   void onBidClick (); // universal handler
-  void slotPushButtonClick86 ();
-  void slotPushButtonClickPass ();
-  void slotPushButtonClickVist ();
-  void slotPushButtonClickHalfVist ();
+  void misere ();
+  void pass ();
+  void slotWhist ();
+  void slotHalfWhist ();
   void slotWithoutThree ();
-  void slotShowBullet ();
+  void score ();
 
 protected:
   FormBid (DeskView *parent=0);
@@ -65,14 +65,14 @@ protected:
 
 public:
   eGameBid _GamesType;
-  QPushButton *bwithoutthree;
-  QPushButton *showbullet;
-  QPushButton *bhalfvist;
+  QPushButton *btnWithoutThree;
+  QPushButton *btnShowScore;
+  QPushButton *btnHalfWhist;
   
 private:
-  QPushButton *b86;
-  QPushButton *bpass;
-  QPushButton *bvist;
+  QPushButton *btnMisere;
+  QPushButton *btnPass;
+  QPushButton *btnWhist;
   DeskView *m_deskview;
 };
 

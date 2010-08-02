@@ -82,13 +82,13 @@ eGameBid HumanPlayer::dropForGame () {
   formBid->enableAll();
   formBid->disableItem(whist);
   //formBid->disableItem(halfwhist);
-  formBid->bhalfvist->setEnabled(false);
+  formBid->btnHalfWhist->setEnabled(false);
   formBid->disableItem(gtPass);
   if (mMyGame != g86) formBid->disableItem(g86);
   formBid->disableLessThan(mMyGame);
-  formBid->showbullet->setEnabled(true);
+  formBid->btnShowScore->setEnabled(true);
   if (optWithoutThree)
-  	formBid->bwithoutthree->setEnabled(true);
+  	formBid->btnWithoutThree->setEnabled(true);
 
   do {
     tmpGamesType = mDeskView->selectBid(zerogame, zerogame);
@@ -144,9 +144,9 @@ eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
   formBid->enableItem(gtPass);
   formBid->disableItem(whist);
   //formBid->disableItem(halfwhist);
-  formBid->bhalfvist->setEnabled(false);
-  formBid->showbullet->setEnabled(true);
-  formBid->bwithoutthree->setEnabled(false);
+  formBid->btnHalfWhist->setEnabled(false);
+  formBid->btnShowScore->setEnabled(true);
+  formBid->btnWithoutThree->setEnabled(false);
   do {
     tmpGamesType = mDeskView->selectBid(lMove, rMove);
     if (tmpGamesType == 0) {
@@ -229,9 +229,9 @@ eGameBid HumanPlayer::moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerP
     formBid->disableAll();
     formBid->enableItem(gtPass);
     formBid->enableItem(whist);
-    formBid->showbullet->setEnabled(true);
+    formBid->btnShowScore->setEnabled(true);
     if (nGamerPass == 1 && MaxGame <= 81)
-		formBid->bhalfvist->setEnabled(true);
+		formBid->btnHalfWhist->setEnabled(true);
     mMyGame = mDeskView->selectBid(zerogame, zerogame);
     formBid->enableAll();
   }
