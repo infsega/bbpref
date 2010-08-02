@@ -243,8 +243,8 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_
   //Event = 0;
   CardWidht = CARDWIDTH;
   CardHeight = CARDHEIGHT;
-  xBorder = 20;
-  yBorder = 20;
+  m_leftRightMargin = 20;
+  m_topBottomMargin = 20;
  /* QPalette palette;
   palette.setBrush(QPalette::Window, QPixmap(":/pics/cloth.png"));
   setPalette(palette);*/
@@ -286,15 +286,15 @@ void DeskView::drawIMove (/*int x, int y*/) {
   switch (m_model->nCurrentStart.nValue) {
       case 1:
         x = width()/2-15;
-        y = height() - yBorder - CARDHEIGHT - 30; //- 40;
+        y = height() - m_topBottomMargin - CARDHEIGHT - 30; //- 40;
         break;
       case 2:
-        x = xBorder+20;
-        y = yBorder + CARDHEIGHT + 20; //+40;
+        x = m_leftRightMargin+20;
+        y = m_topBottomMargin + CARDHEIGHT + 20; //+40;
         break;
       case 3:
-        x = width() - xBorder - 20;
-        y = yBorder + CARDHEIGHT + 20; //+40;
+        x = width() - m_leftRightMargin - 20;
+        y = m_topBottomMargin + CARDHEIGHT + 20; //+40;
         break;
       default:
         qDebug() << "Invalid nCurrentStart.nValue =" << m_model->nCurrentStart.nValue;
@@ -594,7 +594,7 @@ void DeskView::drawPlayerMessage (int player, const QString msg, bool dim)
   switch (player) {
     case 1:
       x = -666;
-      y = -(yBorder+CARDHEIGHT+40);
+      y = -(m_topBottomMargin+CARDHEIGHT+40);
       break;
     case 2:
       x = 30;
@@ -725,16 +725,16 @@ void DeskView::getLeftTop (int player, int & left, int & top)
   left = 0; top = 0;
   switch (player) {
     case 1:
-      left = width()/4 + xBorder; //(DesktopWidth - (width() / 2 - 2 * xBorder)) / 2;
-      top = height() - yBorder - CARDHEIGHT; //DesktopHeight - yBorder - CARDHEIGHT;//mDeskView->CardHeight;//-10;
+      left = width()/4 + m_leftRightMargin; //(DesktopWidth - (width() / 2 - 2 * xBorder)) / 2;
+      top = height() - m_topBottomMargin - CARDHEIGHT; //DesktopHeight - yBorder - CARDHEIGHT;//mDeskView->CardHeight;//-10;
       break;
     case 2:
-      left = xBorder;
-      top = yBorder;// + 20;
+      left = m_leftRightMargin;
+      top = m_topBottomMargin;// + 20;
       break;
     case 3:
-      left = width() - xBorder;
-      top = yBorder;// + 20;
+      left = width() - m_leftRightMargin;
+      top = m_topBottomMargin;// + 20;
       break;
     default: ;
   }

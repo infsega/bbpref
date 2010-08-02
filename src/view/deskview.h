@@ -116,7 +116,7 @@ private:
   QPixmap *mKeyBmp[2];
   QPixmap *mDigitsBmp;
   int bidBmpX, bidBmpY;
-  int xBorder, yBorder;
+  int m_leftRightMargin, m_topBottomMargin;
   int CardWidht, CardHeight;
   QHash<QString, QPixmap *> cardI;
   QHash<int, QPixmap *> bidIcons;
