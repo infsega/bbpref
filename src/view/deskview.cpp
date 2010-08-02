@@ -236,7 +236,9 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_
   
   mIMoveBmp = new QPixmap(QString(":/pics/imove.png"));
 
-  if (!loadCards()) abort();
+  //if (!loadCards()) abort();
+  const bool result = loadCards();
+  Q_ASSERT(result);
 
   //Event = 0;
   CardWidht = CARDWIDTH;

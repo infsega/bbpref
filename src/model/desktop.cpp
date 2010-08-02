@@ -111,6 +111,11 @@ static const char * bidMessage(eGameBid game)
 
 
 static int whoseTrick (Card *p1, Card *p2, Card *p3, int trump) {
+  Q_ASSERT(p1 != 0);
+  Q_ASSERT(p2 != 0);
+  Q_ASSERT(p3 != 0);
+  // The next assert doesn't work because of dirty hack passing values > 4 here
+  //Q_ASSERT((trump >= 0) && (trump <= 4)); // 0 is no trump
   Card *maxC = p1;
   int res = 1;
   if ((maxC->suit() == p2->suit() && maxC->face() < p2->face()) || (maxC->suit() != trump && p2->suit() == trump)) {
@@ -126,6 +131,8 @@ static int whoseTrick (Card *p1, Card *p2, Card *p3, int trump) {
 
 
 static void cardName (char *dest, const Card *c) {
+  Q_ASSERT(dest != 0);
+  Q_ASSERT(c != 0);
   static const char *faceN[] = {" 7"," 8"," 9","10"," J"," Q"," K"," A"};
   static const char *suitN[] = {"S","C","D","H"};
   if (!c) { strcat(dest, "..."); return; }
@@ -189,6 +196,8 @@ PrefModel::~PrefModel () {
 
 
 void PrefModel::closePool () {
+  if(!mGameRunning)
+    return;
   WrapCounter counter(1, 1, 3);
   int i;
   tScores R[4];
@@ -311,12 +320,14 @@ int PrefModel::playerWithMaxPool () {
 
 
 Player *PrefModel::player (int num) {
-  if (num < 1 || num > 3) return 0;
+  //if (num < 1 || num > 3) return 0;
+  Q_ASSERT(num >= 1 || num <= 3);
   return mPlayers[num];
 }
 
 
 Player *PrefModel::player (const WrapCounter &cnt) {
+  Q_ASSERT(cnt.nValue >= 1 || cnt.nValue <= 3);
   return player(cnt.nValue);
 }
 
@@ -349,7 +360,8 @@ bool PrefModel::saveGame (const QString &name)  {
 
 
 void PrefModel::draw (bool emitSignal) {
-  if (!mDeskView) return;
+  //if (!mDeskView) return;
+  Q_ASSERT(mDeskView != 0);
   mDeskView->ClearScreen();
 
   if (!mGameRunning)
@@ -450,7 +462,8 @@ void PrefModel::runGame () {
       for (int f = 0; f < 32; f++) {
         QByteArray ba(dbgDT.readLine());
         Card *c = cardFromName(ba.constData());
-        if (!c) abort();
+        //if (!c) abort();
+        Q_ASSERT(c != 0);
         qDebug() << c->toString();
         mDeck << c;
         nCurrentStart.nValue = 1;
@@ -459,7 +472,9 @@ void PrefModel::runGame () {
       QByteArray ba(dbgD.readAll());
       dbgD.close();
       int pos = 0;
-      if (!mDeck.unserialize(ba, &pos)) abort();
+      const bool result = mDeck.unserialize(ba, &pos);
+      //if (!mDeck.unserialize(ba, &pos)) abort();
+      Q_ASSERT(result);
       nCurrentStart.nValue = 1;
     //} else if (allowDebugLog) {
     } else if (allowDebugLog) {
@@ -963,7 +978,15 @@ void PrefModel::runGame () {
 	  else
 	  	mDeskView->mySleep(1);
 
+      //////////////////////////////////////////////////////////////////
+      // Warning! Dirty hack!
+      //
+      // Assuming trump to be playerBids[0]-(playerBids[0]/10)*10 works
+      // ONLY because of special choice of numerical constants for no trump
+      // games!
+      // See prfconst.h for more details
       nPl = whoseTrick(mFirstCard, mSecondCard, mThirdCard, playerBids[0]-(playerBids[0]/10)*10)-1;
+      
       nCurrentMove = nCurrentMove+nPl;
       mDeskView->animateDeskToPlayer(nCurrentMove.nValue, mCardsOnDesk, optTakeAnim); // will clear mCardsOnDesk[]
       draw();
@@ -1046,7 +1069,6 @@ LabelRecordOnPaper:
       }
     }
   } // end of pool
-  mDeskView->drawPool();
   mDeskView->update();
   emit gameOver();
 

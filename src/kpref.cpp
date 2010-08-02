@@ -252,14 +252,13 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 
 void MainWindow::slotHelpAbout () {
   QMessageBox::about(this, tr("About"),
-    tr("<h2 align=center>&spades; <font color=red>&diams;</font> OpenPref 0.1.3 &clubs; <font color=red>&hearts;</font></h2>"
-	"<p>More information on <br/><a href=\"http://sourceforge.net/projects/openpref\">http://sourceforge.net/projects/openpref</a><br/>"
-    "Get latest sources on <br/><a href=\"http://gitorious.org/openprefqt4\">http://gitorious.org/openprefqt4</a><br/></p>\n"
-    "  <br/>Copyright &copy;2000-2010, OpenPref Developers:<br/>I.Azarniy, A.V.Fedotov, Ketmar Dark, K.Tokarev<br/>"
-	"<br/>"
-	"OpenPref is free software; you can redistribute it and/or modify<br/>"
+    tr("<h2 align=center>&spades; <font color=red>&diams;</font> OpenPref " OPENPREF_VERSION " &clubs; <font color=red>&hearts;</font></h2>"
+  "<p align=center>Open source cross-platform Preferans game</p>"
+  "<p align=center><a href=\"http://openpref.sourceforge.net/\">http://openpref.sourceforge.net</a></p>\n"
+  "<p align=center>Copyright &copy;2000-2010, OpenPref Developers:<br/>I.Azarniy<br/>A.V.Fedotov<br/>Ketmar Dark<br/>K.Tokarev</p>"
+	"<p>OpenPref is free software; you can redistribute it and/or modify<br/>"
     "it under the terms of the GNU General Public License (see file<br/>"
-    "COPYING or <a href=\"http://www.gnu.org/licenses\">http://www.gnu.org/licenses</a>)")
+    "COPYING or <a href=\"http://www.gnu.org/licenses\">http://www.gnu.org/licenses</a>)</p>")
   );
 }
 

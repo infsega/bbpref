@@ -68,9 +68,9 @@ protected:
 
   void loadLists (Player *aLeftPlayer, Player *aRightPlayer, CardList &aMaxCardList); // Набор списков
 
-  Card *GetMaxCardPere ();
-  Card *GetMaxCardWithOutPere ();
-  Card *GetMinCardWithOutVz ();
+  Card *GetMaxCardPere (int s0=0, int s1=0, int s2=0);
+  Card *GetMaxCardWithOutPere (int s0=0, int s1=0, int s2=0);
+  Card *GetMinCardWithOutVz (int s0=0, int s1=0, int s2=0);
 
   Card *Miser1 (Player *aLeftPlayer, Player *aRightPlayer);
   Card *Miser2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer);

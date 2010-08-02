@@ -214,7 +214,14 @@ int ScoreBoard::recordScores (
 }
 
 
-QString ScoreBoard::poolStr (int maxItems) const { return intList2Str(mPool, maxItems); }
+QString ScoreBoard::poolStr (int maxItems) const
+{
+  QString str = intList2Str(mPool, maxItems);
+  if (mPool.last() == optMaxPool)
+    str += "<<";
+  return str;
+}
+
 QString ScoreBoard::mountainStr (int maxItems) const { return intList2Str(mMountain, maxItems); }
 QString ScoreBoard::leftWhistsStr (int maxItems) const { return intList2Str(mLeftWhists, maxItems); }
 QString ScoreBoard::rightWhistsStr (int maxItems) const { return intList2Str(mRightWhists, maxItems); }

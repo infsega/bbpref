@@ -43,7 +43,7 @@ typedef unsigned char  card_t;
 
 
 static inline card_t CARD (int face, int suit) {
-  if (face < 7 || face > 14 || suit < 0 || suit > 3) abort();
+  Q_ASSERT(!(face < 7 || face > 14 || suit < 0 || suit > 3));
   return ((face-7)*4+suit)+1;
 }
 
@@ -177,9 +177,8 @@ static void abcPrune (
   }
   int crdNo = 0, crdNext, ccc = 0;
   for (int f = 0; f < 10; f++) if (hand->faces[f]) ccc++;
-  if (!ccc) {
-    abort();
-  }
+  //if (!ccc) { abort(); }
+  Q_ASSERT(ccc);
   //int movesChecked = 0, firstm = -1;
   while (crdNo < 10) {
     crdFace = hand->faces[crdNo];
@@ -194,7 +193,8 @@ static void abcPrune (
       if (gPassOutSuit >= 0 && crdSuit != gPassOutSuit && hand->suitCount[gPassOutSuit]) {
         // не, это очень херовая масть, начнём с верной масти
         tmp = hand->suitStart[gPassOutSuit];
-        if (tmp == crdNo) abort(); // а такого не бывает
+        //if (tmp == crdNo) abort(); // а такого не бывает
+        Q_ASSERT(tmp != crdNo);
         if (tmp < crdNo) break; // ну нет у нас такой, и уже всё, что было, проверили
         // скипаем и повторяем выборы
         crdNo = tmp;
@@ -313,7 +313,8 @@ doMove:
       printf("==%i takes; cards left: %i; turn: %i\n", who, xCardsLeft, turn);
       printStatus(turn, player, 1);
 #endif
-      if (xCardsLeft < 0) abort();
+      //if (xCardsLeft < 0) abort();
+      Q_ASSERT(xCardsLeft >= 0);
       if (!xCardsLeft) {
         // всё, отбомбились, даёшь коэффициенты
         gIterations++;
@@ -532,7 +533,8 @@ Card *CheatPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
 
   // build hands
   for (int c = 0; c < 3; c++) {
-    if (!plst[c]) abort();
+    //if (!plst[c]) abort();
+    Q_ASSERT(plst[c]);
     CardList *clst = &(plst[c]->mCards);
     //for (int f = 0; f < 10; f++) hds[c][f] = hands[c][f] = 0;
     int pos = 0;
@@ -670,11 +672,12 @@ Card *CheatPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
   }
   fprintf(stderr, "\n");
 */
-  if (move < 0) {
+  /*if (move < 0) {
     fprintf(stderr, "fuck!\n");
     //goto again;
     abort();
-  }
+  }*/
+  Q_ASSERT(move >= 0);
 
   Card *moveCard = newCard(FACE(hands[me][move]), SUIT(hands[me][move])+1);
 
