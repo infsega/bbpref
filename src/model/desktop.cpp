@@ -129,7 +129,7 @@ static int whoseTrick (Card *p1, Card *p2, Card *p3, int trump) {
   return res;
 }
 
-
+/// @todo move to Card class
 static void cardName (char *dest, const Card *c) {
   Q_ASSERT(dest != 0);
   Q_ASSERT(c != 0);
@@ -145,7 +145,7 @@ static void cardName (char *dest, const Card *c) {
   strcat(dest, "???");
 }
 
-
+/// @todo move to CardList class
 static void dumpCardList (char *dest, const CardList &lst) {
   CardList tmp(lst); tmp.mySort();
   for (int f = 0; f < tmp.size(); f++) {
@@ -358,6 +358,14 @@ bool PrefModel::saveGame (const QString &name)  {
   return true;
 }
 
+void PrefModel::drawBidBoard()
+{
+    Player *plr1 = player(1);
+    Player *plr2 = player(2);
+    Player *plr3 = player(3);
+    Q_ASSERT(plr1 && plr2 && plr3);
+    mDeskView->drawBidsBmp(mPlayerActive, plr1->tricksTaken(), plr2->tricksTaken(), plr3->tricksTaken(), gCurrentGame);
+}
 
 void PrefModel::draw (bool emitSignal) {
   //if (!mDeskView) return;
@@ -376,14 +384,9 @@ void PrefModel::draw (bool emitSignal) {
     if (mCardsOnDesk[f]) mDeskView->drawInGameCard(f, mCardsOnDesk[f], mOnDeskClosed);
 
   // draw bidboard
-  if (mPlayingRound) {
-    Player *plr1 = player(1);
-    Player *plr2 = player(2);
-    Player *plr3 = player(3);
-    if (plr1 && plr2 && plr3) {
-      mDeskView->drawBidsBmp(mPlayerActive, plr1->tricksTaken(), plr2->tricksTaken(), plr3->tricksTaken(), gCurrentGame);
-    }
-  }
+  if (mPlayingRound)
+    drawBidBoard();
+
   mDeskView->drawIMove();
   // 
   for (int f = 1; f <= 3; f++) {
