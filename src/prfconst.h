@@ -28,34 +28,13 @@
 
 
 typedef QList<int>  QIntList;
-//typedef QList<int>  QIntList;
-
-//  choose card size:
-// standard deck
-/*
-#define CARDWIDTH    71
-#define CARDHEIGHT   96
-*/
-/*
-// PrefClub deck
-#define CARDWIDTH    56
-#define CARDHEIGHT   67
-*/
 
 extern int CARDWIDTH;
 extern int CARDHEIGHT;
 
-#define FONTSIZE 10
-
 #define SUIT_OFFSET         22
 #define NEW_SUIT_OFFSET     ((CARDWIDTH)+8)
 #define CLOSED_CARD_OFFSET  ((CARDWIDTH)*0.55)
-
-//#define PEVENTMILLISECOND 50
-#define CARDINCOLODA 32
-#define MAXMASTLEN   8
-
-#define MAXGAMELEN   1024
 
 #define OPENPREF_VERSION "0.1.3"
 
@@ -111,6 +90,5 @@ int gameTricks (eGameBid gType);
 int gameWhists (eGameBid gType);
 int gameWhistsMin (eGameBid gType);
 int gamePoolPrice (eGameBid gType);
-
 
 #endif

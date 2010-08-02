@@ -550,7 +550,7 @@ void DeskView::drawText (const QString &str, int x, int y, QRgb textColor, QRgb 
   QBrush b(p.brush());
   b.setColor(outlineColor);
   p.setBrush(b);
-  y += FONTSIZE;
+  y += p.boundingRect(rect(), s).height();
   for (int dy = -1; dy <= 1; dy++) {
     for (int dx = -1; dx <= 1; dx++) {
       if (dx || dy) p.drawText(x+dx, y+dy, s);
