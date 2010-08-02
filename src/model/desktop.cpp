@@ -313,7 +313,7 @@ int PrefModel::playerWithMaxPool () {
 }
 
 
-inline Player *PrefModel::player (int num) {
+Player *PrefModel::player (int num) {
   //if (num < 1 || num > 3) return 0;
   Q_ASSERT(num >= 1 || num <= 3);
   return mPlayers[num];
