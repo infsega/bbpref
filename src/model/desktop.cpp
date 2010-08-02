@@ -422,7 +422,7 @@ void PrefModel::runGame () {
   eGameBid playerBids[4];
   //char *filename;
   //Card *mFirstCard, *mSecondCard, *mThirdCard;
-  int npasscounter;
+  //int npasscounter;
 
   mGameRunning = true;
   //mDeskView->ClearScreen();
@@ -434,8 +434,7 @@ void PrefModel::runGame () {
            player(3)->mScore.pool() >= optMaxPool)) {
     WrapCounter plrCounter(1, 1, 3);
     mPlayingRound = false;
-	mBiddingDone = false;
-    int nPl;
+    mBiddingDone = false;
     int nPassCounter = 0; // number of passes
     playerBids[3] = playerBids[2] = playerBids[1] = playerBids[0] = undefined;
     mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard = 0;
@@ -562,7 +561,8 @@ void PrefModel::runGame () {
     //npasscounter = 0;
     //bids4win[0] = bids4win[1] = bids4win[2] = bids4win[3] = undefined;
     int curBidIdx = 1;
-    while (npasscounter < 2) {
+    //while (npasscounter < 2) {
+    while(true) {
       //      
       Player *plr = player(plrCounter);
       mPlayerHi = plrCounter.nValue;
@@ -626,7 +626,7 @@ void PrefModel::runGame () {
           // show talon
           WrapCounter tmpPlayersCounter(1, 3);
           Player *PassOrVistPlayers;
-          int PassOrVist = 0, nPassOrVist = 0;
+          int PassOrVist = 0; //, nPassOrVist = 0;
           mOnDeskClosed = false;
           mCardsOnDesk[2] = mDeck.at(30);
           mCardsOnDesk[3] = mDeck.at(31);
@@ -648,6 +648,16 @@ void PrefModel::runGame () {
           mDeskView->animateDeskToPlayer(mPlayerActive, mCardsOnDesk, optTakeAnim); // will clear mCardsOnDesk[]
           draw();
 
+      //////////////////////////////////////////////////////////////////
+      // Warning! Dirty hack!
+      //
+      // Assuming trump to be playerBids[0]-(playerBids[0]/10)*10 works
+      // ONLY because of special choice of numerical constants for no trump
+      // games!
+      // See prfconst.h for more details      
+
+      m_trump = playerBids[0]-(playerBids[0]/10)*10;
+
           //bids4win[0] = bids4win[1] = bids4win[2] = bids4win[3] = undefined;
           // throw away
 		  eGameBid maxBid = gCurrentGame;
@@ -667,7 +677,7 @@ void PrefModel::runGame () {
             int nVisibleState = tmpg->invisibleHand();
             tmpg->setInvisibleHand(false);
             draw(false);
-            if (tmpg->number() != 1)
+            if (!tmpg->isHuman())
 				kpref->showHint(tr("Try to remember the cards"));
             /*else 
 				tmpg->setMessage(tr("Misere"));*/
@@ -716,7 +726,7 @@ void PrefModel::runGame () {
 		  }
           //PassOrVist = PassOrVistPlayers->moveFinalBid(gCurrentGame, gtPass, 0);
 		  PassOrVist = PassOrVistPlayers->moveFinalBid(gCurrentGame, whist, nPassCounter);
-          nPassOrVist = tmpPlayersCounter.nValue;
+//          nPassOrVist = tmpPlayersCounter.nValue;
           if (PassOrVistPlayers->myGame() == gtPass) {
             nPassCounter++;
             player(tmpPlayersCounter)->setMessage(tr("pass"));
@@ -898,90 +908,7 @@ void PrefModel::runGame () {
     // game (10 moves)
 	mBiddingDone = true;
     nCurrentMove = nCurrentStart;
-    for (int i = 1; i <= 10; i++) {
-      Player *tmpg;
-      mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard = 0;
-      if (gCurrentGame == raspass && (i >= 1 && i <= 3)) nCurrentMove = nCurrentStart;
-
-      dlogf("------------------------\nmove #%i", i);
-      for (int f = 1; f <= 3; f++) {
-        Player *plr = player(nCurrentMove); ++nCurrentMove;
-        xxBuf[0] = 0;
-        dumpCardList(xxBuf, plr->mCards);
-        dlogf("hand %i:%s", plr->number(), xxBuf);
-      }
-
-      mPlayerHi = nCurrentMove.nValue;
-      draw(false);
-	  player(mPlayerHi)->setMessage(tr("thinking..."));
-	  draw();
-      mDeskView->mySleep(0);
-      if (gCurrentGame == raspass && (i == 1 || i == 2)) {
-        Card *tmp4show, *ptmp4rpass;
-        tmp4show = mDeck.at(29+i);
-        ptmp4rpass = tmp4show;//newCard(6, tmp4show->suit());
-        mCardsOnDesk[0] = tmp4show;
-        draw();
-        mDeskView->mySleep(0);
-        //if (nCurrentMove.nValue != 1) mDeskView->mySleep(-1);
-        mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, ptmp4rpass, true);
-        //mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, 0);
-      } else {
-        mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, 0, false);
-      }
-      player(mPlayerHi)->setMessage("");
-
-      xxBuf[0] = 0;
-      cardName(xxBuf, mCardsOnDesk[nCurrentMove.nValue]);
-      dlogf(" (1st) player %i:%s", nCurrentMove.nValue, xxBuf);
-
-      ++nCurrentMove;
-      mPlayerHi = nCurrentMove.nValue;
-      player(mPlayerHi)->setMessage(tr("thinking..."));
-      draw();
-      mDeskView->mySleep(0);
-      mCardsOnDesk[nCurrentMove.nValue] = mSecondCard = makeGameMove(0, mFirstCard, false);
-      player(mPlayerHi)->setMessage("");
-
-      xxBuf[0] = 0;
-      cardName(xxBuf, mCardsOnDesk[nCurrentMove.nValue]);
-      dlogf(" (2nd) player %i:%s", nCurrentMove.nValue, xxBuf);
-
-      ++nCurrentMove;
-      mPlayerHi = nCurrentMove.nValue;
-      player(mPlayerHi)->setMessage(tr("thinking..."));
-      draw();
-      mDeskView->mySleep(0);
-      mCardsOnDesk[nCurrentMove.nValue] = mThirdCard = makeGameMove(mFirstCard, mSecondCard, false);
-      player(mPlayerHi)->setMessage("");
-
-      xxBuf[0] = 0;
-      cardName(xxBuf, mCardsOnDesk[nCurrentMove.nValue]);
-      dlogf(" (3rd) player %i:%s", nCurrentMove.nValue, xxBuf);
-
-      ++nCurrentMove;
-      draw();
-	  if (optPrefClub)
-      	mDeskView->mySleep(-1);
-	  else
-	  	mDeskView->mySleep(1);
-
-      //////////////////////////////////////////////////////////////////
-      // Warning! Dirty hack!
-      //
-      // Assuming trump to be playerBids[0]-(playerBids[0]/10)*10 works
-      // ONLY because of special choice of numerical constants for no trump
-      // games!
-      // See prfconst.h for more details
-      nPl = whoseTrick(mFirstCard, mSecondCard, mThirdCard, playerBids[0]-(playerBids[0]/10)*10)-1;
-      
-      nCurrentMove = nCurrentMove+nPl;
-      mDeskView->animateDeskToPlayer(nCurrentMove.nValue, mCardsOnDesk, optTakeAnim); // will clear mCardsOnDesk[]
-      draw();
-      tmpg = player(nCurrentMove);
-      tmpg->gotTrick();
-      draw(false);
-    }
+    playingRound();
 LabelRecordOnPaper:
 
     mPlayingRound = false;
@@ -1064,4 +991,86 @@ void PrefModel::calculateScore(int nPassCounter)
 			for (int i=1; i<=3; i++) 				
 				player(i)->mScore.mountainAmnesty(mm);
 	}
+}
+
+void PrefModel::playingRound()
+{
+  char xxBuf[1024];
+    for (int i = 1; i <= 10; i++) {
+      Player *tmpg;
+      mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard = 0;
+      if (gCurrentGame == raspass && (i >= 1 && i <= 3)) nCurrentMove = nCurrentStart;
+
+      dlogf("------------------------\nmove #%i", i);
+      for (int f = 1; f <= 3; f++) {
+        Player *plr = player(nCurrentMove); ++nCurrentMove;
+        xxBuf[0] = 0;
+        dumpCardList(xxBuf, plr->mCards);
+        dlogf("hand %i:%s", plr->number(), xxBuf);
+      }
+
+      mPlayerHi = nCurrentMove.nValue;
+      draw(false);
+	  player(mPlayerHi)->setMessage(tr("thinking..."));
+	  draw();
+      mDeskView->mySleep(0);
+      if (gCurrentGame == raspass && (i == 1 || i == 2)) {
+        Card *tmp4show, *ptmp4rpass;
+        tmp4show = mDeck.at(29+i);
+        ptmp4rpass = tmp4show;//newCard(6, tmp4show->suit());
+        mCardsOnDesk[0] = tmp4show;
+        draw();
+        mDeskView->mySleep(0);
+        //if (nCurrentMove.nValue != 1) mDeskView->mySleep(-1);
+        mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, ptmp4rpass, true);
+        //mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, 0);
+      } else {
+        mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, 0, false);
+      }
+      player(mPlayerHi)->setMessage("");
+
+      xxBuf[0] = 0;
+      cardName(xxBuf, mCardsOnDesk[nCurrentMove.nValue]);
+      dlogf(" (1st) player %i:%s", nCurrentMove.nValue, xxBuf);
+
+      ++nCurrentMove;
+      mPlayerHi = nCurrentMove.nValue;
+      player(mPlayerHi)->setMessage(tr("thinking..."));
+      draw();
+      mDeskView->mySleep(0);
+      mCardsOnDesk[nCurrentMove.nValue] = mSecondCard = makeGameMove(0, mFirstCard, false);
+      player(mPlayerHi)->setMessage("");
+
+      xxBuf[0] = 0;
+      cardName(xxBuf, mCardsOnDesk[nCurrentMove.nValue]);
+      dlogf(" (2nd) player %i:%s", nCurrentMove.nValue, xxBuf);
+
+      ++nCurrentMove;
+      mPlayerHi = nCurrentMove.nValue;
+      player(mPlayerHi)->setMessage(tr("thinking..."));
+      draw();
+      mDeskView->mySleep(0);
+      mCardsOnDesk[nCurrentMove.nValue] = mThirdCard = makeGameMove(mFirstCard, mSecondCard, false);
+      player(mPlayerHi)->setMessage("");
+
+      xxBuf[0] = 0;
+      cardName(xxBuf, mCardsOnDesk[nCurrentMove.nValue]);
+      dlogf(" (3rd) player %i:%s", nCurrentMove.nValue, xxBuf);
+
+      ++nCurrentMove;
+      draw();
+	  if (optPrefClub)
+      	mDeskView->mySleep(-1);
+	  else
+	  	mDeskView->mySleep(1);
+
+      nCurrentMove = nCurrentMove
+        + whoseTrick(mFirstCard, mSecondCard, mThirdCard, m_trump)-1;
+      
+      mDeskView->animateDeskToPlayer(nCurrentMove.nValue, mCardsOnDesk, optTakeAnim); // will clear mCardsOnDesk[]
+      draw();
+      tmpg = player(nCurrentMove);
+      tmpg->gotTrick();
+      draw(false);
+    }
 }

@@ -69,6 +69,7 @@ private:
   Card *makeGameMove (Card *lMove, Card *rMove, bool isPassOut);
   int playerWithMaxPool (); // except the players who closed the pool
   void calculateScore (int nPassCounter);
+  void playingRound();
 
 private:
   DeskView *mDeskView;
@@ -80,6 +81,7 @@ private:
   int mPlayerActive; // who plays (if not raspass and mPlayingRound=true)
   int mPlayerHi; // highlighted message number
   bool mOnDeskClosed;
+  int m_trump;
 };
 
 
