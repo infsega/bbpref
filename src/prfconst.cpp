@@ -26,15 +26,16 @@
 #include "prfconst.h"
 #include "card.h"
 
-
-
 bool optStalingrad = true;
 bool opt10Whist = false;
 bool optWhistGreedy = true;
 int optMaxPool = 10;
 eGameBid gCurrentGame;
-#ifndef WIN32	// May be #ifdef POSIX?
+
+#if defined Q_WS_X11 || defined Q_WS_QWS || defined Q_WS_MAC
 	QString optHumanName = getenv("USER");
+#elif defined Q_WS_WIN
+  QString optHumanName = ""; // get user name from WinAPI
 #else
 	QString optHumanName = "";
 #endif
