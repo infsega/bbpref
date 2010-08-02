@@ -432,6 +432,11 @@ void PrefModel::runGame () {
   while (!(player(1)->mScore.pool() >= optMaxPool &&
            player(2)->mScore.pool() >= optMaxPool &&
            player(3)->mScore.pool() >= optMaxPool)) {
+    // Number of current round
+    roundNo++;
+    if (optQuitAfterMaxRounds && roundNo > optMaxRounds)
+      break;
+
     WrapCounter plrCounter(1, 1, 3);
     mPlayingRound = false;
     mBiddingDone = false;
@@ -441,6 +446,7 @@ void PrefModel::runGame () {
     mDeck.newDeck();
     mDeck.shuffle();
 
+#ifndef QT_NO_DEBUG
   {
     QFile dbgD("dbg.deck");
     QFile dbgDT("dbg.deck.txt");
@@ -477,6 +483,7 @@ void PrefModel::runGame () {
       }
     }
   }
+#endif
 
     player(1)->clear();
     player(2)->clear();

@@ -30,6 +30,8 @@ bool optStalingrad = true;
 bool opt10Whist = false;
 bool optWhistGreedy = true;
 int optMaxPool = 10;
+bool optQuitAfterMaxRounds = false;
+int optMaxRounds = -1;
 eGameBid gCurrentGame;
 
 #if defined Q_WS_X11 || defined Q_WS_QWS || defined Q_WS_MAC

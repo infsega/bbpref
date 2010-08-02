@@ -69,6 +69,8 @@ extern bool optStalingrad;
 extern bool opt10Whist;
 extern bool optWhistGreedy;
 extern int optMaxPool;
+extern int optMaxRounds;
+extern bool optQuitAfterMaxRounds;
 extern QString optHumanName;
 extern QString optPlayerName1;
 extern bool optAlphaBeta1;

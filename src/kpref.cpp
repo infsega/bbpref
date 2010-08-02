@@ -188,6 +188,10 @@ void MainWindow::slotNewSingleGame () {
   dlg->cbAlphaBeta2->setChecked(optAlphaBeta2);
   // Conventions
   dlg->sbGame->setValue(optMaxPool);
+  if(optQuitAfterMaxRounds) {
+    dlg->cbRounds->setCheckState(Qt::Checked);
+    dlg->sbRounds->setValue(optMaxRounds);
+  }
   dlg->cbGreedy->setChecked(optWhistGreedy);
   dlg->rbTenWhist->setChecked(opt10Whist);
   dlg->cbStalin->setChecked(optStalingrad);
@@ -202,7 +206,11 @@ void MainWindow::slotNewSingleGame () {
 	optPlayerName2 = dlg->leName2->text();
 	optAlphaBeta2 = dlg->cbAlphaBeta2->isChecked();
     // Conventions
-	optMaxPool = dlg->sbGame->value();
+  optMaxPool = dlg->sbGame->value();
+  optQuitAfterMaxRounds = (dlg->cbRounds->checkState() == Qt::Checked);
+  if (optQuitAfterMaxRounds) {
+    optMaxRounds = dlg->sbRounds->value();
+  }
     optWhistGreedy = dlg->cbGreedy->isChecked();
     opt10Whist = dlg->rbTenWhist->isChecked();
     optStalingrad = dlg->cbStalin->isChecked();
@@ -266,6 +274,8 @@ void MainWindow::slotHelpAbout () {
 void MainWindow::saveOptions () {
   QSettings st;
   st.setValue("maxpool", optMaxPool);
+  st.setValue("quitmaxrounds", optQuitAfterMaxRounds);
+  st.setValue("maxrounds", optMaxRounds);
   st.setValue("stalin", optStalingrad);
   st.setValue("whist10", opt10Whist);
   st.setValue("whistgreedy", optWhistGreedy);
