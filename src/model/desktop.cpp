@@ -559,7 +559,7 @@ void PrefModel::runGame () {
     //draw();
 
     //  
-    npasscounter = 0;
+    //npasscounter = 0;
     //bids4win[0] = bids4win[1] = bids4win[2] = bids4win[3] = undefined;
     int curBidIdx = 1;
     while (npasscounter < 2) {
@@ -983,10 +983,48 @@ void PrefModel::runGame () {
       draw(false);
     }
 LabelRecordOnPaper:
-				
+
     mPlayingRound = false;
     ++nCurrentStart;
-    //   
+
+    calculateScore(nPassCounter);
+    closePool();
+
+    CardList tmplist[3];
+    if (nPassCounter != 2) {
+      //  
+      for (int f = 1; f <= 3; f++) {
+        Player *plr = player(f);
+        tmplist[f-1] = plr->mCards;
+        plr->mCards = plr->mCardsOut;
+        plr->setInvisibleHand(false);
+      }
+    }
+    mPlayingRound = true;
+    draw();
+    mDeskView->drawPool();
+/*	if (optPrefClub)
+    	mDeskView->mySleep(-1);
+	else
+		mDeskView->mySleep(4);*/
+    mPlayingRound = false;
+    if (nPassCounter != 2) {
+      //  
+      for (int f = 1; f <= 3; f++) {
+        Player *plr = player(f);
+        plr->mCardsOut = plr->mCards;
+        plr->mCards = tmplist[f-1];
+      }
+    }
+  } // end of pool
+  mDeskView->update();
+  emit gameOver();
+
+  mGameRunning = false;
+}
+
+void PrefModel::calculateScore(int nPassCounter)
+{
     for (int i = 1; i <= 3;i++ ) {
       Player *tmpg = player(i);
       Player *plr = player(mPlayerActive);
@@ -1026,39 +1064,4 @@ LabelRecordOnPaper:
 			for (int i=1; i<=3; i++) 				
 				player(i)->mScore.mountainAmnesty(mm);
 	}
-	closePool();
-    //    --        . 
-
-    //   --     
-    CardList tmplist[3];
-    if (nPassCounter != 2) {
-      //  
-      for (int f = 1; f <= 3; f++) {
-        Player *plr = player(f);
-        tmplist[f-1] = plr->mCards;
-        plr->mCards = plr->mCardsOut;
-        plr->setInvisibleHand(false);
-      }
-    }
-    mPlayingRound = true;
-    draw();
-    mDeskView->drawPool();
-/*	if (optPrefClub)
-    	mDeskView->mySleep(-1);
-	else
-		mDeskView->mySleep(4);*/
-    mPlayingRound = false;
-    if (nPassCounter != 2) {
-      //  
-      for (int f = 1; f <= 3; f++) {
-        Player *plr = player(f);
-        plr->mCardsOut = plr->mCards;
-        plr->mCards = tmplist[f-1];
-      }
-    }
-  } // end of pool
-  mDeskView->update();
-  emit gameOver();
-
-  mGameRunning = false;
 }

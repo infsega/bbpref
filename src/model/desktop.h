@@ -68,6 +68,7 @@ private:
   void internalInit ();
   Card *makeGameMove (Card *lMove, Card *rMove, bool isPassOut);
   int playerWithMaxPool (); // except the players who closed the pool
+  void calculateScore (int nPassCounter);
 
 private:
   DeskView *mDeskView;
