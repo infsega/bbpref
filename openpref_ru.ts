@@ -1,4 +1,6 @@
-<!DOCTYPE TS><TS>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.0" language="ru_RU">
 <context>
     <name>FormBid</name>
     <message>
@@ -65,6 +67,125 @@
     <name>Kpref</name>
     <message>
         <source>&amp;Game</source>
+        <translation type="obsolete">&amp;Игра</translation>
+    </message>
+    <message>
+        <source>&amp;New game...</source>
+        <translation type="obsolete">&amp;Новая игра...</translation>
+    </message>
+    <message>
+        <source>&amp;Open...</source>
+        <translation type="obsolete">&amp;Открыть...</translation>
+    </message>
+    <message>
+        <source>&amp;Save</source>
+        <translation type="obsolete">&amp;Сохранить</translation>
+    </message>
+    <message>
+        <source>&amp;Options...</source>
+        <translation type="obsolete">&amp;Параметры...</translation>
+    </message>
+    <message>
+        <source>&amp;Quit</source>
+        <translation type="obsolete">Вы&amp;ход</translation>
+    </message>
+    <message>
+        <source>&amp;Show</source>
+        <translation type="obsolete">По&amp;казать</translation>
+    </message>
+    <message>
+        <source>S&amp;core...</source>
+        <translation type="obsolete">С&amp;чет...</translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation type="obsolete">&amp;Справка</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="obsolete">О программе</translation>
+    </message>
+    <message>
+        <source>&amp;About...</source>
+        <translation type="obsolete">&amp;О программе...</translation>
+    </message>
+    <message>
+        <source>&amp;Preferans Rules...</source>
+        <translation type="obsolete">&amp;Правила преферанса...</translation>
+    </message>
+    <message>
+        <source>&amp;About OpenPref</source>
+        <translation type="obsolete">О &amp;программе OpenPref</translation>
+    </message>
+    <message>
+        <source>About &amp;Qt</source>
+        <translation type="obsolete">&amp;О Qt</translation>
+    </message>
+    <message>
+        <source>Player 1</source>
+        <translation type="obsolete">Игрок 1</translation>
+    </message>
+    <message>
+        <source>Player 2</source>
+        <translation type="obsolete">Игрок 2</translation>
+    </message>
+    <message>
+        <source>OpenPref</source>
+        <translation type="obsolete">OpenPref</translation>
+    </message>
+    <message>
+        <source>Do you really want to quit the game?</source>
+        <translation type="obsolete">Вы действительно хотите покинуть игру?</translation>
+    </message>
+    <message>
+        <source>This move is impossible</source>
+        <translation type="obsolete">Этот ход недопустим</translation>
+    </message>
+    <message>
+        <source>Your move</source>
+        <translation type="obsolete">Ваш ход</translation>
+    </message>
+    <message>
+        <source>Welcome to OpenPref!</source>
+        <translation type="obsolete">Добро пожаловать в OpenPref!</translation>
+    </message>
+    <message>
+        <source>Preferans Rules</source>
+        <translation type="obsolete">Правила преферанса</translation>
+    </message>
+    <message>
+        <source>Help system has not been implemented yet!
+See http://en.wikipedia.org/wiki/Preferans</source>
+        <translation type="obsolete">Справочная система пока не реализована!
+Смотрите http://ru.wikipedia.org/wiki/Преферанс</translation>
+    </message>
+    <message>
+        <source>Choose whist type</source>
+        <translation type="obsolete">Выберите тип виста</translation>
+    </message>
+    <message>
+        <source>Do you want to whist with opened cards?</source>
+        <translation type="obsolete">Вы хотите вистовать с открытыми картами?</translation>
+    </message>
+    <message>
+        <source>&lt;h2&gt;OpenPref 0.1.3&lt;/h2&gt;More information on &lt;br/&gt;&lt;a href=&quot;http://sourceforge.net/projects/openpref&quot;&gt;http://sourceforge.net/projects/openpref&lt;/a&gt;&lt;br/&gt;Get latest sources on &lt;br/&gt;&lt;a href=&quot;http://gitorious.org/openprefqt4&quot;&gt;http://gitorious.org/openprefqt4&lt;/a&gt;&lt;br/&gt;
+&lt;br/&gt;Copyright (c) 2000-2009, OpenPref Developers:&lt;br/&gt;I.Azarniy, A.V.Fedotov, Ketmar Dark, K.Tokarev&lt;br/&gt;&lt;br/&gt;OpenPref is free software; you can redistribute it and/or modify&lt;br/&gt;it under the terms of the GNU General Public License (see file&lt;br/&gt;COPYING or &lt;a href=&quot;http://www.gnu.org/licenses&quot;&gt;http://www.gnu.org/licenses&lt;/a&gt;)</source>
+        <translation type="obsolete">&lt;h2&gt;OpenPref 0.1.3&lt;/h2&gt;Больше информации на сайте &lt;br/&gt;&lt;a href=&quot;http://sourceforge.net/projects/openpref&quot;&gt;http://sourceforge.net/projects/openpref&lt;/a&gt;&lt;br/&gt;Получите последние исходники на&lt;br/&gt;&lt;a href=&quot;http://gitorious.org/openprefqt4&quot;&gt;http://gitorious.org/openprefqt4&lt;/a&gt;&lt;br/&gt;(new line)
+&lt;br/&gt;Copyright (c) 2000-2009, Разработчики OpenPref:&lt;br/&gt;I.Azarniy, A.V.Fedotov, Ketmar Dark, K.Tokarev&lt;br/&gt;&lt;br/&gt;OpenPref - это свободное программное обеспечение; вы можете распространять и/или изменять&lt;br/&gt;его согласно GNU General Public License (смотрите файл&lt;br/&gt;COPYING или &lt;a href=&quot;http://www.gnu.org/licenses&quot;&gt;http://www.gnu.org/licenses&lt;/a&gt;)</translation>
+    </message>
+    <message>
+        <source>Select two cards to drop</source>
+        <translation type="obsolete">Снесите две карты</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <source>Welcome to OpenPref!</source>
+        <translation>Добро пожаловать в OpenPref!</translation>
+    </message>
+    <message>
+        <source>&amp;Game</source>
         <translation>&amp;Игра</translation>
     </message>
     <message>
@@ -100,14 +221,6 @@
         <translation>&amp;Справка</translation>
     </message>
     <message>
-        <source>About</source>
-        <translation>О программе</translation>
-    </message>
-    <message>
-        <source>&amp;About...</source>
-        <translation type="obsolete">&amp;О программе...</translation>
-    </message>
-    <message>
         <source>&amp;Preferans Rules...</source>
         <translation>&amp;Правила преферанса...</translation>
     </message>
@@ -120,14 +233,6 @@
         <translation>&amp;О Qt</translation>
     </message>
     <message>
-        <source>Player 1</source>
-        <translation>Игрок 1</translation>
-    </message>
-    <message>
-        <source>Player 2</source>
-        <translation>Игрок 2</translation>
-    </message>
-    <message>
         <source>OpenPref</source>
         <translation>OpenPref</translation>
     </message>
@@ -136,16 +241,20 @@
         <translation>Вы действительно хотите покинуть игру?</translation>
     </message>
     <message>
-        <source>This move is impossible</source>
-        <translation>Этот ход недопустим</translation>
+        <source>About</source>
+        <translation>О программе</translation>
     </message>
     <message>
-        <source>Your move</source>
-        <translation>Ваш ход</translation>
+        <source>&lt;h2 align=center&gt;&amp;spades; &lt;font color=red&gt;&amp;diams;&lt;/font&gt; OpenPref </source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Welcome to OpenPref!</source>
-        <translation>Добро пожаловать в OpenPref!</translation>
+        <source>Player 1</source>
+        <translation>Игрок 1</translation>
+    </message>
+    <message>
+        <source>Player 2</source>
+        <translation>Игрок 2</translation>
     </message>
     <message>
         <source>Preferans Rules</source>
@@ -158,22 +267,24 @@ See http://en.wikipedia.org/wiki/Preferans</source>
 Смотрите http://ru.wikipedia.org/wiki/Преферанс</translation>
     </message>
     <message>
+        <source>This move is impossible</source>
+        <translation>Этот ход недопустим</translation>
+    </message>
+    <message>
+        <source>Your move</source>
+        <translation>Ваш ход</translation>
+    </message>
+    <message>
+        <source>Select two cards to drop</source>
+        <translation>Снесите две карты</translation>
+    </message>
+    <message>
         <source>Choose whist type</source>
         <translation>Выберите тип виста</translation>
     </message>
     <message>
         <source>Do you want to whist with opened cards?</source>
         <translation>Вы хотите вистовать с открытыми картами?</translation>
-    </message>
-    <message>
-        <source>&lt;h2&gt;OpenPref 0.1.3&lt;/h2&gt;More information on &lt;br/&gt;&lt;a href=&quot;http://sourceforge.net/projects/openpref&quot;&gt;http://sourceforge.net/projects/openpref&lt;/a&gt;&lt;br/&gt;Get latest sources on &lt;br/&gt;&lt;a href=&quot;http://gitorious.org/openprefqt4&quot;&gt;http://gitorious.org/openprefqt4&lt;/a&gt;&lt;br/&gt;
-&lt;br/&gt;Copyright (c) 2000-2009, OpenPref Developers:&lt;br/&gt;I.Azarniy, A.V.Fedotov, Ketmar Dark, K.Tokarev&lt;br/&gt;&lt;br/&gt;OpenPref is free software; you can redistribute it and/or modify&lt;br/&gt;it under the terms of the GNU General Public License (see file&lt;br/&gt;COPYING or &lt;a href=&quot;http://www.gnu.org/licenses&quot;&gt;http://www.gnu.org/licenses&lt;/a&gt;)</source>
-        <translation>&lt;h2&gt;OpenPref 0.1.3&lt;/h2&gt;Больше информации на сайте &lt;br/&gt;&lt;a href=&quot;http://sourceforge.net/projects/openpref&quot;&gt;http://sourceforge.net/projects/openpref&lt;/a&gt;&lt;br/&gt;Получите последние исходники на&lt;br/&gt;&lt;a href=&quot;http://gitorious.org/openprefqt4&quot;&gt;http://gitorious.org/openprefqt4&lt;/a&gt;&lt;br/&gt;(new line)
-&lt;br/&gt;Copyright (c) 2000-2009, Разработчики OpenPref:&lt;br/&gt;I.Azarniy, A.V.Fedotov, Ketmar Dark, K.Tokarev&lt;br/&gt;&lt;br/&gt;OpenPref - это свободное программное обеспечение; вы можете распространять и/или изменять&lt;br/&gt;его согласно GNU General Public License (смотрите файл&lt;br/&gt;COPYING или &lt;a href=&quot;http://www.gnu.org/licenses&quot;&gt;http://www.gnu.org/licenses&lt;/a&gt;)</translation>
-    </message>
-    <message>
-        <source>Select two cards to drop</source>
-        <translation>Снесите две карты</translation>
     </message>
 </context>
 <context>
@@ -290,6 +401,14 @@ See http://en.wikipedia.org/wiki/Preferans</source>
         <source>&amp;Without three</source>
         <translation>&amp;Без трех</translation>
     </message>
+    <message>
+        <source>Rounds:</source>
+        <translation>Число кругов:</translation>
+    </message>
+    <message>
+        <source>End game after specified number of rounds</source>
+        <translation>Закончить игру после определенного количества кругов</translation>
+    </message>
 </context>
 <context>
     <name>OptDialog</name>
@@ -390,7 +509,7 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     <name>PrefDesktop</name>
     <message>
         <source>thinking...</source>
-        <translation>думаю...</translation>
+        <translation type="obsolete">думаю...</translation>
     </message>
     <message>
         <source>PASS</source>
@@ -399,6 +518,73 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     <message>
         <source>WHIST</source>
         <translation type="obsolete">ВИСТ</translation>
+    </message>
+    <message>
+        <source>whist</source>
+        <translation type="obsolete">вист</translation>
+    </message>
+    <message>
+        <source>pass</source>
+        <translation type="obsolete">пас</translation>
+    </message>
+    <message>
+        <source>6 no trump</source>
+        <translation type="obsolete">6 без козыря</translation>
+    </message>
+    <message>
+        <source>7 no trump</source>
+        <translation type="obsolete">7 без козыря</translation>
+    </message>
+    <message>
+        <source>8 no trump</source>
+        <translation type="obsolete">8 без козыря</translation>
+    </message>
+    <message>
+        <source>9 no trump</source>
+        <translation type="obsolete">9 без козыря</translation>
+    </message>
+    <message>
+        <source>10 no trump</source>
+        <translation type="obsolete">10 без козыря</translation>
+    </message>
+    <message>
+        <source>Try to remember the cards</source>
+        <translation type="obsolete">Постарайтесь запомнить карты</translation>
+    </message>
+    <message>
+        <source>Misere</source>
+        <translation type="obsolete">Мизер</translation>
+    </message>
+    <message>
+        <source>Select two cards to drop</source>
+        <translation type="obsolete">Снесите две карты</translation>
+    </message>
+    <message>
+        <source>without three</source>
+        <translation type="obsolete">без трех</translation>
+    </message>
+    <message>
+        <source>close</source>
+        <translation type="obsolete">втемную</translation>
+    </message>
+    <message>
+        <source>open</source>
+        <translation type="obsolete">в открытую</translation>
+    </message>
+    <message>
+        <source>halfwhist</source>
+        <translation type="obsolete">полвиста</translation>
+    </message>
+    <message>
+        <source>half of whist</source>
+        <translation type="obsolete">полвиста</translation>
+    </message>
+</context>
+<context>
+    <name>PrefModel</name>
+    <message>
+        <source>thinking...</source>
+        <translation>думаю...</translation>
     </message>
     <message>
         <source>whist</source>
@@ -429,20 +615,20 @@ See http://en.wikipedia.org/wiki/Preferans</source>
         <translation>10 без козыря</translation>
     </message>
     <message>
-        <source>Try to remember the cards</source>
-        <translation>Постарайтесь запомнить карты</translation>
-    </message>
-    <message>
         <source>Misere</source>
         <translation>Мизер</translation>
+    </message>
+    <message>
+        <source>Try to remember the cards</source>
+        <translation>Постарайтесь запомнить карты</translation>
     </message>
     <message>
         <source>Select two cards to drop</source>
         <translation>Снесите две карты</translation>
     </message>
     <message>
-        <source>without three</source>
-        <translation>без трех</translation>
+        <source>half of whist</source>
+        <translation>полвиста</translation>
     </message>
     <message>
         <source>close</source>
@@ -452,13 +638,12 @@ See http://en.wikipedia.org/wiki/Preferans</source>
         <source>open</source>
         <translation>в открытую</translation>
     </message>
+</context>
+<context>
+    <name>ScoreWidget</name>
     <message>
-        <source>halfwhist</source>
-        <translation type="obsolete">полвиста</translation>
-    </message>
-    <message>
-        <source>half of whist</source>
-        <translation>полвиста</translation>
+        <source>Score</source>
+        <translation>Пуля</translation>
     </message>
 </context>
 </TS>
