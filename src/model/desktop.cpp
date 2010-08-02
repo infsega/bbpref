@@ -181,10 +181,9 @@ void PrefModel::internalInit () {
 }
 
 
-PrefModel::PrefModel (DeskView *aDeskView) : QObject(0) {
-  mPlayingRound = false;
-  mGameRunning = false;  
-  mDeskView = aDeskView;
+PrefModel::PrefModel (DeskView *aDeskView) : QObject(0), mPlayingRound(false),
+                            mGameRunning(false), mDeskView(aDeskView), m_trump(0)
+{
   internalInit();
 }
 
@@ -655,16 +654,6 @@ void PrefModel::runGame () {
           mDeskView->animateDeskToPlayer(mPlayerActive, mCardsOnDesk, optTakeAnim); // will clear mCardsOnDesk[]
           draw();
 
-      //////////////////////////////////////////////////////////////////
-      // Warning! Dirty hack!
-      //
-      // Assuming trump to be playerBids[0]-(playerBids[0]/10)*10 works
-      // ONLY because of special choice of numerical constants for no trump
-      // games!
-      // See prfconst.h for more details      
-
-      m_trump = playerBids[0]-(playerBids[0]/10)*10;
-
           //bids4win[0] = bids4win[1] = bids4win[2] = bids4win[3] = undefined;
           // throw away
 		  eGameBid maxBid = gCurrentGame;
@@ -915,6 +904,18 @@ void PrefModel::runGame () {
     // game (10 moves)
 	mBiddingDone = true;
     nCurrentMove = nCurrentStart;
+
+      //////////////////////////////////////////////////////////////////
+      // Warning! Dirty hack!
+      //
+      // Assuming trump to be playerBids[0]-(playerBids[0]/10)*10 works
+      // ONLY because of special choice of numerical constants for no trump
+      // games!
+      // See prfconst.h for more details      
+
+      m_trump = playerBids[0]-(playerBids[0]/10)*10;
+      qDebug() << "Trump = " << m_trump;
+
     playingRound();
 LabelRecordOnPaper:
 
