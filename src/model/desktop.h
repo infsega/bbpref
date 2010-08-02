@@ -51,7 +51,6 @@ public:
   bool unserialize (QByteArray &ba, int *pos);
 
   Player *player (int num);
-  Player *player (const WrapCounter &cnt);
   Player *currentPlayer () const { return mPlayers[nCurrentMove.nValue]; }
   int activePlayerNumber () const { return mPlayerActive; }
 
@@ -65,6 +64,7 @@ public:
   bool mBiddingDone;
 
 private:
+  Player *player (const WrapCounter &cnt);
   void internalInit ();
   Card *makeGameMove (Card *lMove, Card *rMove, bool isPassOut);
   int playerWithMaxPool (); // except the players who closed the pool
