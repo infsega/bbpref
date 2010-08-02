@@ -570,11 +570,6 @@ void DeskView::MessageBox (const QString &text, const QString &caption) {
   mb.exec();
 }
 
-void DeskView::StatusBar (const QString &text) {
-  qDebug() << text;
-  //StatusBar1->showMessage(text);
-}
-
 eGameBid DeskView::selectBid (eGameBid lMove, eGameBid rMove) {
   Q_UNUSED(lMove)
   Q_UNUSED(rMove)

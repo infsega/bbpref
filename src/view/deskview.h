@@ -61,7 +61,6 @@ public:
   void MessageBox (const QString &text, const QString &caption);
   //----------------------------- for human player
   eGameBid selectBid (eGameBid lMove, eGameBid rMove);
-  void StatusBar (const QString &text);
 
   void drawPKeyBmp (bool show);
   void drawPool ();
@@ -78,6 +77,9 @@ public:
 
   bool loadCards ();
   void freeCards ();
+
+signals:
+  void showHint (const QString text);
 
 public:
   int imoveX, imoveY;
