@@ -65,7 +65,6 @@ public:
   bool mBiddingDone;
 
 private:
-  Player *addPlayer (Player *);
   void internalInit ();
   Card *makeGameMove (Card *lMove, Card *rMove, bool isPassOut);
   int playerWithMaxPool (); // except the players who closed the pool
@@ -78,7 +77,7 @@ private:
   Card *mCardsOnDesk[4];
   bool mPlayingRound;
   int mPlayerActive; // who plays (if not raspass and mPlayingRound=true)
-  int mPlayerHi; // подсвеченая мессага
+  int mPlayerHi; // highlighted message number
   bool mOnDeskClosed;
 };
 

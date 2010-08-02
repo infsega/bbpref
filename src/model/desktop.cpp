@@ -167,15 +167,15 @@ void PrefModel::internalInit () {
   mPlayers << 0; // 0th player is nobody
   //addPlayer(new AiPlayer(1));
   // I Hate This Game :)
-  addPlayer(new HumanPlayer(1, mDeskView));
+  mPlayers << new HumanPlayer(1, mDeskView);
   if (!optAlphaBeta1)
-    addPlayer(new AiPlayer(2, mDeskView));
+    mPlayers << new AiPlayer(2, mDeskView);
   else 
-    addPlayer(new CheatPlayer(2, mDeskView));
+    mPlayers << new CheatPlayer(2, mDeskView);
   if (!optAlphaBeta2)
-    addPlayer(new AiPlayer(3, mDeskView));
+    mPlayers << new AiPlayer(3, mDeskView);
   else 
-    addPlayer(new CheatPlayer(3, mDeskView));
+    mPlayers << new CheatPlayer(3, mDeskView);
 
   mOnDeskClosed = false;
 }
@@ -246,12 +246,6 @@ void PrefModel::closePool () {
     i2 = counter.nValue;
     player(i)->mScore.setWhists(R[i].leftWh+R[i].rightWh-R[i1].rightWh-R[i2].leftWh);
   }
-}
-
-
-Player *PrefModel::addPlayer (Player *plr) {
-  mPlayers << plr;
-  return plr;
 }
 
 
