@@ -166,6 +166,7 @@ void ScoreWidget::keyPressEvent (QKeyEvent *event)
       case Qt::Key_Space:
       //qDebug() << "geom" << QString(saveGeometry());
         settings.setValue( "score/geometry", saveGeometry());
+        //qDebug() << "save";
         hide();
         break;
       default: ;
@@ -175,6 +176,9 @@ void ScoreWidget::keyPressEvent (QKeyEvent *event)
 void ScoreWidget::mouseReleaseEvent(QMouseEvent *event)
 {
   Q_UNUSED(event)
+  QSettings settings;
+  settings.setValue( "score/geometry", saveGeometry());
+  //qDebug() << "save";
   hide();
 }
 
@@ -183,7 +187,7 @@ void ScoreWidget::paintEvent(QPaintEvent *event)
   Q_UNUSED(event)
 
   QString sb, sm, slw, srw;
-  int tw;
+  int tw[3];
     QPainter p;
     p.begin(this);
     p.drawPixmap(0, 0, *(m_paperBmp));
@@ -194,9 +198,10 @@ void ScoreWidget::paintEvent(QPaintEvent *event)
     sm = plr->mScore.mountainStr(7);
     slw = plr->mScore.leftWhistsStr(14);
     srw = plr->mScore.rightWhistsStr(14);
-    tw = plr->mScore.whists();
-    showPlayerScore(i, sb, sm, slw, srw, tw);
+    tw[i-1] = plr->mScore.whists();
+    showPlayerScore(i, sb, sm, slw, srw, tw[i-1]);
   }
+  Q_ASSERT(tw[0] + tw[1] + tw[2] == 0);
 
   /*QStyleOptionSizeGrip *opt = new QStyleOptionSizeGrip();
   opt->corner = Qt::BottomRightCorner;
@@ -220,6 +225,7 @@ void ScoreWidget::showEvent(QShowEvent *event)
   QSettings settings;
   setMaximumSize(500, (int) (static_cast<QWidget *>(parent())->height()));
   restoreGeometry(settings.value("score/geometry").toByteArray());
+  //qDebug() << "restore";
   //adjustSize();
   //resize(410,480);
 }
