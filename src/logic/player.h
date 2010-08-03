@@ -55,16 +55,16 @@ public:
 
   virtual Card *makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) = 0; //move
   virtual eGameBid makeBid (eGameBid lMove, eGameBid rMove) = 0; //
-  virtual eGameBid makeFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerWhist) = 0; // после получения игроком прикупа -- пасс или вист
-  virtual eGameBid dropForGame () = 0; // сброс для игры
-  virtual eGameBid dropForMisere () = 0; // сброс для мизера
-  virtual void returnDrop (); // вернуть сброс
+  virtual eGameBid makeFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerWhist) = 0; // п©п╬я│п╩п╣ п©п╬п╩я┐я┤п╣п╫п╦я▐ п╦пЁя─п╬п╨п╬п╪ п©я─п╦п╨я┐п©п╟ -- п©п╟я│я│ п╦п╩п╦ п╡п╦я│я┌
+  virtual eGameBid dropForGame () = 0; // я│п╠я─п╬я│ п╢п╩я▐ п╦пЁя─я▀
+  virtual eGameBid dropForMisere () = 0; // я│п╠я─п╬я│ п╢п╩я▐ п╪п╦п╥п╣я─п╟
+  virtual void returnDrop (); // п╡п╣я─п╫я┐я┌я▄ я│п╠я─п╬я│
 
   virtual bool chooseClosedWhist () = 0;
 
   /// @todo Move to view delegate
   virtual void draw ();
-  virtual void highlightCard (int lx, int ly); // подсветить карту по данным координатам (и перерисовать руку, если надо)
+  virtual void highlightCard (int lx, int ly); // п©п╬п╢я│п╡п╣я┌п╦я┌я▄ п╨п╟я─я┌я┐ п©п╬ п╢п╟п╫п╫я▀п╪ п╨п╬п╬я─п╢п╦п╫п╟я┌п╟п╪ (п╦ п©п╣я─п╣я─п╦я│п╬п╡п╟я┌я▄ я─я┐п╨я┐, п╣я│п╩п╦ п╫п╟п╢п╬)
 
   void setMessage (const QString msg) { mMessage = msg; }
   const QString message () const { return mMessage; }
@@ -96,7 +96,7 @@ public:
 
   ScoreBoard mScore;
   CardList mCards; // my cards
-  CardList mCardsOut; // во взятках мои
+  CardList mCardsOut; // п╡п╬ п╡п╥я▐я┌п╨п╟я┘ п╪п╬п╦
   // this part for miser catches
   Card *mCardCarryThru;
 
