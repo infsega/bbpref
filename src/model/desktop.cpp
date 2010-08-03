@@ -568,7 +568,7 @@ void PrefModel::runGame () {
     //bids4win[0] = bids4win[1] = bids4win[2] = bids4win[3] = undefined;
     int curBidIdx = 1;
     //while (npasscounter < 2) {
-    while(true) {
+    forever {
       //      
       Player *plr = player(plrCounter);
       mPlayerHi = plrCounter.nValue;
