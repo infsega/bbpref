@@ -57,6 +57,8 @@ public:
 signals:
   void deskChanged ();
   void gameOver ();
+  void showHint (const QString text);
+  void clearHint();
 
 public:
   WrapCounter nCurrentStart, nCurrentMove;

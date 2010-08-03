@@ -78,9 +78,6 @@ public:
   bool loadCards ();
   void freeCards ();
 
-signals:
-  void showHint (const QString text);
-
 public:
   int imoveX, imoveY;
 

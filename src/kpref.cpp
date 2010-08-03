@@ -85,6 +85,8 @@ MainWindow::MainWindow () {
   m_PrefModel = new PrefModel(mDeskView);
   mDeskView->setModel(m_PrefModel);
   connect(m_PrefModel, SIGNAL(deskChanged()), mDeskView, SLOT(update()));
+  connect(m_PrefModel, SIGNAL(showHint(QString)), this, SLOT(showHint(QString)));
+  connect(m_PrefModel, SIGNAL(clearHint()), this, SLOT(clearHint()));
   HintBar->showMessage(tr("Welcome to OpenPref!"));
   FormBid *formBid = FormBid::instance(mDeskView);
   formBid->hide();
@@ -230,6 +232,8 @@ void MainWindow::slotNewSingleGame () {
   m_PrefModel = new PrefModel(mDeskView);    
   mDeskView->setModel(m_PrefModel);
   connect(m_PrefModel, SIGNAL(deskChanged()), mDeskView, SLOT(update()));
+  connect(m_PrefModel, SIGNAL(showHint(QString)), this, SLOT(showHint(QString)));
+  connect(m_PrefModel, SIGNAL(clearHint()), this, SLOT(clearHint()));
   
   optPassCount = 0;
   actFileOpen->setEnabled(false);

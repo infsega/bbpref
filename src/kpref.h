@@ -52,6 +52,9 @@ public slots:
 
   void slotQuit ();
 
+  void showHint(QString hint);
+  void clearHint();
+
 private:
   void adjustDesk ();
   void initMenuBar();
@@ -66,8 +69,6 @@ private:
 public:
   PrefModel *m_PrefModel;
   DeskView *mDeskView;
-  void showHint(QString hint);
-  void clearHint();
 
 protected:
   void  keyPressEvent (QKeyEvent *);

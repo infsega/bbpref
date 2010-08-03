@@ -34,7 +34,6 @@
 #include "debug.h"
 #include "deskview.h"
 #include "ncounter.h"
-#include "kpref.h"
 #include "player.h"
 #include "desktop.h"
 #include "plscore.h"
@@ -424,8 +423,7 @@ void PrefModel::runGame () {
   //int npasscounter;
 
   mGameRunning = true;
-  //mDeskView->ClearScreen();
-  kpref->clearHint();
+  emit clearHint();
   // while !end of pool
   int roundNo = 0;
   while (!(player(1)->mScore.pool() >= optMaxPool &&
@@ -645,13 +643,13 @@ void PrefModel::runGame () {
           draw();
           //drawBidWindows(bids4win, 0);
           if (currentPlayer->number() != 1)
-				kpref->showHint(tr("Try to remember the cards"));
+              emit showHint(tr("Try to remember the cards"));
 		  if (optPrefClub)
 		  	mDeskView->mySleep(-1);
 		  else
-		  	mDeskView->mySleep(4);
-		  kpref->clearHint();
-          // deal talon
+			mDeskView->mySleep(4);
+		  emit clearHint();
+		  // deal talon
           currentPlayer->dealCard(mDeck.at(30));
           currentPlayer->dealCard(mDeck.at(31));
           mDeskView->animateDeskToPlayer(mPlayerActive, mCardsOnDesk, optTakeAnim); // will clear mCardsOnDesk[]
@@ -664,12 +662,12 @@ void PrefModel::runGame () {
             // not misere
             nCurrentMove.nValue = i;
             draw(false);
-			if (mPlayerActive == 1)
-				kpref->showHint(tr("Select two cards to drop"));
+            if (mPlayerActive == 1)
+                emit showHint(tr("Select two cards to drop"));
             else
 				mDeskView->mySleep(2);
 			playerBids[0] = gCurrentGame = currentPlayer->dropForGame();
-			kpref->clearHint();
+			emit clearHint();
           } else {	// playing misere
             // show all cards
             int tempint = nCurrentMove.nValue;
@@ -677,7 +675,7 @@ void PrefModel::runGame () {
             currentPlayer->setInvisibleHand(false);
             draw(false);
             if (!currentPlayer->isHuman())
-				kpref->showHint(tr("Try to remember the cards"));
+                emit showHint(tr("Try to remember the cards"));
             /*else 
 				tmpg->setMessage(tr("Misere"));*/
             // wait for event
@@ -694,8 +692,8 @@ void PrefModel::runGame () {
 				mDeskView->mySleep(2);
 
 			playerBids[0] = gCurrentGame = currentPlayer->dropForMisere();
-			kpref->clearHint();
-            nCurrentMove.nValue = tempint;
+			emit clearHint();
+			nCurrentMove.nValue = tempint;
           }		  	
           passOrWhistPlayersCounter.nValue = i;
 
