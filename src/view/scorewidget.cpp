@@ -37,7 +37,7 @@
 #include "desktop.h"
 #include "player.h"
 
-static void drawRotatedText (QPainter &p, int x, int y, float angle, const QString &text) {
+static void drawRotatedText (QPainter &p, int x, int y, float angle, const QString text) {
   p.translate(x, y);
   p.rotate(angle);
   p.drawText(0, 0, text);
@@ -45,7 +45,7 @@ static void drawRotatedText (QPainter &p, int x, int y, float angle, const QStri
   p.translate(-1*x, -1*y);
 }
 
-static void drawRotatedText (QPainter &p, int x, int y, int width, int height, float angle, const QString &text) {
+static void drawRotatedText (QPainter &p, int x, int y, int width, int height, float angle, const QString text) {
   p.translate(x, y);
   p.rotate(angle);
   p.drawText(QRectF(0,0,width,height),text,QTextOption(Qt::AlignHCenter));

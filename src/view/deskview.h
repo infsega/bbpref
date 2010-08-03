@@ -57,8 +57,8 @@ public:
   void ClearBox (int x1, int y1, int x2, int y2);
   
   void drawCard (const Card *card, int x, int y, bool opened, bool hilight);
-  void drawText (const QString &str, int x, int y, QRgb textColor=qRgb(255,255,255), QRgb outlineColor=qRgb(0,0,0));
-  void MessageBox (const QString &text, const QString &caption);
+  void drawText (const QString str, int x, int y, QRgb textColor=qRgb(255,255,255), QRgb outlineColor=qRgb(0,0,0));
+  void MessageBox (const QString text, const QString caption);
   //----------------------------- for human player
   eGameBid selectBid (eGameBid lMove, eGameBid rMove);
 

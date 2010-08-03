@@ -325,7 +325,7 @@ inline Player *PrefModel::player (const WrapCounter &cnt) {
 }
 
 
-bool PrefModel::loadGame (const QString &name)  {
+bool PrefModel::loadGame (const QString name)  {
   QFile fl(name);
   if (!fl.open(QIODevice::ReadOnly)) {
       printf("Load failed\n");
@@ -338,7 +338,7 @@ bool PrefModel::loadGame (const QString &name)  {
 }
 
 
-bool PrefModel::saveGame (const QString &name)  {
+bool PrefModel::saveGame (const QString name)  {
   QFile fl(name);
   if (!fl.open(QIODevice::WriteOnly)) {
       printf("Save failed\n");

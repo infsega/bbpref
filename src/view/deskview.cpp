@@ -535,7 +535,7 @@ void DeskView::drawCard (const Card *card, int x, int y, bool opened, bool hilig
 }
 
 
-void DeskView::drawText (const QString &str, int x, int y, QRgb textColor, QRgb outlineColor) {
+void DeskView::drawText (const QString str, int x, int y, QRgb textColor, QRgb outlineColor) {
   if (!mDeskBmp) return;
 
   QString s(str);
@@ -565,7 +565,7 @@ void DeskView::drawText (const QString &str, int x, int y, QRgb textColor, QRgb 
 }
 
 
-void DeskView::MessageBox (const QString &text, const QString &caption) {
+void DeskView::MessageBox (const QString text, const QString caption) {
   QMessageBox mb(caption, text, QMessageBox::Information, QMessageBox::Ok | QMessageBox::Default, 0, 0);
   mb.exec();
 }

@@ -42,8 +42,8 @@ public:
 
   void draw (bool emitSignal=true);
 
-  bool saveGame (const QString &name); // don't working!
-  bool loadGame (const QString &name); // don't working!
+  bool saveGame (const QString name);
+  bool loadGame (const QString name);
 
   void closePool ();
 

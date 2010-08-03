@@ -66,8 +66,8 @@ public:
   virtual void draw ();
   virtual void highlightCard (int lx, int ly); // подсветить карту по данным координатам (и перерисовать руку, если надо)
 
-  void setMessage (const QString &msg) { mMessage = msg; }
-  const QString &message () const { return mMessage; }
+  void setMessage (const QString msg) { mMessage = msg; }
+  const QString message () const { return mMessage; }
 
   int number () const { return mPlayerNo; }
 

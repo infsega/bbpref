@@ -31,7 +31,7 @@ int allowDebugLog = 0;
 
 
 #ifdef XDEBUG
-void dlogS (const QString &s) {
+void dlogS (const QString s) {
   QByteArray ba(s.toUtf8());
   dlogf("%s", ba.constData());
 }
