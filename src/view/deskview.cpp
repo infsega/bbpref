@@ -505,7 +505,7 @@ void DeskView::ClearBox (int x1, int y1, int x2, int y2) {
 }
 
 
-void DeskView::drawCard (Card *card, int x, int y, bool opened, bool hilight) {
+void DeskView::drawCard (const Card *card, int x, int y, bool opened, bool hilight) {
   char cCardName[16];
   cCardName[0] = 0;
   if (!card) {
@@ -759,7 +759,7 @@ void DeskView::inGameCardLeftTop (int mCardNo, int &left, int &top)
   left = x; top = y;
 }
 
-void DeskView::drawInGameCard (int mCardNo, Card *card, bool closed)
+void DeskView::drawInGameCard (int mCardNo, const Card *card, bool closed)
 {
   if (!card) return;
   int x, y;
@@ -770,7 +770,7 @@ void DeskView::drawInGameCard (int mCardNo, Card *card, bool closed)
 void DeskView::animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[], bool doAnim)
 {
   static const int steps = 10;
-  Card *cAni[4];
+  const Card *cAni[4];
   int left, top;
 
 //  Player *plr = player(plrNo);
