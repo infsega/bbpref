@@ -36,7 +36,6 @@ public:
   ~MainWindow();
 
   // Messages
-  void MoveImpossible ();
   void HintMove ();
   bool WhistType ();
 

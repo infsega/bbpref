@@ -24,7 +24,6 @@
 
 #include <QDebug>
 
-#include <QMainWindow>
 #include <QMessageBox>
 #include <QFile>
 
@@ -334,6 +333,15 @@ bool PrefModel::loadGame (const QString name)  {
   fl.close();
   int pos = 0;
   return unserialize(ba, &pos);
+}
+
+
+void PrefModel::showMoveImpossible(const bool canRetry)
+{
+  emit showHint(tr("This move is impossible"));
+  if (!canRetry)
+    QMessageBox::about(0,"Error","Somebody is plaing unfair!");
+    ///@todo redirect message to view
 }
 
 

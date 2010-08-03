@@ -91,8 +91,11 @@ protected:
   virtual int buildHandXOfs (int *dest, int startX, bool opened);
   virtual int cardAt (int lx, int ly, bool opened=true);
 
+  bool isValidMove(const Card *move, const Card *lMove, const Card *rMove, const int trump);
+
 public:
   DeskView *mDeskView;
+  //PrefModel *m_model;
 
   ScoreBoard mScore;
   CardList mCards; // my cards

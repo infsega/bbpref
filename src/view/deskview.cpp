@@ -822,3 +822,14 @@ void DeskView::drawBidBoard()
     Q_ASSERT(plr1 && plr2 && plr3);
     drawBidsBmp(m_model->activePlayerNumber(), plr1->tricksTaken(), plr2->tricksTaken(), plr3->tricksTaken(), gCurrentGame);
 }
+
+bool DeskView::askWhistType ()
+{
+  const int ret = QMessageBox::question(this, tr("Choose whist type"),
+    tr("Do you want to whist with opened cards?"),
+    QMessageBox::Yes | QMessageBox::Default, QMessageBox::No | QMessageBox::Escape);
+  if (ret == QMessageBox::Yes)
+    return false;
+  else
+    return true;
+}

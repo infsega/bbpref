@@ -75,6 +75,8 @@ public:
   void drawInGameCard (int mCardNo, const Card *card, bool closed);
   void animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[], bool doAnim);
 
+  bool askWhistType ();
+
   bool loadCards ();
   void freeCards ();
 

@@ -101,7 +101,7 @@ eGameBid HumanPlayer::dropForGame () {
       makeMove(0, 0, 0, 0);
     } else if (tmpGamesType == 1) {
       // показать пулю
-      kpref->slotShowScore();
+      mDeskView->drawBidBoard();
     }
   } while (tmpGamesType <= 1);
   if ( tmpGamesType != withoutThree)
@@ -158,7 +158,7 @@ eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove) {
       makeMove(0, 0, 0, 0);
     } else if (tmpGamesType == 1) {
       // show pool
-      kpref->slotShowScore();
+      mDeskView->drawBidBoard();
     }
   } while (tmpGamesType <= 1);
   mMyGame = tmpGamesType;
@@ -187,20 +187,13 @@ Card *HumanPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Play
       continue;
     }
     //qDebug() << "selected:" << cNo << "mClickX:" << mClickX << "mClickY:" << mClickY;
-    Card *Validator;
-    int koz = trumpSuit();
-    Validator = res = mCards.at(cNo);
-    if (lMove || rMove) {
-      Validator = lMove ? lMove : rMove;
-    }
-    if (!Validator || !res) continue;
+    const int koz = trumpSuit();
+    res = mCards.at(cNo);
     // check if move accords with rules
-    if (!((Validator->suit() == res->suit()) ||
-        (!mCards.minInSuit(Validator->suit()) && (res->suit() == koz || ((!mCards.minInSuit(koz)))))
-       )) {
-		kpref->MoveImpossible(); 
-		res = 0;
-	}
+    if (!isValidMove(res, lMove, rMove, koz)) {
+      //kpref->MoveImpossible(); 
+      res = 0;
+    }
   }
   clearCardArea();
   mPrevHiCardIdx = -1;
@@ -256,5 +249,5 @@ void HumanPlayer::highlightCard (int lx, int ly) {
 }
 
 bool HumanPlayer::chooseClosedWhist () {
-	return kpref->WhistType();
+	return mDeskView->askWhistType();
 }

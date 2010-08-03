@@ -54,6 +54,8 @@ public:
   Player *currentPlayer () const { return mPlayers[nCurrentMove.nValue]; }
   int activePlayerNumber () const { return mPlayerActive; }
 
+  void showMoveImpossible(const bool canRetry);
+
 signals:
   void deskChanged ();
   void gameOver ();

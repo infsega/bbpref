@@ -383,11 +383,11 @@ void MainWindow::slotQuit () {
 		slotAbort();
 		formBid->_GamesType = zerogame;
 	}
-}*/
+}
 
 void MainWindow::MoveImpossible () {
 	HintBar->showMessage(tr("This move is impossible"));
-}
+}*/
 
 void MainWindow::HintMove () {
 	if (m_PrefModel->mBiddingDone)
@@ -404,17 +404,6 @@ void MainWindow::showHint(QString hint)
 void MainWindow::clearHint()
 {
   HintBar->clearMessage();
-}
-
-bool MainWindow::WhistType () {
-	int ret = QMessageBox::question(kpref, tr("Choose whist type"),
-        tr("Do you want to whist with opened cards?"),
-        QMessageBox::Yes | QMessageBox::Default,
-        QMessageBox::No | QMessageBox::Escape);
-	if (ret == QMessageBox::Yes)
-		return false;
-	else
-		return true;
 }
 
 const char * GenName(QString str, QString ext)

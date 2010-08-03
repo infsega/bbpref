@@ -22,6 +22,7 @@
 
 #include "player.h"
 #include "deskview.h"
+#include "desktop.h"
 
 #include <QDebug>
 
@@ -208,4 +209,20 @@ void Player::highlightCard (int lx, int ly) {
   Q_UNUSED(lx)
   Q_UNUSED(ly)
   mPrevHiCardIdx = -1;
+}
+
+bool Player::isValidMove(const Card *move, const Card *lMove,
+      const Card *rMove, const int trump)
+{
+  // Preferans-specific code
+  if (!(lMove || rMove))
+    return true; // first move is not restricted
+  const Card *Validator = lMove ? lMove : rMove;
+  if ((Validator->suit() == move->suit()) || (!mCards.minInSuit(Validator->suit())
+    && (move->suit() == trump || ((!mCards.minInSuit(trump)))))) {
+      return true;
+  } else {
+    mDeskView->model()->showMoveImpossible(true);
+    return false;
+  }
 }
