@@ -570,27 +570,30 @@ void PrefModel::runGame () {
     //while (npasscounter < 2) {
     forever {
       //      
-      Player *plr = player(plrCounter);
+      Player *currentPlayer = player(plrCounter);
       mPlayerHi = plrCounter.nValue;
       if (playerBids[curBidIdx] != gtPass) {
-        plr->setMessage(tr("thinking..."));
+        currentPlayer->setMessage(tr("thinking..."));
         //drawBidWindows(bids4win, p);
         draw(false);
-        if (plr->number() != 1) mDeskView->mySleep(2); else mDeskView->update();
-        eGameBid bb;
-        bb = playerBids[curBidIdx] = plr->makeBid(playerBids[curBidIdx%3+1], playerBids[(curBidIdx+1)%3+1]);
-        qDebug() << "bid:" << sGameName(bb) << bb;
-		QString message;
-		if (bb == whist) message = tr("whist");
-		else if (bb == gtPass) message = tr("pass");
-		else if (bb == g65) message = tr("6 no trump");
-		else if (bb == g75) message = tr("7 no trump");
-		else if (bb == g85) message = tr("8 no trump");
-		else if (bb == g95) message = tr("9 no trump");
-		else if (bb == g105) message = tr("10 no trump");
-		else if (bb == g86) message = tr("Misere");
-		else message = sGameName(bb);  
-        plr->setMessage(message);
+        if (currentPlayer->number() != 1)
+            mDeskView->mySleep(2);
+        else
+            mDeskView->update();
+        const eGameBid bid = playerBids[curBidIdx]
+                            = currentPlayer->makeBid(playerBids[curBidIdx%3+1], playerBids[(curBidIdx+1)%3+1]);
+        qDebug() << "bid:" << sGameName(bid) << bid;
+        QString message;
+		if (bid == whist) message = tr("whist");
+		else if (bid == gtPass) message = tr("pass");
+		else if (bid == g65) message = tr("6 no trump");
+		else if (bid == g75) message = tr("7 no trump");
+		else if (bid == g85) message = tr("8 no trump");
+		else if (bid == g95) message = tr("9 no trump");
+		else if (bid == g105) message = tr("10 no trump");
+		else if (bid == g86) message = tr("Misere");
+		else message = sGameName(bid);
+		currentPlayer->setMessage(message);
         //bids4win[plrCounter] = playerBids[curBidIdx+1];
       }// else plr->setMessage("PASS");
       ++plrCounter;
@@ -615,8 +618,8 @@ void PrefModel::runGame () {
       optPassCount = 0;
 	  // who made maximal bid
       for (int i = 1; i <= 3; i++) {
-        Player *tmpg = player(i);
-        if (tmpg->myGame() == playerBids[0]) {
+        Player *currentPlayer = player(i);
+        if (currentPlayer->myGame() == playerBids[0]) {
           QString gnS(sGameName(playerBids[0]));
           gnS.prepend("game: ");
           gnS += "; player: ";
@@ -630,7 +633,7 @@ void PrefModel::runGame () {
           mPlayerActive = i;
           nPassCounter = 0;
           // show talon
-          WrapCounter tmpPlayersCounter(1, 3);
+          WrapCounter passOrWhistPlayersCounter(1, 3);
           Player *PassOrVistPlayers;
           int PassOrVist = 0; //, nPassOrVist = 0;
           mOnDeskClosed = false;
@@ -641,7 +644,7 @@ void PrefModel::runGame () {
           gCurrentGame = playerBids[0];
           draw();
           //drawBidWindows(bids4win, 0);
-		  if (tmpg->number() != 1)
+          if (currentPlayer->number() != 1)
 				kpref->showHint(tr("Try to remember the cards"));
 		  if (optPrefClub)
 		  	mDeskView->mySleep(-1);
@@ -649,15 +652,15 @@ void PrefModel::runGame () {
 		  	mDeskView->mySleep(4);
 		  kpref->clearHint();
           // deal talon
-          tmpg->dealCard(mDeck.at(30));
-          tmpg->dealCard(mDeck.at(31));
+          currentPlayer->dealCard(mDeck.at(30));
+          currentPlayer->dealCard(mDeck.at(31));
           mDeskView->animateDeskToPlayer(mPlayerActive, mCardsOnDesk, optTakeAnim); // will clear mCardsOnDesk[]
           draw();
 
           //bids4win[0] = bids4win[1] = bids4win[2] = bids4win[3] = undefined;
           // throw away
 		  eGameBid maxBid = gCurrentGame;
-          if (tmpg->myGame() != g86) {		//  not misere
+		  if (currentPlayer->myGame() != g86) {		//  not misere
             // not misere
             nCurrentMove.nValue = i;
             draw(false);
@@ -665,15 +668,15 @@ void PrefModel::runGame () {
 				kpref->showHint(tr("Select two cards to drop"));
             else
 				mDeskView->mySleep(2);
-            playerBids[0] = gCurrentGame = tmpg->dropForGame();
+			playerBids[0] = gCurrentGame = currentPlayer->dropForGame();
 			kpref->clearHint();
           } else {	// playing misere
             // show all cards
             int tempint = nCurrentMove.nValue;
-            int nVisibleState = tmpg->invisibleHand();
-            tmpg->setInvisibleHand(false);
+            int nVisibleState = currentPlayer->invisibleHand();
+            currentPlayer->setInvisibleHand(false);
             draw(false);
-            if (!tmpg->isHuman())
+            if (!currentPlayer->isHuman())
 				kpref->showHint(tr("Try to remember the cards"));
             /*else 
 				tmpg->setMessage(tr("Misere"));*/
@@ -684,100 +687,100 @@ void PrefModel::runGame () {
 		  		mDeskView->mySleep(4);
             draw(false);
 
-            tmpg->setInvisibleHand(nVisibleState);
-            nCurrentMove.nValue = tmpg->number();
+            currentPlayer->setInvisibleHand(nVisibleState);
+            nCurrentMove.nValue = currentPlayer->number();
 
             if (mPlayerActive != 1) 
 				mDeskView->mySleep(2);
 
-            playerBids[0] = gCurrentGame = tmpg->dropForMisere();
+			playerBids[0] = gCurrentGame = currentPlayer->dropForMisere();
 			kpref->clearHint();
             nCurrentMove.nValue = tempint;
           }		  	
-          tmpPlayersCounter.nValue = i;
+          passOrWhistPlayersCounter.nValue = i;
 
           // bid
-          player(tmpPlayersCounter)->setMessage(tr(bidMessage(gCurrentGame)));
+          player(passOrWhistPlayersCounter)->setMessage(tr(bidMessage(gCurrentGame)));
 
 		if (gCurrentGame == withoutThree) {
 			gCurrentGame = maxBid;
-			tmpg->gotPassPassTricks(gameTricks(tmpg->myGame())-3);
+			currentPlayer->gotPassPassTricks(gameTricks(currentPlayer->myGame())-3);
 			dlogf("clean out!\n");
             goto LabelRecordOnPaper;
 		}
 		else {
           // pass or whist?
-          ++tmpPlayersCounter;
-          PassOrVistPlayers = player(tmpPlayersCounter);
+          ++passOrWhistPlayersCounter;
+          PassOrVistPlayers = player(passOrWhistPlayersCounter);
           PassOrVistPlayers->setMyGame(undefined);
           
 
           // choice of the first player
-          int firstPW = tmpPlayersCounter.nValue;
-          mPlayerHi = firstPW;
+          int firstWhistPlayer = passOrWhistPlayersCounter.nValue;
+          mPlayerHi = firstWhistPlayer;
 		  if ((gCurrentGame != g86) && !(!opt10Whist && gCurrentGame>=101 && gCurrentGame<=105)) {
-			player(tmpPlayersCounter)->setMessage(tr("thinking..."));
+			player(passOrWhistPlayersCounter)->setMessage(tr("thinking..."));
 			draw(false);
-			if (firstPW != 1) mDeskView->mySleep(2);
+			if (firstWhistPlayer != 1) mDeskView->mySleep(2);
 		  }
           //PassOrVist = PassOrVistPlayers->moveFinalBid(gCurrentGame, gtPass, 0);
           PassOrVist = PassOrVistPlayers->makeFinalBid(gCurrentGame, whist, nPassCounter);
 //          nPassOrVist = tmpPlayersCounter.nValue;
           if (PassOrVistPlayers->myGame() == gtPass) {
             nPassCounter++;
-            player(tmpPlayersCounter)->setMessage(tr("pass"));
+            player(passOrWhistPlayersCounter)->setMessage(tr("pass"));
           } else if (PassOrVistPlayers->myGame() == g86catch)
-		    player(tmpPlayersCounter)->setMessage("");
+            player(passOrWhistPlayersCounter)->setMessage("");
 		  else
-		    player(tmpPlayersCounter)->setMessage(tr("whist"));
+			player(passOrWhistPlayersCounter)->setMessage(tr("whist"));
 		  draw(false);
           //bids4win[1] = PassOrVistPlayers->myGame();
 
           // choice of the second player
-          ++tmpPlayersCounter;
-          int nextPW = tmpPlayersCounter.nValue;
-          mPlayerHi = nextPW;
+          ++passOrWhistPlayersCounter;
+          int secondWhistPlayer = passOrWhistPlayersCounter.nValue;
+          mPlayerHi = secondWhistPlayer;
 		  draw(false);
-          PassOrVistPlayers = player(tmpPlayersCounter);
+		  PassOrVistPlayers = player(passOrWhistPlayersCounter);
           PassOrVistPlayers->setMyGame(undefined);
 		  if ((gCurrentGame != g86) && !(!opt10Whist && gCurrentGame>=101 && gCurrentGame<=105)) {
-			player(tmpPlayersCounter)->setMessage(tr("thinking..."));
+			player(passOrWhistPlayersCounter)->setMessage(tr("thinking..."));
 			draw(false);
-		  	if (nextPW != 1) mDeskView->mySleep(2);
+			if (secondWhistPlayer != 1) mDeskView->mySleep(2);
 		  }
           //PassOrVistPlayers->moveFinalBid(gCurrentGame, PassOrVist, nPassOrVist);
 		  //qDebug() << nPassCounter;
 		  PassOrVistPlayers->makeFinalBid(gCurrentGame, PassOrVist, nPassCounter);
           if (PassOrVistPlayers->myGame() == gtPass) {
             nPassCounter++;
-            player(tmpPlayersCounter)->setMessage(tr("pass"));
+            player(passOrWhistPlayersCounter)->setMessage(tr("pass"));
           } else if (PassOrVistPlayers->myGame() == g86catch)
-		    player(tmpPlayersCounter)->setMessage("");
+            player(passOrWhistPlayersCounter)->setMessage("");
 		  else if (PassOrVistPlayers->myGame() == halfwhist) 
-		    player(tmpPlayersCounter)->setMessage(tr("half of whist"));
+			player(passOrWhistPlayersCounter)->setMessage(tr("half of whist"));
 		  else
-		    player(tmpPlayersCounter)->setMessage(tr("whist"));
+			player(passOrWhistPlayersCounter)->setMessage(tr("whist"));
 		  draw(false);
           //bids4win[2] = PassOrVistPlayers->myGame();
 
 		  // if halfwhist, choice of the first player again
-		  if (player(nextPW)->myGame() == halfwhist) {
-			--tmpPlayersCounter;
-		  	mPlayerHi = firstPW;
-			PassOrVistPlayers = player(firstPW);
+		  if (player(secondWhistPlayer)->myGame() == halfwhist) {
+			--passOrWhistPlayersCounter;
+			mPlayerHi = firstWhistPlayer;
+			PassOrVistPlayers = player(firstWhistPlayer);
 			PassOrVistPlayers->setMessage(tr("thinking..."));
 			draw(false);			
-          	if (firstPW != 1) mDeskView->mySleep(2);
+			if (firstWhistPlayer != 1) mDeskView->mySleep(2);
             PassOrVist = PassOrVistPlayers->makeFinalBid(gCurrentGame, gtPass, 0);	// no more halfwhists!
           	//nPassOrVist = tmpPlayersCounter.nValue;
           	if (PassOrVistPlayers->myGame() == gtPass) {
             	//nPassCounter++;
-            	player(firstPW)->setMessage(tr("pass"));
+                player(firstWhistPlayer)->setMessage(tr("pass"));
           	}
 		  	else {
-		    	player(firstPW)->setMessage(tr("whist"));
+				player(firstWhistPlayer)->setMessage(tr("whist"));
 				//wasHalfWhist = false;
-				player(nextPW)->setMyGame(gtPass);
+				player(secondWhistPlayer)->setMyGame(gtPass);
 			}
 			draw(false);
 		  }
@@ -801,17 +804,17 @@ void PrefModel::runGame () {
           dlogS(gnS);
           //!DUMP OTHERS!
 
-      if (player(nextPW)->myGame() == halfwhist) {
-        tmpg->gotPassPassTricks(gameTricks(tmpg->myGame()));
-        int n = gameWhists(tmpg->myGame());
+      if (player(secondWhistPlayer)->myGame() == halfwhist) {
+        currentPlayer->gotPassPassTricks(gameTricks(currentPlayer->myGame()));
+        int n = gameWhists(currentPlayer->myGame());
         Q_ASSERT(n > 1);  // Half whist on game >= 8 is illegal
-        player(nextPW)->gotPassPassTricks(n/2);
+        player(secondWhistPlayer)->gotPassPassTricks(n/2);
         dlogf("halfwhist!\n");
         goto LabelRecordOnPaper;
       }
           if (nPassCounter == 2) {
             // two players passed
-            tmpg->gotPassPassTricks(gameTricks(tmpg->myGame()));
+            currentPlayer->gotPassPassTricks(gameTricks(currentPlayer->myGame()));
             dlogf("clean out!\n");
             goto LabelRecordOnPaper;
           } else {
