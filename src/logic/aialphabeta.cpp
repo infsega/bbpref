@@ -516,7 +516,7 @@ static void printDesk (int cnt) {
  * 0, 1th
  * 1th, 2nd
  */
-Card *CheatPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) {
+Card *AlphaBetaPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) {
   printf ("CheatPlayer (%d) moves\n", mPlayerNo);
   
   card_t hands[3][10];
@@ -691,12 +691,12 @@ Card *CheatPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
 
 
 ///////////////////////////////////////////////////////////////////////////////
-CheatPlayer::CheatPlayer (int aMyNumber, DeskView *aDeskView) : AiPlayer(aMyNumber, aDeskView) {
+AlphaBetaPlayer::AlphaBetaPlayer (int aMyNumber, DeskView *aDeskView) : AiPlayer(aMyNumber, aDeskView) {
   mInvisibleHand = false;
 }
 
-Player * CheatPlayer::create(int aMyNumber, DeskView *aDeskView) {
-  Player * pl = new CheatPlayer(aMyNumber, aDeskView);
+Player * AlphaBetaPlayer::create(int aMyNumber, DeskView *aDeskView) {
+  Player * pl = new AlphaBetaPlayer(aMyNumber, aDeskView);
   return pl;
 }
 

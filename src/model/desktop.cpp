@@ -171,11 +171,11 @@ void PrefModel::internalInit () {
   if (!optAlphaBeta1)
     mPlayers << new AiPlayer(2, mDeskView);
   else 
-    mPlayers << new CheatPlayer(2, mDeskView);
+    mPlayers << new AlphaBetaPlayer(2, mDeskView);
   if (!optAlphaBeta2)
     mPlayers << new AiPlayer(3, mDeskView);
   else 
-    mPlayers << new CheatPlayer(3, mDeskView);
+    mPlayers << new AlphaBetaPlayer(3, mDeskView);
 
   mOnDeskClosed = false;
 }
