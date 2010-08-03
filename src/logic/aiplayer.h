@@ -41,9 +41,9 @@ public:
   virtual Player * create(int aMyNumber, DeskView *aDeskView=0);
 
 public:
-  virtual Card *moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut); //ход
-  virtual eGameBid moveBidding (eGameBid lMove, eGameBid rMove); //ход при торговле
-  virtual eGameBid moveFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerWhist); // после получения игроком прикупа - пасс или вист
+  virtual Card *moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut); //я┘п╬п╢
+  virtual eGameBid moveBidding (eGameBid lMove, eGameBid rMove); //я┘п╬п╢ п©я─п╦ я┌п╬я─пЁп╬п╡п╩п╣
+  virtual eGameBid moveFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerWhist); // п©п╬я│п╩п╣ п©п╬п╩я┐я┤п╣п╫п╦я▐ п╦пЁя─п╬п╨п╬п╪ п©я─п╦п╨я┐п©п╟ - п©п╟я│я│ п╦п╩п╦ п╡п╦я│я┌
   virtual eGameBid dropForGame ();
   virtual eGameBid dropForMisere ();
 
@@ -53,20 +53,20 @@ public:
 
 protected:
   bool checkForMisere ();
-  eGameBid moveCalcDrop (); //для расчета сноса
+  eGameBid moveCalcDrop (); //п╢п╩я▐ я─п╟я│я┤п╣я┌п╟ я│п╫п╬я│п╟
   tSuitProbs countGameTricks (eSuit, int a23);
   tSuitProbs countTricks (eSuit, CardList &, int a23);
   tSuitProbs countPassTricks (eSuit, CardList &);
 
-  // Два списка
-  tSuitProbs calcProbsForMax (CardList &my, CardList &enemy); // Для максимального результата на 1 руке
-  tSuitProbs calcProbsForMaxH23 (CardList &my, CardList &enemy); // Для максимального результата на 2 и 3 руке
-  tSuitProbs calcProbsForMin (CardList &my, CardList &enemy); // Для мин результата
+  // п■п╡п╟ я│п©п╦я│п╨п╟
+  tSuitProbs calcProbsForMax (CardList &my, CardList &enemy); // п■п╩я▐ п╪п╟п╨я│п╦п╪п╟п╩я▄п╫п╬пЁп╬ я─п╣п╥я┐п╩я▄я┌п╟я┌п╟ п╫п╟ 1 я─я┐п╨п╣
+  tSuitProbs calcProbsForMaxH23 (CardList &my, CardList &enemy); // п■п╩я▐ п╪п╟п╨я│п╦п╪п╟п╩я▄п╫п╬пЁп╬ я─п╣п╥я┐п╩я▄я┌п╟я┌п╟ п╫п╟ 2 п╦ 3 я─я┐п╨п╣
+  tSuitProbs calcProbsForMin (CardList &my, CardList &enemy); // п■п╩я▐ п╪п╦п╫ я─п╣п╥я┐п╩я▄я┌п╟я┌п╟
 
-  void recalcTables (CardList &aMaxCardList, int a23); // Пересчитывает таблицу tSuitProbs mSuitProb[5];
-  void recalcPassOutTables (CardList &aMaxCardList, int a23); // Пересчитывает таблицу дли распасов или мизера
+  void recalcTables (CardList &aMaxCardList, int a23); // п÷п╣я─п╣я│я┤п╦я┌я▀п╡п╟п╣я┌ я┌п╟п╠п╩п╦я├я┐ tSuitProbs mSuitProb[5];
+  void recalcPassOutTables (CardList &aMaxCardList, int a23); // п÷п╣я─п╣я│я┤п╦я┌я▀п╡п╟п╣я┌ я┌п╟п╠п╩п╦я├я┐ п╢п╩п╦ я─п╟я│п©п╟я│п╬п╡ п╦п╩п╦ п╪п╦п╥п╣я─п╟
 
-  void loadLists (Player *aLeftPlayer, Player *aRightPlayer, CardList &aMaxCardList); // Набор списков
+  void loadLists (Player *aLeftPlayer, Player *aRightPlayer, CardList &aMaxCardList); // п²п╟п╠п╬я─ я│п©п╦я│п╨п╬п╡
 
   Card *GetMaxCardPere (int s0=0, int s1=0, int s2=0);
   Card *GetMaxCardWithOutPere (int s0=0, int s1=0, int s2=0);
@@ -76,18 +76,18 @@ protected:
   Card *Miser2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer);
   Card *Miser3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer);
 
-  Card *MyGame1 (Player *aLeftPlayer, Player *aRightPlayer); // моя игра 1 заход - мой
-  Card *MyGame2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // моя игра 2 заход - мой
-  Card *MyGame3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // моя игра 3 заход - мой
+  Card *MyGame1 (Player *aLeftPlayer, Player *aRightPlayer); // п╪п╬я▐ п╦пЁя─п╟ 1 п╥п╟я┘п╬п╢ - п╪п╬п╧
+  Card *MyGame2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // п╪п╬я▐ п╦пЁя─п╟ 2 п╥п╟я┘п╬п╢ - п╪п╬п╧
+  Card *MyGame3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // п╪п╬я▐ п╦пЁя─п╟ 3 п╥п╟я┘п╬п╢ - п╪п╬п╧
 
-  Card *MyWhist1 (Player *aLeftPlayer, Player *aRightPlayer); // мой вист или пас 1 заход - мой
-  Card *MyWhist2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // мой вист или пас 2 заход - мой
-  Card *MyWhist3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // мой вист или пас 3 заход - мой
+  Card *MyWhist1 (Player *aLeftPlayer, Player *aRightPlayer); // п╪п╬п╧ п╡п╦я│я┌ п╦п╩п╦ п©п╟я│ 1 п╥п╟я┘п╬п╢ - п╪п╬п╧
+  Card *MyWhist2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // п╪п╬п╧ п╡п╦я│я┌ п╦п╩п╦ п©п╟я│ 2 п╥п╟я┘п╬п╢ - п╪п╬п╧
+  Card *MyWhist3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // п╪п╬п╧ п╡п╦я│я┌ п╦п╩п╦ п©п╟я│ 3 п╥п╟я┘п╬п╢ - п╪п╬п╧
 
-  // А вот и часть отвечающая за распасы и мизер !!!
+  // п░ п╡п╬я┌ п╦ я┤п╟я│я┌я▄ п╬я┌п╡п╣я┤п╟я▌я┴п╟я▐ п╥п╟ я─п╟я│п©п╟я│я▀ п╦ п╪п╦п╥п╣я─ !!!
   Card *MyPass1 (Card *, Player *aLeftPlayer, Player *aRightPlayer);
-  Card *MyPass2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // моя игра 2 заход - мой
-  Card *MyPass3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // моя игра 3 заход - мой
+  Card *MyPass2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // п╪п╬я▐ п╦пЁя─п╟ 2 п╥п╟я┘п╬п╢ - п╪п╬п╧
+  Card *MyPass3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer); // п╪п╬я▐ п╦пЁя─п╟ 3 п╥п╟я┘п╬п╢ - п╪п╬п╧
 
   Card *MiserCatch1 (Player *aLeftPlayer, Player *aRightPlayer);
   Card *MiserCatch2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer);
@@ -97,7 +97,7 @@ protected:
   tSuitProbs mSuitProb[5];
   CardList mLeft;  // cards of left player (supposed or open)
   CardList mRight; // cards of right player (supposed or open)
-  CardList mOut;   // Сdropped cards (my or supposed)
+  CardList mOut;   // п║dropped cards (my or supposed)
 };
 
 

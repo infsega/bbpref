@@ -41,10 +41,10 @@ public:
 
   virtual void clear ();
 
-  virtual Card *moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut=false); //ход
-  virtual eGameBid moveBidding (eGameBid lMove, eGameBid rMove); //ход при торговле
-  virtual eGameBid moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerVist); // после получения игроком прикупа - пасс или вист
-  virtual eGameBid dropForGame (); // после сноса чего играем
+  virtual Card *moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut=false); //я┘п╬п╢
+  virtual eGameBid moveBidding (eGameBid lMove, eGameBid rMove); //я┘п╬п╢ п©я─п╦ я┌п╬я─пЁп╬п╡п╩п╣
+  virtual eGameBid moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerVist); // п©п╬я│п╩п╣ п©п╬п╩я┐я┤п╣п╫п╦я▐ п╦пЁя─п╬п╨п╬п╪ п©я─п╦п╨я┐п©п╟ - п©п╟я│я│ п╦п╩п╦ п╡п╦я│я┌
+  virtual eGameBid dropForGame (); // п©п╬я│п╩п╣ я│п╫п╬я│п╟ я┤п╣пЁп╬ п╦пЁя─п╟п╣п╪
   virtual eGameBid dropForMisere ();
 
   virtual bool chooseClosedWhist ();
