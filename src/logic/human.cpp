@@ -60,9 +60,9 @@ void HumanPlayer::clear () {
 // после сноса чего играем
 eGameBid HumanPlayer::dropForMisere () {
   mClickX = mClickY = 0; mWaitingForClick = true;
-  moveSelectCard(0, 0, 0, 0);
+  makeMove(0, 0, 0, 0);
   //mDeskView->mySleep(1);
-  moveSelectCard(0, 0, 0, 0);
+  makeMove(0, 0, 0, 0);
   mWaitingForClick = false;
   return g86;
 }
@@ -74,9 +74,9 @@ eGameBid HumanPlayer::dropForGame () {
   //mClickX = mClickY = 0;
   eGameBid tmpGamesType;
 
-  moveSelectCard(0, 0, 0, 0);
+  makeMove(0, 0, 0, 0);
   //!.!mDeskView->mySleep(1);
-  moveSelectCard(0, 0, 0, 0);
+  makeMove(0, 0, 0, 0);
 
   FormBid *formBid = FormBid::instance();
   formBid->enableAll();
@@ -96,9 +96,9 @@ eGameBid HumanPlayer::dropForGame () {
       // вернуть снос
       clearCardArea();
       returnDrop();
-      moveSelectCard(0, 0, 0, 0);
+      makeMove(0, 0, 0, 0);
       //mDeskView->mySleep(1);
-      moveSelectCard(0, 0, 0, 0);
+      makeMove(0, 0, 0, 0);
     } else if (tmpGamesType == 1) {
       // показать пулю
       kpref->slotShowScore();
@@ -114,7 +114,7 @@ eGameBid HumanPlayer::dropForGame () {
 
 
 // ход при торговле
-eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
+eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove) {
   eGameBid tmpGamesType;
   mClickX = mClickY = 0; mWaitingForClick = true;
 
@@ -153,9 +153,9 @@ eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
       // вернуть снос (если есть) и снести заново
       clearCardArea();
       returnDrop();
-      moveSelectCard(0, 0, 0, 0);
+      makeMove(0, 0, 0, 0);
       //mDeskView->mySleep(1);
-      moveSelectCard(0, 0, 0, 0);
+      makeMove(0, 0, 0, 0);
     } else if (tmpGamesType == 1) {
       // show pool
       kpref->slotShowScore();
@@ -169,7 +169,7 @@ eGameBid HumanPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
 
 
 //move
-Card *HumanPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) {
+Card *HumanPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) {
   Q_UNUSED(aLeftPlayer)
   Q_UNUSED(aRightPlayer)
   Q_UNUSED(isPassOut)
@@ -213,7 +213,7 @@ Card *HumanPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer
 }
 
 
-eGameBid HumanPlayer::moveFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerPass) {
+eGameBid HumanPlayer::makeFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerPass) {
   Q_UNUSED(HaveAVist)
   //Q_UNUSED(nGamerVist)
 

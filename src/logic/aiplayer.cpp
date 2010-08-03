@@ -1333,7 +1333,7 @@ Card *AiPlayer::MyPass3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer,
 // game moves
 ///////////////////////////////////////////////////////////////////////////////
 // make game move (dispatcher)
-Card *AiPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) {
+Card *AiPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) {
   Q_UNUSED(isPassOut)
   printf ("AiPlayer (%d) moves\n", mPlayerNo);
   Card *cur = 0;
@@ -1370,7 +1370,7 @@ Card *AiPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, P
 
 ///////////////////////////////////////////////////////////////////////////////
 // Pass or Whist or Halfwhist
-eGameBid AiPlayer::moveFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerPass) {
+eGameBid AiPlayer::makeFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerPass) {
   Q_UNUSED(nGamerPass)
   eGameBid Answer;
   eGameBid MyMaxGame = moveCalcDrop();
@@ -1554,7 +1554,7 @@ eGameBid AiPlayer::dropForGame () {
 
 
 //ход при торговле
-eGameBid AiPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
+eGameBid AiPlayer::makeBid (eGameBid lMove, eGameBid rMove) {
 //mIStart = (lMove == undefined && rMove == undefined);
 	//qDebug() << mPlayerNo << mIStart;
 /*
@@ -1683,7 +1683,7 @@ eGameBid AiPlayer::moveBidding (eGameBid lMove, eGameBid rMove) {
   }
   //???
   if (optAggPass && optPassCount > 0 && mMyGame != gtPass && mMyGame < g71) {
-    moveBidding(g71, g71);
+    makeBid(g71, g71);
    // if (optAggPass && optPassCount > 0 && mMyGame != gtPass && mMyGame < g71) moveBidding(g72, g72);
   }
   return mMyGame;

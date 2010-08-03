@@ -285,14 +285,14 @@ Card *PrefModel::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
     *plr = *curPlr;
     mPlayers[nCurrentMove.nValue] = plr;
     qDebug() << plr->type() << " plays for " << nCurrentMove.nValue;
-    res = plr->moveSelectCard(lMove, rMove, player(nextPlayer(nCurrentMove)),
+    res = plr->makeMove(lMove, rMove, player(nextPlayer(nCurrentMove)),
       player(previousPlayer(nCurrentMove)), isPassOut);
     *curPlr = *plr;
     mPlayers[nCurrentMove.nValue] = curPlr;
     delete plr;
   } else {
     // No swaps, current player makes move himself
-    res = curPlr->moveSelectCard(lMove, rMove, player(nextPlayer(nCurrentMove)),
+    res = curPlr->makeMove(lMove, rMove, player(nextPlayer(nCurrentMove)),
       player(previousPlayer(nCurrentMove)), isPassOut);
   }
   return res;
@@ -578,7 +578,7 @@ void PrefModel::runGame () {
         draw(false);
         if (plr->number() != 1) mDeskView->mySleep(2); else mDeskView->update();
         eGameBid bb;
-        bb = playerBids[curBidIdx] = plr->moveBidding(playerBids[curBidIdx%3+1], playerBids[(curBidIdx+1)%3+1]);
+        bb = playerBids[curBidIdx] = plr->makeBid(playerBids[curBidIdx%3+1], playerBids[(curBidIdx+1)%3+1]);
         qDebug() << "bid:" << sGameName(bb) << bb;
 		QString message;
 		if (bb == whist) message = tr("whist");
@@ -721,7 +721,7 @@ void PrefModel::runGame () {
 			if (firstPW != 1) mDeskView->mySleep(2);
 		  }
           //PassOrVist = PassOrVistPlayers->moveFinalBid(gCurrentGame, gtPass, 0);
-		  PassOrVist = PassOrVistPlayers->moveFinalBid(gCurrentGame, whist, nPassCounter);
+          PassOrVist = PassOrVistPlayers->makeFinalBid(gCurrentGame, whist, nPassCounter);
 //          nPassOrVist = tmpPlayersCounter.nValue;
           if (PassOrVistPlayers->myGame() == gtPass) {
             nPassCounter++;
@@ -747,7 +747,7 @@ void PrefModel::runGame () {
 		  }
           //PassOrVistPlayers->moveFinalBid(gCurrentGame, PassOrVist, nPassOrVist);
 		  //qDebug() << nPassCounter;
-		  PassOrVistPlayers->moveFinalBid(gCurrentGame, PassOrVist, nPassCounter);
+		  PassOrVistPlayers->makeFinalBid(gCurrentGame, PassOrVist, nPassCounter);
           if (PassOrVistPlayers->myGame() == gtPass) {
             nPassCounter++;
             player(tmpPlayersCounter)->setMessage(tr("pass"));
@@ -768,7 +768,7 @@ void PrefModel::runGame () {
 			PassOrVistPlayers->setMessage(tr("thinking..."));
 			draw(false);			
           	if (firstPW != 1) mDeskView->mySleep(2);
-		  	PassOrVist = PassOrVistPlayers->moveFinalBid(gCurrentGame, gtPass, 0);	// no more halfwhists!
+            PassOrVist = PassOrVistPlayers->makeFinalBid(gCurrentGame, gtPass, 0);	// no more halfwhists!
           	//nPassOrVist = tmpPlayersCounter.nValue;
           	if (PassOrVistPlayers->myGame() == gtPass) {
             	//nPassCounter++;

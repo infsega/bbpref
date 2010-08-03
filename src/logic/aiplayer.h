@@ -41,9 +41,9 @@ public:
   virtual Player * create(int aMyNumber, DeskView *aDeskView=0);
 
 public:
-  virtual Card *moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut); //ход
-  virtual eGameBid moveBidding (eGameBid lMove, eGameBid rMove); //ход при торговле
-  virtual eGameBid moveFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerWhist); // после получения игроком прикупа - пасс или вист
+  virtual Card *makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut); //ход
+  virtual eGameBid makeBid (eGameBid lMove, eGameBid rMove); //ход при торговле
+  virtual eGameBid makeFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerWhist); // после получения игроком прикупа - пасс или вист
   virtual eGameBid dropForGame ();
   virtual eGameBid dropForMisere ();
 

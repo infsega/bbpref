@@ -53,9 +53,9 @@ public:
 
   void dealCard (Card *aCard) { mCards.insert(aCard); } // get dealed card
 
-  virtual Card *moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) = 0; //move
-  virtual eGameBid moveBidding (eGameBid lMove, eGameBid rMove) = 0; //
-  virtual eGameBid moveFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerWhist) = 0; // после получения игроком прикупа -- пасс или вист
+  virtual Card *makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) = 0; //move
+  virtual eGameBid makeBid (eGameBid lMove, eGameBid rMove) = 0; //
+  virtual eGameBid makeFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerWhist) = 0; // после получения игроком прикупа -- пасс или вист
   virtual eGameBid dropForGame () = 0; // сброс для игры
   virtual eGameBid dropForMisere () = 0; // сброс для мизера
   virtual void returnDrop (); // вернуть сброс

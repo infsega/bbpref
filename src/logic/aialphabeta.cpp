@@ -516,7 +516,7 @@ static void printDesk (int cnt) {
  * 0, 1th
  * 1th, 2nd
  */
-Card *AlphaBetaPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) {
+Card *AlphaBetaPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) {
   printf ("CheatPlayer (%d) moves\n", mPlayerNo);
   
   card_t hands[3][10];
@@ -550,7 +550,7 @@ Card *AlphaBetaPlayer::moveSelectCard (Card *lMove, Card *rMove, Player *aLeftPl
 
 
   if (!lMove && !rMove && crdLeft == 10) { 
-    return AiPlayer::moveSelectCard(lMove, rMove, aLeftPlayer, aRightPlayer, isPassOut);
+    return AiPlayer::makeMove(lMove, rMove, aLeftPlayer, aRightPlayer, isPassOut);
   }
 
 
