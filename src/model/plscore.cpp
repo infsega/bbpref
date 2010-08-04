@@ -111,26 +111,26 @@ void ScoreBoard::whistsAdd (int index, int myNumber, int delta) {
 int ScoreBoard::recordScores (
   eGameBid aGamerType,
   eGameBid aMyType,
-  int nGamerVz, //“¡⁄Ÿ«“Ÿ◊¡¿›≈«œ
-  int nMyVz, //ﬁ…c‘Ÿ» Õœ…»
+  int nGamerVz, //—Ä–∞–∑—ã–≥—Ä—ã–≤–∞—é—â–µ–≥–æ
+  int nMyVz, //—á–∏c—Ç—ã—Ö –º–æ–∏—Ö
   int nGamer,
   int myNumber,
-  int nqVist //ÀœÃ-◊œ ◊…”‘’¿›…»
+  int nqVist //–∫–æ–ª-–≤–æ –≤–∏—Å—Ç—É—é—â–∏—Ö
   )
 {
-  int nGamePrice = gamePoolPrice(aGamerType); // √≈Œ¡ …«“Ÿ
-  int nGameCard = gameTricks(aGamerType); // ◊⁄—‘œÀ ƒœÃ÷Œœ ¬Ÿ‘ÿ –“… ƒ¡ŒŒœ  …«“≈
-  int nVistCard = gameWhists(aGamerType); // Õ…Œ…Õ¡ÃÿŒœ≈ ÀœÃ-◊œ ◊⁄—‘œÀ ◊…”‘’¿›…» Œ¡ ƒ◊œ…»
+  int nGamePrice = gamePoolPrice(aGamerType); // —Ü–µ–Ω–∞ –∏–≥—Ä—ã
+  int nGameCard = gameTricks(aGamerType); // –≤–∑—è—Ç–æ–∫ –¥–æ–ª–∂–Ω–æ –±—ã—Ç—å –ø—Ä–∏ –¥–∞–Ω–Ω–æ–π –∏–≥—Ä–µ
+  int nVistCard = gameWhists(aGamerType); // –º–∏–Ω–∏–º–∞–ª—å–Ω–æ–µ –∫–æ–ª-–≤–æ –≤–∑—è—Ç–æ–∫ –≤–∏—Å—Ç—É—é—â–∏—Ö –Ω–∞ –¥–≤–æ–∏—Ö
   int score = 0, pnCurrent = 0;
   QIntList *dList;
 
   if (aMyType >= g61 && aMyType != g86) {
-    // ⁄Œ¡ﬁ…‘ — ﬁ‘œ-‘œ …«“¡Ã!
+    // –∑–Ω–∞—á–∏—Ç —è —á—Ç–æ-—Ç–æ –∏–≥—Ä–∞–ª!
     if (nGamerVz >= nGameCard) {
-      // … ”Ÿ«“¡Ã!
+      // –∏ —Å—ã–≥—Ä–∞–ª!
       return poolAdd(nGamePrice);
     } else {
-      // … Œ¡…«“¡Ã «œ“’
+      // –∏ –Ω–∞–∏–≥—Ä–∞–ª –≥–æ—Ä—É
       pnCurrent = mMountain[mMountain.size()-1];
       score = nGamePrice*(nGameCard-nMyVz)+pnCurrent;
       if (score) mMountain << score;
@@ -164,7 +164,7 @@ int ScoreBoard::recordScores (
   //-------------------------------------------------------------------------
   if (aMyType == gtPass && aGamerType != g86) {
     if (!optWhistGreedy && nGameCard-nGamerVz > 0) {
-      // “¡⁄Ÿ«“Ÿ◊¡¿›…  ¬≈⁄ Ã¡–(Ÿ)
+      // —Ä–∞–∑—ã–≥—Ä—ã–≤–∞—é—â–∏–π –±–µ–∑ –ª–∞–ø(—ã)
       score = nGamePrice*((nGameCard-nGamerVz)+nMyVz)+pnCurrent;
     }
     if (score) dList->append(score);
@@ -178,32 +178,32 @@ int ScoreBoard::recordScores (
   //-------------------------------------------------------------------------
   if (aMyType == whist && aGamerType != g86)  {
     if (nGameCard-nGamerVz > 0) {
-      // “¡⁄Ÿ«“Ÿ◊¡¿›…  ¬≈⁄ Ã¡–(Ÿ)
+      // —Ä–∞–∑—ã–≥—Ä—ã–≤–∞—é—â–∏–π –±–µ–∑ –ª–∞–ø(—ã)
       if (nqVist == 2) {
-        // 2 ◊…”‘’¿›…»
-        // ⁄¡–…”ÿ ‘œÃÿÀœ ⁄¡ ”◊œ… ◊⁄—‘À… + Œ≈ƒœ¬œ“
+        // 2 –≤–∏—Å—Ç—É—é—â–∏—Ö
+        // –∑–∞–ø–∏—Å—å —Ç–æ–ª—å–∫–æ –∑–∞ —Å–≤–æ–∏ –≤–∑—è—Ç–∫–∏ + –Ω–µ–¥–æ–±–æ—Ä
         score = nGamePrice*((nGameCard-nGamerVz)+nMyVz)+pnCurrent;
       } else {
-        // 1 ◊…”‘’¿›… 
-        // ⁄¡–…”ÿ ⁄¡ ”◊œ… + Œ≈ƒœ¬œ“
+        // 1 –≤–∏—Å—Ç—É—é—â–∏–π
+        // –∑–∞–ø–∏—Å—å –∑–∞ —Å–≤–æ–∏ + –Ω–µ–¥–æ–±–æ—Ä
         score = nGamePrice*((nGameCard-nGamerVz)+nMyVz)+pnCurrent;
       }
     } else {
-      // “¡⁄Ÿ«“Ÿ◊¡¿›…  ◊⁄—Ã ”◊œ£ …Ã… ¬œÃÿ€≈
+      // —Ä–∞–∑—ã–≥—Ä—ã–≤–∞—é—â–∏–π –≤–∑—è–ª —Å–≤–æ—ë –∏–ª–∏ –±–æ–ª—å—à–µ
       if (nqVist == 2) {
         score = nGamePrice*(nMyVz)+pnCurrent;
       } else {
         score = nGamePrice*(10-nGamerVz)+pnCurrent;
       }
-      // –“œ◊≈“…‘ÿ Œ¡ Œ¡Ã…ﬁ…≈ Œ≈ƒœ¬œ“¡ ”œ ”‘œ“œŒŸ ◊…”‘’¿›≈«œ!
+      // –ø—Ä–æ–≤–µ—Ä–∏—Ç—å –Ω–∞ –Ω–∞–ª–∏—á–∏–µ –Ω–µ–¥–æ–±–æ—Ä–∞ —Å–æ —Å—Ç–æ—Ä–æ–Ω—ã –≤–∏—Å—Ç—É—é—â–µ–≥–æ!
       if (nVistCard > 10-nGamerVz) {
         if (nqVist == 2) {
-          // 2 ◊…”‘’¿›…»
+          // 2 –≤–∏—Å—Ç—É—é—â–∏—Ö
           double d = nVistCard;
           d = (d/2-nMyVz)*nGamePrice;
           mountainUp((int)d);
         } else {
-          // 1 ◊…”‘’¿›… 
+          // 1 –≤–∏—Å—Ç—É—é—â–∏–π
           if (nVistCard-nMyVz > 0) mountainUp(nGamePrice*(nVistCard-(10-nGamerVz)));
         }
       }
