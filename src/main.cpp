@@ -31,6 +31,10 @@
 #include "kpref.h"
 #include "prfconst.h"
 
+#ifdef USE_CONAN
+  #include "Conan.h"
+#endif
+
 using namespace std;
 
 int main (int argc, char *argv[]) {
@@ -79,6 +83,11 @@ int main (int argc, char *argv[]) {
   //#else
   //  kpref->showFullScreen();
   //#endif
+
+  #ifdef USE_CONAN
+    ConanWidget widget;
+    widget.show();
+  #endif
   bool exitCode = a.exec();
   return exitCode;
 }
