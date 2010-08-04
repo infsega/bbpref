@@ -50,7 +50,6 @@ public:
   QString mountainStr (int maxItems=-1) const;
   QString leftWhistsStr (int maxItems=-1) const;
   QString rightWhistsStr (int maxItems=-1) const;
-  QString whistsStr () const { return QString::number(mWhists); }
 
   int whists () const { return mWhists; }
   void setWhists (int w) { mWhists = w; }
