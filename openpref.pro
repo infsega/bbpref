@@ -6,7 +6,7 @@ QT += gui
 CONFIG += qt warn_on
 CONFIG += debug_and_release
 
-!isEmpty(QTV_FRAMEWORK_PATH) {
+!isEmpty(USE_CONAN) {
     INCLUDEPATH += /usr/local/include/conan/include
     LIBS += -L/usr/local/lib64 -lConan
 }
