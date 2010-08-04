@@ -60,7 +60,6 @@ private:
   void saveOptions ();
   void loadOptions ();
 
-  QAction *actNewGame;
   QAction *actFileOpen;
   QAction *actFileSave;
   QStatusBar * HintBar;

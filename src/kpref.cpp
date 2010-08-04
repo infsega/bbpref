@@ -112,7 +112,7 @@ void MainWindow::adjustDesk () {
 void MainWindow::initMenuBar () {
   QMenu *fileMenu = menuBar()->addMenu(tr("&Game"));
 
-  actNewGame = fileMenu->addAction(QIcon(QString(":/pics/newgame.png")), tr("&New game..."), this, SLOT(slotNewSingleGame()), Qt::CTRL+Qt::Key_N);
+  fileMenu->addAction(QIcon(QString(":/pics/newgame.png")), tr("&New game..."), this, SLOT(slotNewSingleGame()), Qt::CTRL+Qt::Key_N);
 
   fileMenu->addSeparator();
 
