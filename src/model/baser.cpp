@@ -23,7 +23,7 @@
 #include <unistd.h>
 
 #include "baser.h"
-
+#include <QByteArray>
 
 void serializeInt (QByteArray &ba, int i) {
   for (int f = 3; f >= 0; f--) {
