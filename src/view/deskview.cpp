@@ -664,7 +664,7 @@ void DeskView::drawMessageWindow (int x0, int y0, const QString msg, bool dim) {
 
 void DeskView::resizeEvent(QResizeEvent *event) {
   Q_UNUSED(event)
-  m_model->draw();
+  draw();
 }
 
 
@@ -784,7 +784,7 @@ void DeskView::animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[], bool doAnim
   }
 
   for (int f = doAnim?0:steps; f <= steps; f++) {
-    m_model->draw(false);
+    draw(false);
     for (int c = 0; c <= 3; c++) {
       if (!cAni[c]) continue;
       int x, y;
@@ -832,4 +832,39 @@ bool DeskView::askWhistType ()
     return false;
   else
     return true;
+}
+
+void DeskView::draw (bool emitSignal) {
+  if(!m_model->mGameRunning)
+    return;
+  ClearScreen();
+
+  // repaint players
+  for (int f = 1; f <= 3; f++) 
+      m_model->player(f)->draw();
+
+  // repaint in-game cards
+  for (int f = 0; f <= 3; f++)
+    if (m_model->cardOnDesk(f))
+      drawInGameCard(f, m_model->cardOnDesk(f), m_model->mOnDeskClosed);
+
+  // draw bidboard
+  if (m_model->mPlayingRound) {
+    Player *plr1 = m_model->player(1);
+    Player *plr2 = m_model->player(2);
+    Player *plr3 = m_model->player(3);
+    //if (plr1 && plr2 && plr3) {
+    drawBidsBmp(m_model->activePlayerNumber(), plr1->tricksTaken(), plr2->tricksTaken(), plr3->tricksTaken(), gCurrentGame);
+    //}
+  }
+  drawIMove();
+  // ÓÏÏÂÝÅÎÉÑ
+  for (int f = 1; f <= 3; f++) {
+    Player *plr = m_model->player(f);
+      QString msg(plr->message());
+      if (!msg.isEmpty()) {
+        drawPlayerMessage(f, msg, f!=m_model->mPlayerHi);
+      }
+  }
+  if (emitSignal) update();
 }

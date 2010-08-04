@@ -39,8 +39,7 @@ public:
   virtual ~PrefModel ();
 
   void runGame ();
-
-  void draw (bool emitSignal=true);
+  Card *cardOnDesk(int index) const;;
 
   bool saveGame (const QString name);
   bool loadGame (const QString name);
@@ -66,6 +65,9 @@ public:
   WrapCounter nCurrentStart, nCurrentMove;
   bool mGameRunning;
   bool mBiddingDone;
+  bool mOnDeskClosed;
+  bool mPlayingRound;
+  int mPlayerHi; // highlighted message number
 
 private:
   Player *player (const WrapCounter &cnt);
@@ -81,10 +83,7 @@ private:
   QList<Player *> mPlayers;
   Card *mFirstCard, *mSecondCard, *mThirdCard;
   Card *mCardsOnDesk[4];
-  bool mPlayingRound;
   int mPlayerActive; // who plays (if not raspass and mPlayingRound=true)
-  int mPlayerHi; // highlighted message number
-  bool mOnDeskClosed;
   int m_trump;
 };
 

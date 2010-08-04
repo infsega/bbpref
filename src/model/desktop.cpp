@@ -323,6 +323,13 @@ inline Player *PrefModel::player (const WrapCounter &cnt) {
 }
 
 
+Card *PrefModel::cardOnDesk(int num) const
+{
+  Q_ASSERT(num >= 0 || num <= 3);
+  return mCardsOnDesk[num];
+}
+
+
 bool PrefModel::loadGame (const QString name)  {
   QFile fl(name);
   if (!fl.open(QIODevice::ReadOnly)) {
@@ -357,7 +364,7 @@ bool PrefModel::saveGame (const QString name)  {
   fl.close();
   return true;
 }
-
+/*
 void PrefModel::draw (bool emitSignal) {
   //if (!mDeskView) return;
   Q_ASSERT(mDeskView != 0);
@@ -388,7 +395,7 @@ void PrefModel::draw (bool emitSignal) {
       }
   }
   if (emitSignal) mDeskView->update();
-}
+}*/
 
 
 void PrefModel::serialize (QByteArray &ba) {
@@ -510,7 +517,7 @@ void PrefModel::runGame () {
   for (int i=1; i<=3; i++)
     player(i)->setCurrentStart(i == nCurrentStart.nValue);
 
-    draw();
+    mDeskView->draw();
     {
       CardList tmpDeck; int cc = nextPlayer(nCurrentStart), tPos = 0, tNo = 0;
       mOnDeskClosed = true;
@@ -521,15 +528,15 @@ void PrefModel::runGame () {
           // talon
           tNo = tPos;
           mCardsOnDesk[2] = mDeck.at(tPos++);
-          if (optDealAnim) { draw(); mDeskView->aniSleep(40); }
+          if (optDealAnim) { mDeskView->draw(); mDeskView->aniSleep(40); }
           mCardsOnDesk[3] = mDeck.at(tPos++);
-          if (optDealAnim) { draw(); mDeskView->aniSleep(40); }
+          if (optDealAnim) { mDeskView->draw(); mDeskView->aniSleep(40); }
         }
         Player *plr = player(cc); cc = (cc%3)+1;
         plr->dealCard(mDeck.at(tPos)); tmpDeck << mDeck.at(tPos++);
         //if (optDealAnim) { draw(); mDeskView->aniSleep(40); }
         plr->dealCard(mDeck.at(tPos)); tmpDeck << mDeck.at(tPos++);
-        if (optDealAnim) { draw(); mDeskView->aniSleep(80); }
+        if (optDealAnim) { mDeskView->draw(); mDeskView->aniSleep(80); }
         if (optDealAnim) { 
           if (f%3 == 2) mDeskView->aniSleep(200);
         }
@@ -545,10 +552,10 @@ void PrefModel::runGame () {
       mOnDeskClosed = false;
       mCardsOnDesk[1] = mCardsOnDesk[2] = 0;
 */
-      draw(false);
+      mDeskView->draw(false);
     }
     if (!optDealAnim) {
-      draw();
+      mDeskView->draw();
       mDeskView->update();
       mDeskView->mySleep(0);
     }
@@ -581,7 +588,7 @@ void PrefModel::runGame () {
       if (playerBids[curBidIdx] != gtPass) {
         currentPlayer->setMessage(tr("thinking..."));
         //drawBidWindows(bids4win, p);
-        draw(false);
+        mDeskView->draw(false);
         if (currentPlayer->number() != 1)
             mDeskView->mySleep(2);
         else
@@ -609,7 +616,7 @@ void PrefModel::runGame () {
           ((playerBids[1] == gtPass?1:0)+(playerBids[2] == gtPass?1:0)+(playerBids[3] == gtPass?1:0) >= 2)) break;
     }
     mPlayerHi = 0;
-    draw(false); //mDeskView->mySleep(0);
+    mDeskView->draw(false); //mDeskView->mySleep(0);
 
     // calculate max game
     for (int i = 1; i <= 3; i++) {
@@ -648,7 +655,7 @@ void PrefModel::runGame () {
           
 		  // trick with gCurrentGame - shows game on bidboard
           gCurrentGame = playerBids[0];
-          draw();
+          mDeskView->draw();
           //drawBidWindows(bids4win, 0);
           if (currentPlayer->number() != 1)
               emit showHint(tr("Try to remember the cards"));
@@ -661,7 +668,7 @@ void PrefModel::runGame () {
           currentPlayer->dealCard(mDeck.at(30));
           currentPlayer->dealCard(mDeck.at(31));
           mDeskView->animateDeskToPlayer(mPlayerActive, mCardsOnDesk, optTakeAnim); // will clear mCardsOnDesk[]
-          draw();
+          mDeskView->draw();
 
           //bids4win[0] = bids4win[1] = bids4win[2] = bids4win[3] = undefined;
           // throw away
@@ -669,7 +676,7 @@ void PrefModel::runGame () {
 		  if (currentPlayer->myGame() != g86) {		//  not misere
             // not misere
             nCurrentMove.nValue = i;
-            draw(false);
+            mDeskView->draw(false);
             if (mPlayerActive == 1)
                 emit showHint(tr("Select two cards to drop"));
             else
@@ -681,7 +688,7 @@ void PrefModel::runGame () {
             int tempint = nCurrentMove.nValue;
             int nVisibleState = currentPlayer->invisibleHand();
             currentPlayer->setInvisibleHand(false);
-            draw(false);
+            mDeskView->draw(false);
             if (!currentPlayer->isHuman())
                 emit showHint(tr("Try to remember the cards"));
             /*else 
@@ -691,7 +698,7 @@ void PrefModel::runGame () {
             	mDeskView->mySleep(-1);
 			else
 		  		mDeskView->mySleep(4);
-            draw(false);
+            mDeskView->draw(false);
 
             currentPlayer->setInvisibleHand(nVisibleState);
             nCurrentMove.nValue = currentPlayer->number();
@@ -726,7 +733,7 @@ void PrefModel::runGame () {
           mPlayerHi = firstWhistPlayer;
 		  if ((gCurrentGame != g86) && !(!opt10Whist && gCurrentGame>=101 && gCurrentGame<=105)) {
 			player(passOrWhistPlayersCounter)->setMessage(tr("thinking..."));
-			draw(false);
+			mDeskView->draw(false);
 			if (firstWhistPlayer != 1) mDeskView->mySleep(2);
 		  }
           //PassOrVist = PassOrVistPlayers->moveFinalBid(gCurrentGame, gtPass, 0);
@@ -739,19 +746,19 @@ void PrefModel::runGame () {
             player(passOrWhistPlayersCounter)->setMessage("");
 		  else
 			player(passOrWhistPlayersCounter)->setMessage(tr("whist"));
-		  draw(false);
+		  mDeskView->draw(false);
           //bids4win[1] = PassOrVistPlayers->myGame();
 
           // choice of the second player
           ++passOrWhistPlayersCounter;
           int secondWhistPlayer = passOrWhistPlayersCounter.nValue;
           mPlayerHi = secondWhistPlayer;
-		  draw(false);
+		  mDeskView->draw(false);
 		  PassOrVistPlayers = player(passOrWhistPlayersCounter);
           PassOrVistPlayers->setMyGame(undefined);
 		  if ((gCurrentGame != g86) && !(!opt10Whist && gCurrentGame>=101 && gCurrentGame<=105)) {
 			player(passOrWhistPlayersCounter)->setMessage(tr("thinking..."));
-			draw(false);
+			mDeskView->draw(false);
 			if (secondWhistPlayer != 1) mDeskView->mySleep(2);
 		  }
           //PassOrVistPlayers->moveFinalBid(gCurrentGame, PassOrVist, nPassOrVist);
@@ -766,7 +773,7 @@ void PrefModel::runGame () {
 			player(passOrWhistPlayersCounter)->setMessage(tr("half of whist"));
 		  else
 			player(passOrWhistPlayersCounter)->setMessage(tr("whist"));
-		  draw(false);
+		  mDeskView->draw(false);
           //bids4win[2] = PassOrVistPlayers->myGame();
 
 		  // if halfwhist, choice of the first player again
@@ -775,7 +782,7 @@ void PrefModel::runGame () {
 			mPlayerHi = firstWhistPlayer;
 			PassOrVistPlayers = player(firstWhistPlayer);
 			PassOrVistPlayers->setMessage(tr("thinking..."));
-			draw(false);			
+			mDeskView->draw(false);			
 			if (firstWhistPlayer != 1) mDeskView->mySleep(2);
             PassOrVist = PassOrVistPlayers->makeFinalBid(gCurrentGame, gtPass, 0);	// no more halfwhists!
           	//nPassOrVist = tmpPlayersCounter.nValue;
@@ -788,13 +795,13 @@ void PrefModel::runGame () {
 				//wasHalfWhist = false;
 				player(secondWhistPlayer)->setMyGame(gtPass);
 			}
-			draw(false);
+			mDeskView->draw(false);
 		  }
 		  
           mPlayerHi = 0;
 
           // choice made
-          draw(false);
+          mDeskView->draw(false);
 		  if (optPrefClub)
           	mDeskView->mySleep(-1);
 		  else
@@ -850,7 +857,7 @@ void PrefModel::runGame () {
 				for (int n=1; n<=3; n++)
 					if (player(n)->myGame() == whist) {
     					player(n)->setMessage(tr("thinking..."));
-						draw(false);
+						mDeskView->draw(false);
 						if (n != 1)
 							mDeskView->mySleep(1);
 						Closed_Whist = player(n)->chooseClosedWhist();
@@ -858,7 +865,7 @@ void PrefModel::runGame () {
 							player(n)->setMessage(tr("close"));
 						else
 							player(n)->setMessage(tr("open"));
-						draw(false);
+						mDeskView->draw(false);
 			          	mDeskView->mySleep(1);
 					}
 
@@ -898,7 +905,7 @@ void PrefModel::runGame () {
       player(3)->setMyGame(raspass);
       mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = 0;
       mOnDeskClosed = false;
-      draw();
+      mDeskView->draw();
 	  if (optPrefClub)
 	  	mDeskView->mySleep(-1);
 	  else
@@ -908,7 +915,7 @@ void PrefModel::runGame () {
     player(1)->setMessage("");
     player(2)->setMessage("");
     player(3)->setMessage("");
-    draw(false);
+    mDeskView->draw(false);
 
     // game (10 moves)
 	mBiddingDone = true;
@@ -945,7 +952,7 @@ LabelRecordOnPaper:
       }
     }
     mPlayingRound = true;
-    draw();
+    mDeskView->draw();
     mDeskView->drawPool();
 /*	if (optPrefClub)
     	mDeskView->mySleep(-1);
@@ -1027,16 +1034,16 @@ void PrefModel::playingRound()
       }
 
       mPlayerHi = nCurrentMove.nValue;
-      draw(false);
+      mDeskView->draw(false);
 	  player(mPlayerHi)->setMessage(tr("thinking..."));
-	  draw();
+	  mDeskView->draw();
       mDeskView->mySleep(0);
       if (gCurrentGame == raspass && (i == 1 || i == 2)) {
         Card *tmp4show, *ptmp4rpass;
         tmp4show = mDeck.at(29+i);
         ptmp4rpass = tmp4show;//newCard(6, tmp4show->suit());
         mCardsOnDesk[0] = tmp4show;
-        draw();
+        mDeskView->draw();
         mDeskView->mySleep(0);
         //if (nCurrentMove.nValue != 1) mDeskView->mySleep(-1);
         mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, ptmp4rpass, true);
@@ -1053,7 +1060,7 @@ void PrefModel::playingRound()
       ++nCurrentMove;
       mPlayerHi = nCurrentMove.nValue;
       player(mPlayerHi)->setMessage(tr("thinking..."));
-      draw();
+      mDeskView->draw();
       mDeskView->mySleep(0);
       mCardsOnDesk[nCurrentMove.nValue] = mSecondCard = makeGameMove(0, mFirstCard, false);
       player(mPlayerHi)->setMessage("");
@@ -1065,7 +1072,7 @@ void PrefModel::playingRound()
       ++nCurrentMove;
       mPlayerHi = nCurrentMove.nValue;
       player(mPlayerHi)->setMessage(tr("thinking..."));
-      draw();
+      mDeskView->draw();
       mDeskView->mySleep(0);
       mCardsOnDesk[nCurrentMove.nValue] = mThirdCard = makeGameMove(mFirstCard, mSecondCard, false);
       player(mPlayerHi)->setMessage("");
@@ -1075,7 +1082,7 @@ void PrefModel::playingRound()
       dlogf(" (3rd) player %i:%s", nCurrentMove.nValue, xxBuf);
 
       ++nCurrentMove;
-      draw();
+      mDeskView->draw();
 	  if (optPrefClub)
       	mDeskView->mySleep(-1);
 	  else
@@ -1085,9 +1092,9 @@ void PrefModel::playingRound()
         + whoseTrick(mFirstCard, mSecondCard, mThirdCard, m_trump)-1;
       
       mDeskView->animateDeskToPlayer(nCurrentMove.nValue, mCardsOnDesk, optTakeAnim); // will clear mCardsOnDesk[]
-      draw();
+      mDeskView->draw();
       tmpg = player(nCurrentMove);
       tmpg->gotTrick();
-      draw(false);
+      mDeskView->draw(false);
     }
 }

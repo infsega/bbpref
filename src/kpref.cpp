@@ -354,7 +354,7 @@ void MainWindow::slotDeckChanged () {
   		setMinimumHeight(CARDHEIGHT*6);
   	else
   		setMinimumHeight(570);
-	m_PrefModel->draw();
+	mDeskView->draw();
 }
 
 void MainWindow::slotRules () {
