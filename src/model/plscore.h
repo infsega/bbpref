@@ -27,7 +27,7 @@
 
 #include "prfconst.h"
 
-
+class PrefModel;
 class ScoreBoard {
 public:
   ScoreBoard ();
@@ -56,6 +56,8 @@ public:
 
   void serialize (QByteArray &ba);
   bool unserialize (QByteArray &ba, int *pos);
+
+  static void calculateScore(PrefModel *model, int nPassCounter);
 
 private:
   QIntList mPool;

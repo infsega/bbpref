@@ -53,6 +53,7 @@ public:
   Player *player (int num);
   Player *currentPlayer () const { return mPlayers[nCurrentMove.nValue]; }
   int activePlayerNumber () const { return mPlayerActive; }
+  int playerWithMaxPool (); // except the players who closed the pool
 
   void showMoveImpossible(const bool canRetry);
 
@@ -71,8 +72,6 @@ private:
   Player *player (const WrapCounter &cnt);
   void internalInit ();
   Card *makeGameMove (Card *lMove, Card *rMove, bool isPassOut);
-  int playerWithMaxPool (); // except the players who closed the pool
-  void calculateScore (int nPassCounter);
   void playingRound();
 
 private:

@@ -24,6 +24,8 @@
 
 #include "baser.h"
 #include "prfconst.h"
+#include "desktop.h"
+#include "player.h"
 
 
 static QString intList2Str (const QIntList &list, int maxItems) {
@@ -262,4 +264,54 @@ bool ScoreBoard::unserialize (QByteArray &ba, int *pos) {
   if (!unserializeIntList(ba, pos, mRightWhists)) return false;
   if (!unserializeInt(ba, pos, &mWhists)) return false;
   return true;
+}
+
+
+void ScoreBoard::calculateScore(PrefModel *model, int nPassCounter)
+{
+    const int mPlayerActive = model->activePlayerNumber();
+    Player *plr;
+    if (mPlayerActive)
+        plr = model->player(mPlayerActive);
+    else
+        plr = 0;
+
+    for (int i = 1; i <= 3;i++ ) {
+      Player *player_i = model->player(i);
+      int RetValAddRec = player_i->mScore.recordScores(gCurrentGame, player_i->myGame(),
+        plr ? plr->tricksTaken() : 0, player_i->tricksTaken(), plr ? mPlayerActive : 0,
+        i, 2-nPassCounter);
+      if (RetValAddRec) {
+        int index = model->playerWithMaxPool();
+        if (index) {
+          player_i->mScore.whistsAdd(index, i, RetValAddRec); //
+          RetValAddRec = model->player(index)->mScore.poolAdd(RetValAddRec); //
+          if (RetValAddRec) {
+            index = model->playerWithMaxPool();
+            if (index) {
+              player_i->mScore.whistsAdd(index, i, RetValAddRec); //
+              RetValAddRec = model->player(index)->mScore.poolAdd(RetValAddRec);
+              if (RetValAddRec) player_i->mScore.mountainDown(RetValAddRec);
+            } else {
+              player_i->mScore.mountainDown(RetValAddRec);
+            }
+          }
+        } else {
+          player_i->mScore.mountainDown(RetValAddRec);
+        }
+      }
+    }
+
+	//amnesty for pass out (doesn't matter for score)
+	if (gCurrentGame == raspass) {
+		int mm=10;
+		int m=0;
+		for (int i=1; i<=3; i++) {
+			m = model->player(i)->tricksTaken();
+			if (m<mm) mm = m;
+		}
+		if (mm !=0)
+			for (int i=1; i<=3; i++)
+				model->player(i)->mScore.mountainAmnesty(mm);
+	}
 }
