@@ -970,28 +970,28 @@ LabelRecordOnPaper:
 void PrefModel::calculateScore(int nPassCounter)
 {
     for (int i = 1; i <= 3;i++ ) {
-      Player *tmpg = player(i);
+      Player *player_i = player(i);
       Player *plr = player(mPlayerActive);
-      int RetValAddRec = tmpg->mScore.recordScores(gCurrentGame, tmpg->myGame(),
-        plr ? plr->tricksTaken() : 0, tmpg->tricksTaken(), plr ? mPlayerActive : 0,
+      int RetValAddRec = player_i->mScore.recordScores(gCurrentGame, player_i->myGame(),
+        plr ? plr->tricksTaken() : 0, player_i->tricksTaken(), plr ? mPlayerActive : 0,
         i, 2-nPassCounter);
       if (RetValAddRec) {
         int index = playerWithMaxPool();
         if (index) {
-          tmpg->mScore.whistsAdd(index, i, RetValAddRec); //   
+          player_i->mScore.whistsAdd(index, i, RetValAddRec); //
           RetValAddRec = player(index)->mScore.poolAdd(RetValAddRec); //   
           if (RetValAddRec) {
             index = playerWithMaxPool();
             if (index) {
-              tmpg->mScore.whistsAdd(index, i, RetValAddRec); //   
+              player_i->mScore.whistsAdd(index, i, RetValAddRec); //
               RetValAddRec = player(index)->mScore.poolAdd(RetValAddRec);
-              if (RetValAddRec) tmpg->mScore.mountainDown(RetValAddRec);
+              if (RetValAddRec) player_i->mScore.mountainDown(RetValAddRec);
             } else {
-              tmpg->mScore.mountainDown(RetValAddRec);
+              player_i->mScore.mountainDown(RetValAddRec);
             }
           }
         } else {
-          tmpg->mScore.mountainDown(RetValAddRec);
+          player_i->mScore.mountainDown(RetValAddRec);
         }
       }
     }
