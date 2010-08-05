@@ -1055,3 +1055,8 @@ void PrefModel::playingRound()
       mDeskView->draw(false);
     }
 }
+
+int PrefModel::trumpSuit (void) const
+{
+  return gCurrentGame-(gCurrentGame/10)*10;
+}

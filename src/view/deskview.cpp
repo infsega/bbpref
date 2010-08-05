@@ -799,18 +799,6 @@ void DeskView::animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[], bool doAnim
 
 
 void DeskView::drawPool () {
-/*  QString sb, sm, slw, srw, tw;
-  ShowBlankPaper(optMaxPool);
-  for (int i = 1;i<=3;i++) {
-    Player *plr = mDesktop->player(i);
-    sb = plr->mScore.poolStr();
-    sm = plr->mScore.mountainStr(7);
-    slw = plr->mScore.leftWhistsStr(14);
-    srw = plr->mScore.rightWhistsStr(14);
-    tw = plr->mScore.whistsStr();
-    showPlayerScore(i, sb, sm, slw, srw, tw);
-  }
-*/
   d_ptr->m_scorew->exec();
 }
 
@@ -820,7 +808,7 @@ void DeskView::drawBidBoard()
     Player *plr2 = m_model->player(2);
     Player *plr3 = m_model->player(3);
     Q_ASSERT(plr1 && plr2 && plr3);
-    drawBidsBmp(m_model->activePlayerNumber(), plr1->tricksTaken(), plr2->tricksTaken(), plr3->tricksTaken(), gCurrentGame);
+    drawBidsBmp(m_model->activePlayerNumber(), plr1->tricksTaken(), plr2->tricksTaken(), plr3->tricksTaken(), m_model->gCurrentGame);
 }
 
 bool DeskView::askWhistType ()
@@ -854,7 +842,7 @@ void DeskView::draw (bool emitSignal) {
     Player *plr2 = m_model->player(2);
     Player *plr3 = m_model->player(3);
     //if (plr1 && plr2 && plr3) {
-    drawBidsBmp(m_model->activePlayerNumber(), plr1->tricksTaken(), plr2->tricksTaken(), plr3->tricksTaken(), gCurrentGame);
+    drawBidsBmp(m_model->activePlayerNumber(), plr1->tricksTaken(), plr2->tricksTaken(), plr3->tricksTaken(), m_model->gCurrentGame);
     //}
   }
   drawIMove();

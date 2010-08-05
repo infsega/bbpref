@@ -278,7 +278,7 @@ void ScoreBoard::calculateScore(PrefModel *model, int nPassCounter)
 
     for (int i = 1; i <= 3;i++ ) {
       Player *player_i = model->player(i);
-      int RetValAddRec = player_i->mScore.recordScores(gCurrentGame, player_i->myGame(),
+      int RetValAddRec = player_i->mScore.recordScores(model->gCurrentGame, player_i->myGame(),
         plr ? plr->tricksTaken() : 0, player_i->tricksTaken(), plr ? mPlayerActive : 0,
         i, 2-nPassCounter);
       if (RetValAddRec) {
@@ -303,7 +303,7 @@ void ScoreBoard::calculateScore(PrefModel *model, int nPassCounter)
     }
 
 	//amnesty for pass out (doesn't matter for score)
-	if (gCurrentGame == raspass) {
+	if (model->gCurrentGame == raspass) {
 		int mm=10;
 		int m=0;
 		for (int i=1; i<=3; i++) {

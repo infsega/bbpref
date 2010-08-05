@@ -55,6 +55,7 @@ public:
   int playerWithMaxPool (); // except the players who closed the pool
 
   void showMoveImpossible(const bool canRetry);
+  int trumpSuit (void) const;
 
 signals:
   void deskChanged ();
@@ -69,6 +70,7 @@ public:
   bool mOnDeskClosed;
   bool mPlayingRound;
   int mPlayerHi; // highlighted message number
+  eGameBid gCurrentGame;
 
 private:
   Player *player (const WrapCounter &cnt);

@@ -77,7 +77,6 @@ extern bool optAlphaBeta1;
 extern QString optPlayerName2;
 extern bool optAlphaBeta2;
 extern bool optDebugHands;
-extern eGameBid gCurrentGame;
 extern bool optAggPass;
 extern int optPassCount;
 extern bool optWithoutThree;
@@ -87,7 +86,6 @@ extern bool optTakeAnim;
 extern bool optPrefClub;
 
 int succBid (eGameBid game);
-int trumpSuit ();
 int gameTricks (eGameBid gType);
 int gameWhists (eGameBid gType);
 int gameWhistsMin (eGameBid gType);

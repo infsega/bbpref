@@ -32,7 +32,6 @@ bool optWhistGreedy = true;
 int optMaxPool = 10;
 bool optQuitAfterMaxRounds = false;
 int optMaxRounds = -1;
-eGameBid gCurrentGame;
 
 #if defined Q_WS_X11 || defined Q_WS_QWS || defined Q_WS_MAC
 	QString optHumanName = getenv("USER");
@@ -56,11 +55,6 @@ bool optPrefClub = false;
 
 int CARDWIDTH = 71;
 int CARDHEIGHT = 96;
-
-int trumpSuit (void) {
-  return gCurrentGame-(gCurrentGame/10)*10;
-}
-
 
 int succBid (eGameBid game) {
   switch (game) {

@@ -187,7 +187,7 @@ Card *HumanPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Play
       continue;
     }
     //qDebug() << "selected:" << cNo << "mClickX:" << mClickX << "mClickY:" << mClickY;
-    const int koz = trumpSuit();
+    const int koz = mDeskView->model()->trumpSuit();
     res = mCards.at(cNo);
     // check if move accords with rules
     if (!isValidMove(res, lMove, rMove, koz)) {
