@@ -938,7 +938,7 @@ LabelRecordOnPaper:
     mPlayingRound = false;
     ++nCurrentStart;
 
-    calculateScore(nPassCounter);
+    ScoreBoard::calculateScore(this, nPassCounter);
     closePool();
 
     CardList tmplist[3];
@@ -972,49 +972,6 @@ LabelRecordOnPaper:
   emit gameOver();
 
   mGameRunning = false;
-}
-
-void PrefModel::calculateScore(int nPassCounter)
-{
-    for (int i = 1; i <= 3;i++ ) {
-      Player *tmpg = player(i);
-      Player *plr = player(mPlayerActive);
-      int RetValAddRec = tmpg->mScore.recordScores(gCurrentGame, tmpg->myGame(),
-        plr ? plr->tricksTaken() : 0, tmpg->tricksTaken(), plr ? mPlayerActive : 0,
-        i, 2-nPassCounter);
-      if (RetValAddRec) {
-        int index = playerWithMaxPool();
-        if (index) {
-          tmpg->mScore.whistsAdd(index, i, RetValAddRec); //   
-          RetValAddRec = player(index)->mScore.poolAdd(RetValAddRec); //   
-          if (RetValAddRec) {
-            index = playerWithMaxPool();
-            if (index) {
-              tmpg->mScore.whistsAdd(index, i, RetValAddRec); //   
-              RetValAddRec = player(index)->mScore.poolAdd(RetValAddRec);
-              if (RetValAddRec) tmpg->mScore.mountainDown(RetValAddRec);
-            } else {
-              tmpg->mScore.mountainDown(RetValAddRec);
-            }
-          }
-        } else {
-          tmpg->mScore.mountainDown(RetValAddRec);
-        }
-      }
-    }
-	
-	//amnesty for pass out (don't matter for score)
-	if (gCurrentGame == raspass) {
-		int mm=10;
-		int m=0;
-		for (int i=1; i<=3; i++) {			
-			m = player(i)->tricksTaken();
-			if (m<mm) mm = m;
-		}
-		if (mm !=0) 
-			for (int i=1; i<=3; i++) 				
-				player(i)->mScore.mountainAmnesty(mm);
-	}
 }
 
 void PrefModel::playingRound()
