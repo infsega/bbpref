@@ -3,6 +3,7 @@
  *      
  *      Copyright (C) 2000-2010 OpenPref Developers
  *      (see file AUTHORS for more details)
+ *      For more information, see <http://openpref.sourceforge.net/>
  *      Contact: annulen@users.sourceforge.net
  *      
  *      OpenPref is free software; you can redistribute it and/or modify

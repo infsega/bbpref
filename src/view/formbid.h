@@ -44,6 +44,9 @@ public:
   void disableLessThan (eGameBid);//(eGameBid);
   void disableItem (eGameBid);
   void enableItem (eGameBid);
+  void enableWithoutThree();
+  void disableWithoutThree();
+  void enableScore();
 
 private slots:
   void onBidClick (); // universal handler
@@ -57,22 +60,20 @@ private slots:
 protected:
   FormBid (DeskView *parent=0);
   ~FormBid ();
-
   void initDialog ();
-  QList<QPushButton *> buttonList ();
-
   void closeEvent(QCloseEvent *event);
 
 public:
   eGameBid _GamesType;
-  QPushButton *btnWithoutThree;
-  QPushButton *btnShowScore;
-  QPushButton *btnHalfWhist;
   
 private:
+  QList<QPushButton *> m_bidButtons;
   QPushButton *btnMisere;
   QPushButton *btnPass;
   QPushButton *btnWhist;
+  QPushButton *btnWithoutThree;
+  QPushButton *btnShowScore;
+  QPushButton *btnHalfWhist;
   DeskView *m_deskview;
 };
 
