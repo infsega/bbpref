@@ -81,14 +81,14 @@ eGameBid HumanPlayer::dropForGame () {
   FormBid *formBid = FormBid::instance();
   formBid->enableAll();
   formBid->disableItem(whist);
-  //formBid->disableItem(halfwhist);
-  formBid->btnHalfWhist->setEnabled(false);
+  formBid->disableItem(halfwhist);
+  //formBid->btnHalfWhist->setEnabled(false);
   formBid->disableItem(gtPass);
   if (mMyGame != g86) formBid->disableItem(g86);
   formBid->disableLessThan(mMyGame);
-  formBid->btnShowScore->setEnabled(true);
+  formBid->enableScore();
   if (optWithoutThree)
-  	formBid->btnWithoutThree->setEnabled(true);
+    formBid->enableWithoutThree();
 
   do {
     tmpGamesType = mDeskView->selectBid(zerogame, zerogame);
@@ -143,10 +143,10 @@ eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove) {
     formBid->disableItem(g86);
   formBid->enableItem(gtPass);
   formBid->disableItem(whist);
-  //formBid->disableItem(halfwhist);
-  formBid->btnHalfWhist->setEnabled(false);
-  formBid->btnShowScore->setEnabled(true);
-  formBid->btnWithoutThree->setEnabled(false);
+  formBid->disableItem(halfwhist);
+  //formBid->btnHalfWhist->setEnabled(false);
+  formBid->enableScore();
+  formBid->disableWithoutThree();
   do {
     tmpGamesType = mDeskView->selectBid(lMove, rMove);
     if (tmpGamesType == 0) {
@@ -222,9 +222,10 @@ eGameBid HumanPlayer::makeFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerP
     formBid->disableAll();
     formBid->enableItem(gtPass);
     formBid->enableItem(whist);
-    formBid->btnShowScore->setEnabled(true);
+    formBid->enableScore();
     if (nGamerPass == 1 && MaxGame <= 81)
-		formBid->btnHalfWhist->setEnabled(true);
+        formBid->enableItem(halfwhist);
+        //formBid->btnHalfWhist->setEnabled(true);
     mMyGame = mDeskView->selectBid(zerogame, zerogame);
     formBid->enableAll();
   }

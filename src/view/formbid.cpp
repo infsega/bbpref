@@ -25,6 +25,7 @@
 #include <QMessageBox>
 #include <QObject>
 #include <QToolTip>
+#include <QDebug>
 
 #include "formbid.h"
 #include "prfconst.h"
@@ -33,6 +34,7 @@
 static eGameBid gameName2Type (const QString s) {
   if (s == "raspass") return raspass;
   if (s == "whist") return whist;
+  if (s == "halfwhist") return halfwhist;
   if (s == "undefined") return undefined;
   if (s == "pass") return gtPass;
   if (s == "g61") return g61;
@@ -70,6 +72,8 @@ namespace {
   public:
     QBidButton (eGameBid aBid, int x, int y, QWidget *parent=0);
     eGameBid bid () const { return mBid; }
+    void enable();
+    void disable();
 
   protected:
     eGameBid mBid;
@@ -84,6 +88,19 @@ namespace {
     setMinimumSize(40, 27);
     setIconSize(QSize(40, 27));
     setIcon(QIcon(iName));
+  }
+
+  void QBidButton::enable() {
+      if(!isEnabled()) {
+          setEnabled(true);
+          setFlat(false);
+      }
+  }
+  void QBidButton::disable() {
+      if(isEnabled()) {
+          setFlat(true);
+          setEnabled(false);
+      }
   }
 } // end of namespace
 
@@ -139,7 +156,7 @@ void FormBid::onBidClick () {
   accept();
 }
 
-
+/*
 QList<QPushButton *> FormBid::buttonList () {
   QList<QPushButton *> res;
   QList<QWidget *> wList = qFindChildren<QWidget *>(this);
@@ -150,7 +167,7 @@ QList<QPushButton *> FormBid::buttonList () {
   return res;
 }
 
-/*
+
 QList<QPushButton *> FormBid::bidButtonList () {
   QList<QPushButton *> res;
   QList<QWidget *> wList = qFindChildren<QWidget *>(this);
@@ -163,38 +180,62 @@ QList<QPushButton *> FormBid::bidButtonList () {
 
 
 void FormBid::enableAll () {
-  QList<QPushButton *> wList(buttonList());
-  foreach (QPushButton *b, wList) b->setEnabled(true);
+  foreach (QPushButton *b, m_bidButtons) {
+      (static_cast<QBidButton *>(b))->enable();
+  }
 }
 
 
 void FormBid::disableAll () {
-  QList<QPushButton *> wList(buttonList());
-  foreach (QPushButton *b, wList) b->setEnabled(false);
+    QList<QPushButton *> bList = qFindChildren<QPushButton *>(this);
+    foreach (QPushButton *button, bList) {
+      QBidButton *b = dynamic_cast<QBidButton *>(button);
+      if (b)
+          b->disable();
+      else
+          button->setEnabled(false);
+    }
 }
 
 
 void FormBid::disableLessThan (eGameBid gameType) {
-  QList<QPushButton *> wList(buttonList());
-  foreach (QPushButton *b, wList) {
-    if (gameName2Type(b->objectName()) < gameType) b->setEnabled(false);
+  foreach (QPushButton *b, m_bidButtons) {
+      if (gameName2Type(b->objectName()) < gameType)
+          (static_cast<QBidButton *>(b))->disable();
   }
 }
 
 
 void FormBid::disableItem (eGameBid gameType) {
-  QList<QPushButton *> wList(buttonList());
-  foreach (QPushButton *b, wList) {
-    if (gameName2Type(b->objectName()) == gameType) b->setEnabled(false);
+  QList<QPushButton *> bList = qFindChildren<QPushButton *>(this);
+  foreach (QPushButton *b, bList) {
+      if (gameName2Type(b->objectName()) == gameType)
+          b->setEnabled(false);
   }
 }
 
 
 void FormBid::enableItem (eGameBid gameType) {
-  QList<QPushButton *> wList(buttonList());
-  foreach (QPushButton *b, wList) {
-    if (gameName2Type(b->objectName()) == gameType) b->setEnabled(true);
+  QList<QPushButton *> bList = qFindChildren<QPushButton *>(this);
+  foreach (QPushButton *b, bList) {
+      if (gameName2Type(b->objectName()) == gameType)
+          b->setEnabled(true);
   }
+}
+
+void FormBid::enableWithoutThree()
+{
+    btnWithoutThree->setEnabled(true);
+}
+
+void FormBid::disableWithoutThree()
+{
+    btnWithoutThree->setEnabled(false);
+}
+
+void FormBid::enableScore()
+{
+    btnShowScore->setEnabled(true);
 }
 
 
@@ -212,12 +253,13 @@ void FormBid::initDialog () {
       int bid = face*10+suit;
       QBidButton *b = new QBidButton((eGameBid)bid, x, y, this);
 	  if (suit == 5)
-	  	b->setToolTip(tr("no trump"));
+		b->setToolTip(tr("no trump"));
+	  m_bidButtons.append(b);
       connect(b, SIGNAL(clicked()), this, SLOT(onBidClick()));
     }
   }
 
-  btnMisere = new QPushButton(this);
+  btnMisere = new QBidButton(g86, 0, 0, this);
   btnMisere->setGeometry(10, 100, 200, 27);
   btnMisere->setMinimumSize(0,0);
   btnMisere->setObjectName("g86");
