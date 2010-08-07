@@ -23,9 +23,12 @@
 #ifndef PLSCORE_H
 #define PLSCORE_H
 
-#include <QString>
+#include <QtCore/QList>
+#include <QtCore/QString>
 
 #include "prfconst.h"
+
+typedef QList<int>  QIntList;
 
 class PrefModel;
 class ScoreBoard {

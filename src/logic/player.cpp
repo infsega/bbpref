@@ -26,6 +26,10 @@
 
 #include <QDebug>
 
+#define SUIT_OFFSET         22
+#define NEW_SUIT_OFFSET     ((CARDWIDTH)+8)
+#define CLOSED_CARD_OFFSET  ((CARDWIDTH)*0.55)
+
 Player::Player (int aMyNumber, PrefModel *model) : mDeskView(model->view()), m_model(model),
                         mIStart(false), mPlayerNo(aMyNumber), mScore(model) {
   internalInit();

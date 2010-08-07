@@ -24,17 +24,9 @@
 #define PRFCONST_H
 
 #include <QString>
-#include <QList>
-
-
-typedef QList<int>  QIntList;
 
 extern int CARDWIDTH;
 extern int CARDHEIGHT;
-
-#define SUIT_OFFSET         22
-#define NEW_SUIT_OFFSET     ((CARDWIDTH)+8)
-#define CLOSED_CARD_OFFSET  ((CARDWIDTH)*0.55)
 
 #define OPENPREF_VERSION "0.1.3"
 
