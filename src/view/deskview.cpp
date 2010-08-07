@@ -823,9 +823,9 @@ bool DeskView::askWhistType ()
 }
 
 void DeskView::draw (bool emitSignal) {
+  ClearScreen();
   if(!m_model->mGameRunning)
     return;
-  ClearScreen();
 
   // repaint players
   for (int f = 1; f <= 3; f++) 
