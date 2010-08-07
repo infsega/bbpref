@@ -29,11 +29,11 @@
 
 class HumanPlayer : public Player {
 public:
-  HumanPlayer (int aMyNumber, DeskView *aDeskView=0);
+  HumanPlayer(int aMyNumber, PrefModel *model);
 
   virtual QString type() const { return "Human"; }
 
-  virtual Player * create(int aMyNumber, DeskView *aDeskView=0);
+  virtual Player * create(int aMyNumber, PrefModel *model);
   virtual bool isHuman() const { return true; }
 
   //HumanPlayer &operator = (const Player &pl);

@@ -59,6 +59,7 @@ private:
   void initMenuBar();
   void saveOptions ();
   void loadOptions ();
+  void doConnects();
 
   QAction *actFileOpen;
   QAction *actFileSave;

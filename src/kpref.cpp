@@ -83,10 +83,13 @@ MainWindow::MainWindow () {
   setCentralWidget(mDeskView);
   mDeskView->setAutoFillBackground(false);
   m_PrefModel = new PrefModel(mDeskView);
+
+  // Load conventions
+//  QSettings st;
+//  m_PrefModel->optMaxPool = st.value("maxpool", 10).toInt();
+  
   mDeskView->setModel(m_PrefModel);
-  connect(m_PrefModel, SIGNAL(deskChanged()), mDeskView, SLOT(update()));
-  connect(m_PrefModel, SIGNAL(showHint(QString)), this, SLOT(showHint(QString)));
-  connect(m_PrefModel, SIGNAL(clearHint()), this, SLOT(clearHint()));
+  doConnects();
   HintBar->showMessage(tr("Welcome to OpenPref!"));
   FormBid *formBid = FormBid::instance(mDeskView);
   formBid->hide();
@@ -100,6 +103,13 @@ MainWindow::~MainWindow () {
   m_PrefModel->deleteLater();
   HintBar->deleteLater();
   //delete Hint;
+}
+
+inline void MainWindow::doConnects()
+{
+  connect(m_PrefModel, SIGNAL(deskChanged()), mDeskView, SLOT(update()));
+  connect(m_PrefModel, SIGNAL(showHint(QString)), this, SLOT(showHint(QString)));
+  connect(m_PrefModel, SIGNAL(clearHint()), this, SLOT(clearHint()));
 }
 
 
@@ -189,58 +199,62 @@ void MainWindow::slotNewSingleGame () {
   dlg->leName2->setText(optPlayerName2);
   dlg->cbAlphaBeta2->setChecked(optAlphaBeta2);
   // Conventions
-  dlg->sbGame->setValue(optMaxPool);
-  if(optQuitAfterMaxRounds) {
+  //dlg->sbGame->setValue(m_PrefModel->optMaxPool);
+  QSettings st;
+  dlg->sbGame->setValue(st.value("maxpool", 10).toInt());
+  /*if(optQuitAfterMaxRounds) {
     dlg->cbRounds->setCheckState(Qt::Checked);
     dlg->sbRounds->setValue(optMaxRounds);
+  }*/
+  if(st.value("quitmaxrounds", false).toBool()) {
+    dlg->cbRounds->setCheckState(Qt::Checked);
+    dlg->sbRounds->setValue(st.value("maxrounds", -1).toInt());
   }
-  dlg->cbGreedy->setChecked(optWhistGreedy);
-  dlg->rbTenWhist->setChecked(opt10Whist);
-  dlg->cbStalin->setChecked(optStalingrad);
-  dlg->cbAggPass->setChecked(optAggPass);
-  dlg->cbWithoutThree->setChecked(optWithoutThree);
+  dlg->cbGreedy->setChecked(st.value("whistgreedy", true).toBool());
+  dlg->rbTenWhist->setChecked(st.value("whist10", false).toBool());
+  dlg->cbStalin->setChecked(st.value("stalin", false).toBool());
+  dlg->cbAggPass->setChecked(st.value("aggpass", false).toBool());
+  dlg->cbWithoutThree->setChecked(st.value("without3", false).toBool());
   
   if (dlg->exec() == QDialog::Accepted) {
-	// Players
-	optHumanName = dlg->leHumanName->text();
-	optPlayerName1 = dlg->leName1->text();
-    optAlphaBeta1 = dlg->cbAlphaBeta1->isChecked();
-	optPlayerName2 = dlg->leName2->text();
-	optAlphaBeta2 = dlg->cbAlphaBeta2->isChecked();
+    mDeskView->ClearScreen();
+    delete m_PrefModel;
+    m_PrefModel = new PrefModel(mDeskView);
+    mDeskView->setModel(m_PrefModel);
+    doConnects();
+    
     // Conventions
-  optMaxPool = dlg->sbGame->value();
-  optQuitAfterMaxRounds = (dlg->cbRounds->checkState() == Qt::Checked);
-  if (optQuitAfterMaxRounds) {
-    optMaxRounds = dlg->sbRounds->value();
-  }
-    optWhistGreedy = dlg->cbGreedy->isChecked();
-    opt10Whist = dlg->rbTenWhist->isChecked();
-    optStalingrad = dlg->cbStalin->isChecked();
-    optAggPass = dlg->cbAggPass->isChecked();
-	optWithoutThree = dlg->cbWithoutThree->isChecked();
+  //st.setValue("maxpool",dlg->sbGame->value());
+    m_PrefModel->optMaxPool = dlg->sbGame->value();
+    m_PrefModel->optQuitAfterMaxRounds = (dlg->cbRounds->checkState() == Qt::Checked);
+    if (m_PrefModel->optQuitAfterMaxRounds) {
+      m_PrefModel->optMaxRounds = dlg->sbRounds->value();
+    }
+    m_PrefModel->optWhistGreedy = dlg->cbGreedy->isChecked();
+    m_PrefModel->opt10Whist = dlg->rbTenWhist->isChecked();
+    m_PrefModel->optStalingrad = dlg->cbStalin->isChecked();
+    m_PrefModel->optAggPass = dlg->cbAggPass->isChecked();
+    m_PrefModel->optWithoutThree = dlg->cbWithoutThree->isChecked();
+    m_PrefModel->optPassCount = 0;
+
+    // Players
+    optHumanName = dlg->leHumanName->text();
+    optPlayerName1 = dlg->leName1->text();
+    optAlphaBeta1 = dlg->cbAlphaBeta1->isChecked();
+    optPlayerName2 = dlg->leName2->text();
+    optAlphaBeta2 = dlg->cbAlphaBeta2->isChecked();
+  
     saveOptions();
-	delete dlg;
+    //actFileOpen->setEnabled(false);
+    actFileSave->setEnabled(true); 
+    m_PrefModel->runGame();
+    //actFileOpen->setEnabled(true);
+    actFileSave->setEnabled(false);
   }
-  else
-  {
-	delete dlg;
-	return;
-  }
-  
-  mDeskView->ClearScreen();
-  delete m_PrefModel;
-  m_PrefModel = new PrefModel(mDeskView);    
-  mDeskView->setModel(m_PrefModel);
-  connect(m_PrefModel, SIGNAL(deskChanged()), mDeskView, SLOT(update()));
-  connect(m_PrefModel, SIGNAL(showHint(QString)), this, SLOT(showHint(QString)));
-  connect(m_PrefModel, SIGNAL(clearHint()), this, SLOT(clearHint()));
-  
-  optPassCount = 0;
-  actFileOpen->setEnabled(false);
-  actFileSave->setEnabled(true); 
-  m_PrefModel->runGame();
-  actFileOpen->setEnabled(true);
-  actFileSave->setEnabled(false);
+  delete dlg;
+
+    // Load conventions
+  //m_PrefModel->optMaxPool = st.value("maxpool", 10).toInt();
 }
 
 
@@ -277,12 +291,18 @@ void MainWindow::slotHelpAbout () {
 
 void MainWindow::saveOptions () {
   QSettings st;
-  st.setValue("maxpool", optMaxPool);
-  st.setValue("quitmaxrounds", optQuitAfterMaxRounds);
-  st.setValue("maxrounds", optMaxRounds);
-  st.setValue("stalin", optStalingrad);
-  st.setValue("whist10", opt10Whist);
-  st.setValue("whistgreedy", optWhistGreedy);
+  // Conventions
+  st.setValue("maxpool", m_PrefModel->optMaxPool);
+  st.setValue("quitmaxrounds", m_PrefModel->optQuitAfterMaxRounds);
+  st.setValue("maxrounds", m_PrefModel->optMaxRounds);
+  st.setValue("stalin", m_PrefModel->optStalingrad);
+  st.setValue("whist10", m_PrefModel->opt10Whist);
+  st.setValue("whistgreedy", m_PrefModel->optWhistGreedy);
+  st.setValue("without3", m_PrefModel->optWithoutThree);
+  st.setValue("aggpass", m_PrefModel->optAggPass);
+
+  // View settings
+  st.setValue("prefclub", optPrefClub);
   st.setValue("animdeal", optDealAnim);
   st.setValue("animtake", optTakeAnim);
   st.setValue("humanname", optHumanName);
@@ -291,19 +311,19 @@ void MainWindow::saveOptions () {
   st.setValue("playername2", optPlayerName2);
   st.setValue("alphabeta2", optAlphaBeta2);
   st.setValue("debughand", optDebugHands);
-  st.setValue("without3", optWithoutThree);
-  st.setValue("aggpass", optAggPass);
-  st.setValue("prefclub", optPrefClub);
 }
 
 
 void MainWindow::loadOptions () {
   QSettings st;
-  optMaxPool = st.value("maxpool", 10).toInt();
-  if (optMaxPool < 4) optMaxPool = 4; else if (optMaxPool > 1000) optMaxPool = 1000;
-  optStalingrad = st.value("stalin", false).toBool();
-  opt10Whist = st.value("whist10", false).toBool();// true => radio button checks 'check' nevertheless!
-  optWhistGreedy = st.value("whistgreedy", true).toBool();
+  //m_PrefModel->optMaxPool = st.value("maxpool", 10).toInt();
+  //if (m_PrefModel->optMaxPool < 4)
+    //m_PrefModel->optMaxPool = 4;
+  //else if (m_PrefModel->optMaxPool > 1000)
+    //m_PrefModel->optMaxPool = 1000;
+  //optStalingrad = st.value("stalin", false).toBool();
+  //opt10Whist = st.value("whist10", false).toBool();// true => radio button checks 'check' nevertheless!
+  //optWhistGreedy = st.value("whistgreedy", true).toBool();
   optDealAnim = st.value("animdeal", true).toBool();
   optTakeAnim = st.value("animtake", true).toBool();
   #ifndef WIN32	// May be #ifdef POSIX?
@@ -315,9 +335,9 @@ void MainWindow::loadOptions () {
   optAlphaBeta1 = (st.value("alphabeta1", false).toBool());
   optPlayerName2 = st.value("playername2", tr("Player 2")).toString();
   optAlphaBeta2 = (st.value("alphabeta2", false).toBool());
-  optWithoutThree = st.value("without3", false).toBool();
+  //optWithoutThree = st.value("without3", false).toBool();
   optDebugHands = st.value("debughand", false).toBool();
-  optAggPass = st.value("aggpass", false).toBool();
+  //optAggPass = st.value("aggpass", false).toBool();
   optPrefClub = st.value("prefclub", false).toBool();
 }
 

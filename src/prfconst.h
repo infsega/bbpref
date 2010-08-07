@@ -65,21 +65,12 @@ enum eGameBid {
 };// g86 - miser
 
 
-extern bool optStalingrad;
-extern bool opt10Whist;
-extern bool optWhistGreedy;
-extern int optMaxPool;
-extern int optMaxRounds;
-extern bool optQuitAfterMaxRounds;
 extern QString optHumanName;
 extern QString optPlayerName1;
 extern bool optAlphaBeta1;
 extern QString optPlayerName2;
 extern bool optAlphaBeta2;
 extern bool optDebugHands;
-extern bool optAggPass;
-extern int optPassCount;
-extern bool optWithoutThree;
 
 extern bool optDealAnim;
 extern bool optTakeAnim;
@@ -87,7 +78,6 @@ extern bool optPrefClub;
 
 int succBid (eGameBid game);
 int gameTricks (eGameBid gType);
-int gameWhists (eGameBid gType);
 int gameWhistsMin (eGameBid gType);
 int gamePoolPrice (eGameBid gType);
 

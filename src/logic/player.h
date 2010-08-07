@@ -31,14 +31,14 @@ class DeskView;
 
 class Player {
 public:
-  Player (int aMyNumber, DeskView *aDeskView=0);
+  Player (int aMyNumber, PrefModel *model);
   //Player (const Player &pl);
   virtual ~Player ();
 
   virtual QString type() const = 0;
   virtual bool isHuman() const { return false; }
 
-  virtual Player * create(int aMyNumber, DeskView *aDeskView = 0) = 0;
+  virtual Player * create(int aMyNumber, PrefModel *model) = 0;
 
   //Player &operator = (const Player &pl);
 
@@ -95,7 +95,7 @@ protected:
 
 public:
   DeskView *mDeskView;
-  //PrefModel *m_model;
+  PrefModel *m_model;
 
   ScoreBoard mScore;
   CardList mCards; // my cards

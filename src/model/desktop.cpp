@@ -165,22 +165,25 @@ void PrefModel::internalInit () {
   mPlayers << 0; // 0th player is nobody
   //addPlayer(new AiPlayer(1));
   // I Hate This Game :)
-  mPlayers << new HumanPlayer(1, mDeskView);
+  mPlayers << new HumanPlayer(1, this);
   if (!optAlphaBeta1)
-    mPlayers << new AiPlayer(2, mDeskView);
+    mPlayers << new AiPlayer(2, this);
   else 
-    mPlayers << new AlphaBetaPlayer(2, mDeskView);
+    mPlayers << new AlphaBetaPlayer(2, this);
   if (!optAlphaBeta2)
-    mPlayers << new AiPlayer(3, mDeskView);
+    mPlayers << new AiPlayer(3, this);
   else 
-    mPlayers << new AlphaBetaPlayer(3, mDeskView);
+    mPlayers << new AlphaBetaPlayer(3, this);
 
   mOnDeskClosed = false;
 }
 
 
 PrefModel::PrefModel (DeskView *aDeskView) : QObject(0), mPlayingRound(false),
-                            mGameRunning(false), mDeskView(aDeskView), m_trump(0)
+                            mGameRunning(false), mDeskView(aDeskView), m_trump(0),
+                            optStalingrad(false), opt10Whist(false), optWhistGreedy(true),
+                            optMaxPool(10), optQuitAfterMaxRounds(false), optMaxRounds(-1),
+                            optAggPass(false), optPassCount(0), optWithoutThree(true)
 {
   internalInit();
 }
@@ -190,6 +193,22 @@ PrefModel::~PrefModel () {
   foreach (Player *p, mPlayers) delete p;
   mPlayers.clear();
 }
+
+int PrefModel::gameWhists (eGameBid gType) const
+{
+  if (gType >= g71 && gType <= 75) return 2;
+  if (gType >= g81 && gType <= 85) return 1;
+  if (gType == g86) return 0;
+  if (gType >= g91 && gType <= 95) return 1;
+  if (gType >= g101 && gType <= 105) {
+	  if (opt10Whist)
+	  	return 1;
+	  else
+	  	return 0;
+  }
+  return 4;
+}
+
 
 
 void PrefModel::closePool () {
@@ -258,17 +277,17 @@ Card *PrefModel::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
   // passes or catches misere
   if (((player(1)->myGame() == whist && !Closed_Whist) || player(1)->myGame() == g86catch) &&
       !curPlr->isHuman() && (curPlr->myGame() == gtPass || curPlr->myGame() == g86catch)) {
-    plr = player(1)->create(nCurrentMove.nValue, mDeskView);
+    plr = player(1)->create(nCurrentMove.nValue, this);
   }
 
   // 2. Current player passes
   // if AI whists with open cards, it makes move instead of human or other AI
   else if (curPlr->myGame() == gtPass && !Closed_Whist) {
     if (player(2)->myGame() == whist) {
-      plr = player(2)->create(nCurrentMove.nValue, mDeskView);
+      plr = player(2)->create(nCurrentMove.nValue, this);
     }
     else if (player(3)->myGame() == whist) {
-      plr = player(3)->create(nCurrentMove.nValue, mDeskView);
+      plr = player(3)->create(nCurrentMove.nValue, this);
     }
     else
     {

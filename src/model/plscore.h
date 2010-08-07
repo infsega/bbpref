@@ -30,7 +30,7 @@
 class PrefModel;
 class ScoreBoard {
 public:
-  ScoreBoard ();
+  ScoreBoard (PrefModel *model);
   ~ScoreBoard ();
 
   int recordScores (eGameBid aGamerType, eGameBid aMyType, int nGamerVz, int nMyVz, int nGamer, int myNumber, int nqVist);
@@ -65,6 +65,7 @@ private:
   QIntList mLeftWhists;
   QIntList mRightWhists;
   int mWhists;
+  PrefModel *m_model;
 };
 
 

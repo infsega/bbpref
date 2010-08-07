@@ -691,12 +691,12 @@ Card *AlphaBetaPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, 
 
 
 ///////////////////////////////////////////////////////////////////////////////
-AlphaBetaPlayer::AlphaBetaPlayer (int aMyNumber, DeskView *aDeskView) : AiPlayer(aMyNumber, aDeskView) {
+AlphaBetaPlayer::AlphaBetaPlayer (int aMyNumber, PrefModel *model) : AiPlayer(aMyNumber, model) {
   mInvisibleHand = false;
 }
 
-Player * AlphaBetaPlayer::create(int aMyNumber, DeskView *aDeskView) {
-  Player * pl = new AlphaBetaPlayer(aMyNumber, aDeskView);
+Player * AlphaBetaPlayer::create(int aMyNumber, PrefModel *model) {
+  Player * pl = new AlphaBetaPlayer(aMyNumber, model);
   return pl;
 }
 

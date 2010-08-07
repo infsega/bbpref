@@ -43,7 +43,7 @@ static QString intList2Str (const QIntList &list, int maxItems) {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-ScoreBoard::ScoreBoard () {
+ScoreBoard::ScoreBoard (PrefModel *model) : m_model(model) {
   mPool << 0;
   mMountain << 0;
   mLeftWhists << 0;
@@ -59,12 +59,13 @@ ScoreBoard::~ScoreBoard () {
 int ScoreBoard::poolAdd (int delta) {
   int score = pool();
   int ns = score+delta;
-  if (ns <= optMaxPool) {
+  if (ns <= m_model->optMaxPool) {
     mPool << ns;
     return 0;
   } else {
-    if (optMaxPool != score) mPool << optMaxPool;
-    return delta-(optMaxPool-score);
+    if (m_model->optMaxPool != score)
+      mPool << m_model->optMaxPool;
+    return delta-(m_model->optMaxPool-score);
   }
 }
 
@@ -122,7 +123,7 @@ int ScoreBoard::recordScores (
 {
   int nGamePrice = gamePoolPrice(aGamerType); // цена игры
   int nGameCard = gameTricks(aGamerType); // взяток должно быть при данной игре
-  int nVistCard = gameWhists(aGamerType); // минимальное кол-во взяток вистующих на двоих
+  int nVistCard = m_model->gameWhists(aGamerType); // минимальное кол-во взяток вистующих на двоих
   int score = 0, pnCurrent = 0;
   QIntList *dList;
 
@@ -165,7 +166,7 @@ int ScoreBoard::recordScores (
 
   //-------------------------------------------------------------------------
   if (aMyType == gtPass && aGamerType != g86) {
-    if (!optWhistGreedy && nGameCard-nGamerVz > 0) {
+    if (!m_model->optWhistGreedy && nGameCard-nGamerVz > 0) {
       // разыгрывающий без лап(ы)
       score = nGamePrice*((nGameCard-nGamerVz)+nMyVz)+pnCurrent;
     }
@@ -219,7 +220,7 @@ int ScoreBoard::recordScores (
 QString ScoreBoard::poolStr (int maxItems) const
 {
   QString str = intList2Str(mPool, maxItems);
-  if (mPool.last() == optMaxPool)
+  if (mPool.last() == m_model->optMaxPool)
     str += "<<";
   return str;
 }

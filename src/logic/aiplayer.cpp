@@ -28,6 +28,7 @@
 #include <QPainter>
 
 #include "aiplayer.h"
+#include "desktop.h"
 
 #include "debug.h"
 
@@ -39,12 +40,12 @@ enum eHand {
 };
 
 
-AiPlayer::AiPlayer (int aMyNumber, DeskView *aDeskView) : Player(aMyNumber, aDeskView) {
+AiPlayer::AiPlayer (int aMyNumber, PrefModel *model) : Player(aMyNumber, model) {
   internalInit();
 }
 
-Player * AiPlayer::create(int aMyNumber, DeskView *aDeskView) {
-  Player * pl = new AiPlayer(aMyNumber, aDeskView);
+Player * AiPlayer::create(int aMyNumber, PrefModel *model) {
+  Player * pl = new AiPlayer(aMyNumber, model);
   return pl;
 }
 
@@ -1380,11 +1381,11 @@ eGameBid AiPlayer::makeFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerPas
   	Answer = g86catch; // Misere
 	goto myGame;
   }
-  if (optStalingrad && MaxGame == g61) {
+  if (m_model->optStalingrad && MaxGame == g61) {
   	Answer = whist; // Stalingrad  
 	goto myGame;
   }
-  if (!opt10Whist && MaxGame>=101 && MaxGame<=105) {
+  if (!m_model->opt10Whist && MaxGame>=101 && MaxGame<=105) {
 	Answer = whist;
 	goto myGame;
   }
@@ -1393,7 +1394,7 @@ eGameBid AiPlayer::makeFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerPas
   if (HaveAWhist == gtPass)
 	  Answer = (vz > gameWhistsMin(MaxGame)) ? whist : gtPass;
   else
-  	  Answer = (vz > gameWhists(MaxGame)) ? whist : gtPass;
+  	  Answer = (vz > m_model->gameWhists(MaxGame)) ? whist : gtPass;
       
   //Answer = (HaveAWhist != whist && vz >= gameWhistsMin(MaxGame)) ? whist : gtPass ;
   //if (HaveAWhist == gtPass && vz < gameWhistsMin(MaxGame)) Answer = gtPass;
@@ -1459,7 +1460,8 @@ eGameBid AiPlayer::dropForMisere () {
       if (j != f) {
         tmpSecondCardOut = mCards.at(j);
         mCards.removeAt(j);
-        AiPlayer *tmpGamer = new AiPlayer(99);
+        /// @todo bad practise
+        AiPlayer *tmpGamer = new AiPlayer(99, m_model);
         tmpGamer->mCards = mCards;
         tmpGamer->mCards.mySort();
         tmpHight = tmpGamer->moveCalcDrop();
@@ -1506,7 +1508,8 @@ eGameBid AiPlayer::dropForGame () {
       if (j != f) {
         tmpSecondCardOut = mCards.at(j);
         mCards.removeAt(j);
-        AiPlayer *tmpGamer = new AiPlayer(99);
+        /// @todo bad practise
+        AiPlayer *tmpGamer = new AiPlayer(99, m_model);
         tmpGamer->mCards = mCards;
         tmpGamer->mCards.mySort();
         tmpHight = tmpGamer->moveCalcDrop();
@@ -1575,7 +1578,7 @@ eGameBid AiPlayer::makeBid (eGameBid lMove, eGameBid rMove) {
     }
 */
     eGameBid curMaxGame = qMax(lMove, rMove);
-    if (optAggPass && optPassCount > 0) {
+    if (m_model->optAggPass && m_model->optPassCount > 0) {
       if (curMaxGame < g71) curMaxGame = g65;
       if (lMove != gtPass && lMove != undefined && lMove < g65) lMove = g65;
       if (rMove != gtPass && rMove != undefined && rMove < g65) rMove = g65;
@@ -1625,7 +1628,7 @@ eGameBid AiPlayer::makeBid (eGameBid lMove, eGameBid rMove) {
 			mMyGame = curMaxGame;
 		else
       		mMyGame = (eGameBid)succBid(curMaxGame);
-		if (optAggPass && (optPassCount > 0) && (mMyGame < g71))
+		if (m_model->optAggPass && (m_model->optPassCount > 0) && (mMyGame < g71))
 			mMyGame = g71;
 	}
 	else
@@ -1682,7 +1685,7 @@ eGameBid AiPlayer::makeBid (eGameBid lMove, eGameBid rMove) {
     }*/
   }
   //???
-  if (optAggPass && optPassCount > 0 && mMyGame != gtPass && mMyGame < g71) {
+  if (m_model->optAggPass && m_model->optPassCount > 0 && mMyGame != gtPass && mMyGame < g71) {
     makeBid(g71, g71);
    // if (optAggPass && optPassCount > 0 && mMyGame != gtPass && mMyGame < g71) moveBidding(g72, g72);
   }

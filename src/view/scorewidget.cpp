@@ -54,7 +54,7 @@ static void drawRotatedText (QPainter &p, int x, int y, int width, int height, f
   p.translate(-1*x, -1*y);
 }
 
-static void paintBlankPaper (QPixmap *paper) {
+static void paintBlankPaper (QPixmap *paper, int maxPool) {
   const int PaperWidth = paper->width();
   const int PaperHeight = paper->height();
   const int PoolWidth = 60;
@@ -109,7 +109,7 @@ static void paintBlankPaper (QPixmap *paper) {
   fnt.setBold(true);
   p.setFont(fnt);
   p.drawText(QRect(center.x() - maxPoolRadius, center.y() - maxPoolRadius,
-    maxPoolRadius*2, maxPoolRadius*2), QString::number(optMaxPool), QTextOption(Qt::AlignCenter));
+    maxPoolRadius*2, maxPoolRadius*2), QString::number(maxPool), QTextOption(Qt::AlignCenter));
   fnt.setBold(false);
   p.setFont(fnt);
   
@@ -215,7 +215,7 @@ void ScoreWidget::resizeEvent(QResizeEvent *event)
   if (event->size() != event->oldSize()) {
     delete m_paperBmp;
     m_paperBmp = new QPixmap(width(), height());
-    paintBlankPaper(m_paperBmp);
+    paintBlankPaper(m_paperBmp, m_model->optMaxPool);
   }
 }
 

@@ -57,6 +57,9 @@ public:
   void showMoveImpossible(const bool canRetry);
   int trumpSuit (void) const;
 
+  DeskView *view() const { Q_ASSERT(mDeskView); return mDeskView; }
+  int gameWhists (eGameBid gType) const;
+
 signals:
   void deskChanged ();
   void gameOver ();
@@ -71,6 +74,17 @@ public:
   bool mPlayingRound;
   int mPlayerHi; // highlighted message number
   eGameBid gCurrentGame;
+
+  // Conventions
+  bool optStalingrad;
+  bool opt10Whist;
+  bool optWhistGreedy;
+  int optMaxPool;
+  bool optQuitAfterMaxRounds;
+  int optMaxRounds;
+  bool optAggPass;
+  int optPassCount;
+  bool optWithoutThree;
 
 private:
   Player *player (const WrapCounter &cnt);

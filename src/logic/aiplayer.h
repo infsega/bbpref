@@ -34,11 +34,11 @@ typedef struct {
 
 class AiPlayer : public Player {
 public:
-  AiPlayer (int aMyNumber, DeskView *aDeskView=0);
+  AiPlayer(int aMyNumber, PrefModel *model);
 
   virtual QString type() const { return "Original"; }
 
-  virtual Player * create(int aMyNumber, DeskView *aDeskView=0);
+  virtual Player * create(int aMyNumber, PrefModel *model);
 
 public:
   virtual Card *makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut); //ход

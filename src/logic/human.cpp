@@ -30,12 +30,12 @@
 #include "human.h"
 
 
-HumanPlayer::HumanPlayer (int aMyNumber, DeskView *aDeskView) : Player(aMyNumber, aDeskView) {
+HumanPlayer::HumanPlayer (int aMyNumber, PrefModel *model) : Player(aMyNumber, model) {
   internalInit();
 }
 
-Player * HumanPlayer::create(int aMyNumber, DeskView *aDeskView) {
-  Player * pl = new HumanPlayer(aMyNumber, aDeskView);
+Player * HumanPlayer::create(int aMyNumber, PrefModel *model) {
+  Player * pl = new HumanPlayer(aMyNumber, model);
   return pl;
 }
 /*
@@ -87,7 +87,7 @@ eGameBid HumanPlayer::dropForGame () {
   if (mMyGame != g86) formBid->disableItem(g86);
   formBid->disableLessThan(mMyGame);
   formBid->enableScore();
-  if (optWithoutThree)
+  if (m_model->optWithoutThree)
     formBid->enableWithoutThree();
 
   do {
@@ -125,7 +125,7 @@ eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove) {
     if (lMove == undefined) lMove = g71;
     if (rMove == undefined) rMove = g71;
   }*/
-  if (optAggPass && optPassCount > 0)
+  if (m_model->optAggPass && m_model->optPassCount > 0)
 	  formBid->disableLessThan(g71);
   
   if (qMax(lMove, rMove) != gtPass)
@@ -215,8 +215,8 @@ eGameBid HumanPlayer::makeFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerP
   //fprintf(stderr, "whist/pass\n");
   if (MaxGame == g86) {
     mMyGame = g86catch;
-  } else if ((!opt10Whist && MaxGame>=101 && MaxGame<=105)
-      || (optStalingrad && MaxGame == g61)) {
+  } else if ((!m_model->opt10Whist && MaxGame>=101 && MaxGame<=105)
+      || (m_model->optStalingrad && MaxGame == g61)) {
 	mMyGame = whist;
   } else {
     formBid->disableAll();

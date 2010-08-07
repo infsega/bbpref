@@ -27,11 +27,11 @@
 
 class AlphaBetaPlayer : public AiPlayer {
 public:
-  AlphaBetaPlayer (int aMyNumber, DeskView *aDeskView=0);
+  AlphaBetaPlayer(int aMyNumber, PrefModel *model);
 
   virtual QString type() const { return "AlphaBeta"; }
 
-  virtual Player * create(int aMyNumber, DeskView *aDeskView=0);
+  virtual Player * create(int aMyNumber, PrefModel *model);
 
   Card *makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut);
 };

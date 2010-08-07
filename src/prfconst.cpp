@@ -20,18 +20,9 @@
  *      http://www.gnu.org/licenses 
  */
 
-#include <string.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include "prfconst.h"
 #include "card.h"
-
-bool optStalingrad = true;
-bool opt10Whist = false;
-bool optWhistGreedy = true;
-int optMaxPool = 10;
-bool optQuitAfterMaxRounds = false;
-int optMaxRounds = -1;
 
 #if defined Q_WS_X11 || defined Q_WS_QWS || defined Q_WS_MAC
 	QString optHumanName = getenv("USER");
@@ -40,14 +31,12 @@ int optMaxRounds = -1;
 #else
 	QString optHumanName = "";
 #endif
+
 QString optPlayerName1 = "Player 1";
 bool optAlphaBeta1 = false;
 QString optPlayerName2 = "Player 2";
 bool optAlphaBeta2 = false;
 bool optDebugHands = false;
-bool optAggPass = false;
-int optPassCount = 0;
-bool optWithoutThree = true;
 
 bool optDealAnim = true;
 bool optTakeAnim = true;
@@ -85,21 +74,6 @@ int gameTricks (eGameBid gType) {
   if (gType >= g91 && gType <= 95) return 9;
   if (gType >= g101 && gType <= 105) return 10;
   return 6;
-}
-
-
-int gameWhists (eGameBid gType) {
-  if (gType >= g71 && gType <= 75) return 2;
-  if (gType >= g81 && gType <= 85) return 1;
-  if (gType == g86) return 0;
-  if (gType >= g91 && gType <= 95) return 1;
-  if (gType >= g101 && gType <= 105) {
-	  if (opt10Whist)
-	  	return 1;
-	  else
-	  	return 0;
-  }
-  return 4;
 }
 
 

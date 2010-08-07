@@ -26,7 +26,8 @@
 
 #include <QDebug>
 
-Player::Player (int aMyNumber, DeskView *aDeskView) : mDeskView(aDeskView), mIStart(false), mPlayerNo(aMyNumber) {
+Player::Player (int aMyNumber, PrefModel *model) : mDeskView(model->view()), m_model(model),
+                        mIStart(false), mPlayerNo(aMyNumber), mScore(model) {
   internalInit();
 }
 
