@@ -54,8 +54,6 @@ MainWindow::MainWindow () {
   mDeskView = 0;
   m_PrefModel = 0;
 
-  loadOptions();
-
   HintBar = new QStatusBar(this);
   HintBar->setSizeGripEnabled(true);
   setStatusBar(HintBar);
@@ -89,6 +87,7 @@ MainWindow::MainWindow () {
 //  m_PrefModel->optMaxPool = st.value("maxpool", 10).toInt();
   
   mDeskView->setModel(m_PrefModel);
+  loadOptions();
   doConnects();
   HintBar->showMessage(tr("Welcome to OpenPref!"));
   FormBid *formBid = FormBid::instance(mDeskView);
@@ -188,19 +187,20 @@ void MainWindow::slotShowScore () {
 }
 
 
-void MainWindow::slotNewSingleGame () {
-
+void MainWindow::slotNewSingleGame ()
+{
+  QSettings st;
   NewGameDialog *dlg = new NewGameDialog(this);
   connect(dlg->cbRounds, SIGNAL(stateChanged(int)), dlg, SLOT(toggleRounds(int)));
   // Players
-  dlg->leHumanName->setText(optHumanName);
-  dlg->leName1->setText(optPlayerName1);
-  dlg->cbAlphaBeta1->setChecked(optAlphaBeta1);
-  dlg->leName2->setText(optPlayerName2);
-  dlg->cbAlphaBeta2->setChecked(optAlphaBeta2);
+  dlg->leHumanName->setText(m_PrefModel->optHumanName);
+  dlg->leName1->setText(st.value("playername1", tr("Player 1")).toString());
+  dlg->leName2->setText(st.value("playername2", tr("Player 2")).toString());
+  dlg->cbAlphaBeta1->setChecked(st.value("alphabeta1", false).toBool());
+  dlg->cbAlphaBeta2->setChecked(st.value("alphabeta2", false).toBool());
   // Conventions
   //dlg->sbGame->setValue(m_PrefModel->optMaxPool);
-  QSettings st;
+
   dlg->sbGame->setValue(st.value("maxpool", 10).toInt());
   /*if(optQuitAfterMaxRounds) {
     dlg->cbRounds->setCheckState(Qt::Checked);
@@ -238,11 +238,11 @@ void MainWindow::slotNewSingleGame () {
     m_PrefModel->optPassCount = 0;
 
     // Players
-    optHumanName = dlg->leHumanName->text();
-    optPlayerName1 = dlg->leName1->text();
-    optAlphaBeta1 = dlg->cbAlphaBeta1->isChecked();
-    optPlayerName2 = dlg->leName2->text();
-    optAlphaBeta2 = dlg->cbAlphaBeta2->isChecked();
+    m_PrefModel->optHumanName = dlg->leHumanName->text();
+    m_PrefModel->optPlayerName1 = dlg->leName1->text();
+    m_PrefModel->optAlphaBeta1 = dlg->cbAlphaBeta1->isChecked();
+    m_PrefModel->optPlayerName2 = dlg->leName2->text();
+    m_PrefModel->optAlphaBeta2 = dlg->cbAlphaBeta2->isChecked();
   
     saveOptions();
     //actFileOpen->setEnabled(false);
@@ -301,16 +301,17 @@ void MainWindow::saveOptions () {
   st.setValue("without3", m_PrefModel->optWithoutThree);
   st.setValue("aggpass", m_PrefModel->optAggPass);
 
+  st.setValue("humanname", m_PrefModel->optHumanName);
+  st.setValue("playername1", m_PrefModel->optPlayerName1);
+  st.setValue("alphabeta1", m_PrefModel->optAlphaBeta1);
+  st.setValue("playername2", m_PrefModel->optPlayerName2);
+  st.setValue("alphabeta2", m_PrefModel->optAlphaBeta2);
+
   // View settings
-  st.setValue("prefclub", optPrefClub);
-  st.setValue("animdeal", optDealAnim);
-  st.setValue("animtake", optTakeAnim);
-  st.setValue("humanname", optHumanName);
-  st.setValue("playername1", optPlayerName1);
-  st.setValue("alphabeta1", optAlphaBeta1);
-  st.setValue("playername2", optPlayerName2);
-  st.setValue("alphabeta2", optAlphaBeta2);
-  st.setValue("debughand", optDebugHands);
+  st.setValue("prefclub", mDeskView->optPrefClub);
+  st.setValue("animdeal", mDeskView->optDealAnim);
+  st.setValue("animtake", mDeskView->optTakeAnim);
+  st.setValue("debughand", mDeskView->optDebugHands);
 }
 
 
@@ -324,46 +325,46 @@ void MainWindow::loadOptions () {
   //optStalingrad = st.value("stalin", false).toBool();
   //opt10Whist = st.value("whist10", false).toBool();// true => radio button checks 'check' nevertheless!
   //optWhistGreedy = st.value("whistgreedy", true).toBool();
-  optDealAnim = st.value("animdeal", true).toBool();
-  optTakeAnim = st.value("animtake", true).toBool();
+  mDeskView->optDealAnim = st.value("animdeal", true).toBool();
+  mDeskView->optTakeAnim = st.value("animtake", true).toBool();
   #ifndef WIN32	// May be #ifdef POSIX?
-  	optHumanName = st.value("humanname", getenv("USER")).toString();
+  	m_PrefModel->optHumanName = st.value("humanname", getenv("USER")).toString();
   #else
-  	optHumanName = st.value("humanname", "").toString();
+  	m_PrefModel->optHumanName = st.value("humanname", "").toString();
   #endif
-  optPlayerName1 = st.value("playername1", tr("Player 1")).toString();
-  optAlphaBeta1 = (st.value("alphabeta1", false).toBool());
-  optPlayerName2 = st.value("playername2", tr("Player 2")).toString();
-  optAlphaBeta2 = (st.value("alphabeta2", false).toBool());
+  m_PrefModel->optPlayerName1 = st.value("playername1", tr("Player 1")).toString();
+  m_PrefModel->optAlphaBeta1 = (st.value("alphabeta1", false).toBool());
+  m_PrefModel->optPlayerName2 = st.value("playername2", tr("Player 2")).toString();
+  m_PrefModel->optAlphaBeta2 = (st.value("alphabeta2", false).toBool());
   //optWithoutThree = st.value("without3", false).toBool();
-  optDebugHands = st.value("debughand", false).toBool();
+  mDeskView->optDebugHands = st.value("debughand", false).toBool();
   //optAggPass = st.value("aggpass", false).toBool();
-  optPrefClub = st.value("prefclub", false).toBool();
+  mDeskView->optPrefClub = st.value("prefclub", false).toBool();
 }
 
 
 void MainWindow::slotOptions () {
-  bool oldPrefClub = optPrefClub;
-  bool oldDebugHands = optDebugHands;
+  bool oldPrefClub = mDeskView->optPrefClub;
+  bool oldDebugHands = mDeskView->optDebugHands;
   
   OptDialog *dlg = new OptDialog(this);
   //connect(dlg->cbPrefClub, SIGNAL(clicked()), this, SLOT(slotDeckChanged()));
-  dlg->cbAnimDeal->setChecked(optDealAnim);
-  dlg->cbAnimTake->setChecked(optTakeAnim);
-  dlg->cbDebugHands->setChecked(optDebugHands);
-  dlg->cbPrefClub->setChecked(optPrefClub);
+  dlg->cbAnimDeal->setChecked(mDeskView->optDealAnim);
+  dlg->cbAnimTake->setChecked(mDeskView->optTakeAnim);
+  dlg->cbDebugHands->setChecked(mDeskView->optDebugHands);
+  dlg->cbPrefClub->setChecked(mDeskView->optPrefClub);
   
   if (dlg->exec() == QDialog::Accepted) {
-    optDealAnim = dlg->cbAnimDeal->isChecked();
-    optTakeAnim = dlg->cbAnimTake->isChecked();
-	optPrefClub = dlg->cbPrefClub->isChecked();
-    optDebugHands = dlg->cbDebugHands->isChecked();
+    mDeskView->optDealAnim = dlg->cbAnimDeal->isChecked();
+    mDeskView->optTakeAnim = dlg->cbAnimTake->isChecked();
+    mDeskView->optPrefClub = dlg->cbPrefClub->isChecked();
+    mDeskView->optDebugHands = dlg->cbDebugHands->isChecked();
     saveOptions();
   }
   delete dlg;
 
-  if ((optPrefClub != oldPrefClub) || (optDebugHands != oldDebugHands))
-  	slotDeckChanged();
+  if ((mDeskView->optPrefClub != oldPrefClub) || (mDeskView->optDebugHands != oldDebugHands))
+    slotDeckChanged();
 }
 
 void MainWindow::slotDeckChanged () {

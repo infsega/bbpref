@@ -49,17 +49,6 @@ enum eGameBid {
 };// g86 - miser
 
 
-extern QString optHumanName;
-extern QString optPlayerName1;
-extern bool optAlphaBeta1;
-extern QString optPlayerName2;
-extern bool optAlphaBeta2;
-extern bool optDebugHands;
-
-extern bool optDealAnim;
-extern bool optTakeAnim;
-extern bool optPrefClub;
-
 int succBid (eGameBid game);
 int gameTricks (eGameBid gType);
 int gameWhistsMin (eGameBid gType);

@@ -41,6 +41,7 @@ class ScoreWidget : public QDialog
     void resizeEvent (QResizeEvent *);
     void showEvent(QShowEvent *event);
 
+    void paintBlankPaper ();
     void showPlayerScore (int i, const QString scoreBullet, const QString scoreMountain,
       const QString scoreLeftWhist, const QString scoreRightWhist, const int scoreTotal);
 

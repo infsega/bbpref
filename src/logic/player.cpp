@@ -92,7 +92,8 @@ void Player::clear () {
 
 
 inline bool Player::invisibleHand () const {
-  return optDebugHands ? false : mInvisibleHand;
+  /// @todo should be dispatched elsewhere
+  return mDeskView->optDebugHands ? false : mInvisibleHand;
 }
 
 

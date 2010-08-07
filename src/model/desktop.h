@@ -86,6 +86,16 @@ public:
   int optPassCount;
   bool optWithoutThree;
 
+  // Names
+  QString optHumanName;
+  QString optPlayerName1;
+  QString optPlayerName2;
+
+  // AIs
+  bool optAlphaBeta1;
+  bool optAlphaBeta2;
+
+
 private:
   Player *player (const WrapCounter &cnt);
   void internalInit ();

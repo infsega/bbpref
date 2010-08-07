@@ -74,15 +74,20 @@ public:
   void getLeftTop (int player, int & left, int & top);
   
   void drawInGameCard (int mCardNo, const Card *card, bool closed);
-  void animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[], bool doAnim);
+  void animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[]);
 
   bool askWhistType ();
+  void longWait (const int n);
 
   bool loadCards ();
   void freeCards ();
 
 public:
   int imoveX, imoveY;
+  bool optDebugHands;
+  bool optDealAnim;
+  bool optTakeAnim;
+  bool optPrefClub;
 
 protected:
   void  showEvent (QShowEvent *);

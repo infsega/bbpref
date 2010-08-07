@@ -54,80 +54,6 @@ static void drawRotatedText (QPainter &p, int x, int y, int width, int height, f
   p.translate(-1*x, -1*y);
 }
 
-static void paintBlankPaper (QPixmap *paper, int maxPool) {
-  const int PaperWidth = paper->width();
-  const int PaperHeight = paper->height();
-  const int PoolWidth = 60;
-  const int Pool2Width = 85;
-  const int maxPoolRadius = 20;
-  // if (width() > height()) horizontal
-
-  QPainter p(paper);
-  p.setRenderHints(QPainter::Antialiasing);
-  QRect NewRect = QRect(0, 0, PaperWidth, PaperHeight);
-  QBrush brush(qRgb(255, 255, 255));
-  p.fillRect(NewRect, brush);
-  p.setPen(Qt::black);
-
-  // Draw borders of paper
-  p.drawRect(NewRect);
-  //QPoint center(NewRect.center().x(), NewRect.center().y()*1.23);
-  QPoint center(PaperWidth/2, PaperHeight-PaperWidth/2);
-
-  // Diagonal lines from bottom corners to circle
-  p.drawLine(NewRect.bottomLeft(), center);
-  p.drawLine(NewRect.bottomRight(), center);
-
-  // Central vertical line
-  p.drawLine( center.x(), 0, center.x(), center.y() );
-
-  // External border of pool
-  p.drawRect(PoolWidth, 0, PaperWidth-2*PoolWidth, PaperHeight-PoolWidth);
-
-  // Border of mountain
-  p.drawRect(Pool2Width, 0, PaperWidth-2*Pool2Width, PaperHeight-Pool2Width);
-
-  // Player lines
-  p.drawLine(0, (PaperHeight-PoolWidth)/2, PoolWidth, (PaperHeight-PoolWidth)/2);
-  p.drawLine(PaperWidth, (PaperHeight-PoolWidth)/2, PaperWidth-PoolWidth, (PaperHeight-PoolWidth)/2);
-  p.drawLine(PaperWidth/2, PaperHeight, PaperWidth/2, PaperHeight-PoolWidth);
-
-  // Circle with MaxPool value
-  QRadialGradient g(center, maxPoolRadius, center+QPoint(-maxPoolRadius/2,-maxPoolRadius/2));
-  g.setColorAt(0, Qt::white);
-  g.setColorAt(1, qRgb(250, 250, 0));
-  //g.setColorAt(1, Qt::gray);
-  //QBrush b1(brush);
-  //b1.setColor(qRgb(255, 255, 0));
-  QBrush b1(g);
-  p.setBrush(b1);
-  p.drawEllipse(center, maxPoolRadius, maxPoolRadius);
-
-  // Draw text  
-  // MaxPool
-  QFont fnt(p.font());
-  fnt.setBold(true);
-  p.setFont(fnt);
-  p.drawText(QRect(center.x() - maxPoolRadius, center.y() - maxPoolRadius,
-    maxPoolRadius*2, maxPoolRadius*2), QString::number(maxPool), QTextOption(Qt::AlignCenter));
-  fnt.setBold(false);
-  p.setFont(fnt);
-  
-  // Players' names
-  p.setBrush(brush);
-  const QRect r1 = p.boundingRect(NewRect, Qt::AlignHCenter, optHumanName);
-  const QRect r2 = p.boundingRect(NewRect, Qt::AlignHCenter, optPlayerName1);
-  const QRect r3 = p.boundingRect(NewRect, Qt::AlignHCenter, optPlayerName2);
-  p.drawText(QRect(center.x()-r1.width()/2, center.y()+55, r1.width(), r1.height()),
-    optHumanName, QTextOption(Qt::AlignHCenter));
-  drawRotatedText(p, center.x() - 30, (PaperHeight - Pool2Width - r2.width())/2,
-    r2.width(), r2.height(), 90,optPlayerName1);
-  drawRotatedText(p, center.x() + 30, (PaperHeight - Pool2Width + r3.width())/2,
-    r3.width(), r3.height(), -90,optPlayerName2);
-  
-  p.end();
-}
-
 ScoreWidget::ScoreWidget(PrefModel *model, QWidget *parent, Qt::WindowFlags f)
     : QDialog(parent, f), m_model(model), m_paperBmp(0)
 {
@@ -215,7 +141,7 @@ void ScoreWidget::resizeEvent(QResizeEvent *event)
   if (event->size() != event->oldSize()) {
     delete m_paperBmp;
     m_paperBmp = new QPixmap(width(), height());
-    paintBlankPaper(m_paperBmp, m_model->optMaxPool);
+    paintBlankPaper();
   }
 }
 
@@ -228,6 +154,81 @@ void ScoreWidget::showEvent(QShowEvent *event)
   //qDebug() << "restore";
   //adjustSize();
   //resize(410,480);
+}
+
+void ScoreWidget::paintBlankPaper ()
+{
+  const int PaperWidth = m_paperBmp->width();
+  const int PaperHeight = m_paperBmp->height();
+  const int PoolWidth = 60;
+  const int Pool2Width = 85;
+  const int maxPoolRadius = 20;
+  // if (width() > height()) horizontal
+
+  QPainter p(m_paperBmp);
+  p.setRenderHints(QPainter::Antialiasing);
+  QRect NewRect = QRect(0, 0, PaperWidth, PaperHeight);
+  QBrush brush(qRgb(255, 255, 255));
+  p.fillRect(NewRect, brush);
+  p.setPen(Qt::black);
+
+  // Draw borders of paper
+  p.drawRect(NewRect);
+  //QPoint center(NewRect.center().x(), NewRect.center().y()*1.23);
+  QPoint center(PaperWidth/2, PaperHeight-PaperWidth/2);
+
+  // Diagonal lines from bottom corners to circle
+  p.drawLine(NewRect.bottomLeft(), center);
+  p.drawLine(NewRect.bottomRight(), center);
+
+  // Central vertical line
+  p.drawLine( center.x(), 0, center.x(), center.y() );
+
+  // External border of pool
+  p.drawRect(PoolWidth, 0, PaperWidth-2*PoolWidth, PaperHeight-PoolWidth);
+
+  // Border of mountain
+  p.drawRect(Pool2Width, 0, PaperWidth-2*Pool2Width, PaperHeight-Pool2Width);
+
+  // Player lines
+  p.drawLine(0, (PaperHeight-PoolWidth)/2, PoolWidth, (PaperHeight-PoolWidth)/2);
+  p.drawLine(PaperWidth, (PaperHeight-PoolWidth)/2, PaperWidth-PoolWidth, (PaperHeight-PoolWidth)/2);
+  p.drawLine(PaperWidth/2, PaperHeight, PaperWidth/2, PaperHeight-PoolWidth);
+
+  // Circle with MaxPool value
+  QRadialGradient g(center, maxPoolRadius, center+QPoint(-maxPoolRadius/2,-maxPoolRadius/2));
+  g.setColorAt(0, Qt::white);
+  g.setColorAt(1, qRgb(250, 250, 0));
+  //g.setColorAt(1, Qt::gray);
+  //QBrush b1(brush);
+  //b1.setColor(qRgb(255, 255, 0));
+  QBrush b1(g);
+  p.setBrush(b1);
+  p.drawEllipse(center, maxPoolRadius, maxPoolRadius);
+
+  // Draw text  
+  // MaxPool
+  QFont fnt(p.font());
+  fnt.setBold(true);
+  p.setFont(fnt);
+  p.drawText(QRect(center.x() - maxPoolRadius, center.y() - maxPoolRadius,
+    maxPoolRadius*2, maxPoolRadius*2), QString::number(m_model->optMaxPool), QTextOption(Qt::AlignCenter));
+  fnt.setBold(false);
+  p.setFont(fnt);
+  
+  // Players' names
+  p.setBrush(brush);
+  const QRect r1 = p.boundingRect(NewRect, Qt::AlignHCenter, m_model->optHumanName);
+  const QRect r2 = p.boundingRect(NewRect, Qt::AlignHCenter, m_model->optPlayerName1);
+  const QRect r3 = p.boundingRect(NewRect, Qt::AlignHCenter, m_model->optPlayerName2);
+  p.drawText(QRect(center.x()-r1.width()/2, center.y()+55, r1.width(), r1.height()),
+    m_model->optHumanName, QTextOption(Qt::AlignHCenter));
+  drawRotatedText(p, center.x() - 30, (PaperHeight - Pool2Width - r2.width())/2,
+    r2.width(), r2.height(), 90, m_model->optPlayerName1);
+  drawRotatedText(p, center.x() + 30, (PaperHeight - Pool2Width + r3.width())/2,
+    r3.width(), r3.height(), -90, m_model->optPlayerName2);
+  
+  p.end();
 }
 
 void ScoreWidget::showPlayerScore (int i, const QString scoreBullet, const QString scoreMountain,

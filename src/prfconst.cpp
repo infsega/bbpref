@@ -24,24 +24,6 @@
 #include "prfconst.h"
 #include "card.h"
 
-#if defined Q_WS_X11 || defined Q_WS_QWS || defined Q_WS_MAC
-	QString optHumanName = getenv("USER");
-#elif defined Q_WS_WIN
-  QString optHumanName = ""; // get user name from WinAPI
-#else
-	QString optHumanName = "";
-#endif
-
-QString optPlayerName1 = "Player 1";
-bool optAlphaBeta1 = false;
-QString optPlayerName2 = "Player 2";
-bool optAlphaBeta2 = false;
-bool optDebugHands = false;
-
-bool optDealAnim = true;
-bool optTakeAnim = true;
-bool optPrefClub = false;
-
 int CARDWIDTH = 71;
 int CARDHEIGHT = 96;
 

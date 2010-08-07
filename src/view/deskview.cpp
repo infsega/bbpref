@@ -111,7 +111,7 @@ void SleepEventLoop::doEventMouse (QMouseEvent *event) {
 
 
 void SleepEventLoop::keyPicUpdate () {
-  if (optPrefClub == true) {
+  if (mDeskView->optPrefClub == true) {
     mDeskView->drawPKeyBmp(true);
     mDeskView->update();
   }
@@ -223,7 +223,11 @@ QPixmap *DeskView::GetImgByName (const char *name) {
 ///////////////////////////////////////////////////////////////////////////////
 //DeskView::DeskView (int aW, int aH) : mDeskBmp(0), d_ptr(new DeskViewPrivate(this))
 DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_ptr(new DeskViewPrivate(this)),
-                                                           m_model(0), mDeskBmp(0)
+                                                           m_model(0), mDeskBmp(0),
+ optDebugHands(false),
+ optDealAnim(true),
+ optTakeAnim(true),
+ optPrefClub(false)
 {
   mDigitsBmp = new QPixmap(QString(":/pics/digits/digits.png"));
   mBidBmp = new QPixmap(QString(":/pics/bidinfo.png"));
@@ -767,7 +771,7 @@ void DeskView::drawInGameCard (int mCardNo, const Card *card, bool closed)
   drawCard(card, x, y, !closed, 0);
 }
 
-void DeskView::animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[], bool doAnim)
+void DeskView::animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[])
 {
   static const int steps = 10;
   const Card *cAni[4];
@@ -783,7 +787,7 @@ void DeskView::animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[], bool doAnim
     mCardsOnDesk[f] = 0;
   }
 
-  for (int f = doAnim?0:steps; f <= steps; f++) {
+  for (int f = optTakeAnim?0:steps; f <= steps; f++) {
     draw(false);
     for (int c = 0; c <= 3; c++) {
       if (!cAni[c]) continue;
@@ -855,4 +859,12 @@ void DeskView::draw (bool emitSignal) {
       }
   }
   if (emitSignal) update();
+}
+
+void DeskView::longWait (const int n)
+{
+  if (optPrefClub)
+    mySleep(-1);
+  else
+    mySleep(2*n);
 }
