@@ -31,14 +31,6 @@ extern int CARDHEIGHT;
 #define OPENPREF_VERSION "0.1.3"
 
 
-enum eSuit {
-  SuitSpades=1,
-  SuitClubs,
-  SuitDiamonds,
-  SuitHearts,
-  SuitNone,
-};
-
 enum eGameBid {
   zerogame=0,
   showpool=1,

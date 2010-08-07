@@ -26,6 +26,13 @@
 #include <QList>
 #include <QString>
 
+enum eSuit {
+  SuitSpades=1,
+  SuitClubs,
+  SuitDiamonds,
+  SuitHearts,
+  SuitNone,
+};
 
 const int FACE_JACK  = 11;
 const int FACE_QUEEN = 12;
