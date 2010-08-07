@@ -26,6 +26,7 @@
 #include <QApplication>
 #include <QLibraryInfo>
 #include <QLocale>
+#include <QtCore/QTime>
 #include <QTranslator>
 
 #include "debug.h"
@@ -60,7 +61,9 @@ int main (int argc, char *argv[]) {
 	}
   }
 
-  qsrand((unsigned)time(0));
+  //qsrand((unsigned)time(0));
+  const QTime t = QTime::currentTime();
+  qsrand(t.minute()*t.msec()/t.second());
 
   QApplication a(argc, argv);
   QString translationCode = QLocale::system().name();
