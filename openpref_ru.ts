@@ -2,6 +2,17 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="ru_RU">
 <context>
+    <name>DeskView</name>
+    <message>
+        <source>Choose whist type</source>
+        <translation>Выберите тип виста</translation>
+    </message>
+    <message>
+        <source>Do you want to whist with opened cards?</source>
+        <translation>Вы хотите вистовать с открытыми картами?</translation>
+    </message>
+</context>
+<context>
     <name>FormBid</name>
     <message>
         <source>Show game table with calculated scores</source>
@@ -245,10 +256,6 @@ See http://en.wikipedia.org/wiki/Preferans</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <source>&lt;h2 align=center&gt;&amp;spades; &lt;font color=red&gt;&amp;diams;&lt;/font&gt; OpenPref </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Player 1</source>
         <translation>Игрок 1</translation>
     </message>
@@ -268,7 +275,7 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     </message>
     <message>
         <source>This move is impossible</source>
-        <translation>Этот ход недопустим</translation>
+        <translation type="obsolete">Этот ход недопустим</translation>
     </message>
     <message>
         <source>Your move</source>
@@ -280,11 +287,11 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     </message>
     <message>
         <source>Choose whist type</source>
-        <translation>Выберите тип виста</translation>
+        <translation type="obsolete">Выберите тип виста</translation>
     </message>
     <message>
         <source>Do you want to whist with opened cards?</source>
-        <translation>Вы хотите вистовать с открытыми картами?</translation>
+        <translation type="obsolete">Вы хотите вистовать с открытыми картами?</translation>
     </message>
 </context>
 <context>
@@ -637,6 +644,10 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     <message>
         <source>open</source>
         <translation>в открытую</translation>
+    </message>
+    <message>
+        <source>This move is impossible</source>
+        <translation>Этот ход недопустим</translation>
     </message>
 </context>
 <context>
