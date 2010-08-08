@@ -49,18 +49,22 @@ inline void Player::internalInit () {
 void Player::clear () {
   mCards.clear();
   mCardsOut.clear();
+  /// @todo to be moved elsewhere
   mCardCarryThru = 0;
   mMessage.clear();
+  /// @todo should be dispatched by model
   mInvisibleHand = (mPlayerNo != 1);
   mMyGame = undefined;
+  /// @todo should be dispatched by model or score board
   mTricksTaken = 0;
+  /// @todo should be dispatched by delegate
   mWaitingForClick = false;
   mPrevHiCardIdx = -1;
 }
 
 
 inline bool Player::invisibleHand () const {
-  /// @todo should be dispatched elsewhere
+  /// @todo should be dispatched by model
   return mDeskView->optDebugHands ? false : mInvisibleHand;
 }
 

@@ -81,7 +81,6 @@ public:
 
 protected:
   virtual void internalInit ();
-  //virtual void clone (const Player *pl);
 
   virtual void drawAt (DeskView *aDeskView, int left, int top, int selNo=-1);
   virtual void clearCardArea ();
