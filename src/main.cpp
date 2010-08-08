@@ -77,10 +77,9 @@ int main (int argc, char *argv[]) {
   if(openprefTranslator.load(openprefFilename))
   	a.installTranslator(&openprefTranslator);
 
-  //a.setFont (QFont("helvetica", FONTSIZE));
-  kpref = new MainWindow();
+  MainWindow kpref;
   //#ifndef MOBILE
-    kpref->show();
+    kpref.show();
   //#else
   //  kpref->showFullScreen();
   //#endif

@@ -53,12 +53,15 @@ public:
   Player *currentPlayer () const { return mPlayers[nCurrentMove.nValue]; }
   int activePlayerNumber () const { return mPlayerActive; }
   int playerWithMaxPool (); // except the players who closed the pool
-
-  void showMoveImpossible(const bool canRetry);
   int trumpSuit (void) const;
 
   DeskView *view() const { Q_ASSERT(mDeskView); return mDeskView; }
   int gameWhists (eGameBid gType) const;
+
+  void emitShowHint(const QString text) { emit showHint(text); }
+  void emitClearHint() { emit clearHint(); }
+  void showMoveImpossible(const bool canRetry);
+  void showMoveHint();
 
 signals:
   void deskChanged ();

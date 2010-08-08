@@ -363,6 +363,13 @@ void PrefModel::showMoveImpossible(const bool canRetry)
     ///@todo redirect message to view
 }
 
+void PrefModel::showMoveHint()
+{
+  if (mBiddingDone)
+    emitShowHint(tr("Your move"));
+  else
+    emitShowHint(tr("Select two cards to drop"));
+}
 
 bool PrefModel::saveGame (const QString name)  {
   QFile fl(name);

@@ -25,10 +25,7 @@
 #include <QTime>
 
 #include "prfconst.h"
-
 #include "formbid.h"
-#include "kpref.h"
-
 #include "aialphabeta.h"
 
 

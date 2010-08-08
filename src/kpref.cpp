@@ -391,18 +391,6 @@ void MainWindow::slotQuit () {
   		exit(0);	
 }
 
-/*
-void MainWindow::MoveImpossible () {
-	HintBar->showMessage(tr("This move is impossible"));
-}*/
-
-void MainWindow::HintMove () {
-  if (m_PrefModel->mBiddingDone)
-    HintBar->showMessage(tr("Your move"));
-  else
-    HintBar->showMessage(tr("Select two cards to drop"));
-}
-
 void MainWindow::showHint(QString hint)
 {
   HintBar->showMessage(hint);

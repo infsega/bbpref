@@ -23,10 +23,7 @@
 #include <QDebug>
 
 #include "prfconst.h"
-
 #include "formbid.h"
-#include "kpref.h"
-
 #include "human.h"
 
 
@@ -153,7 +150,7 @@ Card *HumanPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Play
   qDebug() << type() << "("<< mPlayerNo << ") moves";
   Card *res = 0;
   mClickX = mClickY = 0; mWaitingForClick = true;
-  kpref->HintMove();
+  m_model->showMoveHint();
   draw();
   while (!res) {
     if (mDeskView) mDeskView->mySleep(-2);
@@ -166,7 +163,6 @@ Card *HumanPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Play
     res = mCards.at(cNo);
     // check if move accords with rules
     if (!isValidMove(res, lMove, rMove, koz)) {
-      //kpref->MoveImpossible(); 
       res = 0;
     }
   }
@@ -175,7 +171,7 @@ Card *HumanPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Play
   mCards.remove(res);
   mCardsOut.insert(res);
   mClickX = mClickY = 0; mWaitingForClick = false;
-  kpref->clearHint();
+  m_model->emitClearHint();
   draw();
   return res;
 }
@@ -218,7 +214,7 @@ void HumanPlayer::highlightCard (int lx, int ly)
     mPrevHiCardIdx = cNo;
   }
   draw();
-  kpref->clearHint();
+  m_model->emitClearHint();
 }
 
 bool HumanPlayer::chooseClosedWhist () {

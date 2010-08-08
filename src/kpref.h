@@ -35,10 +35,6 @@ public:
   MainWindow();
   ~MainWindow();
 
-  // Messages
-  void HintMove ();
-  bool WhistType ();
-
 public slots:
   void slotNewSingleGame ();
   void slotShowScore ();
@@ -73,8 +69,5 @@ protected:
   void  keyPressEvent (QKeyEvent *);
   void  closeEvent(QCloseEvent *event);
 };
-
-extern MainWindow *kpref;
-
 
 #endif
