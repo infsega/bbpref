@@ -20,12 +20,13 @@
  *      http://www.gnu.org/licenses 
  */
 
+#include <limits.h>
+
 #include "prfconst.h"
 
-#include <QDebug>
-
-#include <QMessageBox>
-#include <QFile>
+#include <QtCore/QDebug>
+#include <QtCore/QFile>
+#include <QtCore/QTime>
 
 #include "aialphabeta.h"
 #include "aiplayer.h"
@@ -282,12 +283,13 @@ Card *PrefModel::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
     else if (player(3)->myGame() == whist) {
       plr = player(3)->create(nCurrentMove.nValue, this);
     }
+  #ifndef QT_NO_DEBUG
     else
-    {
-      QMessageBox::about(0,"Error","Something went wrong!");
+    {      
       qDebug() << player(1)->myGame() << player(2)->myGame() << player(3)->myGame();
-      Q_ASSERT(1 == 0);
+      qFatal("Something went wrong!");
     }
+  #endif
   }
 
   if (plr) {
@@ -359,7 +361,7 @@ void PrefModel::showMoveImpossible(const bool canRetry)
 {
   emit showHint(tr("This move is impossible"));
   if (!canRetry)
-    QMessageBox::about(0,"Error","Somebody is plaing unfair!");
+    qFatal("Somebody is plaing unfair!");
     ///@todo redirect message to view
 }
 
@@ -421,6 +423,9 @@ bool PrefModel::unserialize (QByteArray &ba, int *pos) {
 void PrefModel::runGame () {
   eGameBid playerBids[4];
   initPlayers();
+  // Randomize
+  const QTime t = QTime::currentTime();
+  qsrand((double)t.minute()*t.msec()/(t.second()+1)*UINT_MAX/3600);
 
   mGameRunning = true;
   emit clearHint();

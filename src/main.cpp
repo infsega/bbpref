@@ -21,7 +21,7 @@
  *      http://www.gnu.org/licenses 
  */
 
-#include <time.h>
+#include "limits.h"
 
 #include <QApplication>
 #include <QLibraryInfo>
@@ -60,7 +60,7 @@ int main (int argc, char *argv[]) {
 
   //qsrand((unsigned)time(0));
   const QTime t = QTime::currentTime();
-  qsrand(t.minute()*t.msec()/t.second());
+  qsrand((double)t.minute()*t.msec()/(t.second()+1)*UINT_MAX/3600);
 
   QApplication a(argc, argv);
   QString translationCode = QLocale::system().name();
