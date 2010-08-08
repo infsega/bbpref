@@ -672,11 +672,6 @@ Card *AlphaBetaPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, 
   }
   fprintf(stderr, "\n");
 */
-  /*if (move < 0) {
-    fprintf(stderr, "fuck!\n");
-    //goto again;
-    abort();
-  }*/
   Q_ASSERT(move >= 0);
 
   Card *moveCard = newCard(FACE(hands[me][move]), SUIT(hands[me][move])+1);

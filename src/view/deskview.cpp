@@ -24,9 +24,7 @@
 
 #include <QApplication>
 #include <QMessageBox>
-//#include <QPixmap>
 #include <QPainter>
-#include <QPalette>
 #include <QTimer>
 #include <QVBoxLayout>
 
@@ -35,11 +33,8 @@
 
 #include "baser.h"
 #include "formbid.h"
-//#include "kpref.h"
 #include "prfconst.h"
 #include "player.h"
-//class SleepEventLoop;
-
 #include "scorewidget.h"
 
 
@@ -146,12 +141,10 @@ public:
   SleepEventFilter *m_efilter;
   QTimer *m_timer;
   ScoreWidget *m_scorew;
-  //QDialog *m_score;
 };
 
 bool DeskView::loadCards () {
   qDebug() << "load";
-  //qDebug() << SLOT(slotPushButtonClick95());
   // load cards from resources
   QString deckPath;
   if (optPrefClub) {
@@ -174,7 +167,6 @@ bool DeskView::loadCards () {
       QImage im(fname);
       yellowize(&im);
       resname.sprintf("q%i%i", face, suit);
-      //cardI[resname] = new QPixmap;
       cardI[resname] = new QPixmap(QPixmap::fromImage(im));
     }
   }
@@ -191,11 +183,7 @@ bool DeskView::loadCards () {
   }
   cardI.squeeze();
   bidIcons.squeeze();
-  //qDebug() << "cardI.size() = " << cardI.size();
-  //qDebug() << "cardI.capacity() = " << cardI.capacity();  
-  //qDebug() << "bidIcons.size() = " << bidIcons.size();
-  //qDebug() << "bidIcons.capacity() = " << bidIcons.capacity();
-  
+
   // done
   return true;
 }
@@ -221,7 +209,6 @@ QPixmap *DeskView::GetImgByName (const char *name) {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-//DeskView::DeskView (int aW, int aH) : mDeskBmp(0), d_ptr(new DeskViewPrivate(this))
 DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_ptr(new DeskViewPrivate(this)),
                                                            m_model(0), mDeskBmp(0),
  optDebugHands(false),
@@ -231,20 +218,15 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_
 {
   mDigitsBmp = new QPixmap(QString(":/pics/digits/digits.png"));
   mBidBmp = new QPixmap(QString(":/pics/bidinfo.png"));
-
   mKeyBmp[0] = new QPixmap(QString(":/pics/presskey.png"));
-  
   QImage key1(QString(":/pics/presskey.png"));  
   yellowize(&key1, qRgb(127, 127, 127));
   mKeyBmp[1] = new QPixmap(QPixmap::fromImage(key1));
-  
   mIMoveBmp = new QPixmap(QString(":/pics/imove.png"));
 
-  //if (!loadCards()) abort();
   const bool result = loadCards();
   Q_ASSERT(result);
 
-  //Event = 0;
   CardWidht = CARDWIDTH;
   CardHeight = CARDHEIGHT;
   m_leftRightMargin = 20;
@@ -252,14 +234,9 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_
  /* QPalette palette;
   palette.setBrush(QPalette::Window, QPixmap(":/pics/cloth.png"));
   setPalette(palette);*/
-  //DesktopWidth = aW;
-  //DesktopHeight = aH;
-  //qDebug() << width() << height();
   mDeskBmp = new QPixmap(width(), height());
   ClearScreen();
   setMouseTracking(true);
-
-  //connect(this, SIGNAL(deskChanged()), this, SLOT(update()));
 }
 
 
@@ -380,7 +357,6 @@ void DeskView::drawGameBid (eGameBid game) {
       if (i) {
         x = 44-(i->width()/2)+3;
         y = 34-(i->height()/2)-1;
-        //p.drawImage(bidBmpX+x, bidBmpY+y, *i);
         p.drawPixmap(bidBmpX+x, bidBmpY+y, *i);
       }
       break;
@@ -455,7 +431,6 @@ void DeskView::mySleep (int seconds) {
     d_ptr->m_timer->start(1000);
   } else if (seconds < -1) {
     d_ptr->m_eloop->mIgnoreKey = true;
-    //d_ptr->m_timer->start(0);
   }
   if (optPrefClub == true)
   drawPKeyBmp(seconds == -1);
@@ -471,7 +446,6 @@ void DeskView::mySleep (int seconds) {
     drawPKeyBmp(false);
     update();
   }
-  //d_ptr->m_eloop->exit();
 }
 
 
@@ -518,21 +492,17 @@ void DeskView::drawCard (const Card *card, int x, int y, bool opened, bool hilig
   }
 
   strcpy(cCardName, opened?"empty":"1000");
-  //opened = true;
   if (opened && card->face() >= 7 && card->face() <= FACE_ACE && card->suit() >= 1 && card->suit() <= 4) {
     sprintf(cCardName, "%s%i%i", hilight?"q":"", card->face(), card->suit());
-    //if (hilight) fprintf(stderr, "SELECTED! [%s]\n", cCardName);
   }
   QPixmap *bmp = GetImgByName(cCardName);
   if (!bmp) {
-    //fprintf(stderr, "not found: [%s]\n", cCardName);
     bmp = GetImgByName("empty");
     if (!bmp) {
       ClearBox(x, y, x+CARDWIDTH, y+CARDHEIGHT);
       return;
     }
   }
-  //fprintf(stderr, "found: [%s]\n", cCardName);
   QPainter p(mDeskBmp);
   p.drawPixmap(x, y, *bmp);
   p.end();
@@ -577,8 +547,6 @@ void DeskView::MessageBox (const QString text, const QString caption) {
 eGameBid DeskView::selectBid (eGameBid lMove, eGameBid rMove) {
   Q_UNUSED(lMove)
   Q_UNUSED(rMove)
-  //if (!formBid->exec()) qApp->quit();
-  //connect(formBid, SIGNAL(rejected()), kpref, SLOT(slotAbortBid()));
   FormBid *formBid = FormBid::instance();
   formBid->_GamesType = undefined;
   do
@@ -692,7 +660,6 @@ void DeskView::keyPressEvent (QKeyEvent *event) {
       case Qt::Key_Enter:
       case Qt::Key_Return:
       case Qt::Key_Space:
-//        Event = 2;
         event->accept();
         break;
       default: ;
@@ -710,13 +677,10 @@ void DeskView::showEvent (QShowEvent *event)
 
 void DeskView::paintEvent (QPaintEvent *event) {
   Q_UNUSED(event)
-  //qDebug() << "paintEvent";
-    //mDeskView->DesktopHeight = height()-HINTBAR_MAX_HEIGHT;
-    //mDeskView->DesktopWidth = width();
-    QPainter p;
-    p.begin(this);
-    p.drawPixmap(0, 0, *(mDeskBmp));
-    p.end();
+  QPainter p;
+  p.begin(this);
+  p.drawPixmap(0, 0, *(mDeskBmp));
+  p.end();
 }
 
 void DeskView::getLeftTop (int player, int & left, int & top)

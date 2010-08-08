@@ -174,13 +174,6 @@ void MainWindow::slotFileSave () {
 }
 
 
-/*
-void Kpref::slotFileQuit() {
-  //quit();
-}
-*/
-
-
 void MainWindow::slotShowScore () {
   m_PrefModel->closePool();
   mDeskView->drawPool();
@@ -398,23 +391,16 @@ void MainWindow::slotQuit () {
   		exit(0);	
 }
 
-/*void Kpref::slotAbortBid () {
-	if ((formBid->_GamesType != showpool) && (formBid->_GamesType != zerogame))
-	{
-		slotAbort();
-		formBid->_GamesType = zerogame;
-	}
-}
-
+/*
 void MainWindow::MoveImpossible () {
 	HintBar->showMessage(tr("This move is impossible"));
 }*/
 
 void MainWindow::HintMove () {
-	if (m_PrefModel->mBiddingDone)
-		HintBar->showMessage(tr("Your move"));
-	else
-		HintBar->showMessage(tr("Select two cards to drop"));
+  if (m_PrefModel->mBiddingDone)
+    HintBar->showMessage(tr("Your move"));
+  else
+    HintBar->showMessage(tr("Select two cards to drop"));
 }
 
 void MainWindow::showHint(QString hint)

@@ -35,12 +35,6 @@ Player::Player (int aMyNumber, PrefModel *model) : mDeskView(model->view()), m_m
   internalInit();
 }
 
-/*
-Player::Player (const Player &pl) {
-  internalInit();
-  clone(&pl);
-}
-*/
 
 Player::~Player () {
   clear();
@@ -51,32 +45,6 @@ inline void Player::internalInit () {
   clear();
 }
 
-/*
-Player &Player::operator = (const Player &pl) {
-  clone(&pl);
-  return *this;
-}
-
-
-void Player::clone (const Player *pl) {
-  if (pl && pl != this) {
-    mDeskView = pl->mDeskView;
-    mCards = pl->mCards;
-    mLeft = pl->mLeft;
-    mRight = pl->mRight;
-    mOut = pl->mOut;
-    mCardsOut = pl->mCardsOut;
-    mCardCarryThru = pl->mCardCarryThru;
-    mNick = pl->mNick;
-    mMessage = pl->mMessage;
-    mPlayerNo = pl->mPlayerNo;
-    mInvisibleHand = pl->mInvisibleHand;
-    mMyGame = pl->mMyGame;
-    mTricksTaken = pl->mTricksTaken;
-    mPrevHiCardIdx = pl->mPrevHiCardIdx;
-  }
-}
-*/
 
 void Player::clear () {
   mCards.clear();

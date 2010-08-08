@@ -142,12 +142,6 @@ static bool inited = false;
 void initCardList () {
   if (inited) return;
   for (int f = 0; f < 32; f++) cList[f] = new Card(f/4+7, f%4+1);
-/*
-  cList[32] = new Card(7, 1);
-  cList[32]->mFace = 0;
-  cList[32]->mSuit = 0;
-  cList[32]->mValid = false;
-*/
   cList[32] = 0;
   inited = true;
 }

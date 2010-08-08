@@ -174,7 +174,6 @@ void ScoreWidget::paintBlankPaper ()
 
   // Draw borders of paper
   p.drawRect(NewRect);
-  //QPoint center(NewRect.center().x(), NewRect.center().y()*1.23);
   QPoint center(PaperWidth/2, PaperHeight-PaperWidth/2);
 
   // Diagonal lines from bottom corners to circle
@@ -199,9 +198,7 @@ void ScoreWidget::paintBlankPaper ()
   QRadialGradient g(center, maxPoolRadius, center+QPoint(-maxPoolRadius/2,-maxPoolRadius/2));
   g.setColorAt(0, Qt::white);
   g.setColorAt(1, qRgb(250, 250, 0));
-  //g.setColorAt(1, Qt::gray);
-  //QBrush b1(brush);
-  //b1.setColor(qRgb(255, 255, 0));
+  
   QBrush b1(g);
   p.setBrush(b1);
   p.drawEllipse(center, maxPoolRadius, maxPoolRadius);
@@ -244,8 +241,6 @@ void ScoreWidget::showPlayerScore (int i, const QString scoreBullet, const QStri
   QPainter p(this);
   p.setPen(qRgb(0, 0, 0));
   QFont fnt(p.font());
-  //fnt.setBold(false);
-  //p.setFont(fnt);
   QRect r1 = p.boundingRect(rect(), Qt::AlignHCenter, QString::number(scoreTotal));
   switch (i) {
     case 1:

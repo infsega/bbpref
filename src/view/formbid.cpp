@@ -156,28 +156,6 @@ void FormBid::onBidClick () {
   accept();
 }
 
-/*
-QList<QPushButton *> FormBid::buttonList () {
-  QList<QPushButton *> res;
-  QList<QWidget *> wList = qFindChildren<QWidget *>(this);
-  foreach (QWidget *widget, wList) {
-    QPushButton *b = static_cast<QPushButton *>(widget);
-    if (b) res << b;
-  }
-  return res;
-}
-
-
-QList<QPushButton *> FormBid::bidButtonList () {
-  QList<QPushButton *> res;
-  QList<QWidget *> wList = qFindChildren<QWidget *>(this);
-  foreach (QWidget *widget, wList) {
-    QBidButton *b = static_cast<QBidButton *>(widget);
-    if (b) res << b;
-  }
-  return res;
-}*/
-
 
 void FormBid::enableAll () {
   foreach (QPushButton *b, m_bidButtons) {

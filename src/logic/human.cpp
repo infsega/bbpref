@@ -38,17 +38,6 @@ Player * HumanPlayer::create(int aMyNumber, PrefModel *model) {
   Player * pl = new HumanPlayer(aMyNumber, model);
   return pl;
 }
-/*
-HumanPlayer &HumanPlayer::operator = (const Player &pl) {
-  Player::clone(&pl);
-  return *this;
-}
-
-
-HumanPlayer &HumanPlayer::operator = (const HumanPlayer &pl) {
-  Player::clone(&pl);
-  return *this;
-}*/
 
 
 void HumanPlayer::clear () {
@@ -61,7 +50,6 @@ void HumanPlayer::clear () {
 eGameBid HumanPlayer::dropForMisere () {
   mClickX = mClickY = 0; mWaitingForClick = true;
   makeMove(0, 0, 0, 0);
-  //mDeskView->mySleep(1);
   makeMove(0, 0, 0, 0);
   mWaitingForClick = false;
   return g86;
@@ -69,20 +57,17 @@ eGameBid HumanPlayer::dropForMisere () {
 
 
 // после сноса чего играем
-eGameBid HumanPlayer::dropForGame () {
-  //mWaitingForClick = 1;
-  //mClickX = mClickY = 0;
+eGameBid HumanPlayer::dropForGame ()
+{
   eGameBid tmpGamesType;
 
   makeMove(0, 0, 0, 0);
-  //!.!mDeskView->mySleep(1);
   makeMove(0, 0, 0, 0);
 
   FormBid *formBid = FormBid::instance();
   formBid->enableAll();
   formBid->disableItem(whist);
   formBid->disableItem(halfwhist);
-  //formBid->btnHalfWhist->setEnabled(false);
   formBid->disableItem(gtPass);
   if (mMyGame != g86) formBid->disableItem(g86);
   formBid->disableLessThan(mMyGame);
@@ -97,7 +82,6 @@ eGameBid HumanPlayer::dropForGame () {
       clearCardArea();
       returnDrop();
       makeMove(0, 0, 0, 0);
-      //mDeskView->mySleep(1);
       makeMove(0, 0, 0, 0);
     } else if (tmpGamesType == 1) {
       // показать пулю
@@ -114,37 +98,30 @@ eGameBid HumanPlayer::dropForGame () {
 
 
 // ход при торговле
-eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove) {
+eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove)
+{
   eGameBid tmpGamesType;
   mClickX = mClickY = 0; mWaitingForClick = true;
 
-  //fprintf(stderr, "select bid\n");
   FormBid *formBid = FormBid::instance();
   formBid->enableAll();
-  /*if (optAggPass && optPassCount > 0) {
-    if (lMove == undefined) lMove = g71;
-    if (rMove == undefined) rMove = g71;
-  }*/
+  
   if (m_model->optAggPass && m_model->optPassCount > 0)
-	  formBid->disableLessThan(g71);
+    formBid->disableLessThan(g71);
   
   if (qMax(lMove, rMove) != gtPass)
   {
-  	// If HumanPlayer started bid, he can stay
-	//mIStart = (lMove == undefined && rMove == undefined);
-	
-	if (mIStart)
-		formBid->disableLessThan(qMax(lMove, rMove));
-  	// otherwise he must increase
-	else
-   		formBid->disableLessThan(qMax((eGameBid)succBid(lMove), (eGameBid)succBid(rMove)));
+    if (mIStart)
+      formBid->disableLessThan(qMax(lMove, rMove));
+    // otherwise he must increase
+    else
+      formBid->disableLessThan(qMax((eGameBid)succBid(lMove), (eGameBid)succBid(rMove)));
   }
   if (mMyGame != undefined)
     formBid->disableMisere();
   formBid->enableItem(gtPass);
   formBid->disableItem(whist);
   formBid->disableItem(halfwhist);
-  //formBid->btnHalfWhist->setEnabled(false);
   formBid->enableScore();
   formBid->disableWithoutThree();
   do {
@@ -183,10 +160,8 @@ Card *HumanPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Play
     int cNo = cardAt(mClickX, mClickY, !invisibleHand());
     if (cNo == -1) {
       mClickX = mClickY = 0;
-      //draw();
       continue;
     }
-    //qDebug() << "selected:" << cNo << "mClickX:" << mClickX << "mClickY:" << mClickY;
     const int koz = mDeskView->model()->trumpSuit();
     res = mCards.at(cNo);
     // check if move accords with rules
@@ -206,13 +181,12 @@ Card *HumanPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Play
 }
 
 
-eGameBid HumanPlayer::makeFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerPass) {
+eGameBid HumanPlayer::makeFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerPass)
+{
   Q_UNUSED(HaveAVist)
-  //Q_UNUSED(nGamerVist)
 
   FormBid *formBid = FormBid::instance();
 
-  //fprintf(stderr, "whist/pass\n");
   if (MaxGame == g86) {
     mMyGame = g86catch;
   } else if ((!m_model->opt10Whist && MaxGame>=101 && MaxGame<=105)
@@ -225,7 +199,6 @@ eGameBid HumanPlayer::makeFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerP
     formBid->enableScore();
     if (nGamerPass == 1 && MaxGame <= 81)
         formBid->enableItem(halfwhist);
-        //formBid->btnHalfWhist->setEnabled(true);
     mMyGame = mDeskView->selectBid(zerogame, zerogame);
     formBid->enableAll();
   }
@@ -233,8 +206,8 @@ eGameBid HumanPlayer::makeFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerP
 }
 
 
-void HumanPlayer::highlightCard (int lx, int ly) {
-  //qDebug() << "lx:" << lx << "ly:" << ly;
+void HumanPlayer::highlightCard (int lx, int ly)
+{
   if (!mWaitingForClick) {
     // not in "card selection" mode
     if (mPrevHiCardIdx == -1) return; // nothing selected --> nothing to redraw
@@ -242,7 +215,6 @@ void HumanPlayer::highlightCard (int lx, int ly) {
   } else {
     int cNo = cardAt(lx, ly, !invisibleHand());
     if (cNo == mPrevHiCardIdx) return; // same selected --> nothing to redraw
-    //qDebug() << "mPrevHiCardIdx:" << mPrevHiCardIdx << "cNo:" << cNo;
     mPrevHiCardIdx = cNo;
   }
   draw();
