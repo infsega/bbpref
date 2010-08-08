@@ -46,6 +46,7 @@ public:
   void enableItem (eGameBid);
   void enableWithoutThree();
   void disableWithoutThree();
+  void disableMisere();
   void enableScore();
 
 private slots:

@@ -140,7 +140,7 @@ eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove) {
    		formBid->disableLessThan(qMax((eGameBid)succBid(lMove), (eGameBid)succBid(rMove)));
   }
   if (mMyGame != undefined)
-    formBid->disableItem(g86);
+    formBid->disableMisere();
   formBid->enableItem(gtPass);
   formBid->disableItem(whist);
   formBid->disableItem(halfwhist);

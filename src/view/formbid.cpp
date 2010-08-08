@@ -223,6 +223,11 @@ void FormBid::enableItem (eGameBid gameType) {
   }
 }
 
+void FormBid::disableMisere()
+{
+    (static_cast<QBidButton *>(btnMisere))->disable();
+}
+
 void FormBid::enableWithoutThree()
 {
     btnWithoutThree->setEnabled(true);
@@ -264,6 +269,7 @@ void FormBid::initDialog () {
   btnMisere->setMinimumSize(0,0);
   btnMisere->setObjectName("g86");
   btnMisere->setText(tr("&Misere"));
+  m_bidButtons.append(btnMisere);
   
   btnPass = new QPushButton(this);
   btnPass->setGeometry(10,190,60,30);
