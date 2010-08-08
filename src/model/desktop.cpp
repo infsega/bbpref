@@ -883,11 +883,6 @@ LabelRecordOnPaper:
     mPlayingRound = true;
     mDeskView->draw();
     mDeskView->drawPool();
-/*	if (optPrefClub)
-    	mDeskView->mySleep(-1);
-	else
-		mDeskView->mySleep(4);*/
-    mDeskView->longWait(2);
     mPlayingRound = false;
     if (nPassCounter != 2) {
       //  
@@ -907,6 +902,7 @@ LabelRecordOnPaper:
 void PrefModel::playingRound()
 {
   char xxBuf[1024];
+  m_outCards.clear();
     for (int i = 1; i <= 10; i++) {
       Player *tmpg;
       mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard = 0;
@@ -926,15 +922,12 @@ void PrefModel::playingRound()
 	  mDeskView->draw();
       mDeskView->mySleep(0);
       if (gCurrentGame == raspass && (i == 1 || i == 2)) {
-        Card *tmp4show, *ptmp4rpass;
-        tmp4show = mDeck.at(29+i);
-        ptmp4rpass = tmp4show;//newCard(6, tmp4show->suit());
-        mCardsOnDesk[0] = tmp4show;
+        mCardsOnDesk[0] = mDeck.at(29+i);
         mDeskView->draw();
         mDeskView->mySleep(0);
-        //if (nCurrentMove.nValue != 1) mDeskView->mySleep(-1);
-        mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, ptmp4rpass, true);
+        mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, mDeck.at(29+i), true);
       } else {
+        mCardsOnDesk[0] = 0;
         mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, 0, false);
       }
       player(mPlayerHi)->setMessage("");
@@ -967,6 +960,9 @@ void PrefModel::playingRound()
       cardName(xxBuf, mCardsOnDesk[nCurrentMove.nValue]);
       dlogf(" (3rd) player %i:%s", nCurrentMove.nValue, xxBuf);
 
+      checkMoves();
+      m_outCards << mCardsOnDesk[0] << mCardsOnDesk[1] << mCardsOnDesk[2] << mCardsOnDesk[3];
+
       ++nCurrentMove;
       mDeskView->draw();
       mDeskView->longWait(1);
@@ -982,7 +978,20 @@ void PrefModel::playingRound()
     }
 }
 
-int PrefModel::trumpSuit (void) const
+int PrefModel::trumpSuit () const
 {
   return gCurrentGame-(gCurrentGame/10)*10;
+}
+
+bool PrefModel::checkMoves ()
+{
+  // Protect from ace in a sleeve
+  for (int i=0; i<4; i++) {
+    if(!mCardsOnDesk[i]) continue;
+    if (m_outCards.contains(mCardsOnDesk[i])) {
+      qFatal("Player %d is cheating!", i);
+      return false;
+    }
+  }
+  return true;
 }

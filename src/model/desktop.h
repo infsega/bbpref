@@ -53,7 +53,7 @@ public:
   Player *currentPlayer () const { return mPlayers[nCurrentMove.nValue]; }
   int activePlayerNumber () const { return mPlayerActive; }
   int playerWithMaxPool (); // except the players who closed the pool
-  int trumpSuit (void) const;
+  int trumpSuit () const;
 
   DeskView *view() const { Q_ASSERT(mDeskView); return mDeskView; }
   int gameWhists (eGameBid gType) const;
@@ -103,6 +103,7 @@ private:
   Player *player (const WrapCounter &cnt);
   Card *makeGameMove (Card *lMove, Card *rMove, bool isPassOut);
   void playingRound();
+  bool checkMoves();
 
 private:
   DeskView *mDeskView;
@@ -110,6 +111,7 @@ private:
   QList<Player *> mPlayers;
   Card *mFirstCard, *mSecondCard, *mThirdCard;
   Card *mCardsOnDesk[4];
+  QCardList m_outCards;
   int mPlayerActive; // who plays (if not raspass and mPlayingRound=true)
   int m_trump;
 };
