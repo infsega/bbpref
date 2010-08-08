@@ -517,7 +517,7 @@ static void printDesk (int cnt) {
  * 1th, 2nd
  */
 Card *AlphaBetaPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) {
-  printf ("CheatPlayer (%d) moves\n", mPlayerNo);
+  qDebug() << type() << "("<< mPlayerNo << ") moves";
   
   card_t hands[3][10];
   card_t desk[3];

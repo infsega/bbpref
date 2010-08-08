@@ -173,7 +173,7 @@ Card *HumanPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Play
   Q_UNUSED(aLeftPlayer)
   Q_UNUSED(aRightPlayer)
   Q_UNUSED(isPassOut)
-  printf ("HumanPlayer (%d) moves\n", mPlayerNo);
+  qDebug() << type() << "("<< mPlayerNo << ") moves";
   Card *res = 0;
   mClickX = mClickY = 0; mWaitingForClick = true;
   kpref->HintMove();

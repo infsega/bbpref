@@ -1336,7 +1336,7 @@ Card *AiPlayer::MyPass3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer,
 // make game move (dispatcher)
 Card *AiPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) {
   Q_UNUSED(isPassOut)
-  printf ("AiPlayer (%d) moves\n", mPlayerNo);
+  qDebug() << type() << "("<< mPlayerNo << ") moves";
   Card *cur = 0;
   if (lMove == 0 && rMove == 0) {
     // мой заход - первый
