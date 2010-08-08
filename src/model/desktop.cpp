@@ -155,13 +155,8 @@ static void dumpCardList (char *dest, const CardList &lst) {
 }
 
 
-void PrefModel::internalInit () {
-  mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard=0;
-
-  nCurrentStart.nValue = nCurrentMove.nValue = (qrand()%3)+1;
-  nCurrentStart.nMin = nCurrentMove.nMin = 1;
-  nCurrentStart.nMax = nCurrentMove.nMax = 3;
-
+void PrefModel::initPlayers() {
+  mPlayers.clear();
   mPlayers << 0; // 0th player is nobody
   //addPlayer(new AiPlayer(1));
   // I Hate This Game :)
@@ -174,8 +169,6 @@ void PrefModel::internalInit () {
     mPlayers << new AiPlayer(3, this);
   else 
     mPlayers << new AlphaBetaPlayer(3, this);
-
-  mOnDeskClosed = false;
 }
 
 
@@ -196,8 +189,12 @@ PrefModel::PrefModel (DeskView *aDeskView) : QObject(0), mPlayingRound(false),
 #else
 	QString optHumanName = "";
 #endif
-
-  internalInit();
+  nCurrentStart.nValue = nCurrentMove.nValue = (qrand()%3)+1;
+  nCurrentStart.nMin = nCurrentMove.nMin = 1;
+  nCurrentStart.nMax = nCurrentMove.nMax = 3;
+  mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard=0;
+  mOnDeskClosed = false;
+  initPlayers();
 }
 
 
@@ -464,6 +461,7 @@ bool PrefModel::unserialize (QByteArray &ba, int *pos) {
 
 void PrefModel::runGame () {
   eGameBid playerBids[4];
+  initPlayers();
   //char *filename;
   //Card *mFirstCard, *mSecondCard, *mThirdCard;
   //int npasscounter;

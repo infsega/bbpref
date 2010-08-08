@@ -39,7 +39,7 @@ public:
   virtual ~PrefModel ();
 
   void runGame ();
-  Card *cardOnDesk(int index) const;;
+  Card *cardOnDesk(int index) const;
 
   bool saveGame (const QString name);
   bool loadGame (const QString name);
@@ -95,10 +95,9 @@ public:
   bool optAlphaBeta1;
   bool optAlphaBeta2;
 
-
 private:
+  void initPlayers ();
   Player *player (const WrapCounter &cnt);
-  void internalInit ();
   Card *makeGameMove (Card *lMove, Card *rMove, bool isPassOut);
   void playingRound();
 
