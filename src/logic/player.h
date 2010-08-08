@@ -66,6 +66,9 @@ public:
   virtual void draw ();
   virtual void highlightCard (int lx, int ly); // подсветить карту по данным координатам (и перерисовать руку, если надо)
 
+  void setNick (const QString nick) { m_nick = nick; }
+  QString nick() const { return m_nick; }
+
   void setMessage (const QString msg) { mMessage = msg; }
   const QString message () const { return mMessage; }
 
@@ -106,7 +109,7 @@ public:
   bool mWaitingForClick;
 
 protected:
-  QString mNick;
+  QString m_nick;
   QString mMessage;
   int mPlayerNo; // my number
   bool mInvisibleHand;

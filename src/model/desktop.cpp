@@ -169,6 +169,10 @@ void PrefModel::initPlayers() {
     mPlayers << new AiPlayer(3, this);
   else 
     mPlayers << new AlphaBetaPlayer(3, this);
+    
+  mPlayers[1]->setNick(optHumanName);  
+  mPlayers[2]->setNick(optPlayerName1);
+  mPlayers[3]->setNick(optPlayerName2);
 }
 
 
