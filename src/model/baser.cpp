@@ -20,8 +20,6 @@
  *      http://www.gnu.org/licenses 
  */
 
-#include <unistd.h>
-
 #include "baser.h"
 #include <QByteArray>
 
@@ -31,7 +29,6 @@ void serializeInt (QByteArray &ba, int i) {
     ba.append((char)c);
   }
 }
-
 
 bool unserializeInt (QByteArray &ba, int *pos, int *i) {
   unsigned char buf[4];
@@ -46,28 +43,3 @@ bool unserializeInt (QByteArray &ba, int *pos, int *i) {
   }
   return true;
 }
-
-
-/*
-void msSleep (int ms) {
-  // 1sec=1000000
-
-  // seconds
-  while (ms >= 1000) {
-    usleep(1000000/2);
-    usleep(1000000/2);
-    ms -= 1000;
-  }
-  // milliseconds
-  int sec = (ms*1000); // nseconds
-  while (sec > 0) {
-    if (sec >= 1000000/2) {
-      usleep(1000000/2);
-      sec -= 1000000/2;
-    } else {
-      usleep(sec);
-      sec = 0;
-    }
-  }
-}
-*/
