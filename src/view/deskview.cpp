@@ -20,13 +20,14 @@
  *      http://www.gnu.org/licenses 
  */
 
-#include <QDebug>
+#include <QtCore/QDebug>
+#include <QtCore/QSettings>
+#include <QtCore/QTimer>
 
-#include <QApplication>
-#include <QMessageBox>
-#include <QPainter>
-#include <QTimer>
-#include <QVBoxLayout>
+#include <QtGui/QApplication>
+#include <QtGui/QMessageBox>
+#include <QtGui/QPainter>
+#include <QtGui/QVBoxLayout>
 
 #include "deskview.h"
 #include "desktop.h"
@@ -220,7 +221,9 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_
  optDealAnim(true),
  optTakeAnim(true),
  optPrefClub(false)
-{
+{    
+  readSettings();
+
   mDigitsBmp = new QPixmap(QString(":/pics/digits/digits.png"));
   mBidBmp = new QPixmap(QString(":/pics/bidinfo.png"));
   mKeyBmp[0] = new QPixmap(QString(":/pics/presskey.png"));
@@ -245,7 +248,8 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_
 
 
 DeskView::~DeskView () {
-  qDebug() << "NO!!!";
+  writeSettings();
+
   delete mDeskBmp;
   freeCards();
   delete mIMoveBmp;
@@ -835,4 +839,22 @@ void DeskView::longWait (const int n)
     mySleep(-1);
   else
     mySleep(2*n);
+}
+
+void DeskView::readSettings()
+{
+    QSettings st;
+    optDealAnim = st.value("animdeal", true).toBool();
+    optTakeAnim = st.value("animtake", true).toBool();
+    optDebugHands = st.value("debughand", false).toBool();
+    optPrefClub = st.value("prefclub", false).toBool();
+}
+
+void DeskView::writeSettings() const
+{
+    QSettings st;
+    st.setValue("prefclub", optPrefClub);
+    st.setValue("animdeal", optDealAnim);
+    st.setValue("animtake", optTakeAnim);
+    st.setValue("debughand", optDebugHands);
 }

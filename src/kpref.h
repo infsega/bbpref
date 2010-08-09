@@ -45,7 +45,7 @@ public slots:
   void slotOptions ();
   void slotDeckChanged ();
 
-  void slotQuit ();
+  bool slotQuit ();
 
   void showHint(QString hint);
   void clearHint();

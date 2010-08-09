@@ -249,17 +249,10 @@ void  MainWindow::keyPressEvent (QKeyEvent *event) {
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
-	 int ret;
-	if (!m_PrefModel->mGameRunning)
-		exit(0);	 
-	 ret = QMessageBox::question(this, tr("OpenPref"),
-        tr("Do you really want to quit the game?"),
-        QMessageBox::Yes | QMessageBox::Default,
-        QMessageBox::No | QMessageBox::Escape);
-	if (ret == QMessageBox::Yes)
-         exit(0);
-    else
-         event->ignore();
+  if (slotQuit())
+    exit(0);
+  else
+    event->ignore();
  }
 
 void MainWindow::slotHelpAbout () {
@@ -292,12 +285,6 @@ void MainWindow::saveOptions () {
   st.setValue("alphabeta1", m_PrefModel->optAlphaBeta1);
   st.setValue("playername2", m_PrefModel->optPlayerName2);
   st.setValue("alphabeta2", m_PrefModel->optAlphaBeta2);
-
-  // View settings
-  st.setValue("prefclub", mDeskView->optPrefClub);
-  st.setValue("animdeal", mDeskView->optDealAnim);
-  st.setValue("animtake", mDeskView->optTakeAnim);
-  st.setValue("debughand", mDeskView->optDebugHands);
 }
 
 
@@ -311,8 +298,6 @@ void MainWindow::loadOptions () {
   //optStalingrad = st.value("stalin", false).toBool();
   //opt10Whist = st.value("whist10", false).toBool();// true => radio button checks 'check' nevertheless!
   //optWhistGreedy = st.value("whistgreedy", true).toBool();
-  mDeskView->optDealAnim = st.value("animdeal", true).toBool();
-  mDeskView->optTakeAnim = st.value("animtake", true).toBool();
   #ifndef WIN32	// May be #ifdef POSIX?
   	m_PrefModel->optHumanName = st.value("humanname", getenv("USER")).toString();
   #else
@@ -323,9 +308,7 @@ void MainWindow::loadOptions () {
   m_PrefModel->optPlayerName2 = st.value("playername2", tr("Player 2")).toString();
   m_PrefModel->optAlphaBeta2 = (st.value("alphabeta2", false).toBool());
   //optWithoutThree = st.value("without3", false).toBool();
-  mDeskView->optDebugHands = st.value("debughand", false).toBool();
   //optAggPass = st.value("aggpass", false).toBool();
-  mDeskView->optPrefClub = st.value("prefclub", false).toBool();
 }
 
 
@@ -366,16 +349,23 @@ void MainWindow::slotRules () {
   // delete dlg;
 }
 
-void MainWindow::slotQuit () {
+bool MainWindow::slotQuit () {
 	int ret;
-	if (!m_PrefModel->mGameRunning)
+	if (!m_PrefModel->mGameRunning) {
+		mDeskView->writeSettings();
 		exit(0);
+		return true;
+	}
 	ret = QMessageBox::question(this, tr("OpenPref"),
         tr("Do you really want to quit the game?"),
         QMessageBox::Yes | QMessageBox::Default,
         QMessageBox::No | QMessageBox::Escape);
-	if (ret == QMessageBox::Yes)
-  		exit(0);	
+    if (ret == QMessageBox::Yes) {
+        mDeskView->writeSettings();
+        exit(0);
+        return true;
+    }
+    return false;
 }
 
 void MainWindow::showHint(QString hint)

@@ -131,9 +131,10 @@ void FormBid::closeEvent(QCloseEvent *event) {
         tr("Do you really want to quit the game?"),
         QMessageBox::Yes | QMessageBox::Default,
         QMessageBox::No | QMessageBox::Escape);
-	if (ret == QMessageBox::Yes)
-         exit(0);
-    else
+    if (ret == QMessageBox::Yes) {
+        m_deskview->writeSettings();
+        exit(0);
+    } else
          event->ignore();
 }
 

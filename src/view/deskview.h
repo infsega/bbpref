@@ -49,6 +49,9 @@ public:
   PrefModel * model() { return m_model; }
   void setModel(PrefModel *model);
 
+  void readSettings();
+  void writeSettings() const;
+
   void mySleep (int seconds);
   void aniSleep (int milliseconds);
 
@@ -77,7 +80,7 @@ public:
   bool askWhistType ();
   void longWait (const int n);
 
-  bool reloadCards () { freeCards(); loadCards(); }
+  void reloadCards () { freeCards(); loadCards(); }
 
 public:
   int imoveX, imoveY;
