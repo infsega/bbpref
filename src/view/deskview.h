@@ -63,7 +63,6 @@ public:
   //----------------------------- for human player
   eGameBid selectBid (eGameBid lMove, eGameBid rMove);
 
-  void drawPKeyBmp (bool show);
   void drawPool ();
   void drawBidBoard();
 
@@ -73,7 +72,6 @@ public:
 
   void getLeftTop (int player, int & left, int & top);
   
-  void drawInGameCard (int mCardNo, const Card *card, bool closed);
   void animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[]);
 
   bool askWhistType ();
@@ -107,6 +105,8 @@ private:
    * plrAct: 0-3
    */
   void drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game);
+  void drawPKeyBmp (bool show);
+  void drawInGameCard (int mCardNo, const Card *card, bool closed);
   void inGameCardLeftTop (int mCardNo, int &left, int &top);
 
   void drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy);
@@ -116,6 +116,7 @@ private:
 
 private:
   friend class DeskViewPrivate;
+  friend class SleepEventLoop;
   DeskViewPrivate * d_ptr;  
   PrefModel *m_model;
   QPixmap *mDeskBmp;
