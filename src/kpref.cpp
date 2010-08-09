@@ -39,7 +39,7 @@
 
 #include "formbid.h"
 #include "newgameform.h"
-#include "optform.h"
+#include "optiondialog.h"
 #include "helpbrowser.h"
 
 inline static const char * GenName(QString str, QString ext);
@@ -313,32 +313,41 @@ void MainWindow::loadOptions () {
 
 
 void MainWindow::options () {
+  int oldBackgroundType = mDeskView->m_backgroundType;
+  QRgb oldBackgroundColor = mDeskView->m_backgroundColor;
   bool oldPrefClub = mDeskView->optPrefClub;
   bool oldDebugHands = mDeskView->optDebugHands;
   
-  OptDialog *dlg = new OptDialog(this);
-  //connect(dlg->cbPrefClub, SIGNAL(clicked()), this, SLOT(slotDeckChanged()));
+  OptionDialog *dlg = new OptionDialog(this);
+  dlg->setBackgroundType(mDeskView->m_backgroundType);
+  dlg->setBackgroundColor(mDeskView->m_backgroundColor);
   dlg->cbAnimDeal->setChecked(mDeskView->optDealAnim);
   dlg->cbAnimTake->setChecked(mDeskView->optTakeAnim);
   dlg->cbDebugHands->setChecked(mDeskView->optDebugHands);
   dlg->cbPrefClub->setChecked(mDeskView->optPrefClub);
   
   if (dlg->exec() == QDialog::Accepted) {
+    mDeskView->m_backgroundType = dlg->backgroundType();
+    mDeskView->m_backgroundColor = dlg->backgroundColor();
     mDeskView->optDealAnim = dlg->cbAnimDeal->isChecked();
     mDeskView->optTakeAnim = dlg->cbAnimTake->isChecked();
     mDeskView->optPrefClub = dlg->cbPrefClub->isChecked();
     mDeskView->optDebugHands = dlg->cbDebugHands->isChecked();
-    saveOptions();
+    //saveOptions();
   }
   delete dlg;
 
-  if ((mDeskView->optPrefClub != oldPrefClub) || (mDeskView->optDebugHands != oldDebugHands))
+  if ( (mDeskView->m_backgroundType != oldBackgroundType)
+    || (mDeskView->m_backgroundColor != oldBackgroundColor)
+    || (mDeskView->optPrefClub != oldPrefClub)
+    || (mDeskView->optDebugHands != oldDebugHands) )
     deckChanged();
 }
 
 void MainWindow::deckChanged () {
 	mDeskView->reloadCards();
-	mDeskView->draw();
+	mDeskView->draw(true);
+  mDeskView->update();
 }
 
 void MainWindow::helpRules () {

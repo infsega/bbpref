@@ -20,20 +20,34 @@
  *      http://www.gnu.org/licenses 
  */
 
-#ifndef OPTFORM_H
-#define OPTFORM_H
+#ifndef OPTIONDIALOG_H
+#define OPTIONDIALOG_H
 
-#include <QDialog>
+#include <QtGui/QDialog>
+#include <QtGui/QRgb>
 
 #include "ui_optform.h"
 
-class OptDialog : public QDialog, public Ui_OptDialog
+class OptionDialog : public QDialog, public Ui_OptDialog
 {
   Q_OBJECT
 
 public:
-  OptDialog (QWidget *parent=0) : QDialog(parent) { setupUi(this); }
-  ~OptDialog () { }
+  OptionDialog (QWidget *parent=0);
+  ~OptionDialog () { }
+  
+  int backgroundType() const;
+  void setBackgroundType(const int type);
+
+  QRgb backgroundColor() const { return m_color; }
+  void setBackgroundColor(const QRgb color);
+
+private slots:
+  void changeTexture(bool);
+  void chooseColor();
+
+private:
+  QRgb m_color;
 };
 
 

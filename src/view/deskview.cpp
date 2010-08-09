@@ -220,7 +220,9 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_
  optDebugHands(false),
  optDealAnim(true),
  optTakeAnim(true),
- optPrefClub(false)
+ optPrefClub(false),
+ m_backgroundType(1),
+ m_backgroundColor(qRgb(0,128,0))
 {    
   readSettings();
 
@@ -483,8 +485,20 @@ void DeskView::ClearScreen () {
 void DeskView::ClearBox (int x1, int y1, int x2, int y2) {
   if (!mDeskBmp) return;
   QPainter p(mDeskBmp);
-  //QBrush brush(qRgb(0, 128, 0));
-  QBrush brush(QPixmap(":/pics/cloth.png"));
+  QBrush brush;
+  switch(m_backgroundType) {
+    case 1:
+      brush = QPixmap(":/pics/cloth.png");
+      break;
+    case 2:
+      brush = QPixmap(":/pics/wood.jpg").scaled(size());
+      break;
+    default:
+      brush.setColor(m_backgroundColor);
+      brush.setStyle(Qt::SolidPattern);
+      break;
+  }
+
   QRect NewRect = QRect(x1, y1, x2, y2);
   p.fillRect(NewRect, brush);
   p.end();
@@ -844,6 +858,8 @@ void DeskView::longWait (const int n)
 void DeskView::readSettings()
 {
     QSettings st;
+    m_backgroundType = st.value("background_type", 1).toInt();
+    m_backgroundColor = st.value("background_color", qRgb(0,128,0)).toUInt();
     optDealAnim = st.value("animdeal", true).toBool();
     optTakeAnim = st.value("animtake", true).toBool();
     optDebugHands = st.value("debughand", false).toBool();
@@ -853,6 +869,8 @@ void DeskView::readSettings()
 void DeskView::writeSettings() const
 {
     QSettings st;
+    st.setValue("background_type", m_backgroundType);
+    st.setValue("background_color", m_backgroundColor);
     st.setValue("prefclub", optPrefClub);
     st.setValue("animdeal", optDealAnim);
     st.setValue("animtake", optTakeAnim);

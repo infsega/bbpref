@@ -25,14 +25,15 @@
 #ifndef DESKVIEW_H
 #define DESKVIEW_H
 
-#include <QHash>
-#include <QPixmap>
-#include <QString>
+#include <QtCore/QHash>
+#include <QtCore/QString>
+#include <QtCore/QEventLoop>
 
-#include <QEventLoop>
-#include <QKeyEvent>
-#include <QMouseEvent>
-#include <QWidget>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QPixmap>
+#include <QtGui/QRgb>
+#include <QtGui/QWidget>
 
 #include "prfconst.h"
 
@@ -86,6 +87,8 @@ public:
   bool optDealAnim;
   bool optTakeAnim;
   bool optPrefClub;
+  int m_backgroundType;
+  QRgb m_backgroundColor;
   int CardWidth, CardHeight;
 
 protected:

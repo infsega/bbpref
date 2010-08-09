@@ -74,7 +74,10 @@
     <file>pics/cards/prefclub/empty.png</file>
     
     <file>pics/cloth.png</file>
-	
+    <file>pics/cloth_s.png</file>
+    <file>pics/wood.jpg</file>
+    <file>pics/wood_s.jpg</file>
+
     <file>pics/filenew.png</file>
     <file>pics/fileopen.png</file>
     <file>pics/filesave.png</file>
