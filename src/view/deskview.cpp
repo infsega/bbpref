@@ -144,7 +144,6 @@ public:
 };
 
 bool DeskView::loadCards () {
-  qDebug() << "load";
   // load cards from resources
   QString deckPath;
   if (optPrefClub) {
@@ -157,6 +156,13 @@ bool DeskView::loadCards () {
     CardWidth = 71;
     CardHeight = 96;
   }
+
+  setMinimumWidth(CardWidth*14.42);
+  if (CardHeight*6 > 570)
+    setMinimumHeight(CardHeight*6);
+  else
+    setMinimumHeight(570);
+
   for (int face = 7; face <= 14; face++) {
     for (int suit = 1; suit <= 4; suit++) {
       QString fname, resname;
@@ -190,11 +196,10 @@ bool DeskView::loadCards () {
 
 
 void DeskView::freeCards () {
-  qDebug() << "free";
+  // erase card images
   foreach (QPixmap *i, bidIcons)
     delete i;
   bidIcons.clear();
-
   foreach (QPixmap *i, cardI)
     delete i;
   cardI.clear();
@@ -236,11 +241,6 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_
   ClearScreen();
   setMouseTracking(true);
   setAutoFillBackground(false);
-  setMinimumWidth(CardWidth*14.42);
-  if (CardHeight*6 > 570)
-    setMinimumHeight(CardHeight*6);
-  else
-    setMinimumHeight(570);
 }
 
 

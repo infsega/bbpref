@@ -354,13 +354,7 @@ void MainWindow::slotOptions () {
 }
 
 void MainWindow::slotDeckChanged () {
-	mDeskView->freeCards();
-	mDeskView->loadCards();
-	setMinimumWidth(mDeskView->CardWidth*14.42);
-	if (mDeskView->CardHeight*6 > 570)
-		setMinimumHeight(mDeskView->CardHeight*6);
-  	else
-  		setMinimumHeight(570);
+	mDeskView->reloadCards();
 	mDeskView->draw();
 }
 

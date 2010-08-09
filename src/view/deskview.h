@@ -77,8 +77,7 @@ public:
   bool askWhistType ();
   void longWait (const int n);
 
-  bool loadCards ();
-  void freeCards ();
+  bool reloadCards () { freeCards(); loadCards(); }
 
 public:
   int imoveX, imoveY;
@@ -112,6 +111,10 @@ private:
   void drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy);
   void drawNumber (int x0, int y0, int n, bool red);
   void drawGameBid (eGameBid game);
+
+  void freeCards();
+  bool loadCards ();
+
   QPixmap *GetImgByName (const char *name);
 
 private:
