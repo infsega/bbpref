@@ -114,31 +114,31 @@ void MainWindow::adjustDesk () {
 void MainWindow::initMenuBar () {
   QMenu *fileMenu = menuBar()->addMenu(tr("&Game"));
 
-  fileMenu->addAction(QIcon(QString(":/pics/newgame.png")), tr("&New game..."), this, SLOT(slotNewSingleGame()), Qt::CTRL+Qt::Key_N);
+  fileMenu->addAction(QIcon(QString(":/pics/newgame.png")), tr("&New game..."), this, SLOT(newSingleGame()), Qt::CTRL+Qt::Key_N);
 
   fileMenu->addSeparator();
 
-  actFileOpen = fileMenu->addAction(QIcon(QString(":/pics/fileopen.png")), tr("&Open..."), this, SLOT(slotFileOpen()), Qt::CTRL+Qt::Key_O);
-  actFileSave = fileMenu->addAction(QIcon(QString(":/pics/filesave.png")), tr("&Save"), this, SLOT(slotFileSave()), Qt::CTRL+Qt::Key_S);
+  actFileOpen = fileMenu->addAction(QIcon(QString(":/pics/fileopen.png")), tr("&Open..."), this, SLOT(openFile()), Qt::CTRL+Qt::Key_O);
+  actFileSave = fileMenu->addAction(QIcon(QString(":/pics/filesave.png")), tr("&Save"), this, SLOT(saveFile()), Qt::CTRL+Qt::Key_S);
 
   fileMenu->addSeparator();
 
-  QAction *actOptions = fileMenu->addAction(QIcon(QString(":/pics/tool.png")), tr("&Options..."), this, SLOT(slotOptions()), Qt::CTRL+Qt::Key_P);
+  QAction *actOptions = fileMenu->addAction(QIcon(QString(":/pics/tool.png")), tr("&Options..."), this, SLOT(options()), Qt::CTRL+Qt::Key_P);
   fileMenu->addSeparator();
   //actQuit = fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), qApp, SLOT(quit()), Qt::CTRL+Qt::Key_Q);
-  fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), this, SLOT(slotQuit()), Qt::CTRL+Qt::Key_Q);
+  fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), this, SLOT(quitGame()), Qt::CTRL+Qt::Key_Q);
   
   actFileSave->setEnabled(false);
   actOptions->setEnabled(true);
 
   QMenu *viewMenu = menuBar()->addMenu(tr("&Show"));
-  viewMenu->addAction(QIcon(QString(":/pics/paper.png")), tr("S&core..."), this, SLOT(slotShowScore()), Qt::CTRL+Qt::Key_R);
+  viewMenu->addAction(QIcon(QString(":/pics/paper.png")), tr("S&core..."), this, SLOT(showScore()), Qt::CTRL+Qt::Key_R);
 
   menuBar()->addSeparator();
 
   QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
-  helpMenu->addAction(tr("&Preferans Rules..."), this, SLOT(slotRules()), Qt::Key_F1);
-  helpMenu->addAction(tr("&About OpenPref"), this, SLOT(slotHelpAbout()), 0);
+  helpMenu->addAction(tr("&Preferans Rules..."), this, SLOT(helpRules()), Qt::Key_F1);
+  helpMenu->addAction(tr("&About OpenPref"), this, SLOT(helpAbout()), 0);
   helpMenu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
 }
 
@@ -146,7 +146,7 @@ void MainWindow::initMenuBar () {
 ///////////////////////////////////////////////////////////////////////////////
 // slots
 ///////////////////////////////////////////////////////////////////////////////
-void MainWindow::slotFileOpen () {
+void MainWindow::openFile () {
   QString fileName = QFileDialog::getOpenFileName(this, "Select saved game", "", "*.prf");
   if (!fileName.isEmpty())  {
     m_PrefModel->loadGame(fileName);
@@ -156,7 +156,7 @@ void MainWindow::slotFileOpen () {
 }
 
 
-void MainWindow::slotFileSave () {
+void MainWindow::saveFile () {
   if (m_PrefModel) {
     QString fn = QFileDialog::getSaveFileName(this, "Select file to save the current game", "", "*.prf");
     if (!fn.isEmpty()) {
@@ -167,13 +167,13 @@ void MainWindow::slotFileSave () {
 }
 
 
-void MainWindow::slotShowScore () {
+void MainWindow::showScore () {
   m_PrefModel->closePool();
   mDeskView->drawPool();
 }
 
 
-void MainWindow::slotNewSingleGame ()
+void MainWindow::newSingleGame ()
 {
   QSettings st;
   NewGameDialog *dlg = new NewGameDialog(this);
@@ -249,13 +249,13 @@ void  MainWindow::keyPressEvent (QKeyEvent *event) {
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
-  if (slotQuit())
+  if (quitGame())
     exit(0);
   else
     event->ignore();
  }
 
-void MainWindow::slotHelpAbout () {
+void MainWindow::helpAbout () {
   QMessageBox::about(this, tr("About"),
     tr("<h2 align=center>&spades; <font color=red>&diams;</font> OpenPref " OPENPREF_VERSION " &clubs; <font color=red>&hearts;</font></h2>"
   "<p align=center>Open source cross-platform Preferans game</p>"
@@ -312,7 +312,7 @@ void MainWindow::loadOptions () {
 }
 
 
-void MainWindow::slotOptions () {
+void MainWindow::options () {
   bool oldPrefClub = mDeskView->optPrefClub;
   bool oldDebugHands = mDeskView->optDebugHands;
   
@@ -333,15 +333,15 @@ void MainWindow::slotOptions () {
   delete dlg;
 
   if ((mDeskView->optPrefClub != oldPrefClub) || (mDeskView->optDebugHands != oldDebugHands))
-    slotDeckChanged();
+    deckChanged();
 }
 
-void MainWindow::slotDeckChanged () {
+void MainWindow::deckChanged () {
 	mDeskView->reloadCards();
 	mDeskView->draw();
 }
 
-void MainWindow::slotRules () {
+void MainWindow::helpRules () {
 	QMessageBox::about(this, tr("Preferans Rules"), tr("Help system has not been implemented yet!\nSee http://en.wikipedia.org/wiki/Preferans"));
   //HelpBrowser *dlg = new HelpBrowser;
   //dlg->tbHelp->setSearchPaths(QStringList("/home/kostya/projects/Qt/doc/html"));
@@ -349,7 +349,7 @@ void MainWindow::slotRules () {
   // delete dlg;
 }
 
-bool MainWindow::slotQuit () {
+bool MainWindow::quitGame () {
 	int ret;
 	if (!m_PrefModel->mGameRunning) {
 		mDeskView->writeSettings();

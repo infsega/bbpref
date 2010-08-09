@@ -36,16 +36,15 @@ public:
   ~MainWindow();
 
 public slots:
-  void slotNewSingleGame ();
-  void slotShowScore ();
-  void slotFileOpen ();
-  void slotFileSave ();
-  void slotHelpAbout ();
-  void slotRules ();
-  void slotOptions ();
-  void slotDeckChanged ();
+  void newSingleGame ();
+  void showScore ();
+  void openFile ();
+  void saveFile ();
+  void helpAbout ();
+  void helpRules ();
+  void options ();
 
-  bool slotQuit ();
+  bool quitGame ();
 
   void showHint(QString hint);
   void clearHint();
@@ -56,6 +55,7 @@ private:
   void saveOptions ();
   void loadOptions ();
   void doConnects();
+  void deckChanged();
 
   QAction *actFileOpen;
   QAction *actFileSave;
