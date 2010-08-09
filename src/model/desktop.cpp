@@ -39,8 +39,6 @@
 #include "plscore.h"
 #include "human.h"
 
-bool Closed_Whist = false;
-
 /*enum GameStage {
 	Bidding,
 	Drop,
@@ -184,7 +182,8 @@ PrefModel::PrefModel (DeskView *aDeskView) : QObject(0), mPlayingRound(false),
  optPlayerName1("Player 1"),
  optAlphaBeta1(false),
  optPlayerName2("Player 2"),
- optAlphaBeta2(false)
+ optAlphaBeta2(false),
+ m_closedWhist(false)
 {
   #if defined Q_WS_X11 || defined Q_WS_QWS || defined Q_WS_MAC
 	QString optHumanName = getenv("USER");
@@ -273,14 +272,14 @@ Card *PrefModel::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
   // 1. Current player is not human
   // Human's move if current he whists whith open cards or catches misere, and current player
   // passes or catches misere
-  if (((player(1)->myGame() == whist && !Closed_Whist) || player(1)->myGame() == g86catch) &&
+  if (((player(1)->myGame() == whist && !m_closedWhist) || player(1)->myGame() == g86catch) &&
       !curPlr->isHuman() && (curPlr->myGame() == gtPass || curPlr->myGame() == g86catch)) {
     plr = player(1)->create(nCurrentMove.nValue, this);
   }
 
   // 2. Current player passes
   // if AI whists with open cards, it makes move instead of human or other AI
-  else if (curPlr->myGame() == gtPass && !Closed_Whist) {
+  else if (curPlr->myGame() == gtPass && !m_closedWhist) {
     if (player(2)->myGame() == whist) {
       plr = player(2)->create(nCurrentMove.nValue, this);
     }
@@ -800,15 +799,15 @@ void PrefModel::runGame () {
 
 			// If one whist, whister chooses closed or opened cards
 			else if ((nPassCounter == 1)) {
-				Closed_Whist = false;
+				m_closedWhist = false;
 				for (int n=1; n<=3; n++)
 					if (player(n)->myGame() == whist) {
     					player(n)->setMessage(tr("thinking..."));
 						mDeskView->draw(false);
 						if (n != 1)
 							mDeskView->mySleep(1);
-						Closed_Whist = player(n)->chooseClosedWhist();
-						if (Closed_Whist)
+						m_closedWhist = player(n)->chooseClosedWhist();
+						if (m_closedWhist)
 							player(n)->setMessage(tr("close"));
 						else
 							player(n)->setMessage(tr("open"));
@@ -818,7 +817,7 @@ void PrefModel::runGame () {
 
 				// if closed whist chosen, no hand become opened
 				// otherwise, whist and pass players open cards
-				if (!Closed_Whist) {
+				if (!m_closedWhist) {
 					for (int n=2; n<=3; n++)
 						if ((player(n)->myGame() == whist) || (player(n)->myGame() == gtPass))
 							player(n)->setInvisibleHand(false);

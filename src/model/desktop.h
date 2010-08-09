@@ -113,7 +113,8 @@ private:
   Card *mCardsOnDesk[4];
   QCardList m_outCards;
   int mPlayerActive; // who plays (if not raspass and mPlayingRound=true)
-  int m_trump;
+  int m_trump;  
+  bool m_closedWhist;
 };
 
 
