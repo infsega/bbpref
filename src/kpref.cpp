@@ -68,18 +68,11 @@ MainWindow::MainWindow () {
   int x = dims.left()+(dims.width()-w)/2;
   int y = dims.top()+(dims.height()-h)/2;
   move(x, y);
-  setMinimumWidth(CARDWIDTH*14.42);
-  if (CARDHEIGHT*6 > 570)
-  	setMinimumHeight(CARDHEIGHT*6);
-  else
-  	setMinimumHeight(570);
-  //setFixedSize(w, h);
-  resize(w, h);
 
   mDeskView = new DeskView(this);
   mDeskView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   setCentralWidget(mDeskView);
-  mDeskView->setAutoFillBackground(false);
+  resize(w, h);
   m_PrefModel = new PrefModel(mDeskView);
 
   // Load conventions
@@ -363,9 +356,9 @@ void MainWindow::slotOptions () {
 void MainWindow::slotDeckChanged () {
 	mDeskView->freeCards();
 	mDeskView->loadCards();
-	setMinimumWidth(CARDWIDTH*14.42);
-  	if (CARDHEIGHT*6 > 570)
-  		setMinimumHeight(CARDHEIGHT*6);
+	setMinimumWidth(mDeskView->CardWidth*14.42);
+	if (mDeskView->CardHeight*6 > 570)
+		setMinimumHeight(mDeskView->CardHeight*6);
   	else
   		setMinimumHeight(570);
 	mDeskView->draw();

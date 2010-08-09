@@ -88,6 +88,7 @@ public:
   bool optDealAnim;
   bool optTakeAnim;
   bool optPrefClub;
+  int CardWidth, CardHeight;
 
 protected:
   void  showEvent (QShowEvent *);
@@ -124,7 +125,6 @@ private:
   QPixmap *mDigitsBmp;
   int bidBmpX, bidBmpY;
   int m_leftRightMargin, m_topBottomMargin;
-  int CardWidht, CardHeight;
   QHash<QString, QPixmap *> cardI;
   QHash<int, QPixmap *> bidIcons;
 };

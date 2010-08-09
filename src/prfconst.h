@@ -25,11 +25,7 @@
 
 #include <QString>
 
-extern int CARDWIDTH;
-extern int CARDHEIGHT;
-
 #define OPENPREF_VERSION "0.1.3"
-
 
 enum eGameBid {
   zerogame=0,

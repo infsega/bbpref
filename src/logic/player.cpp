@@ -27,8 +27,8 @@
 #include <QDebug>
 
 #define SUIT_OFFSET         22
-#define NEW_SUIT_OFFSET     ((CARDWIDTH)+8)
-#define CLOSED_CARD_OFFSET  ((CARDWIDTH)*0.55)
+#define NEW_SUIT_OFFSET     ((mDeskView->CardWidth)+8)
+#define CLOSED_CARD_OFFSET  ((mDeskView->CardWidth)*0.55)
 
 Player::Player (int aMyNumber, PrefModel *model) : mDeskView(model->view()), m_model(model),
                         mIStart(false), mPlayerNo(aMyNumber), mScore(model) {
@@ -120,7 +120,7 @@ int Player::buildHandXOfs (int *dest, int startX, bool opened) {
 
   if (mPlayerNo == 3 && cnt) {
     // righttop
-    startX = oldXX-(oDest[(cnt-1)*2]+CARDWIDTH+4);
+    startX = oldXX-(oDest[(cnt-1)*2]+mDeskView->CardWidth+4);
     for (int f = 0; f < cnt; f++) oDest[f*2] += startX;
   }
 
@@ -135,7 +135,7 @@ int Player::cardAt (int lx, int ly, bool opened) {
   buildHandXOfs(ofs, left, opened);
   for (int f = 0; ofs[f] >= 0; f += 2) {
     int x1 = ofs[f], y1 = top;//+mDeskView->yBorder;
-    int x2 = x1+CARDWIDTH, y2 = y1+CARDHEIGHT;
+    int x2 = x1+mDeskView->CardWidth, y2 = y1+mDeskView->CardHeight;
     if (x1 < lx && lx < x2 && y1 < ly && ly < y2) res = ofs[f+1];
   }
   return res;
@@ -178,7 +178,7 @@ void Player::clearCardArea () {
   if (!cnt) return;
   for (int f = 0; ofs[f] >= 0; f += 2) {
     int x = ofs[f], y = top;
-    mDeskView->ClearBox(x, y, CARDWIDTH, CARDHEIGHT);
+    mDeskView->ClearBox(x, y, mDeskView->CardWidth, mDeskView->CardHeight);
   }
 }
 

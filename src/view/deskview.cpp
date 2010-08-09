@@ -149,13 +149,13 @@ bool DeskView::loadCards () {
   QString deckPath;
   if (optPrefClub) {
   	deckPath = "prefclub/";
-	CARDWIDTH = 56;
-	CARDHEIGHT = 67;
+    CardWidth = 56;
+    CardHeight = 67;
   }
   else {
   	deckPath = "classic/";
-	CARDWIDTH = 71;
-	CARDHEIGHT = 96;
+    CardWidth = 71;
+    CardHeight = 96;
   }
   for (int face = 7; face <= 14; face++) {
     for (int suit = 1; suit <= 4; suit++) {
@@ -227,8 +227,6 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_
   const bool result = loadCards();
   Q_ASSERT(result);
 
-  CardWidht = CARDWIDTH;
-  CardHeight = CARDHEIGHT;
   m_leftRightMargin = 20;
   m_topBottomMargin = 20;
  /* QPalette palette;
@@ -237,6 +235,12 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_
   mDeskBmp = new QPixmap(width(), height());
   ClearScreen();
   setMouseTracking(true);
+  setAutoFillBackground(false);
+  setMinimumWidth(CardWidth*14.42);
+  if (CardHeight*6 > 570)
+    setMinimumHeight(CardHeight*6);
+  else
+    setMinimumHeight(570);
 }
 
 
@@ -267,15 +271,15 @@ void DeskView::drawIMove (/*int x, int y*/) {
   switch (m_model->nCurrentStart.nValue) {
       case 1:
         x = width()/2-15;
-        y = height() - m_topBottomMargin - CARDHEIGHT - 30; //- 40;
+        y = height() - m_topBottomMargin - CardHeight - 30; //- 40;
         break;
       case 2:
         x = m_leftRightMargin+20;
-        y = m_topBottomMargin + CARDHEIGHT + 20; //+40;
+        y = m_topBottomMargin + CardHeight + 20; //+40;
         break;
       case 3:
         x = width() - m_leftRightMargin - 20;
-        y = m_topBottomMargin + CARDHEIGHT + 20; //+40;
+        y = m_topBottomMargin + CardHeight + 20; //+40;
         break;
       default:
         qDebug() << "Invalid nCurrentStart.nValue =" << m_model->nCurrentStart.nValue;
@@ -487,7 +491,7 @@ void DeskView::drawCard (const Card *card, int x, int y, bool opened, bool hilig
   char cCardName[16];
   cCardName[0] = 0;
   if (!card) {
-    ClearBox(x, y, x+CARDWIDTH, y+CARDHEIGHT);
+    ClearBox(x, y, x+CardWidth, y+CardHeight);
     return;
   }
 
@@ -499,7 +503,7 @@ void DeskView::drawCard (const Card *card, int x, int y, bool opened, bool hilig
   if (!bmp) {
     bmp = GetImgByName("empty");
     if (!bmp) {
-      ClearBox(x, y, x+CARDWIDTH, y+CARDHEIGHT);
+      ClearBox(x, y, x+CardWidth, y+CardHeight);
       return;
     }
   }
@@ -561,7 +565,7 @@ void DeskView::drawPlayerMessage (int player, const QString msg, bool dim)
   switch (player) {
     case 1:
       x = -666;
-      y = -(m_topBottomMargin+CARDHEIGHT+40);
+      y = -(m_topBottomMargin+CardHeight+40);
       break;
     case 2:
       x = 30;
@@ -689,7 +693,7 @@ void DeskView::getLeftTop (int player, int & left, int & top)
   switch (player) {
     case 1:
       left = width()/4 + m_leftRightMargin; //(DesktopWidth - (width() / 2 - 2 * xBorder)) / 2;
-      top = height() - m_topBottomMargin - CARDHEIGHT; //DesktopHeight - yBorder - CARDHEIGHT;//mDeskView->CardHeight;//-10;
+      top = height() - m_topBottomMargin - CardHeight; //DesktopHeight - yBorder - CARDHEIGHT;//mDeskView->CardHeight;//-10;
       break;
     case 2:
       left = m_leftRightMargin;
@@ -709,18 +713,18 @@ void DeskView::inGameCardLeftTop (int mCardNo, int &left, int &top)
   int x = width()/2, y = height()/2;
   switch (mCardNo) {
     case 0:
-      x -= CARDWIDTH*2+8;
-      y -= CARDHEIGHT/2;
+      x -= CardWidth*2+8;
+      y -= CardHeight/2;
       break;
     case 1:
-      x -= CARDWIDTH/2;
+      x -= CardWidth/2;
       break;
     case 2:
-      x -= CARDWIDTH;
-      y -= CARDHEIGHT;
+      x -= CardWidth;
+      y -= CardHeight;
       break;
     case 3:
-      y -= CARDHEIGHT;
+      y -= CardHeight;
       break;
     default: return;
   }
@@ -744,7 +748,7 @@ void DeskView::animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[])
 //  Player *plr = player(plrNo);
 //  if (!plr) return;
   getLeftTop(plrNo, left, top);
-  if (plrNo == 3) left -= CARDWIDTH-4;
+  if (plrNo == 3) left -= CardWidth-4;
 
   for (int f = 0; f < 4; f++) {
     cAni[f] = mCardsOnDesk[f];
