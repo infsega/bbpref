@@ -62,16 +62,14 @@ public:
   void draw (bool emitSignal=true);
   void drawCard (const Card *card, int x, int y, bool opened, bool hilight);
   void drawText (const QString str, int x, int y, QRgb textColor=qRgb(255,255,255), QRgb outlineColor=qRgb(0,0,0));
+  void drawPool ();
+  void drawBidBoard();
+  void drawMessageWindow (int x0, int y0, const QString msg, bool dim=false);
+  void drawPlayerMessage (int player, const QString msg, bool dim=false);
+
   void MessageBox (const QString text, const QString caption);
   //----------------------------- for human player
   eGameBid selectBid (eGameBid lMove, eGameBid rMove);
-
-  void drawPool ();
-  void drawBidBoard();
-
-  void drawMessageWindow (int x0, int y0, const QString msg, bool dim=false);
-  void drawPlayerMessage (int player, const QString msg, bool dim=false);
-  void drawIMove ();
 
   void getLeftTop (int player, int & left, int & top);
   
@@ -114,6 +112,7 @@ private:
   void drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy);
   void drawNumber (int x0, int y0, int n, bool red);
   void drawGameBid (eGameBid game);
+  void drawIMove ();
 
   void freeCards();
   bool loadCards ();
