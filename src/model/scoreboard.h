@@ -20,8 +20,8 @@
  *      http://www.gnu.org/licenses 
  */
 
-#ifndef PLSCORE_H
-#define PLSCORE_H
+#ifndef SCOREBOARD_H
+#define SCOREBOARD_H
 
 #include <QtCore/QList>
 #include <QtCore/QString>
