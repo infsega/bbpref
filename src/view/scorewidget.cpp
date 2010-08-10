@@ -215,9 +215,9 @@ void ScoreWidget::paintBlankPaper ()
   
   // Players' names
   p.setBrush(brush);
-  const QRect r1 = p.boundingRect(NewRect, Qt::AlignHCenter, m_model->optHumanName);
-  const QRect r2 = p.boundingRect(NewRect, Qt::AlignHCenter, m_model->optPlayerName1);
-  const QRect r3 = p.boundingRect(NewRect, Qt::AlignHCenter, m_model->optPlayerName2);
+  const QRect r1 = p.boundingRect(NewRect, Qt::AlignHCenter, m_model->player(1)->nick());
+  const QRect r2 = p.boundingRect(NewRect, Qt::AlignHCenter, m_model->player(2)->nick());
+  const QRect r3 = p.boundingRect(NewRect, Qt::AlignHCenter, m_model->player(3)->nick());
   p.drawText(QRect(center.x()-r1.width()/2, center.y()+55, r1.width(), r1.height()),
     m_model->player(1)->nick(), QTextOption(Qt::AlignHCenter));
   drawRotatedText(p, center.x() - 30, (PaperHeight - Pool2Width - r2.width())/2,
