@@ -20,7 +20,7 @@
  *      http://www.gnu.org/licenses 
  */
 
-#include "plscore.h"
+#include "scoreboard.h"
 
 #include "baser.h"
 #include "prfconst.h"

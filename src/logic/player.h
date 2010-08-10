@@ -25,7 +25,7 @@
 
 #include "prfconst.h"
 #include "cardlist.h"
-#include "plscore.h"
+#include "scoreboard.h"
 
 class DeskView;
 

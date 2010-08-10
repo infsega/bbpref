@@ -36,7 +36,7 @@
 #include "ncounter.h"
 #include "player.h"
 #include "desktop.h"
-#include "plscore.h"
+#include "scoreboard.h"
 #include "human.h"
 
 /*enum GameStage {

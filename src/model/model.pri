@@ -7,7 +7,7 @@ HEADERS += \
   $$PWD/cardlist.h \
   $$PWD/debug.h \
   $$PWD/desktop.h \
-  $$PWD/plscore.h\
+  $$PWD/scoreboard.h\
   $$PWD/ncounter.h
 
 SOURCES += \
@@ -16,5 +16,5 @@ SOURCES += \
   $$PWD/cardlist.cpp \
   $$PWD/debug.cpp \
   $$PWD/desktop.cpp \
-  $$PWD/plscore.cpp\
+  $$PWD/scoreboard.cpp\
   $$PWD/ncounter.cpp
