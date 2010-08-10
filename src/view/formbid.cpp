@@ -166,14 +166,10 @@ void FormBid::enableAll () {
 
 
 void FormBid::disableAll () {
-    QList<QPushButton *> bList = qFindChildren<QPushButton *>(this);
-    foreach (QPushButton *button, bList) {
-      QBidButton *b = dynamic_cast<QBidButton *>(button);
-      if (b)
-          b->disable();
-      else
-          button->setEnabled(false);
-    }
+    foreach (QPushButton *b, m_bidButtons)
+        (static_cast<QBidButton *>(b))->disable();
+    foreach (QPushButton *button, m_otherButtons)
+        button->setEnabled(false);
 }
 
 
@@ -256,6 +252,7 @@ void FormBid::initDialog () {
   btnPass->setObjectName("pass");
   btnPass->setText(tr("&Pass"));
   btnPass->setIcon(QIcon(QString(":/pics/pass.png")));
+  m_otherButtons.append(btnPass);
 
   btnWhist = new QPushButton(this);
   btnWhist->setGeometry(150,190,60,30);
@@ -263,6 +260,7 @@ void FormBid::initDialog () {
   btnWhist->setObjectName("whist");
   btnWhist->setText(tr("&Whist"));
   btnWhist->setIcon(QIcon(QString(":/pics/whist.png")));
+  m_otherButtons.append(btnWhist);
 
   btnHalfWhist = new QPushButton(this);
   btnHalfWhist->setGeometry(70, 190, 80, 30);
@@ -270,6 +268,7 @@ void FormBid::initDialog () {
   btnHalfWhist->setObjectName("halfwhist");
   btnHalfWhist->setText(tr("&HalfWhist"));
   btnHalfWhist->setIcon(QIcon(QString(":/pics/halfwhist.png")));
+  m_otherButtons.append(btnHalfWhist);
 
   btnShowScore = new QPushButton(this);
   btnShowScore->setGeometry(116, 220, 94, 27);
@@ -277,6 +276,7 @@ void FormBid::initDialog () {
   btnShowScore->setText(tr("S&core"));
   btnShowScore->setToolTip(tr("Show game table with calculated scores"));
   btnShowScore->setIcon(QIcon(QString(":/pics/paper.png")));
+  m_otherButtons.append(btnShowScore);
 
   btnWithoutThree = new QPushButton(this);
   btnWithoutThree->setGeometry(10, 220, 106, 27);
@@ -284,6 +284,7 @@ void FormBid::initDialog () {
   btnWithoutThree->setText(tr("Without &Three"));
   btnWithoutThree->setToolTip(tr("Cancel game with penalty of three untaken tricks. No whists are written"));
   btnWithoutThree->setIcon(QIcon(QString(":/pics/cancel.png")));
+  m_otherButtons.append(btnWithoutThree);
 
   connect(btnMisere, SIGNAL(clicked()), this, SLOT(misere()));
   connect(btnPass, SIGNAL(clicked()), this, SLOT(pass()));

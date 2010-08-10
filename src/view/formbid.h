@@ -69,6 +69,7 @@ public:
   
 private:
   QList<QPushButton *> m_bidButtons;
+  QList<QPushButton *> m_otherButtons;
   QPushButton *btnMisere;
   QPushButton *btnPass;
   QPushButton *btnWhist;
