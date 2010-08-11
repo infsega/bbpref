@@ -223,16 +223,16 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_
  optPrefClub(false),
  m_backgroundType(1),
  m_backgroundColor(qRgb(0,128,0))
-{    
+{
   readSettings();
 
-  mDigitsBmp = new QPixmap(QString(":/pics/digits/digits.png"));
-  mBidBmp = new QPixmap(QString(":/pics/bidinfo.png"));
-  mKeyBmp[0] = new QPixmap(QString(":/pics/presskey.png"));
-  QImage key1(QString(":/pics/presskey.png"));  
+  mDigitsBmp = new QPixmap(":/pics/digits/digits.png");
+  mBidBmp = new QPixmap(":/pics/bidinfo.png");
+  mKeyBmp[0] = new QPixmap(":/pics/presskey.png");
+  QImage key1(":/pics/presskey.png");
   yellowize(&key1, qRgb(127, 127, 127));
   mKeyBmp[1] = new QPixmap(QPixmap::fromImage(key1));
-  mIMoveBmp = new QPixmap(QString(":/pics/imove.png"));
+  mIMoveBmp = new QPixmap(":/pics/imove.png");
 
   const bool result = loadCards();
   Q_ASSERT(result);
