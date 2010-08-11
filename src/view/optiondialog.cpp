@@ -40,6 +40,8 @@ int OptionDialog::backgroundType() const
     return 1;
   else if (rbTexture2->isChecked())
     return 2;
+  else
+    return 1;
 }
 
 void OptionDialog::setBackgroundType(const int type)
