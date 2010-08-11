@@ -350,8 +350,9 @@ static int numWidth (int n) {
 
 
 void DeskView::drawGameBid (eGameBid game) {
-  if (!mDeskBmp) return;
-  if (game != raspass && (game < 61 || game > 105)) return; // unknown game
+  Q_ASSERT(mDeskBmp);
+  //if (game != raspass && (game < 61 || game > 105)) return; // unknown game
+  Q_ASSERT(game == raspass || (game >= 61 && game <= 105));
   QPainter p(mDeskBmp);
   int x, y;
   QPixmap *i;
