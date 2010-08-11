@@ -100,14 +100,6 @@ protected:
   void  resizeEvent(QResizeEvent *event);
 
 private:
-  /* game:
-   *  <0: none
-   *  =0: misere
-   * suit:
-   *  =0: nt
-   * plrAct: 0-3
-   */
-  void drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game);
   void drawPKeyBmp (bool show);
   void drawInGameCard (int mCardNo, const Card *card, bool closed);
   void inGameCardLeftTop (int mCardNo, int &left, int &top);

@@ -78,7 +78,7 @@ public:
   void setMyGame (eGameBid game) { mMyGame = game; }
 
   /// @todo Move to shared score board
-  int tricksTaken () const { return mTricksTaken; }
+  int tricksTaken () const { Q_ASSERT(mTricksTaken >= 0); return mTricksTaken; }
   void gotTrick () { mTricksTaken++; }
   void gotPassPassTricks (int cnt) { mTricksTaken = cnt; }
 

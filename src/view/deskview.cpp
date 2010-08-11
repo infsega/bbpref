@@ -375,47 +375,6 @@ void DeskView::drawGameBid (eGameBid game) {
 }
 
 
-/* game:
- *  <0: none
- *  =0: misere
- * suit:
- *  =0: nt
- * plrAct: 0-3
- */
-void DeskView::drawBidsBmp (int plrAct, int p0t, int p1t, int p2t, eGameBid game) {
-  if (!mDeskBmp) return;
-  QPixmap *i = mBidBmp;
-  bidBmpX = width()-(i->width()+8);
-  bidBmpY = height()-(i->height()+8);
-  QPainter p(mDeskBmp);
-  p.drawPixmap(bidBmpX, bidBmpY, *i);
-  p.end();
-/*
- * p0t: 10,6 (left top)
- * p1t: 77,6 (right top)
- * p2t: 44,50 (bottom center)
- * bid: 44,34 (center)
-*/
-  // human
-  if (p0t >= 0) {
-    int wdt = numWidth(p0t);
-    int x = 44-(wdt/2);
-    drawNumber(bidBmpX+x, bidBmpY+50, p0t, plrAct==1);
-  }
-  // left-top ai
-  if (p1t >= 0) {
-    drawNumber(bidBmpX+10, bidBmpY+6, p1t, plrAct==2);
-  }
-  // right-top ai
-  if (p2t >= 0) {
-    int wdt = numWidth(p2t);
-    int x = 77-wdt;
-    drawNumber(bidBmpX+x, bidBmpY+6, p2t, plrAct==3);
-  }
-  drawGameBid(game);
-}
-
-
 void DeskView::mySleep (int seconds) {
   //Event = 0;
   installEventFilter(d_ptr->m_efilter);
@@ -794,11 +753,35 @@ void DeskView::drawPool () {
 
 void DeskView::drawBidBoard()
 {
-    Player *plr1 = m_model->player(1);
-    Player *plr2 = m_model->player(2);
-    Player *plr3 = m_model->player(3);
+    if (!mDeskBmp) return;
+    const Player *plr1 = m_model->player(1);
+    const Player *plr2 = m_model->player(2);
+    const Player *plr3 = m_model->player(3);
+    const int plrAct = m_model->activePlayerNumber();
     Q_ASSERT(plr1 && plr2 && plr3);
-    drawBidsBmp(m_model->activePlayerNumber(), plr1->tricksTaken(), plr2->tricksTaken(), plr3->tricksTaken(), m_model->gCurrentGame);
+    QPixmap *i = mBidBmp;
+    bidBmpX = width()-(i->width()+8);
+    bidBmpY = height()-(i->height()+8);
+    QPainter p(mDeskBmp);
+    p.drawPixmap(bidBmpX, bidBmpY, *i);
+    p.end();
+  /*
+   * p0t: 10,6 (left top)
+   * p1t: 77,6 (right top)
+   * p2t: 44,50 (bottom center)
+   * bid: 44,34 (center)
+  */
+    // human
+      const int wdt1 = numWidth(plr1->tricksTaken() >= 0);
+      const int x1 = 44-(wdt1/2);
+      drawNumber(bidBmpX+x1, bidBmpY+50, plr1->tricksTaken(), plrAct==1);
+    // left-top ai
+      drawNumber(bidBmpX+10, bidBmpY+6, plr2->tricksTaken(), plrAct==2);
+    // right-top ai
+      const int wdt2 = numWidth(plr3->tricksTaken());
+      const int x2 = 77-wdt2;
+      drawNumber(bidBmpX+x2, bidBmpY+6, plr3->tricksTaken(), plrAct==3);
+    drawGameBid(m_model->gCurrentGame);
 }
 
 bool DeskView::askWhistType ()
@@ -828,12 +811,7 @@ void DeskView::draw (bool emitSignal) {
 
   // draw bidboard
   if (m_model->mPlayingRound) {
-    Player *plr1 = m_model->player(1);
-    Player *plr2 = m_model->player(2);
-    Player *plr3 = m_model->player(3);
-    //if (plr1 && plr2 && plr3) {
-    drawBidsBmp(m_model->activePlayerNumber(), plr1->tricksTaken(), plr2->tricksTaken(), plr3->tricksTaken(), m_model->gCurrentGame);
-    //}
+    drawBidBoard();
   }
   drawIMove();
   // ÓÏÏÂÝÅÎÉÑ
