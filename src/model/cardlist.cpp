@@ -156,7 +156,7 @@ Card *CardList::lesserInSuit (int aFace, int aSuit) const {
 }
 
 
-//ĞÅÒ×ÁÑ ÍÅÎØÛÅ ŞÅÍ ĞÅÒÅÄÁÎÎÁÑ
+//Ğ¿ĞµÑ€Ğ²Ğ°Ñ Ğ¼ĞµĞ½ÑŒÑˆĞµ Ñ‡ĞµĞ¼ Ğ¿ĞµÑ€ĞµĞ´Ğ°Ğ½Ğ½Ğ°Ñ
 Card *CardList::lesserInSuit (Card *card) const {
   if (!card) return 0;
   return lesserInSuit(card->face(), card->suit());
