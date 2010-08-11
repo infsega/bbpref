@@ -222,7 +222,6 @@ int PrefModel::gameWhists (eGameBid gType) const
 }
 
 
-
 void PrefModel::closePool () {
   if(!mGameRunning)
     return;
@@ -328,21 +327,20 @@ int PrefModel::playerWithMaxPool () {
 
 
 Player *PrefModel::player (int num) {
-  //if (num < 1 || num > 3) return 0;
-  Q_ASSERT(num >= 1 || num <= 3);
+  Q_ASSERT(num >= 1 && num <= 3);
   return mPlayers[num];
 }
 
 
 inline Player *PrefModel::player (const WrapCounter &cnt) {
-  Q_ASSERT(cnt.nValue >= 1 || cnt.nValue <= 3);
+  Q_ASSERT(cnt.nValue >= 1 && cnt.nValue <= 3);
   return player(cnt.nValue);
 }
 
 
 Card *PrefModel::cardOnDesk(int num) const
 {
-  Q_ASSERT(num >= 0 || num <= 3);
+  Q_ASSERT(num >= 0 && num <= 3);
   return mCardsOnDesk[num];
 }
 
@@ -460,7 +458,6 @@ void PrefModel::runGame () {
       for (int f = 0; f < 32; f++) {
         QByteArray ba(dbgDT.readLine());
         Card *c = cardFromName(ba.constData());
-        //if (!c) abort();
         Q_ASSERT(c != 0);
         qDebug() << c->toString();
         mDeck << c;
@@ -471,10 +468,8 @@ void PrefModel::runGame () {
       dbgD.close();
       int pos = 0;
       const bool result = mDeck.unserialize(ba, &pos);
-      //if (!mDeck.unserialize(ba, &pos)) abort();
       Q_ASSERT(result);
       nCurrentStart.nValue = 1;
-    //} else if (allowDebugLog) {
     } else if (allowDebugLog) {
       QString fns(QString::number(roundNo));
       //roundNo++

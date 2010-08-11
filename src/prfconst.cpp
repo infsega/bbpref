@@ -45,7 +45,6 @@ int succBid (eGameBid game) {
     return vz*10+mast;
   }
   return g61;
-  //return gtPass;
 }
 
 

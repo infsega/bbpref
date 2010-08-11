@@ -109,10 +109,8 @@ int Player::buildHandXOfs (int *dest, int startX, bool opened) {
     *dest++ = startX;
     int idx = mCards.indexOf(cur);
     *dest++ = idx;
-    //if (idx < 0) abort();
     Q_ASSERT(idx >= 0);
     cnt++;
-    //if (cnt > 12) abort();
     Q_ASSERT(cnt <= 12);
   }
   *dest++ = -1;
@@ -156,7 +154,6 @@ void Player::drawAt (DeskView *aDeskView, int left, int top, int selNo) {
     Card *card = mCards.at(ofs[f+1]);
     aDeskView->drawCard(card, x, y, !invisibleHand(), ofs[f+1]==selNo);
   }
-  //aDeskView->emitRepaint();
   aDeskView->update();
   mDeskView = oDesk;
 }

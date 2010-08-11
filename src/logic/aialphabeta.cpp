@@ -28,16 +28,7 @@
 #include "formbid.h"
 #include "aialphabeta.h"
 
-
-// 1-33; 0: unused
-/*
-#define SUIT(c)  (((c)-1)%4)
-#define FACE(c)  ((((c)-1)/4)+7)
-#define CARD(face,suit)  (((face-7)*4+(suit))+1)
-*/
-
 typedef unsigned char  card_t;
-
 
 static inline card_t CARD (int face, int suit) {
   Q_ASSERT(!(face < 7 || face > 14 || suit < 0 || suit > 3));
@@ -530,7 +521,6 @@ Card *AlphaBetaPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, 
 
   // build hands
   for (int c = 0; c < 3; c++) {
-    //if (!plst[c]) abort();
     Q_ASSERT(plst[c]);
     CardList *clst = &(plst[c]->mCards);
     //for (int f = 0; f < 10; f++) hds[c][f] = hands[c][f] = 0;
@@ -691,19 +681,3 @@ Player * AlphaBetaPlayer::create(int aMyNumber, PrefModel *model) {
   Player * pl = new AlphaBetaPlayer(aMyNumber, model);
   return pl;
 }
-
-
-/*
-CheatPlayer &CheatPlayer::operator = (const Player &pl) {
-  Player::clone(&pl);
-  mInvisibleHand = false;
-  return *this;
-}
-
-
-CheatPlayer &CheatPlayer::operator = (const CheatPlayer &pl) {
-  Player::clone(&pl);
-  if (allowDebugLog) mInvisibleHand = false;
-  return *this;
-}
-*/
