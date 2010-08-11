@@ -40,6 +40,7 @@
 #include "formbid.h"
 #include "newgameform.h"
 #include "optiondialog.h"
+#include "playersinfodialog.h"
 #include "helpbrowser.h"
 
 inline static const char * GenName(QString str, QString ext);
@@ -114,16 +115,16 @@ void MainWindow::adjustDesk () {
 void MainWindow::initMenuBar () {
   QMenu *fileMenu = menuBar()->addMenu(tr("&Game"));
 
-  fileMenu->addAction(QIcon(QString(":/pics/newgame.png")), tr("&New game..."), this, SLOT(newSingleGame()), Qt::CTRL+Qt::Key_N);
+  fileMenu->addAction(QIcon(":/pics/newgame.png"), tr("&New game..."), this, SLOT(newSingleGame()), Qt::CTRL+Qt::Key_N);
 
   fileMenu->addSeparator();
 
-  actFileOpen = fileMenu->addAction(QIcon(QString(":/pics/fileopen.png")), tr("&Open..."), this, SLOT(openFile()), Qt::CTRL+Qt::Key_O);
-  actFileSave = fileMenu->addAction(QIcon(QString(":/pics/filesave.png")), tr("&Save"), this, SLOT(saveFile()), Qt::CTRL+Qt::Key_S);
+  actFileOpen = fileMenu->addAction(QIcon(":/pics/fileopen.png"), tr("&Open..."), this, SLOT(openFile()), Qt::CTRL+Qt::Key_O);
+  actFileSave = fileMenu->addAction(QIcon(":/pics/filesave.png"), tr("&Save"), this, SLOT(saveFile()), Qt::CTRL+Qt::Key_S);
 
   fileMenu->addSeparator();
 
-  QAction *actOptions = fileMenu->addAction(QIcon(QString(":/pics/tool.png")), tr("&Options..."), this, SLOT(options()), Qt::CTRL+Qt::Key_P);
+  QAction *actOptions = fileMenu->addAction(QIcon(":/pics/tool.png"), tr("&Options..."), this, SLOT(options()), Qt::CTRL+Qt::Key_P);
   fileMenu->addSeparator();
   //actQuit = fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), qApp, SLOT(quit()), Qt::CTRL+Qt::Key_Q);
   fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), this, SLOT(quitGame()), Qt::CTRL+Qt::Key_Q);
@@ -132,7 +133,8 @@ void MainWindow::initMenuBar () {
   actOptions->setEnabled(true);
 
   QMenu *viewMenu = menuBar()->addMenu(tr("&Show"));
-  viewMenu->addAction(QIcon(QString(":/pics/paper.png")), tr("S&core..."), this, SLOT(showScore()), Qt::CTRL+Qt::Key_R);
+  viewMenu->addAction(QIcon(":/pics/paper.png"), tr("S&core..."), this, SLOT(showScore()), Qt::CTRL+Qt::Key_R);
+  viewMenu->addAction(QIcon(":/pics/unknown-player.png"), tr("Players..."), this, SLOT(showPlayers()));
 
   menuBar()->addSeparator();
 
@@ -172,6 +174,14 @@ void MainWindow::showScore () {
   mDeskView->drawPool();
 }
 
+void MainWindow::showPlayers()
+{
+  PlayersInfoDialog *dlg = new PlayersInfoDialog(m_PrefModel);
+  //dlg->setSizePolicy(QSizePolicy::Preferred);
+  dlg->exec();
+  //dlg->adjustSize();
+  //delete dlg;
+}
 
 void MainWindow::newSingleGame ()
 {

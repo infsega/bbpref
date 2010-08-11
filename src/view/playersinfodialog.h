@@ -20,55 +20,18 @@
  *      http://www.gnu.org/licenses 
  */
 
-#ifndef KPREF_H
-#define KPREF_H
+#ifndef PLAYERSINFODIALOG_H
+#define PLAYERSINFODIALOG_H
 
-#include <QMainWindow>
+#include <QDialog>
 
 class PrefModel;
-class DeskView;
+class QShowEvent;
 
-class MainWindow : public QMainWindow {
-  Q_OBJECT
-
-public:
-  MainWindow();
-  ~MainWindow();
-
-public slots:
-  void newSingleGame ();
-  void showScore ();
-  void showPlayers();
-  void openFile ();
-  void saveFile ();
-  void helpAbout ();
-  void helpRules ();
-  void options ();
-
-  bool quitGame ();
-
-  void showHint(QString hint);
-  void clearHint();
-
-private:
-  void adjustDesk ();
-  void initMenuBar();
-  void saveOptions ();
-  void loadOptions ();
-  void doConnects();
-  void deckChanged();
-
-  QAction *actFileOpen;
-  QAction *actFileSave;
-  QStatusBar * HintBar;
-
-public:
-  PrefModel *m_PrefModel;
-  DeskView *mDeskView;
-
-protected:
-  void  keyPressEvent (QKeyEvent *);
-  void  closeEvent(QCloseEvent *event);
+class PlayersInfoDialog : public QDialog
+{
+  public:
+    PlayersInfoDialog(PrefModel *model);
 };
 
 #endif

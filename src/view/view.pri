@@ -4,6 +4,7 @@ INCLUDEPATH += $$PWD
 HEADERS += \
   $$PWD/deskview.h \
   $$PWD/optiondialog.h \
+  $$PWD/playersinfodialog.h \
   $$PWD/newgameform.h \
   $$PWD/helpbrowser.h \
   $$PWD/formbid.h \
@@ -14,6 +15,7 @@ SOURCES += \
   $$PWD/helpbrowser.cpp \
   $$PWD/formbid.cpp \
   $$PWD/optiondialog.cpp \
+  $$PWD/playersinfodialog.cpp \
   $$PWD/scorewidget.cpp
 
 FORMS += \
