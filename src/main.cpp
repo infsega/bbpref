@@ -88,6 +88,7 @@ int main (int argc, char *argv[]) {
     ConanWidget widget;
     widget.show();
   #endif
-  bool exitCode = a.exec();
+  int exitCode = 0;
+  exitCode = a.exec();
   return exitCode;
 }
