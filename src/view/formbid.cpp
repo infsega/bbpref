@@ -182,19 +182,31 @@ void FormBid::disableLessThan (eGameBid gameType) {
 
 
 void FormBid::disableItem (eGameBid gameType) {
-  QList<QPushButton *> bList = qFindChildren<QPushButton *>(this);
-  foreach (QPushButton *b, bList) {
+  if (gameType < g61) {
+    foreach(QPushButton *b, m_otherButtons) {
       if (gameName2Type(b->objectName()) == gameType)
-          b->setEnabled(false);
+        b->setEnabled(false);
+    }
+  } else {
+    foreach(QPushButton *b, m_bidButtons) {
+      if (gameName2Type(b->objectName()) == gameType)
+        (static_cast<QBidButton *>(b))->disable();
+    }
   }
 }
 
 
 void FormBid::enableItem (eGameBid gameType) {
-  QList<QPushButton *> bList = qFindChildren<QPushButton *>(this);
-  foreach (QPushButton *b, bList) {
+  if (gameType < g61) {
+    foreach(QPushButton *b, m_otherButtons) {
       if (gameName2Type(b->objectName()) == gameType)
-          b->setEnabled(true);
+        b->setEnabled(true);
+    }
+  } else {
+    foreach(QPushButton *b, m_bidButtons) {
+      if (gameName2Type(b->objectName()) == gameType)
+        (static_cast<QBidButton *>(b))->enable();
+    }
   }
 }
 
