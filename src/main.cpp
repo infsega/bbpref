@@ -78,11 +78,11 @@ int main (int argc, char *argv[]) {
   	a.installTranslator(&openprefTranslator);
 
   MainWindow kpref;
-  //#ifndef MOBILE
+  #if !defined(MOBILE) && !defined(Q_WS_QWS)
     kpref.show();
-  //#else
-  //  kpref->showFullScreen();
-  //#endif
+  #else
+    kpref.showFullScreen();
+  #endif
 
   #ifdef USE_CONAN
     ConanWidget widget;
