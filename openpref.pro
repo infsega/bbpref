@@ -37,3 +37,15 @@ include($$PWD/src/main.pri)
 RESOURCES += $$PWD/gfx.qrc
 
 TRANSLATIONS = openpref_ru.ts
+
+
+isEmpty(BIN_INSTALL_DIR) {
+  BIN_INSTALL_DIR = games
+}
+
+isEmpty(PREFIX) {
+  PREFIX = /usr/local
+}
+
+target.path = $$PREFIX/$$BIN_INSTALL_DIR
+INSTALLS += target
