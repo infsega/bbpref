@@ -54,8 +54,8 @@ public slots:
 private:
   void adjustDesk ();
   void initMenuBar();
-  void saveOptions ();
-  void loadOptions ();
+  void writeSettings ();
+  void readSettings ();
   void doConnects();
   void deckChanged();
 

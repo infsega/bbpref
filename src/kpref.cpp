@@ -74,7 +74,7 @@ MainWindow::MainWindow (bool fullScreen) : m_fullScreen(fullScreen)
   resize(w, h);
   m_PrefModel = new PrefModel(mDeskView);
   mDeskView->setModel(m_PrefModel);
-  loadOptions();
+  readSettings();
   doConnects();
   HintBar->showMessage(tr("Welcome to OpenPref!"));
   FormBid *formBid = FormBid::instance(mDeskView);
@@ -236,7 +236,7 @@ void MainWindow::newSingleGame ()
     m_PrefModel->optPlayerName2 = dlg->leName2->text();
     m_PrefModel->optAlphaBeta2 = dlg->cbAlphaBeta2->isChecked();
   
-    saveOptions();
+    writeSettings();
     //actFileOpen->setEnabled(false);
     actFileSave->setEnabled(true); 
     m_PrefModel->runGame();
@@ -271,7 +271,7 @@ void MainWindow::helpAbout () {
 }
 
 
-void MainWindow::saveOptions () {
+void MainWindow::writeSettings () {
   QSettings st;
   // Conventions
   st.setValue("maxpool", m_PrefModel->optMaxPool);
@@ -291,7 +291,7 @@ void MainWindow::saveOptions () {
 }
 
 
-void MainWindow::loadOptions () {
+void MainWindow::readSettings () {
   QSettings st;
   //m_PrefModel->optMaxPool = st.value("maxpool", 10).toInt();
   //if (m_PrefModel->optMaxPool < 4)
