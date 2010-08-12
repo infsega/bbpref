@@ -107,14 +107,14 @@ void MainWindow::initMenuBar () {
     const QIcon saveicon = QIcon::fromTheme("document-save", QIcon(":/pics/filesave.png"));
     const QIcon toolicon = QIcon::fromTheme("preferences-system", QIcon(":/pics/tool.png"));
     const QIcon exiticon = QIcon::fromTheme("application-exit", QIcon(":/pics/exit.png"));
-    const QIcon helpicon = QIcon::fromTheme("system-help", QIcon(":/pics/help"));
+    const QIcon helpicon = QIcon::fromTheme("system-help", QIcon(":/pics/help.png"));
   #else
     const QIcon openicon(":/pics/fileopen.png");
     const QIcon saveicon(":/pics/filesave.png");
     const QIcon toolicon(":/pics/tool.png");
     const QIcon quiticon(":/pics/exit.png");
     const QIcon exiticon(":/pics/exit.png");
-    const QIcon helpicon(":/pics/help");
+    const QIcon helpicon(":/pics/help.png");
   #endif
   QMenu *fileMenu = menuBar()->addMenu(tr("&Game"));
 
