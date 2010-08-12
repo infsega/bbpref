@@ -67,8 +67,10 @@ ScoreWidget::ScoreWidget(PrefModel *model, QWidget *parent, Qt::WindowFlags f)
   //paintBlankPaper(m_paperBmp);
   //resize(410,480);
   setWindowFlags(Qt::Window);
+#ifndef MOBILE
   QSettings settings;
   restoreGeometry(settings.value("score/geometry").toByteArray());
+#endif
   //setSizePolicy(QSizePolicy::Preferred);
 }
 
@@ -149,8 +151,12 @@ void ScoreWidget::showEvent(QShowEvent *event)
 {
   Q_UNUSED(event)
   QSettings settings;
+#ifndef MOBILE
   setMaximumSize(500, (int) (static_cast<QWidget *>(parent())->height()));
   restoreGeometry(settings.value("score/geometry").toByteArray());
+#else
+  QDialog::showFullScreen();
+#endif
   //qDebug() << "restore";
   //adjustSize();
   //resize(410,480);

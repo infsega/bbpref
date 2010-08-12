@@ -28,11 +28,12 @@
 class PrefModel;
 class DeskView;
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow
+{
   Q_OBJECT
 
 public:
-  MainWindow();
+  MainWindow(bool fullScreen=false);
   ~MainWindow();
 
 public slots:
@@ -61,6 +62,7 @@ private:
   QAction *actFileOpen;
   QAction *actFileSave;
   QStatusBar * HintBar;
+  bool m_fullScreen;
 
 public:
   PrefModel *m_PrefModel;

@@ -77,12 +77,17 @@ int main (int argc, char *argv[]) {
   if(openprefTranslator.load(openprefFilename))
   	a.installTranslator(&openprefTranslator);
 
-  MainWindow kpref;
-  #if !defined(MOBILE) && !defined(Q_WS_QWS)
-    kpref.show();
+  #ifdef MOBILE
+    const bool fullScreen = true;
   #else
-    kpref.showFullScreen();
+    const bool fullScreen = false;
   #endif
+
+  MainWindow kpref(fullScreen);
+  if(!fullScreen)
+      kpref.show();
+  else
+      kpref.showFullScreen();
 
   #ifdef USE_CONAN
     ConanWidget widget;

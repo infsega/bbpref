@@ -47,7 +47,8 @@ inline static const char * GenName(QString str, QString ext);
 
 //char *documentation; //see bottom this file
 
-MainWindow::MainWindow () {
+MainWindow::MainWindow (bool fullScreen) : m_fullScreen(fullScreen)
+{
   setWindowTitle("OpenPref");
   
   initMenuBar();

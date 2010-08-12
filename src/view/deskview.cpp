@@ -749,7 +749,11 @@ void DeskView::animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[])
 
 
 void DeskView::drawPool () {
+//#ifdef MOBILE
+//  d_ptr->m_scorew->showFullScreen();
+//#endif
   d_ptr->m_scorew->exec();
+//#endif
 }
 
 void DeskView::drawBidBoard()

@@ -27,6 +27,10 @@
 
 #define OPENPREF_VERSION "0.1.3"
 
+#ifdef Q_WS_QWS
+  #define MOBILE
+#endif
+
 enum eGameBid {
   zerogame=0,
   showpool=1,
