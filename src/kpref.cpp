@@ -113,21 +113,36 @@ void MainWindow::adjustDesk () {
 
 
 void MainWindow::initMenuBar () {
+  // Load icons
+  #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    const QIcon openicon = QIcon::fromTheme("document-open", QIcon(":/pics/fileopen.png"));
+    const QIcon saveicon = QIcon::fromTheme("document-save", QIcon(":/pics/filesave.png"));
+    const QIcon toolicon = QIcon::fromTheme("preferences-system", QIcon(":/pics/tool.png"));
+    const QIcon exiticon = QIcon::fromTheme("application-exit", QIcon(":/pics/exit.png"));
+    const QIcon helpicon = QIcon::fromTheme("system-help", QIcon(":/pics/help"));
+  #else
+    const QIcon openicon(":/pics/fileopen.png");
+    const QIcon saveicon(":/pics/filesave.png");
+    const QIcon toolicon(":/pics/tool.png");
+    const QIcon quiticon(":/pics/exit.png");
+    const QIcon exiticon(":/pics/exit.png");
+    const QIcon helpicon(":/pics/help");
+  #endif
   QMenu *fileMenu = menuBar()->addMenu(tr("&Game"));
 
   fileMenu->addAction(QIcon(":/pics/newgame.png"), tr("&New game..."), this, SLOT(newSingleGame()), Qt::CTRL+Qt::Key_N);
 
   fileMenu->addSeparator();
 
-  actFileOpen = fileMenu->addAction(QIcon(":/pics/fileopen.png"), tr("&Open..."), this, SLOT(openFile()), Qt::CTRL+Qt::Key_O);
-  actFileSave = fileMenu->addAction(QIcon(":/pics/filesave.png"), tr("&Save"), this, SLOT(saveFile()), Qt::CTRL+Qt::Key_S);
+  actFileOpen = fileMenu->addAction(openicon, tr("&Open..."), this, SLOT(openFile()), Qt::CTRL+Qt::Key_O);
+  actFileSave = fileMenu->addAction(saveicon, tr("&Save"), this, SLOT(saveFile()), Qt::CTRL+Qt::Key_S);
 
   fileMenu->addSeparator();
 
-  QAction *actOptions = fileMenu->addAction(QIcon(":/pics/tool.png"), tr("&Options..."), this, SLOT(options()), Qt::CTRL+Qt::Key_P);
+  QAction *actOptions = fileMenu->addAction(toolicon, tr("&Options..."), this, SLOT(options()), Qt::CTRL+Qt::Key_P);
   fileMenu->addSeparator();
   //actQuit = fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), qApp, SLOT(quit()), Qt::CTRL+Qt::Key_Q);
-  fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), this, SLOT(quitGame()), Qt::CTRL+Qt::Key_Q);
+  fileMenu->addAction(exiticon, tr("&Quit"), this, SLOT(quitGame()), Qt::CTRL+Qt::Key_Q);
   
   actFileSave->setEnabled(false);
   actOptions->setEnabled(true);
@@ -139,7 +154,7 @@ void MainWindow::initMenuBar () {
   menuBar()->addSeparator();
 
   QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
-  helpMenu->addAction(tr("&Preferans Rules..."), this, SLOT(helpRules()), Qt::Key_F1);
+  helpMenu->addAction(helpicon, tr("&Preferans Rules..."), this, SLOT(helpRules()), Qt::Key_F1);
   helpMenu->addAction(tr("&About OpenPref"), this, SLOT(helpAbout()), 0);
   helpMenu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
 }
