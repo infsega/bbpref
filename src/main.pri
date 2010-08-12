@@ -13,3 +13,4 @@ SOURCES += \
 include($$PWD/view/view.pri)
 include($$PWD/logic/logic.pri)
 include($$PWD/model/model.pri)
+include($$PWD/misc/misc.pri)

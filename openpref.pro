@@ -1,7 +1,7 @@
 TEMPLATE = app
 TARGET = openpref
 
-QT += gui
+QT += gui network
 
 CONFIG += qt warn_on
 CONFIG += debug_and_release

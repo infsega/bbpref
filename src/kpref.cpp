@@ -23,6 +23,7 @@
 #include "kpref.h"
 #include "desktop.h"
 #include "deskview.h"
+#include "updatecheck.h"
 
 #include <QDesktopWidget>
 #include <QSettings>
@@ -74,6 +75,7 @@ MainWindow::MainWindow (bool fullScreen) : m_fullScreen(fullScreen)
   resize(w, h);
   m_PrefModel = new PrefModel(mDeskView);
   mDeskView->setModel(m_PrefModel);
+  m_updateCheck = UpdateCheck::instance(this);
   readSettings();
   doConnects();
   HintBar->showMessage(tr("Welcome to OpenPref!"));
@@ -312,6 +314,12 @@ void MainWindow::readSettings () {
   m_PrefModel->optAlphaBeta2 = (st.value("alphabeta2", false).toBool());
   //optWithoutThree = st.value("without3", false).toBool();
   //optAggPass = st.value("aggpass", false).toBool();
+
+  // Load the updated version configuration settings and then run it
+  if (m_updateCheck) {
+    m_updateCheck->readSettings(st);
+    m_updateCheck->checkForUpdates();
+  }
 }
 
 

@@ -27,6 +27,7 @@
 
 class PrefModel;
 class DeskView;
+class UpdateCheck;
 
 class MainWindow : public QMainWindow
 {
@@ -62,6 +63,7 @@ private:
   QAction *actFileOpen;
   QAction *actFileSave;
   QStatusBar * HintBar;
+  UpdateCheck * m_updateCheck;
   bool m_fullScreen;
 
 public:
