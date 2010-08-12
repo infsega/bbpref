@@ -34,7 +34,7 @@ RCC_DIR = _build/rcc
 #include($$PWD/src/qtstatemachine/src/qtstatemachine.pri)
 include($$PWD/src/main.pri)
 
-RESOURCES += $$PWD/gfx.qrc
+RESOURCES += $$PWD/openpref.qrc
 
 TRANSLATIONS = openpref_ru.ts
 
