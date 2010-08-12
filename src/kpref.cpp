@@ -46,7 +46,6 @@
 inline static const char * GenName(QString str, QString ext);
 
 //char *documentation; //see bottom this file
-MainWindow *kpref;
 
 MainWindow::MainWindow () {
   setWindowTitle("OpenPref");
@@ -58,14 +57,11 @@ MainWindow::MainWindow () {
   HintBar = new QStatusBar(this);
   HintBar->setSizeGripEnabled(true);
   setStatusBar(HintBar);
-  //HintBar->setFixedHeight(HINTBAR_MAX_HEIGHT);
   
   QDesktopWidget *desk = QApplication::desktop();
   QRect dims(desk->availableGeometry(this));
   int w = dims.width()-60;
-  //w = 528*2;
   int h = dims.height()-120;
-  //h = 800;
   int x = dims.left()+(dims.width()-w)/2;
   int y = dims.top()+(dims.height()-h)/2;
   move(x, y);
@@ -75,11 +71,6 @@ MainWindow::MainWindow () {
   setCentralWidget(mDeskView);
   resize(w, h);
   m_PrefModel = new PrefModel(mDeskView);
-
-  // Load conventions
-//  QSettings st;
-//  m_PrefModel->optMaxPool = st.value("maxpool", 10).toInt();
-  
   mDeskView->setModel(m_PrefModel);
   loadOptions();
   doConnects();
@@ -90,12 +81,8 @@ MainWindow::MainWindow () {
 
 
 MainWindow::~MainWindow () {
-  //delete StatusBar1;
-  //!delete formBid;
-  mDeskView->deleteLater();
-  m_PrefModel->deleteLater();
-  HintBar->deleteLater();
-  //delete Hint;
+  delete mDeskView;
+  delete m_PrefModel;
 }
 
 inline void MainWindow::doConnects()
@@ -192,10 +179,8 @@ void MainWindow::showScore () {
 void MainWindow::showPlayers()
 {
   PlayersInfoDialog *dlg = new PlayersInfoDialog(m_PrefModel);
-  //dlg->setSizePolicy(QSizePolicy::Preferred);
   dlg->exec();
-  //dlg->adjustSize();
-  //delete dlg;
+  delete dlg;
 }
 
 void MainWindow::newSingleGame ()
@@ -209,14 +194,9 @@ void MainWindow::newSingleGame ()
   dlg->leName2->setText(st.value("playername2", tr("Player 2")).toString());
   dlg->cbAlphaBeta1->setChecked(st.value("alphabeta1", false).toBool());
   dlg->cbAlphaBeta2->setChecked(st.value("alphabeta2", false).toBool());
-  // Conventions
-  //dlg->sbGame->setValue(m_PrefModel->optMaxPool);
 
+  // Conventions
   dlg->sbGame->setValue(st.value("maxpool", 10).toInt());
-  /*if(optQuitAfterMaxRounds) {
-    dlg->cbRounds->setCheckState(Qt::Checked);
-    dlg->sbRounds->setValue(optMaxRounds);
-  }*/
   if(st.value("quitmaxrounds", false).toBool()) {
     dlg->cbRounds->setCheckState(Qt::Checked);
     dlg->sbRounds->setValue(st.value("maxrounds", -1).toInt());
@@ -235,7 +215,6 @@ void MainWindow::newSingleGame ()
     doConnects();
     
     // Conventions
-  //st.setValue("maxpool",dlg->sbGame->value());
     m_PrefModel->optMaxPool = dlg->sbGame->value();
     m_PrefModel->optQuitAfterMaxRounds = (dlg->cbRounds->checkState() == Qt::Checked);
     if (m_PrefModel->optQuitAfterMaxRounds) {
@@ -263,9 +242,6 @@ void MainWindow::newSingleGame ()
     actFileSave->setEnabled(false);
   }
   delete dlg;
-
-    // Load conventions
-  //m_PrefModel->optMaxPool = st.value("maxpool", 10).toInt();
 }
 
 
@@ -358,7 +334,6 @@ void MainWindow::options () {
     mDeskView->optTakeAnim = dlg->cbAnimTake->isChecked();
     mDeskView->optPrefClub = dlg->cbPrefClub->isChecked();
     mDeskView->optDebugHands = dlg->cbDebugHands->isChecked();
-    //saveOptions();
   }
   delete dlg;
 
