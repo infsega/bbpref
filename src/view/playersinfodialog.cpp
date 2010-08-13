@@ -27,6 +27,8 @@
 #include <QtGui/QFrame>
 #include <QtGui/QGridLayout>
 #include <QtGui/QPixmap>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QMouseEvent>
 #include <QtGui/QLabel>
 
 PlayersInfoDialog::PlayersInfoDialog(PrefModel *model)
@@ -57,4 +59,24 @@ PlayersInfoDialog::PlayersInfoDialog(PrefModel *model)
     layout->addWidget(separator, (i-1)*(nFields+1) + 2, 0, 1, -1);//, Qt::AlignCenter);
     setFixedSize(400,250);
   }  
+}
+
+
+void PlayersInfoDialog::keyPressEvent (QKeyEvent *event)
+{
+    switch (event->key()) {
+      case Qt::Key_Escape:
+      case Qt::Key_Enter:
+      case Qt::Key_Return:
+      case Qt::Key_Space:
+        hide();
+        break;
+      default: ;
+    }
+}
+
+void PlayersInfoDialog::mouseReleaseEvent(QMouseEvent *event)
+{
+  Q_UNUSED(event)
+  hide();
 }

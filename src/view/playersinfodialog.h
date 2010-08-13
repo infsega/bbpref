@@ -32,6 +32,10 @@ class PlayersInfoDialog : public QDialog
 {
   public:
     PlayersInfoDialog(PrefModel *model);
+
+  protected:
+    void keyPressEvent (QKeyEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 };
 
 #endif
