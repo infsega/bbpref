@@ -75,7 +75,7 @@ MainWindow::MainWindow (bool fullScreen) : m_fullScreen(fullScreen)
   resize(w, h);
   m_PrefModel = new PrefModel(mDeskView);
   mDeskView->setModel(m_PrefModel);
-  m_updateCheck = UpdateCheck::instance(this);
+  m_updateCheck = UpdateCheck::instance(mDeskView);
   readSettings();
   doConnects();
   HintBar->showMessage(tr("Welcome to OpenPref!"));
