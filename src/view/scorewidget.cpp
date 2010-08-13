@@ -55,7 +55,7 @@ static void drawRotatedText (QPainter &p, int x, int y, int width, int height, f
 }
 
 ScoreWidget::ScoreWidget(PrefModel *model, QWidget *parent, Qt::WindowFlags f)
-    : QDialog(parent, f), m_model(model), m_paperBmp(0)
+    : QDialog(parent, f), m_model(model), m_paperBmp(0), m_landscape(false)
 {
   //setSizeGripEnabled(true);
   // TODO: flexible size
@@ -142,6 +142,11 @@ void ScoreWidget::resizeEvent(QResizeEvent *event)
 {
   if (event->size() != event->oldSize()) {
     delete m_paperBmp;
+    if (width() > height()) {
+        m_landscape = true;
+    } else {
+        m_landscape = false;
+    }
     m_paperBmp = new QPixmap(width(), height());
     paintBlankPaper();
   }
@@ -164,14 +169,19 @@ void ScoreWidget::showEvent(QShowEvent *event)
 
 void ScoreWidget::paintBlankPaper ()
 {
-  const int PaperWidth = m_paperBmp->width();
-  const int PaperHeight = m_paperBmp->height();
+  int PaperWidth = m_paperBmp->width();
+  int PaperHeight = m_paperBmp->height();
   const int PoolWidth = 60;
   const int Pool2Width = 85;
   const int maxPoolRadius = 20;
-  // if (width() > height()) horizontal
 
   QPainter p(m_paperBmp);
+  if (m_landscape) {
+      p.translate(PaperWidth, 0);
+      p.rotate(90);
+      qSwap(PaperWidth, PaperHeight);
+  }
+
   p.setRenderHints(QPainter::Antialiasing);
   QRect NewRect = QRect(0, 0, PaperWidth, PaperHeight);
   QBrush brush(qRgb(255, 255, 255));
@@ -226,11 +236,16 @@ void ScoreWidget::paintBlankPaper ()
   const QRect r3 = p.boundingRect(NewRect, Qt::AlignHCenter, m_model->player(3)->nick());
   p.drawText(QRect(center.x()-r1.width()/2, center.y()+55, r1.width(), r1.height()),
     m_model->player(1)->nick(), QTextOption(Qt::AlignHCenter));
-  drawRotatedText(p, center.x() - 30, (PaperHeight - Pool2Width - r2.width())/2,
-    r2.width(), r2.height(), 90, m_model->player(2)->nick());
+  if (!m_landscape) {
+    drawRotatedText(p, center.x() - 30, (PaperHeight - Pool2Width - r2.width())/2,
+      r2.width(), r2.height(), 90, m_model->player(2)->nick());
+  } else {
+    drawRotatedText(p, center.x() - 30, (PaperHeight - Pool2Width + r2.width())/2,
+      r2.width(), r2.height(), -90, m_model->player(2)->nick());
+  }
   drawRotatedText(p, center.x() + 30, (PaperHeight - Pool2Width + r3.width())/2,
     r3.width(), r3.height(), -90, m_model->player(3)->nick());
-  
+
   p.end();
 }
 
@@ -239,12 +254,16 @@ void ScoreWidget::showPlayerScore (int i, const QString scoreBullet, const QStri
 {
   const int PoolWidth = 60;
   const int Pool2Width = 85;
-  const int maxPoolRadius = 20;
   //const int margin = 4;
-  const int PaperWidth = m_paperBmp->width();
-  const int PaperHeight = m_paperBmp->height();
-  QPoint center(width()/2, height()-width()/2);
+  int PaperWidth = width();
+  int PaperHeight = height();
   QPainter p(this);
+  if (m_landscape) {
+      p.translate(PaperWidth, 0);
+      p.rotate(90);
+      qSwap(PaperWidth, PaperHeight);
+  }
+  QPoint center(PaperWidth/2, PaperHeight-PaperWidth/2);
   p.setPen(qRgb(0, 0, 0));
   QFont fnt(p.font());
   QRect r1 = p.boundingRect(rect(), Qt::AlignHCenter, QString::number(scoreTotal));
@@ -287,8 +306,13 @@ void ScoreWidget::showPlayerScore (int i, const QString scoreBullet, const QStri
         p.setPen(qRgb(235, 0, 0));
       fnt.setBold(true);
       p.setFont(fnt);
-      drawRotatedText(p, center.x() - 60, (PaperHeight - Pool2Width - r1.width())/2,
-        90, QString::number(scoreTotal));
+      if(!m_landscape) {
+        drawRotatedText(p, center.x() - 60, (PaperHeight - Pool2Width - r1.width())/2,
+          90, QString::number(scoreTotal));
+      } else {
+        drawRotatedText(p, center.x() - 60, (PaperHeight - Pool2Width + r1.width())/2,
+          -90, QString::number(scoreTotal));
+      }
       break;
     case 3:
       // Bullet
