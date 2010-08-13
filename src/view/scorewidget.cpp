@@ -67,6 +67,7 @@ ScoreWidget::ScoreWidget(PrefModel *model, QWidget *parent, Qt::WindowFlags f)
   //paintBlankPaper(m_paperBmp);
   //resize(410,480);
   setWindowFlags(Qt::Window);
+  setAttribute(Qt::WA_OpaquePaintEvent);
 #ifndef MOBILE
   QSettings settings;
   restoreGeometry(settings.value("score/geometry").toByteArray());
