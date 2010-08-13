@@ -27,8 +27,6 @@ class QPixmap;
 
 class ScoreWidget : public QDialog
 {
-  Q_OBJECT
-
   public:
     ScoreWidget(PrefModel *model, QWidget *parent = 0, Qt::WindowFlags f = 0);
     ~ScoreWidget();
