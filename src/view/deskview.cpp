@@ -668,16 +668,16 @@ void DeskView::getLeftTop (int player, int & left, int & top)
   left = 0; top = 0;
   switch (player) {
     case 1:
-      left = width()/4 + m_leftRightMargin; //(DesktopWidth - (width() / 2 - 2 * xBorder)) / 2;
-      top = height() - m_topBottomMargin - CardHeight; //DesktopHeight - yBorder - CARDHEIGHT;//mDeskView->CardHeight;//-10;
+      left = width()/4 + m_leftRightMargin;
+      top = height() - m_topBottomMargin - CardHeight;
       break;
     case 2:
       left = m_leftRightMargin;
-      top = m_topBottomMargin;// + 20;
+      top = m_topBottomMargin;
       break;
     case 3:
       left = width() - m_leftRightMargin;
-      top = m_topBottomMargin;// + 20;
+      top = m_topBottomMargin;
       break;
     default: ;
   }
