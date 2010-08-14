@@ -474,18 +474,15 @@ void DeskView::drawCard (const Card *card, int x, int y, bool opened, bool hilig
     return;
   }
 
-  strcpy(cCardName, opened?"empty":"1000");
-  if (opened && card->face() >= 7 && card->face() <= FACE_ACE && card->suit() >= 1 && card->suit() <= 4) {
+  //strcpy(cCardName, opened?"empty":"1000");
+  if (opened) {
+    Q_ASSERT(card->face() >= 7 && card->face() <= FACE_ACE && card->suit() >= 1 && card->suit() <= 4);
     sprintf(cCardName, "%s%i%i", hilight?"q":"", card->face(), card->suit());
+  } else {
+    sprintf(cCardName, "1000");
   }
   QPixmap *bmp = GetImgByName(cCardName);
-  if (!bmp) {
-    bmp = GetImgByName("empty");
-    if (!bmp) {
-      ClearBox(x, y, x+CardWidth, y+CardHeight);
-      return;
-    }
-  }
+  Q_ASSERT(bmp);
   QPainter p(mDeskBmp);
   p.drawPixmap(x, y, *bmp);
   p.end();
