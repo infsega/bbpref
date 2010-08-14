@@ -710,14 +710,6 @@ void DeskView::inGameCardLeftTop (int mCardNo, int &left, int &top)
   left = x; top = y;
 }
 
-void DeskView::drawInGameCard (int mCardNo, const Card *card, bool closed)
-{
-  if (!card) return;
-  int x, y;
-  inGameCardLeftTop(mCardNo, x, y);
-  drawCard(card, x, y, !closed, 0);
-}
-
 void DeskView::animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[])
 {
   static const int steps = 10;
@@ -812,8 +804,11 @@ void DeskView::draw (bool emitSignal) {
 
   // repaint in-game cards
   for (int f = 0; f <= 3; f++)
-    if (m_model->cardOnDesk(f))
-      drawInGameCard(f, m_model->cardOnDesk(f), m_model->mOnDeskClosed);
+    if (m_model->cardOnDesk(f)) {
+      int x, y;
+      inGameCardLeftTop(f, x, y);
+      drawCard(m_model->cardOnDesk(f), x, y, !m_model->mOnDeskClosed, 0);
+    }
 
   // draw bidboard
   if (m_model->mPlayingRound) {

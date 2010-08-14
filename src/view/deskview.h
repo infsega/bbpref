@@ -101,9 +101,7 @@ protected:
 
 private:
   void drawPKeyBmp (bool show);
-  void drawInGameCard (int mCardNo, const Card *card, bool closed);
   void inGameCardLeftTop (int mCardNo, int &left, int &top);
-
   void drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy);
   void drawNumber (int x0, int y0, int n, bool red);
   void drawGameBid (eGameBid game);
