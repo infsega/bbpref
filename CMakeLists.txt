@@ -1,4 +1,9 @@
 project(openpref)
+set(QT_USE_QTNETWORK true)
+
+if(WIN32)
+  set(QT_USE_QTMAIN true)
+endif()
 
 set(openpref_VERSION_MAJOR 0)
 set(openpref_VERSION_MINOR 1)
@@ -68,7 +73,7 @@ ELSE( MINGW )
 ENDIF( MINGW )
 
 SET ( RCS
-	gfx.qrc
+	openpref.qrc
 )
 
 SET ( QM_SRCS 
