@@ -68,7 +68,7 @@
               this, SLOT(replyFinished(QNetworkReply*)));
     }
 
-    // Check the URL for the latest release version of Avogadro
+    // Check the URL for the latest release version of OpenPref
     m_network->get(QNetworkRequest(QUrl("http://openpref.sourceforge.net/version.txt")));
   }
 

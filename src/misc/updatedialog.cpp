@@ -30,8 +30,8 @@
   UpdateDialog::UpdateDialog(QWidget *parent, const QString &updateText)
     : QDialog(parent)
   {
-    this->setWindowTitle(tr("Updated Version of Avogadro Available",
-                            "Indicates an updated Avogadro version is available"));
+    this->setWindowTitle(tr("Updated Version of OpenPref Available",
+                            "Indicates an updated OpenPref version is available"));
 
     QLabel *mainText = new QLabel(this);
     QPushButton *okButton = new QPushButton(tr("OK"), this);
