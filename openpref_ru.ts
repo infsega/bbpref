@@ -279,11 +279,11 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     </message>
     <message>
         <source>Your move</source>
-        <translation>Ваш ход</translation>
+        <translation type="obsolete">Ваш ход</translation>
     </message>
     <message>
         <source>Select two cards to drop</source>
-        <translation>Снесите две карты</translation>
+        <translation type="obsolete">Снесите две карты</translation>
     </message>
     <message>
         <source>Choose whist type</source>
@@ -292,6 +292,10 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     <message>
         <source>Do you want to whist with opened cards?</source>
         <translation type="obsolete">Вы хотите вистовать с открытыми картами?</translation>
+    </message>
+    <message>
+        <source>Players...</source>
+        <translation>Игроки...</translation>
     </message>
 </context>
 <context>
@@ -511,6 +515,44 @@ See http://en.wikipedia.org/wiki/Preferans</source>
         <source>Pref&amp;Club Remix</source>
         <translation>Pref&amp;Club Remix</translation>
     </message>
+    <message>
+        <source>Background</source>
+        <translation>Фон</translation>
+    </message>
+    <message>
+        <source>Pure Color</source>
+        <translation>Чистый цвет</translation>
+    </message>
+    <message>
+        <source>Cloth</source>
+        <translation>Сукно</translation>
+    </message>
+    <message>
+        <source>Wood</source>
+        <translation>Дерево</translation>
+    </message>
+</context>
+<context>
+    <name>OptionDialog</name>
+    <message>
+        <source>Choose background color</source>
+        <translation>Выберите цвет фона</translation>
+    </message>
+</context>
+<context>
+    <name>PlayersInfoDialog</name>
+    <message>
+        <source>Players</source>
+        <translation>Игроки</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Имя</translation>
+    </message>
+    <message>
+        <source>AI</source>
+        <translation>ИИ</translation>
+    </message>
 </context>
 <context>
     <name>PrefDesktop</name>
@@ -649,12 +691,39 @@ See http://en.wikipedia.org/wiki/Preferans</source>
         <source>This move is impossible</source>
         <translation>Этот ход недопустим</translation>
     </message>
+    <message>
+        <source>Your move</source>
+        <translation>Ваш ход</translation>
+    </message>
 </context>
 <context>
     <name>ScoreWidget</name>
     <message>
         <source>Score</source>
         <translation>Пуля</translation>
+    </message>
+</context>
+<context>
+    <name>UpdateCheck</name>
+    <message>
+        <source>Network Update Check Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network timeout or other error.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>UpdateDialog</name>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Updated Version of OpenPref Available</source>
+        <comment>Indicates an updated OpenPref version is available</comment>
+        <translation>Доступна новая версия OpenPref</translation>
     </message>
 </context>
 </TS>
