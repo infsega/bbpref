@@ -713,8 +713,9 @@ void DeskView::animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[])
     mCardsOnDesk[f] = 0;
   }
 
+  draw(false);
+  QPixmap cache = *mDeskBmp;
   for (int f = optTakeAnim?0:steps; f <= steps; f++) {
-    draw(false);
     for (int c = 0; c <= 3; c++) {
       if (!cAni[c]) continue;
       int x, y;
@@ -724,6 +725,7 @@ void DeskView::animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[])
       drawCard(cAni[c], x, y, 1, 0);
     }
     aniSleep(20);
+    *mDeskBmp = cache;
   }
 }
 
