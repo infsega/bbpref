@@ -272,30 +272,27 @@ void DeskView::setModel(PrefModel *desktop)
 }
 
 
-void DeskView::drawIMove (/*int x, int y*/) {
+void DeskView::drawIMove (QPainter &p) {
   int x, y;
-  if (!mDeskBmp) return;
   switch (m_model->nCurrentStart.nValue) {
       case 1:
         x = width()/2-15;
-        y = height() - m_topBottomMargin - CardHeight - 30; //- 40;
+        y = height() - m_topBottomMargin - CardHeight - 30;
         break;
       case 2:
         x = m_leftRightMargin+20;
-        y = m_topBottomMargin + CardHeight + 20; //+40;
+        y = m_topBottomMargin + CardHeight + 20;
         break;
       case 3:
         x = width() - m_leftRightMargin - 20;
-        y = m_topBottomMargin + CardHeight + 20; //+40;
+        y = m_topBottomMargin + CardHeight + 20;
         break;
       default:
         qDebug() << "Invalid nCurrentStart.nValue =" << m_model->nCurrentStart.nValue;
         x = y = -1;
         break;
   }
-  QPainter p(mDeskBmp);
   p.drawPixmap(x, y, *mIMoveBmp);
-  p.end();
 }
 
 
@@ -325,12 +322,11 @@ void DeskView::drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy) {
 }
 
 
-void DeskView::drawNumber (int x0, int y0, int n, bool red) {
-  if (!mDeskBmp || n < 0 || n > 1024) return;
+void DeskView::drawNumber (QPainter &p, int x0, int y0, int n, bool red) {
+  //if (!mDeskBmp || n < 0 || n > 1024) return;
   char buf[12], *pd;
   sprintf(buf, "%i", n);
   pd = buf;
-  QPainter p(mDeskBmp);
   while (*pd) {
     int d = (*pd++)-'0';
     int px = d*8, py = red?14:0;
@@ -338,7 +334,6 @@ void DeskView::drawNumber (int x0, int y0, int n, bool red) {
     drawBmpChar(p, x0, y0, px, py);
     x0 += 8;
   }
-  p.end();
 }
 
 
@@ -350,11 +345,8 @@ static int numWidth (int n) {
 }
 
 
-void DeskView::drawGameBid (eGameBid game) {
-  Q_ASSERT(mDeskBmp);
-  //if (game != raspass && (game < 61 || game > 105)) return; // unknown game
+void DeskView::drawGameBid (QPainter &p, eGameBid game) {
   Q_ASSERT(game == raspass || (game >= 61 && game <= 105));
-  QPainter p(mDeskBmp);
   int x, y;
   QPixmap *i;
   switch (game) {
@@ -373,12 +365,10 @@ void DeskView::drawGameBid (eGameBid game) {
       }
       break;
   }
-  p.end();
 }
 
 
 void DeskView::mySleep (int seconds) {
-  //Event = 0;
   installEventFilter(d_ptr->m_efilter);
 
   if (seconds == 0)
@@ -444,7 +434,7 @@ void DeskView::ClearScreen () {
 
 
 void DeskView::ClearBox (int x1, int y1, int x2, int y2) {
-  if (!mDeskBmp) return;
+  Q_ASSERT(mDeskBmp);
   QPainter p(mDeskBmp);
   QBrush brush;
   switch(m_backgroundType) {
@@ -560,7 +550,7 @@ void DeskView::drawPlayerMessage (int player, const QString msg, bool dim)
 }
 
 void DeskView::drawMessageWindow (int x0, int y0, const QString msg, bool dim) {
-  if (!mDeskBmp) return;
+  Q_ASSERT(mDeskBmp);
   QPainter p(mDeskBmp);
   // change suits to unicode chars
   QRgb textRGB(qRgb(0, 0, 0));
@@ -616,7 +606,7 @@ void DeskView::drawMessageWindow (int x0, int y0, const QString msg, bool dim) {
 
 void DeskView::resizeEvent(QResizeEvent *event) {
   Q_UNUSED(event)
-  draw();
+  draw(false);
 }
 
 
@@ -759,7 +749,6 @@ void DeskView::drawBidBoard()
     bidBmpY = height()-(i->height()+8);
     QPainter p(mDeskBmp);
     p.drawPixmap(bidBmpX, bidBmpY, *i);
-    p.end();
   /*
    * p0t: 10,6 (left top)
    * p1t: 77,6 (right top)
@@ -769,14 +758,14 @@ void DeskView::drawBidBoard()
     // human
       const int wdt1 = numWidth(plr1->tricksTaken() >= 0);
       const int x1 = 44-(wdt1/2);
-      drawNumber(bidBmpX+x1, bidBmpY+50, plr1->tricksTaken(), plrAct==1);
+      drawNumber(p, bidBmpX+x1, bidBmpY+50, plr1->tricksTaken(), plrAct==1);
     // left-top ai
-      drawNumber(bidBmpX+10, bidBmpY+6, plr2->tricksTaken(), plrAct==2);
+      drawNumber(p, bidBmpX+10, bidBmpY+6, plr2->tricksTaken(), plrAct==2);
     // right-top ai
       const int wdt2 = numWidth(plr3->tricksTaken());
       const int x2 = 77-wdt2;
-      drawNumber(bidBmpX+x2, bidBmpY+6, plr3->tricksTaken(), plrAct==3);
-    drawGameBid(m_model->gCurrentGame);
+      drawNumber(p, bidBmpX+x2, bidBmpY+6, plr3->tricksTaken(), plrAct==3);
+    drawGameBid(p, m_model->gCurrentGame);
 }
 
 bool DeskView::askWhistType ()
@@ -811,7 +800,9 @@ void DeskView::draw (bool emitSignal) {
   if (m_model->mPlayingRound) {
     drawBidBoard();
   }
-  drawIMove();
+  QPainter p(mDeskBmp);
+  drawIMove(p);
+  p.end();
   // ÓÏÏÂÝÅÎÉÑ
   for (int f = 1; f <= 3; f++) {
     Player *plr = m_model->player(f);

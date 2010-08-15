@@ -103,9 +103,9 @@ private:
   void drawPKeyBmp (bool show);
   void inGameCardLeftTop (int mCardNo, int &left, int &top);
   void drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy);
-  void drawNumber (int x0, int y0, int n, bool red);
-  void drawGameBid (eGameBid game);
-  void drawIMove ();
+  void drawNumber (QPainter &p, int x0, int y0, int n, bool red);
+  void drawGameBid (QPainter &p, eGameBid game);
+  void drawIMove (QPainter &p);
 
   void freeCards();
   bool loadCards ();
