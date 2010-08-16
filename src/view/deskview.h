@@ -49,6 +49,8 @@ public:
 
   PrefModel * model() { return m_model; }
   void setModel(PrefModel *model);
+  int backgroundType() const { return m_backgroundType; }
+  void setBackgroundType(const int type);
 
   void readSettings();
   void writeSettings() const;
@@ -87,7 +89,6 @@ public:
   bool optDealAnim;
   bool optTakeAnim;
   bool optPrefClub;
-  int m_backgroundType;
   QRgb m_backgroundColor;
   int CardWidth, CardHeight;
 
@@ -126,6 +127,8 @@ private:
   int m_leftRightMargin, m_topBottomMargin;
   QHash<QString, QPixmap *> cardI;
   QHash<int, QPixmap *> bidIcons;
+  int m_backgroundType;
+  QBrush m_deskBackground;
 };
 
 

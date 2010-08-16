@@ -221,7 +221,6 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_
  optDealAnim(true),
  optTakeAnim(true),
  optPrefClub(false),
- m_backgroundType(1),
  m_backgroundColor(qRgb(0,128,0))
 {
   setAttribute(Qt::WA_OpaquePaintEvent);
@@ -241,9 +240,6 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_
 
   m_leftRightMargin = 20;
   m_topBottomMargin = 20;
- /* QPalette palette;
-  palette.setBrush(QPalette::Window, QPixmap(":/pics/cloth.png"));
-  setPalette(palette);*/
   mDeskBmp = new QPixmap(width(), height());
   ClearScreen();
   setMouseTracking(true);
@@ -272,6 +268,22 @@ void DeskView::setModel(PrefModel *desktop)
   d_ptr = new DeskViewPrivate(this);
 }
 
+void DeskView::setBackgroundType(const int type)
+{
+  m_backgroundType = type;
+  switch(m_backgroundType) {
+    case 1:
+      m_deskBackground = QPixmap(":/pics/cloth.png");
+      break;
+    case 2:
+      m_deskBackground = QPixmap(":/pics/wood.jpg").scaled(size());
+      break;
+    default:
+      m_deskBackground.setColor(m_backgroundColor);
+      m_deskBackground.setStyle(Qt::SolidPattern);
+      break;
+  }
+}
 
 void DeskView::drawIMove (QPainter &p) {
   int x, y;
@@ -437,22 +449,8 @@ void DeskView::ClearScreen () {
 void DeskView::ClearBox (int x1, int y1, int x2, int y2) {
   Q_ASSERT(mDeskBmp);
   QPainter p(mDeskBmp);
-  QBrush brush;
-  switch(m_backgroundType) {
-    case 1:
-      brush = QPixmap(":/pics/cloth.png");
-      break;
-    case 2:
-      brush = QPixmap(":/pics/wood.jpg").scaled(size());
-      break;
-    default:
-      brush.setColor(m_backgroundColor);
-      brush.setStyle(Qt::SolidPattern);
-      break;
-  }
-
   QRect NewRect = QRect(x1, y1, x2, y2);
-  p.fillRect(NewRect, brush);
+  p.fillRect(NewRect, m_deskBackground);
   p.end();
 }
 
@@ -607,6 +605,7 @@ void DeskView::drawMessageWindow (int x0, int y0, const QString msg, bool dim) {
 
 void DeskView::resizeEvent(QResizeEvent *event) {
   Q_UNUSED(event)
+  setBackgroundType(m_backgroundType);
   draw(false);
 }
 
@@ -828,7 +827,7 @@ void DeskView::longWait (const int n)
 void DeskView::readSettings()
 {
     QSettings st;
-    m_backgroundType = st.value("background_type", 1).toInt();
+    setBackgroundType(st.value("background_type", 1).toInt());
     m_backgroundColor = st.value("background_color", qRgb(0,128,0)).toUInt();
     optDealAnim = st.value("animdeal", true).toBool();
     optTakeAnim = st.value("animtake", true).toBool();
