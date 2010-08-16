@@ -66,7 +66,7 @@ public:
 signals:
   void deskChanged ();
   void gameOver ();
-  void showHint (const QString text);
+  void showHint (const QString & text);
   void clearHint();
 
 public:

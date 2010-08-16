@@ -49,7 +49,7 @@ public slots:
 
   bool quitGame ();
 
-  void showHint(QString hint);
+  void showHint(const QString & hint);
   void clearHint();
 
 private:

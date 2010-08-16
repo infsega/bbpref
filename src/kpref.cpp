@@ -81,7 +81,7 @@ MainWindow::~MainWindow () {
 inline void MainWindow::doConnects()
 {
   connect(m_PrefModel, SIGNAL(deskChanged()), mDeskView, SLOT(update()));
-  connect(m_PrefModel, SIGNAL(showHint(QString)), this, SLOT(showHint(QString)));
+  connect(m_PrefModel, SIGNAL(showHint(const QString&)), this, SLOT(showHint(const QString&)));
   connect(m_PrefModel, SIGNAL(clearHint()), this, SLOT(clearHint()));
 }
 
@@ -376,7 +376,7 @@ bool MainWindow::quitGame () {
     return false;
 }
 
-void MainWindow::showHint(QString hint)
+void MainWindow::showHint(const QString & hint)
 {
   HintBar->showMessage(hint);
 }
