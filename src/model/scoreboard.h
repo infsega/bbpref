@@ -54,8 +54,8 @@ public:
   QString leftWhistsStr (int maxItems=-1) const;
   QString rightWhistsStr (int maxItems=-1) const;
 
-  int whists () const { return mWhists; }
-  void setWhists (int w) { mWhists = w; }
+  int score () const { return mScoreInWhists; }
+  void setScore (int w) { mScoreInWhists = w; }
 
   void serialize (QByteArray &ba);
   bool unserialize (QByteArray &ba, int *pos);
@@ -67,7 +67,7 @@ private:
   QIntList mMountain;
   QIntList mLeftWhists;
   QIntList mRightWhists;
-  int mWhists;
+  int mScoreInWhists;
   PrefModel *m_model;
 };
 

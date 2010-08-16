@@ -256,7 +256,7 @@ void PrefModel::closePool () {
     i1 = counter.nValue;
     ++counter;
     i2 = counter.nValue;
-    player(i)->mScore.setWhists(R[i].leftWh+R[i].rightWh-R[i1].rightWh-R[i2].leftWh);
+    player(i)->mScore.setScore(R[i].leftWh+R[i].rightWh-R[i1].rightWh-R[i2].leftWh);
   }
 }
 

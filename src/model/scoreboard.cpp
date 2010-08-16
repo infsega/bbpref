@@ -48,7 +48,7 @@ ScoreBoard::ScoreBoard (PrefModel *model) : m_model(model) {
   mMountain << 0;
   mLeftWhists << 0;
   mRightWhists << 0;
-  mWhists = 0;
+  mScoreInWhists = 0;
 }
 
 
@@ -254,7 +254,7 @@ void ScoreBoard::serialize (QByteArray &ba) {
   serializeIntList(ba, mMountain);
   serializeIntList(ba, mLeftWhists);
   serializeIntList(ba, mRightWhists);
-  serializeInt(ba, mWhists);
+  serializeInt(ba, mScoreInWhists);
 }
 
 
@@ -263,7 +263,7 @@ bool ScoreBoard::unserialize (QByteArray &ba, int *pos) {
   if (!unserializeIntList(ba, pos, mMountain)) return false;
   if (!unserializeIntList(ba, pos, mLeftWhists)) return false;
   if (!unserializeIntList(ba, pos, mRightWhists)) return false;
-  if (!unserializeInt(ba, pos, &mWhists)) return false;
+  if (!unserializeInt(ba, pos, &mScoreInWhists)) return false;
   return true;
 }
 

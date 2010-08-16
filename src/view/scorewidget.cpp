@@ -127,7 +127,7 @@ void ScoreWidget::paintEvent(QPaintEvent *event)
     sm = plr->mScore.mountainStr(7);
     slw = plr->mScore.leftWhistsStr(14);
     srw = plr->mScore.rightWhistsStr(14);
-    tw[i-1] = plr->mScore.whists();
+    tw[i-1] = plr->mScore.score();
     showPlayerScore(i, sb, sm, slw, srw, tw[i-1]);
   }
   Q_ASSERT(tw[0] + tw[1] + tw[2] == 0);
