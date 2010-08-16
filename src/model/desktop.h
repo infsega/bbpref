@@ -28,6 +28,16 @@
 #include "cardlist.h"
 #include "ncounter.h"
 
+struct GameLogEntry {
+    int score[3];
+    int pool[3];
+    int mountain[3];
+    int leftWhists[3];
+    int rightWhists[3];
+    int time;
+    CardList cardList[3];
+};
+
 class DeskView;
 class Player;
 
@@ -54,6 +64,7 @@ public:
   int activePlayerNumber () const { return mPlayerActive; }
   int playerWithMaxPool (); // except the players who closed the pool
   int trumpSuit () const;
+  const QList<GameLogEntry> & gameLog() const { return m_gameLog; }
 
   DeskView *view() const { Q_ASSERT(mDeskView); return mDeskView; }
   int gameWhists (eGameBid gType) const;
@@ -115,6 +126,8 @@ private:
   int mPlayerActive; // who plays (if not raspass and mPlayingRound=true)
   int m_trump;  
   bool m_closedWhist;
+  bool m_keepLog;
+  QList<GameLogEntry> m_gameLog;
 };
 
 

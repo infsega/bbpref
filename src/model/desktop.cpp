@@ -183,7 +183,8 @@ PrefModel::PrefModel (DeskView *aDeskView) : QObject(0), mPlayingRound(false),
  optAlphaBeta1(false),
  optPlayerName2("Player 2"),
  optAlphaBeta2(false),
- m_closedWhist(false)
+ m_closedWhist(false),
+ m_keepLog(true)
 {
   #if defined Q_WS_X11 || defined Q_WS_QWS || defined Q_WS_MAC
 	QString optHumanName = getenv("USER");
@@ -883,6 +884,21 @@ LabelRecordOnPaper:
         plr->setInvisibleHand(false);
       }
     }
+
+    if(m_keepLog) {
+        GameLogEntry entry;
+        for (int f=1; f<=3; f++) {
+            const Player *plr = player(f);
+            entry.score[f-1] = plr->mScore.score();
+            entry.mountain[f-1] = plr->mScore.mountain();
+            entry.pool[f-1] = plr->mScore.pool();
+            entry.leftWhists[f-1] = plr->mScore.leftWhists();
+            entry.rightWhists[f-1] = plr->mScore.rightWhists();
+            entry.cardList[f-1] = tmplist[f-1];
+        }
+        m_gameLog.append(entry);
+    }
+
     mPlayingRound = true;
     mDeskView->draw();
     mDeskView->drawPool();

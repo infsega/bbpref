@@ -40,6 +40,7 @@ public:
 public slots:
   void newSingleGame ();
   void showScore ();
+  void showLog();
   void showPlayers();
   void openFile ();
   void saveFile ();

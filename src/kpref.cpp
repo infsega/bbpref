@@ -41,6 +41,7 @@
 #include "newgameform.h"
 #include "optiondialog.h"
 #include "playersinfodialog.h"
+#include "scorehistory.h"
 #include "helpbrowser.h"
 
 inline static const char * GenName(QString str, QString ext);
@@ -130,6 +131,7 @@ void MainWindow::initMenuBar () {
   QMenu *viewMenu = menuBar()->addMenu(tr("&Show"));
   viewMenu->addAction(QIcon(":/pics/paper.png"), tr("S&core..."), this, SLOT(showScore()), Qt::CTRL+Qt::Key_R);
   viewMenu->addAction(QIcon(":/pics/unknown-player.png"), tr("Players..."), this, SLOT(showPlayers()));
+  viewMenu->addAction(tr("Game Log..."), this, SLOT(showLog()));
 
   menuBar()->addSeparator();
 
@@ -174,6 +176,13 @@ void MainWindow::showPlayers()
   PlayersInfoDialog *dlg = new PlayersInfoDialog(m_PrefModel);
   dlg->exec();
   delete dlg;
+}
+
+void MainWindow::showLog()
+{
+    ScoreHistoryDialog *dlg = new ScoreHistoryDialog(m_PrefModel, this);
+    dlg->exec();
+    delete dlg;
 }
 
 void MainWindow::newSingleGame ()
