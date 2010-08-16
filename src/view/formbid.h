@@ -59,7 +59,7 @@ private slots:
   void score ();
 
 protected:
-  FormBid (DeskView *parent=0);
+  explicit FormBid (DeskView *parent=0);
   ~FormBid ();
   void initDialog ();
   void closeEvent(QCloseEvent *event);

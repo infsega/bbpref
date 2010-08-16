@@ -44,7 +44,7 @@ class DeskViewPrivate;
 class DeskView : public QWidget {
   Q_OBJECT
 public:
-  DeskView (QWidget * parent = 0, Qt::WindowFlags f = 0);
+  explicit DeskView (QWidget * parent = 0, Qt::WindowFlags f = 0);
   ~DeskView ();
 
   PrefModel * model() { return m_model; }

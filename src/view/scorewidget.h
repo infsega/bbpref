@@ -28,7 +28,7 @@ class QPixmap;
 class ScoreWidget : public QDialog
 {
   public:
-    ScoreWidget(PrefModel *model, QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit ScoreWidget(PrefModel *model, QWidget *parent = 0, Qt::WindowFlags f = 0);
     ~ScoreWidget();
     QSize sizeHint() const;
 

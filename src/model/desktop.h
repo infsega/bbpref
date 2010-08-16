@@ -45,7 +45,7 @@ class PrefModel : public QObject {
   Q_OBJECT
 
 public:
-  PrefModel (DeskView *aDeskView/*=0*/);
+  explicit PrefModel (DeskView *aDeskView/*=0*/);
   virtual ~PrefModel ();
 
   void runGame ();

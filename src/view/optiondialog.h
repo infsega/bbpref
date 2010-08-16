@@ -33,7 +33,7 @@ class OptionDialog : public QDialog, public Ui_OptDialog
   Q_OBJECT
 
 public:
-  OptionDialog (QWidget *parent=0);
+  explicit OptionDialog (QWidget *parent=0);
   ~OptionDialog () { }
   
   int backgroundType() const;
