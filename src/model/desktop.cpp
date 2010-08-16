@@ -345,7 +345,7 @@ Card *PrefModel::cardOnDesk(int num) const
 }
 
 
-bool PrefModel::loadGame (const QString name)  {
+bool PrefModel::loadGame (const QString & name)  {
   QFile fl(name);
   if (!fl.open(QIODevice::ReadOnly)) {
       printf("Load failed\n");
@@ -374,7 +374,7 @@ void PrefModel::showMoveHint()
     emitShowHint(tr("Select two cards to drop"));
 }
 
-bool PrefModel::saveGame (const QString name)  {
+bool PrefModel::saveGame (const QString & name)  {
   QFile fl(name);
   if (!fl.open(QIODevice::WriteOnly)) {
       printf("Save failed\n");

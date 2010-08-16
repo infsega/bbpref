@@ -41,8 +41,8 @@ public:
   void runGame ();
   Card *cardOnDesk(int index) const;
 
-  bool saveGame (const QString name);
-  bool loadGame (const QString name);
+  bool saveGame (const QString & name);
+  bool loadGame (const QString & name);
 
   void closePool ();
 

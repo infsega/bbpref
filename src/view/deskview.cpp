@@ -478,7 +478,7 @@ void DeskView::drawCard (const Card *card, int x, int y, bool opened, bool hilig
 }
 
 
-void DeskView::drawText (const QString str, int x, int y, QRgb textColor, QRgb outlineColor) {
+void DeskView::drawText (const QString & str, int x, int y, QRgb textColor, QRgb outlineColor) {
   if (!mDeskBmp) return;
 
   QString s(str);
@@ -508,7 +508,7 @@ void DeskView::drawText (const QString str, int x, int y, QRgb textColor, QRgb o
 }
 
 
-void DeskView::MessageBox (const QString text, const QString caption) {
+void DeskView::MessageBox (const QString & text, const QString & caption) {
   QMessageBox mb(caption, text, QMessageBox::Information, QMessageBox::Ok | QMessageBox::Default, 0, 0);
   mb.exec();
 }
@@ -524,7 +524,7 @@ eGameBid DeskView::selectBid (eGameBid lMove, eGameBid rMove) {
   return formBid->_GamesType;
 }
 
-void DeskView::drawPlayerMessage (int player, const QString msg, bool dim)
+void DeskView::drawPlayerMessage (int player, const QString & msg, bool dim)
 {
   int x, y;
   switch (player) {
@@ -548,7 +548,7 @@ void DeskView::drawPlayerMessage (int player, const QString msg, bool dim)
   drawMessageWindow(x, y, msg, dim);
 }
 
-void DeskView::drawMessageWindow (int x0, int y0, const QString msg, bool dim) {
+void DeskView::drawMessageWindow (int x0, int y0, const QString & msg, bool dim) {
   Q_ASSERT(mDeskBmp);
   QPainter p(mDeskBmp);
   // change suits to unicode chars

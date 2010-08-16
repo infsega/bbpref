@@ -64,13 +64,13 @@ public:
 
   void draw (bool emitSignal=true);
   void drawCard (const Card *card, int x, int y, bool opened, bool hilight);
-  void drawText (const QString str, int x, int y, QRgb textColor=qRgb(255,255,255), QRgb outlineColor=qRgb(0,0,0));
+  void drawText (const QString & str, int x, int y, QRgb textColor=qRgb(255,255,255), QRgb outlineColor=qRgb(0,0,0));
   void drawPool ();
   void drawBidBoard();
-  void drawMessageWindow (int x0, int y0, const QString msg, bool dim=false);
-  void drawPlayerMessage (int player, const QString msg, bool dim=false);
+  void drawMessageWindow (int x0, int y0, const QString & msg, bool dim=false);
+  void drawPlayerMessage (int player, const QString & msg, bool dim=false);
 
-  void MessageBox (const QString text, const QString caption);
+  void MessageBox (const QString & text, const QString & caption);
   //----------------------------- for human player
   eGameBid selectBid (eGameBid lMove, eGameBid rMove);
 
