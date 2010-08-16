@@ -25,7 +25,6 @@
 #include "deskview.h"
 #include "updatecheck.h"
 
-#include <QDesktopWidget>
 #include <QSettings>
 
 //#include <QTextBrowser>
@@ -60,19 +59,9 @@ MainWindow::MainWindow (bool fullScreen) : m_fullScreen(fullScreen)
   HintBar = new QStatusBar(this);
   HintBar->setSizeGripEnabled(true);
   setStatusBar(HintBar);
-  
-  QDesktopWidget *desk = QApplication::desktop();
-  QRect dims(desk->availableGeometry(this));
-  int w = dims.width()-60;
-  int h = dims.height()-120;
-  int x = dims.left()+(dims.width()-w)/2;
-  int y = dims.top()+(dims.height()-h)/2;
-  move(x, y);
 
   mDeskView = new DeskView(this);
-  mDeskView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   setCentralWidget(mDeskView);
-  resize(w, h);
   m_PrefModel = new PrefModel(mDeskView);
   mDeskView->setModel(m_PrefModel);
   m_updateCheck = UpdateCheck::instance(mDeskView);

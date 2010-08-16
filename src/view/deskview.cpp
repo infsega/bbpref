@@ -225,6 +225,7 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_
  m_backgroundColor(qRgb(0,128,0))
 {
   setAttribute(Qt::WA_OpaquePaintEvent);
+  setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   readSettings();
 
   mDigitsBmp = new QPixmap(":/pics/digits/digits.png");
