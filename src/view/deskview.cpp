@@ -637,14 +637,6 @@ void DeskView::keyPressEvent (QKeyEvent *event) {
 }
 
 
-void DeskView::showEvent (QShowEvent *event)
-{
-  Q_UNUSED(event)
-  delete mDeskBmp;
-  mDeskBmp = new QPixmap(width(), height());
-  ClearScreen();
-}
-
 void DeskView::paintEvent (QPaintEvent *event) {
   Q_UNUSED(event)
   QPainter p;

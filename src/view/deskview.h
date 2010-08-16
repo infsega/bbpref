@@ -93,7 +93,6 @@ public:
   int CardWidth, CardHeight;
 
 protected:
-  void  showEvent (QShowEvent *);
   void  paintEvent (QPaintEvent *);
   void  keyPressEvent (QKeyEvent *);
   void  mousePressEvent (QMouseEvent *);
