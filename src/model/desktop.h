@@ -34,7 +34,7 @@ struct GameLogEntry {
     int mountain[3];
     int leftWhists[3];
     int rightWhists[3];
-    int time;
+    float time;
     CardList cardList[3];
 };
 

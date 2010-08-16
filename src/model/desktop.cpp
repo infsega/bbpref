@@ -445,6 +445,8 @@ void PrefModel::runGame () {
     mPlayingRound = false;
     mBiddingDone = false;
     int nPassCounter = 0; // number of passes
+    int elapsedTime = 0;
+    QTime pt;
     playerBids[3] = playerBids[2] = playerBids[1] = playerBids[0] = undefined;
     mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard = 0;
     mDeck.newDeck();
@@ -865,7 +867,10 @@ void PrefModel::runGame () {
       m_trump = playerBids[0]-(playerBids[0]/10)*10;
       qDebug() << "Trump = " << m_trump;
 
+    pt.restart();
     playingRound();
+    elapsedTime = pt.elapsed();
+
 LabelRecordOnPaper:
 
     mPlayingRound = false;
@@ -895,6 +900,7 @@ LabelRecordOnPaper:
             entry.leftWhists[f-1] = plr->mScore.leftWhists();
             entry.rightWhists[f-1] = plr->mScore.rightWhists();
             entry.cardList[f-1] = tmplist[f-1];
+            entry.time = elapsedTime / 1000.0;
         }
         m_gameLog.append(entry);
     }

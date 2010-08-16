@@ -1,5 +1,7 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
 //#include <QDebug>
 
 #include "scorehistory.h"
@@ -21,9 +23,17 @@ ScoreHistoryDialog::ScoreHistoryDialog(PrefModel *model, QWidget *parent, Qt::Wi
     m_table->setHorizontalHeaderItem(3, new QTableWidgetItem(tr("Time")));
     m_table->setHorizontalHeaderItem(4, new QTableWidgetItem(tr("Deal")));
     for (int i=0; i<log.size(); i++) {
-        for (int j=0; j<3; j++)
-            m_table->setItem(i, j, new QTableWidgetItem(QString::number(log.at(i).score[j])));
-        m_table->setItem(i, 3, new QTableWidgetItem(QString::number(log.at(i).time)));
+      for (int j=0; j<3; j++) {
+        QLabel *item = new QLabel(QString::number(log.at(i).score[j]));
+        item->setAlignment(Qt::AlignCenter);
+        m_table->setCellWidget(i, j, item);
+      }
+      QLabel *item = new QLabel(QString::number(log.at(i).time, 'f', 1));
+      item->setAlignment(Qt::AlignCenter);
+      m_table->setCellWidget(i, 3, item);
+      QPushButton *deal = new QPushButton(tr("Show"));
+      deal->setEnabled(false);
+      m_table->setCellWidget(i, 4, deal);
     }
     layout->addWidget(m_table);    
     setLayout(layout);    
