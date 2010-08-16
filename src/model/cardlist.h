@@ -51,16 +51,16 @@ public:
   bool hasSuit (int aSuit) const;
 
   /// Returns first card bigger than defined by aFace and aSuit
-  Card *greaterInSuit (int aFace, int aSuit) const; //первая больше чем переданная
-  Card *lesserInSuit (int aFace, int aSuit) const; //первая меньше чем переданная
-  Card *greaterInSuit (Card *card) const; //первая больше чем переданная
-  Card *lesserInSuit (Card *card) const; //первая меньше чем переданная
+  Card *greaterInSuit (int aFace, int aSuit) const; //п©п╣я─п╡п╟я▐ п╠п╬п╩я▄я┬п╣ я┤п╣п╪ п©п╣я─п╣п╢п╟п╫п╫п╟я▐
+  Card *lesserInSuit (int aFace, int aSuit) const; //п©п╣я─п╡п╟я▐ п╪п╣п╫я▄я┬п╣ я┤п╣п╪ п©п╣я─п╣п╢п╟п╫п╫п╟я▐
+  Card *greaterInSuit (Card *card) const; //п©п╣я─п╡п╟я▐ п╠п╬п╩я▄я┬п╣ я┤п╣п╪ п©п╣я─п╣п╢п╟п╫п╫п╟я▐
+  Card *lesserInSuit (Card *card) const; //п©п╣я─п╡п╟я▐ п╪п╣п╫я▄я┬п╣ я┤п╣п╪ п©п╣я─п╣п╢п╟п╫п╫п╟я▐
 
   void copySuit (const CardList *src, eSuit aSuit); // copy only selected suit
 
   int cardsInSuit (int aSuit) const;
   int count () const;
-  int emptySuit (int aSuit) const; //возврат масти (за исключение данной) в которой нет карт
+  int emptySuit (int aSuit) const; //п╡п╬п╥п╡я─п╟я┌ п╪п╟я│я┌п╦ (п╥п╟ п╦я│п╨п╩я▌я┤п╣п╫п╦п╣ п╢п╟п╫п╫п╬п╧) п╡ п╨п╬я┌п╬я─п╬п╧ п╫п╣я┌ п╨п╟я─я┌
 
   inline int indexOf (Card *cc) const {
     if (!cc) return -1;
