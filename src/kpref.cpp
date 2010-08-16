@@ -173,7 +173,7 @@ void MainWindow::showScore () {
 
 void MainWindow::showPlayers()
 {
-  PlayersInfoDialog *dlg = new PlayersInfoDialog(m_PrefModel);
+  PlayersInfoDialog *dlg = new PlayersInfoDialog(m_PrefModel, this);
   dlg->exec();
   delete dlg;
 }

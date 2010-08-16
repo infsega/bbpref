@@ -31,7 +31,7 @@ class QShowEvent;
 class PlayersInfoDialog : public QDialog
 {
   public:
-    PlayersInfoDialog(PrefModel *model);
+    PlayersInfoDialog(PrefModel *model, QWidget *parent = 0, Qt::WindowFlags f = 0);
 
   protected:
     void keyPressEvent (QKeyEvent *event);

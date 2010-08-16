@@ -31,7 +31,8 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QLabel>
 
-PlayersInfoDialog::PlayersInfoDialog(PrefModel *model)
+PlayersInfoDialog::PlayersInfoDialog(PrefModel *model,
+                                    QWidget *parent, Qt::WindowFlags f) : QDialog(parent, f)
 {
   setWindowTitle(tr("Players"));
   const int nFields = 2;
@@ -57,7 +58,7 @@ PlayersInfoDialog::PlayersInfoDialog(PrefModel *model)
     layout->addWidget(type, (i-1)*(nFields+1) + 1, 1);
     //layout->addWidget(num, (i-1)*nFields+2, 1);
     layout->addWidget(separator, (i-1)*(nFields+1) + 2, 0, 1, -1);//, Qt::AlignCenter);
-    setFixedSize(400,250);
+    resize(400,250);
   }  
 }
 
