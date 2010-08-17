@@ -56,7 +56,7 @@ public:
   void writeSettings() const;
 
   void mySleep (int seconds);
-  void aniSleep (int milliseconds);
+  void aniSleep (int milliseconds, const QRegion & region = QRegion());
 
   // Background repaint
   void ClearScreen ();
@@ -76,7 +76,7 @@ public:
 
   void getLeftTop (int player, int & left, int & top);
   
-  void animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[]);
+  void animateTrick (int plrNo, Card *mCardsOnDesk[]);
 
   bool askWhistType ();
   void longWait (const int n);

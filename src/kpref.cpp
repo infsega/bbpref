@@ -353,9 +353,8 @@ void MainWindow::options () {
 }
 
 void MainWindow::deckChanged () {
-	mDeskView->reloadCards();
-	mDeskView->draw(true);
-  mDeskView->update();
+  mDeskView->reloadCards();
+  mDeskView->draw(true);
 }
 
 void MainWindow::helpRules () {

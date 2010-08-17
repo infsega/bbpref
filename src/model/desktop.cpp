@@ -532,13 +532,13 @@ void PrefModel::runGame () {
       tmpDeck << mDeck.at(tNo);
       if (tmpDeck.count() != 32) abort();
       mDeck = tmpDeck;
-      mDeskView->draw(false);
-    }
-    if (!mDeskView->optDealAnim) {
       mDeskView->draw();
-      mDeskView->update();
-      mDeskView->mySleep(0);
     }
+    /*if (!mDeskView->optDealAnim) {
+      mDeskView->draw();
+//      mDeskView->update();
+      mDeskView->mySleep(0);
+    }*/
   // end of block to move
 
     dlogf("=========================================");
@@ -640,8 +640,7 @@ void PrefModel::runGame () {
 		  // deal talon
           currentPlayer->dealCard(mDeck.at(30));
           currentPlayer->dealCard(mDeck.at(31));
-          mDeskView->animateDeskToPlayer(mPlayerActive, mCardsOnDesk); // will clear mCardsOnDesk[]
-          mDeskView->draw();
+          mDeskView->animateTrick(mPlayerActive, mCardsOnDesk); // will clear mCardsOnDesk[]
 
           // throw away
 		  eGameBid maxBid = gCurrentGame;
@@ -995,8 +994,7 @@ void PrefModel::playingRound()
       nCurrentMove = nCurrentMove
         + whoseTrick(mFirstCard, mSecondCard, mThirdCard, m_trump)-1;
       
-      mDeskView->animateDeskToPlayer(nCurrentMove.nValue, mCardsOnDesk); // will clear mCardsOnDesk[]
-      mDeskView->draw();
+      mDeskView->animateTrick(nCurrentMove.nValue, mCardsOnDesk); // will clear mCardsOnDesk[]
       tmpg = player(nCurrentMove);
       tmpg->gotTrick();
       mDeskView->draw(false);

@@ -109,7 +109,7 @@ void SleepEventLoop::doEventMouse (QMouseEvent *event) {
 void SleepEventLoop::keyPicUpdate () {
   if (mDeskView->optPrefClub == true) {
     mDeskView->drawPKeyBmp(true);
-    mDeskView->update();
+//    mDeskView->update();
   }
 }
 
@@ -325,6 +325,7 @@ void DeskView::drawPKeyBmp (bool show) {
   } else {
     ClearBox(4, height()-(i->height()+8), i->width(), i->height());
   }
+  update(QRegion(4, height()-(i->height()+8), i->width(), i->height()));
 }
 
 
@@ -386,16 +387,9 @@ void DeskView::mySleep (int seconds) {
 
   if (seconds == 0)
   {
-    /*if (optPrefClub == false)
-	  seconds=1;
-    else {*/
     drawPKeyBmp(false);
-    update();
-    qApp->processEvents(QEventLoop::WaitForMoreEvents);
-    qApp->sendPostedEvents();
     removeEventFilter(d_ptr->m_efilter);
     return;
-    //}
   }
   if (seconds > 0) {
     connect(d_ptr->m_timer, SIGNAL(timeout()), d_ptr->m_eloop, SLOT(quit()));
@@ -409,28 +403,32 @@ void DeskView::mySleep (int seconds) {
   if (optPrefClub == true)
   drawPKeyBmp(seconds == -1);
 
-  update();
   if (d_ptr->m_eloop->isRunning())
     d_ptr->m_eloop->exit();
-  d_ptr->m_eloop->exec();
+  if(seconds >= 0)
+    d_ptr->m_eloop->exec();
+  else
+    d_ptr->m_eloop->exec(QEventLoop::WaitForMoreEvents);
   removeEventFilter(d_ptr->m_efilter);
   disconnect(d_ptr->m_timer, SIGNAL(timeout()), 0, 0);
 
   if (seconds == -1) {
     drawPKeyBmp(false);
-    update();
   }
 }
 
 
-void DeskView::aniSleep (int milliseconds) {
+void DeskView::aniSleep (int milliseconds, const QRegion & region) {
   d_ptr->m_eloop->mIgnoreMouse = true;
   d_ptr->m_eloop->mIgnoreKey = true;
   installEventFilter(d_ptr->m_efilter);
   connect(d_ptr->m_timer, SIGNAL(timeout()), d_ptr->m_eloop, SLOT(quit()));
   d_ptr->m_timer->start(milliseconds);
 
-  update();
+  if (region.isEmpty())
+    repaint();
+  else
+    repaint(region);
   d_ptr->m_eloop->exec();
   removeEventFilter(d_ptr->m_efilter);
   disconnect(d_ptr->m_timer, SIGNAL(timeout()), 0, 0);
@@ -471,7 +469,7 @@ void DeskView::drawCard (const Card *card, int x, int y, bool opened, bool hilig
     sprintf(cCardName, "1000");
   }
   QPixmap *bmp = GetImgByName(cCardName);
-  Q_ASSERT(bmp);
+  if (!bmp) return;
   QPainter p(mDeskBmp);
   p.drawPixmap(x, y, *bmp);
   p.end();
@@ -638,9 +636,9 @@ void DeskView::keyPressEvent (QKeyEvent *event) {
 
 
 void DeskView::paintEvent (QPaintEvent *event) {
-  Q_UNUSED(event)
-  QPainter p;
-  p.begin(this);
+  QPainter p(this);
+//  qDebug() << event->region().boundingRect();
+  p.setClipRegion(event->region());
   p.drawPixmap(0, 0, *(mDeskBmp));
   p.end();
 }
@@ -689,9 +687,9 @@ void DeskView::inGameCardLeftTop (int mCardNo, int &left, int &top)
   left = x; top = y;
 }
 
-void DeskView::animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[])
+void DeskView::animateTrick (int plrNo, Card *mCardsOnDesk[])
 {
-  static const int steps = 10;
+  const int steps = 20;
   const Card *cAni[4];
   int left, top;
 
@@ -705,20 +703,27 @@ void DeskView::animateDeskToPlayer (int plrNo, Card *mCardsOnDesk[])
     mCardsOnDesk[f] = 0;
   }
 
-  draw(false);
-  QPixmap cache = *mDeskBmp;
-  for (int f = optTakeAnim?0:steps; f <= steps; f++) {
-    for (int c = 0; c <= 3; c++) {
-      if (!cAni[c]) continue;
-      int x, y;
-      inGameCardLeftTop(c, x, y);
-      x = x+((int)((double)(left-x)/steps*f));
-      y = y+((int)((double)(top-y)/steps*f));
-      drawCard(cAni[c], x, y, 1, 0);
+  if(optTakeAnim) {
+    draw(false);
+    QRegion oldRegion;
+    QPixmap cache = *mDeskBmp;
+    for (int f = optTakeAnim?0:steps; f <= steps; f++) {
+      QRegion newRegion;
+      for (int c = 0; c <= 3; c++) {
+        if (!cAni[c]) continue;
+        int x, y;
+        inGameCardLeftTop(c, x, y);
+        x = x+((int)((double)(left-x)/steps*f));
+        y = y+((int)((double)(top-y)/steps*f));
+        drawCard(cAni[c], x, y, 1, 0);
+        newRegion += QRegion(x, y, CardWidth, CardHeight);
+      }
+      aniSleep(200/steps, newRegion + oldRegion);
+      *mDeskBmp = cache;
+      oldRegion = newRegion;
     }
-    aniSleep(20);
-    *mDeskBmp = cache;
   }
+  draw();
 }
 
 
@@ -732,7 +737,7 @@ void DeskView::drawPool () {
 
 void DeskView::drawBidBoard()
 {
-    if (!mDeskBmp) return;
+    Q_ASSERT(mDeskBmp);
     const Player *plr1 = m_model->player(1);
     const Player *plr2 = m_model->player(2);
     const Player *plr3 = m_model->player(3);
@@ -773,6 +778,7 @@ bool DeskView::askWhistType ()
     return true;
 }
 
+/// @todo Should be merged with paintEvent (and add method like invalidateCache)
 void DeskView::draw (bool emitSignal) {
   ClearScreen();
   if(!m_model->mGameRunning)
@@ -805,6 +811,7 @@ void DeskView::draw (bool emitSignal) {
         drawPlayerMessage(f, msg, f!=m_model->mPlayerHi);
       }
   }
+  /// @todo Calculate region which really needs updating
   if (emitSignal) update();
 }
 
