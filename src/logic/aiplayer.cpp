@@ -1527,6 +1527,8 @@ eGameBid AiPlayer::dropForGame () {
     mCards.putAt(f, tmpFirstCardOut);
   }
 
+  clearCardArea();
+
   RealFirstCardOut = mCards.minInSuit(FirstCardOut->suit());
   mCards.remove(RealFirstCardOut);
   mOut.insert(RealFirstCardOut);
@@ -1539,6 +1541,7 @@ eGameBid AiPlayer::dropForGame () {
   mCards.remove(RealSecondCardOut);
   mOut.insert(RealSecondCardOut);
   mCards.mySort();
+  draw();
   //Hight = moveBidding(undefined,undefined);
   Hight = moveCalcDrop();
   if (Hight < mMyGame)  {

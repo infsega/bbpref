@@ -85,7 +85,7 @@ public:
 protected:
   virtual void internalInit ();
 
-  virtual void drawAt (DeskView *aDeskView, int left, int top, int selNo=-1);
+  virtual void drawAt (int left, int top, int selNo=-1);
   virtual void clearCardArea ();
 
   // at least 28 ints (14 int pairs); return # of used ints; the last int is -1

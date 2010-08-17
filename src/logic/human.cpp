@@ -147,14 +147,16 @@ Card *HumanPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Play
   Q_UNUSED(aLeftPlayer)
   Q_UNUSED(aRightPlayer)
   Q_UNUSED(isPassOut)
+  Q_ASSERT(mDeskView);
   qDebug() << type() << "("<< mPlayerNo << ") moves";
   Card *res = 0;
   mClickX = mClickY = 0; mWaitingForClick = true;
   m_model->showMoveHint();
   draw();
+  int cNo = -1;
   while (!res) {
-    if (mDeskView) mDeskView->mySleep(-2);
-    int cNo = cardAt(mClickX, mClickY, !invisibleHand());
+    mDeskView->mySleep(-2);
+    cNo = cardAt(mClickX, mClickY, !invisibleHand());
     if (cNo == -1) {
       mClickX = mClickY = 0;
       continue;

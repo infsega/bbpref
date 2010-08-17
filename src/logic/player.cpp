@@ -140,30 +140,26 @@ int Player::cardAt (int lx, int ly, bool opened) {
 }
 
 
-void Player::drawAt (DeskView *aDeskView, int left, int top, int selNo) {
+void Player::drawAt (int left, int top, int selNo) {
   int ofs[28];
-  DeskView *oDesk = mDeskView;
-
-  if (!aDeskView) return;
-  mDeskView = aDeskView;
 
   int cnt = buildHandXOfs(ofs, left, !invisibleHand());
   if (cnt) left = ofs[0];
-  for (int f = 0; ofs[f] >= 0; f += 2) {
+  int f;
+  for (f = 0; ofs[f] >= 0; f += 2) {
     int x = ofs[f], y = top;
     Card *card = mCards.at(ofs[f+1]);
-    aDeskView->drawCard(card, x, y, !invisibleHand(), ofs[f+1]==selNo);
+    mDeskView->drawCard(card, x, y, !invisibleHand(), ofs[f+1]==selNo);
   }
-  aDeskView->update();
-  mDeskView = oDesk;
+  mDeskView->update(left-10, top-10, ofs[f-2]-left+mDeskView->CardWidth+10, mDeskView->CardHeight+10);
 }
 
 
 void Player::draw () {
   int left, top;
-  if (!mDeskView) return;
+  Q_ASSERT(mDeskView);
   mDeskView->getLeftTop(mPlayerNo, left, top);
-  drawAt(mDeskView, left, top, mPrevHiCardIdx);
+  drawAt(left, top, mPrevHiCardIdx);
 }
 
 
@@ -173,10 +169,12 @@ void Player::clearCardArea () {
   mDeskView->getLeftTop(mPlayerNo, left, top);
   int cnt = buildHandXOfs(ofs, left, !invisibleHand());
   if (!cnt) return;
-  for (int f = 0; ofs[f] >= 0; f += 2) {
+  int f;
+  for (f = 0; ofs[f] >= 0; f += 2) {
     int x = ofs[f], y = top;
     mDeskView->ClearBox(x, y, mDeskView->CardWidth, mDeskView->CardHeight);
   }
+  mDeskView->update(left-10, top-10, ofs[f-2]-left+mDeskView->CardWidth+10, mDeskView->CardHeight+10);
 }
 
 
