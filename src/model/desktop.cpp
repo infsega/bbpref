@@ -584,6 +584,7 @@ void PrefModel::runGame () {
 		else if (bid == g86) message = tr("Misere");
 		else message = sGameName(bid);
 		currentPlayer->setMessage(message);
+        mDeskView->draw();
       }// else plr->setMessage("PASS");
       ++plrCounter;
       curBidIdx = curBidIdx%3+1;
@@ -652,7 +653,7 @@ void PrefModel::runGame () {
 		  if (currentPlayer->myGame() != g86) {		//  not misere
             // not misere
             nCurrentMove.nValue = i;
-            mDeskView->draw(false);
+            mDeskView->draw();
             if (mPlayerActive == 1)
                 emit showHint(tr("Select two cards to drop"));
             else
@@ -686,11 +687,12 @@ void PrefModel::runGame () {
 
           // bid
           player(passOrWhistPlayersCounter)->setMessage(tr(bidMessage(gCurrentGame)));
+          mDeskView->draw();
 
 		if (gCurrentGame == withoutThree) {
 			gCurrentGame = maxBid;
 			currentPlayer->gotPassPassTricks(gameTricks(currentPlayer->myGame())-3);
-			dlogf("clean out!\n");
+            dlogf("clean out!\n");
             goto LabelRecordOnPaper;
 		}
 		else {
