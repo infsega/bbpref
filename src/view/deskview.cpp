@@ -689,21 +689,13 @@ void DeskView::inGameCardLeftTop (int mCardNo, int &left, int &top)
   left = x; top = y;
 }
 
-void DeskView::animateTrick (int plrNo, Card *mCardsOnDesk[])
+void DeskView::animateTrick (int plrNo, Card *cAni[])
 {
   const int steps = 20;
-  const Card *cAni[4];
   int left, top;
 
-//  Player *plr = player(plrNo);
-//  if (!plr) return;
   getLeftTop(plrNo, left, top);
   if (plrNo == 3) left -= CardWidth-4;
-
-  for (int f = 0; f < 4; f++) {
-    cAni[f] = mCardsOnDesk[f];
-    mCardsOnDesk[f] = 0;
-  }
 
   if(optTakeAnim) {
     draw(false);

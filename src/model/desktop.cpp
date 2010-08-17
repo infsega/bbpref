@@ -640,7 +640,12 @@ void PrefModel::runGame () {
 		  // deal talon
           currentPlayer->dealCard(mDeck.at(30));
           currentPlayer->dealCard(mDeck.at(31));
-          mDeskView->animateTrick(mPlayerActive, mCardsOnDesk); // will clear mCardsOnDesk[]
+          Card *cAni[4];
+          for (int f = 0; f < 4; f++) {
+            cAni[f] = mCardsOnDesk[f];
+            mCardsOnDesk[f] = 0;
+          }
+          mDeskView->animateTrick(mPlayerActive, cAni); // will clear mCardsOnDesk[]
 
           // throw away
 		  eGameBid maxBid = gCurrentGame;
@@ -991,8 +996,13 @@ void PrefModel::playingRound()
 
       nCurrentMove = nCurrentMove
         + whoseTrick(mFirstCard, mSecondCard, mThirdCard, m_trump)-1;
-      
-      mDeskView->animateTrick(nCurrentMove.nValue, mCardsOnDesk); // will clear mCardsOnDesk[]
+
+      Card *cAni[4];
+      for (int f = 0; f < 4; f++) {
+        cAni[f] = mCardsOnDesk[f];
+        mCardsOnDesk[f] = 0;
+      }
+      mDeskView->animateTrick(nCurrentMove.nValue, cAni); // will clear mCardsOnDesk[]
       tmpg = player(nCurrentMove);
       tmpg->gotTrick();
       mDeskView->draw(false);
