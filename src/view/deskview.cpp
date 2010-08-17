@@ -707,8 +707,8 @@ void DeskView::animateTrick (int plrNo, Card *cAni[])
         if (!cAni[c]) continue;
         int x, y;
         inGameCardLeftTop(c, x, y);
-        x = x+((int)((double)(left-x)/steps*f));
-        y = y+((int)((double)(top-y)/steps*f));
+        x = x + ((left-x)*f/steps);
+        y = y + ((top-y)*f/steps);
         drawCard(cAni[c], x, y, 1, 0);
         newRegion += QRegion(x, y, CardWidth, CardHeight);
       }
