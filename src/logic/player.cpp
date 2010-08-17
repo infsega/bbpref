@@ -160,6 +160,7 @@ void Player::draw () {
   Q_ASSERT(mDeskView);
   mDeskView->getLeftTop(mPlayerNo, left, top);
   drawAt(left, top, mPrevHiCardIdx);
+  mDeskView->drawPlayerMessage(mPlayerNo, mMessage, mPlayerNo!=m_model->mPlayerHi);
 }
 
 

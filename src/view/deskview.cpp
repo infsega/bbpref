@@ -524,6 +524,8 @@ eGameBid DeskView::selectBid (eGameBid lMove, eGameBid rMove) {
 
 void DeskView::drawPlayerMessage (int player, const QString & msg, bool dim)
 {
+  if(msg.isEmpty())
+    return;
   int x, y;
   switch (player) {
     case 1:
@@ -803,14 +805,6 @@ void DeskView::draw (bool emitSignal) {
   QPainter p(mDeskBmp);
   drawIMove(p);
   p.end();
-  // ÓÏÏÂÝÅÎÉÑ
-  for (int f = 1; f <= 3; f++) {
-    Player *plr = m_model->player(f);
-      QString msg(plr->message());
-      if (!msg.isEmpty()) {
-        drawPlayerMessage(f, msg, f!=m_model->mPlayerHi);
-      }
-  }
   /// @todo Calculate region which really needs updating
   if (emitSignal) update();
 }

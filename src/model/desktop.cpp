@@ -809,7 +809,6 @@ void PrefModel::runGame () {
 						else
 							player(n)->setMessage(tr("open"));
 						mDeskView->draw(false);
-			          	mDeskView->mySleep(1);
 					}
 
 				// if closed whist chosen, no hand become opened
@@ -819,9 +818,8 @@ void PrefModel::runGame () {
 						if ((player(n)->myGame() == whist) || (player(n)->myGame() == gtPass))
 							player(n)->setInvisibleHand(false);
 				}
-				player(1)->setMessage("");
-    			player(2)->setMessage("");
-    			player(3)->setMessage("");
+				mDeskView->draw(false);
+				mDeskView->mySleep(1);
 			
 			}
           }
@@ -849,7 +847,7 @@ void PrefModel::runGame () {
     player(1)->setMessage("");
     player(2)->setMessage("");
     player(3)->setMessage("");
-    mDeskView->draw(false);
+    mDeskView->draw(true);
 
     // game (10 moves)
 	mBiddingDone = true;
