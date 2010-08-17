@@ -64,6 +64,7 @@ public:
   int activePlayerNumber () const { return mPlayerActive; }
   int playerWithMaxPool (); // except the players who closed the pool
   int trumpSuit () const;
+  eGameBid currentGame() const { return m_currentGame; }
   const QList<GameLogEntry> & gameLog() const { return m_gameLog; }
 
   DeskView *view() const { Q_ASSERT(mDeskView); return mDeskView; }
@@ -87,7 +88,6 @@ public:
   bool mOnDeskClosed;
   bool mPlayingRound;
   int mPlayerHi; // highlighted message number
-  eGameBid gCurrentGame;
 
   // Conventions
   bool optStalingrad;
@@ -128,6 +128,7 @@ private:
   bool m_closedWhist;
   bool m_keepLog;
   QList<GameLogEntry> m_gameLog;
+  eGameBid m_currentGame;
 };
 
 

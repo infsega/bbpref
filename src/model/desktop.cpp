@@ -492,7 +492,7 @@ void PrefModel::runGame () {
     player(2)->clear();
     player(3)->clear();
     mPlayerHi = 0;
-    gCurrentGame = undefined;
+    m_currentGame = undefined;
 
   // Starter of bidding
   plrCounter = nCurrentStart;
@@ -631,7 +631,7 @@ void PrefModel::runGame () {
           mCardsOnDesk[3] = mDeck.at(31);
           
 		  // trick with gCurrentGame - shows game on bidboard
-          gCurrentGame = playerBids[0];
+          m_currentGame = playerBids[0];
           mDeskView->draw();
           //drawBidWindows(bids4win, 0);
           if (currentPlayer->number() != 1)
@@ -649,7 +649,7 @@ void PrefModel::runGame () {
           mDeskView->animateTrick(mPlayerActive, cAni); // will clear mCardsOnDesk[]
 
           // throw away
-		  eGameBid maxBid = gCurrentGame;
+          eGameBid maxBid = m_currentGame;
 		  if (currentPlayer->myGame() != g86) {		//  not misere
             // not misere
             nCurrentMove.nValue = i;
@@ -658,7 +658,7 @@ void PrefModel::runGame () {
                 emit showHint(tr("Select two cards to drop"));
             else
 				mDeskView->mySleep(2);
-			playerBids[0] = gCurrentGame = currentPlayer->dropForGame();
+            playerBids[0] = m_currentGame = currentPlayer->dropForGame();
 			emit clearHint();
           } else {	// playing misere
             // show all cards
@@ -679,18 +679,18 @@ void PrefModel::runGame () {
             if (mPlayerActive != 1) 
 				mDeskView->mySleep(2);
 
-			playerBids[0] = gCurrentGame = currentPlayer->dropForMisere();
+            playerBids[0] = m_currentGame = currentPlayer->dropForMisere();
 			emit clearHint();
 			nCurrentMove.nValue = tempint;
           }		  	
           passOrWhistPlayersCounter.nValue = i;
 
           // bid
-          player(passOrWhistPlayersCounter)->setMessage(tr(bidMessage(gCurrentGame)));
+          player(passOrWhistPlayersCounter)->setMessage(tr(bidMessage(m_currentGame)));
           mDeskView->draw();
 
-		if (gCurrentGame == withoutThree) {
-			gCurrentGame = maxBid;
+        if (m_currentGame == withoutThree) {
+            m_currentGame = maxBid;
 			currentPlayer->gotPassPassTricks(gameTricks(currentPlayer->myGame())-3);
             dlogf("clean out!\n");
             goto LabelRecordOnPaper;
@@ -705,12 +705,12 @@ void PrefModel::runGame () {
           // choice of the first player
           int firstWhistPlayer = passOrWhistPlayersCounter.nValue;
           mPlayerHi = firstWhistPlayer;
-		  if ((gCurrentGame != g86) && !(!opt10Whist && gCurrentGame>=101 && gCurrentGame<=105)) {
+          if ((m_currentGame != g86) && !(!opt10Whist && m_currentGame>=101 && m_currentGame<=105)) {
 			player(passOrWhistPlayersCounter)->setMessage(tr("thinking..."));
 			mDeskView->draw(false);
 			if (firstWhistPlayer != 1) mDeskView->mySleep(2);
 		  }
-          PassOrVist = PassOrVistPlayers->makeFinalBid(gCurrentGame, whist, nPassCounter);
+          PassOrVist = PassOrVistPlayers->makeFinalBid(m_currentGame, whist, nPassCounter);
           if (PassOrVistPlayers->myGame() == gtPass) {
             nPassCounter++;
             player(passOrWhistPlayersCounter)->setMessage(tr("pass"));
@@ -728,12 +728,12 @@ void PrefModel::runGame () {
 		  mDeskView->draw(false);
 		  PassOrVistPlayers = player(passOrWhistPlayersCounter);
           PassOrVistPlayers->setMyGame(undefined);
-		  if ((gCurrentGame != g86) && !(!opt10Whist && gCurrentGame>=101 && gCurrentGame<=105)) {
+          if ((m_currentGame != g86) && !(!opt10Whist && m_currentGame>=101 && m_currentGame<=105)) {
 			player(passOrWhistPlayersCounter)->setMessage(tr("thinking..."));
 			mDeskView->draw(false);
 			if (secondWhistPlayer != 1) mDeskView->mySleep(2);
 		  }
-		  PassOrVistPlayers->makeFinalBid(gCurrentGame, PassOrVist, nPassCounter);
+          PassOrVistPlayers->makeFinalBid(m_currentGame, PassOrVist, nPassCounter);
           if (PassOrVistPlayers->myGame() == gtPass) {
             nPassCounter++;
             player(passOrWhistPlayersCounter)->setMessage(tr("pass"));
@@ -753,7 +753,7 @@ void PrefModel::runGame () {
 			PassOrVistPlayers->setMessage(tr("thinking..."));
 			mDeskView->draw(false);			
 			if (firstWhistPlayer != 1) mDeskView->mySleep(2);
-            PassOrVist = PassOrVistPlayers->makeFinalBid(gCurrentGame, gtPass, 0);	// no more halfwhists!
+            PassOrVist = PassOrVistPlayers->makeFinalBid(m_currentGame, gtPass, 0);	// no more halfwhists!
           	if (PassOrVistPlayers->myGame() == gtPass) {
                 player(firstWhistPlayer)->setMessage(tr("pass"));
           	}
@@ -773,7 +773,7 @@ void PrefModel::runGame () {
 		  player(2)->setMessage("");
           player(3)->setMessage("");
 
-          gnS = sGameName(gCurrentGame);
+          gnS = sGameName(m_currentGame);
           gnS.prepend("game: ");
           gnS += "; player: ";
           gnS += QString::number(mPlayerActive);
@@ -796,7 +796,7 @@ void PrefModel::runGame () {
           } else {
 
 			// On misere or 10 check play with opened cards
-			if ((gCurrentGame == g86)|| (!opt10Whist && gCurrentGame>=101 && gCurrentGame<=105)) {
+            if ((m_currentGame == g86)|| (!opt10Whist && m_currentGame>=101 && m_currentGame<=105)) {
 				player(2)->setInvisibleHand(false);
 				player(3)->setInvisibleHand(false);
 			}
@@ -841,7 +841,7 @@ void PrefModel::runGame () {
       optPassCount++;
       mPlayerActive = 0;
       mPlayerHi = 0;
-      playerBids[0] = gCurrentGame = raspass;
+      playerBids[0] = m_currentGame = raspass;
       player(1)->setMyGame(raspass);
       player(2)->setMyGame(raspass);
       player(3)->setMyGame(raspass);
@@ -935,7 +935,7 @@ void PrefModel::playingRound()
     for (int i = 1; i <= 10; i++) {
       Player *tmpg;
       mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard = 0;
-      if (gCurrentGame == raspass && (i >= 1 && i <= 3)) nCurrentMove = nCurrentStart;
+      if (m_currentGame == raspass && (i >= 1 && i <= 3)) nCurrentMove = nCurrentStart;
 
       dlogf("------------------------\nmove #%i", i);
       for (int f = 1; f <= 3; f++) {
@@ -950,7 +950,7 @@ void PrefModel::playingRound()
 	  player(mPlayerHi)->setMessage(tr("thinking..."));
 	  mDeskView->draw();
       mDeskView->mySleep(0);
-      if (gCurrentGame == raspass && (i == 1 || i == 2)) {
+      if (m_currentGame == raspass && (i == 1 || i == 2)) {
         mCardsOnDesk[0] = mDeck.at(29+i);
         mDeskView->draw();
         mDeskView->mySleep(0);
@@ -1013,7 +1013,7 @@ void PrefModel::playingRound()
 
 int PrefModel::trumpSuit () const
 {
-  return gCurrentGame-(gCurrentGame/10)*10;
+  return m_currentGame-(m_currentGame/10)*10;
 }
 
 bool PrefModel::checkMoves ()

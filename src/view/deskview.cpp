@@ -758,7 +758,7 @@ void DeskView::drawBidBoard()
       const int wdt2 = numWidth(plr3->tricksTaken());
       const int x2 = 77-wdt2;
       drawNumber(p, bidBmpX+x2, bidBmpY+6, plr3->tricksTaken(), plrAct==3);
-    drawGameBid(p, m_model->gCurrentGame);
+    drawGameBid(p, m_model->currentGame());
 }
 
 bool DeskView::askWhistType ()
