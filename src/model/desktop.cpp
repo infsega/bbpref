@@ -905,8 +905,11 @@ LabelRecordOnPaper:
             entry.rightWhists[f-1] = plr->mScore.rightWhists();
 //            entry.cardList[f-1] = tmplist[f-1];
             entry.time = elapsedTime / 1000.0;
-            for (int i=0; i<tmplist[f-1].size(); i++)
-              entry.cardList[f-1] << *(tmplist[f-1].at(i));
+            for (int i=0; i<tmplist[f-1].size(); i++) {
+              const Card *c = tmplist[f-1].at(i);
+              if(c)
+                entry.cardList[f-1] << *c;
+            }
 
         }
         m_gameLog.append(entry);
