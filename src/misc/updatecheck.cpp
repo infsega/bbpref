@@ -22,14 +22,59 @@
 
 #include "prfconst.h"
 #include "updatecheck.h"
-#include "updatedialog.h"
 
+#include <QtGui/QDialog>
+#include <QtGui/QLabel>
 #include <QtGui/QMessageBox>
+#include <QtGui/QPushButton>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QVBoxLayout>
+
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtCore/QSettings>
 #include <QtCore/QDebug>
 
+namespace {
+  class UpdateDialog : public QDialog
+  {
+  public:
+    UpdateDialog(QWidget *parent, const QString &updateText) : QDialog(parent)
+    {
+      setMinimumWidth(275);
+      setWindowTitle(tr("Updated Version of OpenPref Available",
+                              "Indicates an updated OpenPref version is available"));
+
+      QLabel *mainText = new QLabel(this);
+      QPushButton *okButton = new QPushButton(tr("OK"), this);
+      QPushButton *remindButton = new QPushButton(tr("Remind Later"), this);
+
+      // The main label displaying update information
+      mainText->setWordWrap(true);
+      // Want to have links opened if they are in the release notes
+      mainText->setOpenExternalLinks(true);
+      // Set the supplied text
+      mainText->setText(updateText);
+
+      okButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+      okButton->setDefault(true);
+      remindButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+      connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
+      connect(remindButton, SIGNAL(clicked()), this, SLOT(reject()));
+
+      QVBoxLayout *layout = new QVBoxLayout(this);
+      layout->addWidget(mainText);
+
+      QHBoxLayout *okLayout = new QHBoxLayout();
+      okLayout->addStretch();
+      okLayout->addWidget(okButton);
+      okLayout->addWidget(remindButton);
+      okLayout->addStretch();
+
+      layout->addLayout(okLayout);
+    }
+  };
+}
 
   UpdateCheck * UpdateCheck::instance(QWidget* parent)
   {
@@ -104,12 +149,12 @@
     if (newVersionAvailable) {
       //QPointer<UpdateDialog> info = new UpdateDialog(qobject_cast<QWidget *>(parent()), releaseNotes);
       UpdateDialog* info = new UpdateDialog(qobject_cast<QWidget*>(parent()), releaseNotes);
-      info->exec();
+      if (info->exec() == QDialog::Accepted) {
+        // Now we have warned the user, set this version as the prompted version
+        m_versionPrompted = version;
+      }
       delete info;
     }
-    // Now we have warned the user, set this version as the prompted version
-    m_versionPrompted = version;
-
     // We are responsible for deleting the reply object
     reply->deleteLater();
   }
