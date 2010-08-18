@@ -20,7 +20,6 @@
  *      http://www.gnu.org/licenses 
  */
 
-#include "kpref.h"
 #include "prfconst.h"
 #include "updatecheck.h"
 #include "updatedialog.h"
