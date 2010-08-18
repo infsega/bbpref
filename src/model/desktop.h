@@ -35,7 +35,7 @@ struct GameLogEntry {
     int leftWhists[3];
     int rightWhists[3];
     float time;
-    CardList cardList[3];
+    QList<Card> cardList[3];
 };
 
 class DeskView;

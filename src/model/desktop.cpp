@@ -903,8 +903,11 @@ LabelRecordOnPaper:
             entry.pool[f-1] = plr->mScore.pool();
             entry.leftWhists[f-1] = plr->mScore.leftWhists();
             entry.rightWhists[f-1] = plr->mScore.rightWhists();
-            entry.cardList[f-1] = tmplist[f-1];
+//            entry.cardList[f-1] = tmplist[f-1];
             entry.time = elapsedTime / 1000.0;
+            for (int i=0; i<tmplist[f-1].size(); i++)
+              entry.cardList[f-1] << *(tmplist[f-1].at(i));
+
         }
         m_gameLog.append(entry);
     }
