@@ -323,13 +323,13 @@ void MainWindow::readSettings () {
 
 void MainWindow::options () {
   int oldBackgroundType = mDeskView->backgroundType();
-  QRgb oldBackgroundColor = mDeskView->m_backgroundColor;
+  QRgb oldBackgroundColor = mDeskView->backgroundColor();
   bool oldPrefClub = mDeskView->optPrefClub;
   bool oldDebugHands = mDeskView->optDebugHands;
   
   OptionDialog *dlg = new OptionDialog(this);
   dlg->setBackgroundType(mDeskView->backgroundType());
-  dlg->setBackgroundColor(mDeskView->m_backgroundColor);
+  dlg->setBackgroundColor(mDeskView->backgroundColor());
   dlg->cbAnimDeal->setChecked(mDeskView->optDealAnim);
   dlg->cbAnimTake->setChecked(mDeskView->optTakeAnim);
   dlg->cbDebugHands->setChecked(mDeskView->optDebugHands);
@@ -337,7 +337,7 @@ void MainWindow::options () {
   
   if (dlg->exec() == QDialog::Accepted) {
     mDeskView->setBackgroundType(dlg->backgroundType());
-    mDeskView->m_backgroundColor = dlg->backgroundColor();
+    mDeskView->setBackgroundColor(dlg->backgroundColor());
     mDeskView->optDealAnim = dlg->cbAnimDeal->isChecked();
     mDeskView->optTakeAnim = dlg->cbAnimTake->isChecked();
     mDeskView->optPrefClub = dlg->cbPrefClub->isChecked();
@@ -345,15 +345,13 @@ void MainWindow::options () {
   }
   delete dlg;
 
-  if ( (mDeskView->backgroundType() != oldBackgroundType)
+  if ( /*(mDeskView->backgroundType() != oldBackgroundType)
     || (mDeskView->m_backgroundColor != oldBackgroundColor)
-    || (mDeskView->optPrefClub != oldPrefClub)
+    ||*/ (mDeskView->optPrefClub != oldPrefClub)
     || (mDeskView->optDebugHands != oldDebugHands) )
-    deckChanged();
-}
-
-void MainWindow::deckChanged () {
-  mDeskView->reloadCards();
+  {
+    mDeskView->reloadCards();
+  }
   mDeskView->draw(true);
 }
 

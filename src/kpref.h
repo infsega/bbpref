@@ -59,7 +59,6 @@ private:
   void writeSettings ();
   void readSettings ();
   void doConnects();
-  void deckChanged();
 
   QAction *actFileOpen;
   QAction *actFileSave;

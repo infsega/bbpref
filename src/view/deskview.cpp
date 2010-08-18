@@ -285,6 +285,15 @@ void DeskView::setBackgroundType(const int type)
   }
 }
 
+void DeskView::setBackgroundColor(const QRgb color)
+{
+  m_backgroundColor = color;
+  if (m_backgroundType == 0) {
+    m_deskBackground.setColor(m_backgroundColor);
+    m_deskBackground.setStyle(Qt::SolidPattern);
+  }
+}
+
 void DeskView::drawIMove (QPainter &p) {
   int x, y;
   switch (m_model->nCurrentStart.nValue) {
@@ -447,9 +456,7 @@ void DeskView::ClearScreen () {
 void DeskView::ClearBox (int x1, int y1, int x2, int y2) {
   Q_ASSERT(mDeskBmp);
   QPainter p(mDeskBmp);
-  QRect NewRect = QRect(x1, y1, x2, y2);
-  p.fillRect(NewRect, m_deskBackground);
-  p.end();
+  p.fillRect(x1, y1, x2, y2, m_deskBackground);
 }
 
 
@@ -642,7 +649,6 @@ void DeskView::paintEvent (QPaintEvent *event) {
 //  qDebug() << event->region().boundingRect();
   p.setClipRegion(event->region());
   p.drawPixmap(0, 0, *(mDeskBmp));
-  p.end();
 }
 
 void DeskView::getLeftTop (int player, int & left, int & top)
@@ -775,9 +781,7 @@ bool DeskView::askWhistType ()
 /// @todo Should be merged with paintEvent (and add method like invalidateCache)
 void DeskView::draw (bool emitSignal) {
   ClearScreen();
-  if(!m_model->mGameRunning)
-    return;
-
+  if(m_model->mGameRunning) {
   // repaint players
   for (int f = 1; f <= 3; f++) 
       m_model->player(f)->draw();
@@ -797,6 +801,7 @@ void DeskView::draw (bool emitSignal) {
   QPainter p(mDeskBmp);
   drawIMove(p);
   p.end();
+  }
   /// @todo Calculate region which really needs updating
   if (emitSignal) update();
 }
