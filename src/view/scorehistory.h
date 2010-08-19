@@ -2,7 +2,7 @@
 #define SCOREHISTORY_H
 
 #include <QtGui/QDialog>
-#include <QtGui/QTableWidget>
+#include <QtGui/QTableView>
 
 class PrefModel;
 class ScoreHistoryDialog : public QDialog
@@ -15,8 +15,12 @@ public:
 protected:
   void showEvent(QShowEvent *event);
 
+private slots:
+  void showDeal(const QModelIndex &index);
+
 private:
-  QTableWidget *m_table;
+  QTableView *m_table;
+  PrefModel *m_model;
 };
 
 #endif // SCOREHISTORY_H
