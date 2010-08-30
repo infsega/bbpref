@@ -36,6 +36,7 @@
 #include <QtGui/QWidget>
 
 #include "prfconst.h"
+#include "formbid.h"
 
 class Card;
 class PrefModel;
@@ -74,7 +75,7 @@ public:
 
   void MessageBox (const QString & text, const QString & caption);
   //----------------------------- for human player
-  eGameBid selectBid (eGameBid lMove, eGameBid rMove);
+  eGameBid selectBid (FormBid::ActiveButtons);
 
   void getLeftTop (int player, int & left, int & top);
   

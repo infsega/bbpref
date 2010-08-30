@@ -33,7 +33,6 @@
 #include "desktop.h"
 
 #include "baser.h"
-#include "formbid.h"
 #include "prfconst.h"
 #include "player.h"
 #include "scorewidget.h"
@@ -518,11 +517,10 @@ void DeskView::MessageBox (const QString & text, const QString & caption) {
   mb.exec();
 }
 
-eGameBid DeskView::selectBid (eGameBid lMove, eGameBid rMove) {
-  Q_UNUSED(lMove)
-  Q_UNUSED(rMove)
+eGameBid DeskView::selectBid (FormBid::ActiveButtons buttons) {
   FormBid *formBid = FormBid::instance();
   formBid->_GamesType = undefined;
+  formBid->setActiveButtons(buttons);
   do
   	formBid->exec();
   while (formBid->_GamesType == undefined);

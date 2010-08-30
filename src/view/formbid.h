@@ -37,17 +37,23 @@ class FormBid : public QDialog  {
  Q_OBJECT
 
 public:
+  enum ActiveButtonFlag {
+    NoButtons = 0x0,
+    Whist = 0x1,
+    Pass = 0x2,
+    HalfWhist = 0x4,
+    WithoutThree = 0x8,
+    Misere = 0x10,
+    Score = 0x20
+  };
+  Q_DECLARE_FLAGS(ActiveButtons, ActiveButtonFlag)
+
   static FormBid* instance(DeskView *parent=0);
 
-  void enableAll ();
-  void disableAll ();
-  void disableLessThan (eGameBid);//(eGameBid);
-  void disableItem (eGameBid);
-  void enableItem (eGameBid);
-  void enableWithoutThree();
-  void disableWithoutThree();
-  void disableMisere();
-  void enableScore();
+  void enableBids ();
+  void disableBids ();
+  void disableLessThan (eGameBid);
+  void setActiveButtons(const ActiveButtons buttons);
 
 private slots:
   void onBidClick (); // universal handler
@@ -74,9 +80,11 @@ private:
   QPushButton *btnPass;
   QPushButton *btnWhist;
   QPushButton *btnWithoutThree;
-  QPushButton *btnShowScore;
+  QPushButton *btnScore;
   QPushButton *btnHalfWhist;
   DeskView *m_deskview;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(FormBid::ActiveButtons)
 
 #endif

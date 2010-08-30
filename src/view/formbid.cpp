@@ -158,76 +158,58 @@ void FormBid::onBidClick () {
 }
 
 
-void FormBid::enableAll () {
+void FormBid::enableBids () {
   foreach (QPushButton *b, m_bidButtons) {
-      (static_cast<QBidButton *>(b))->enable();
+      static_cast<QBidButton *>(b)->enable();
   }
 }
 
 
-void FormBid::disableAll () {
+void FormBid::disableBids () {
     foreach (QPushButton *b, m_bidButtons)
-        (static_cast<QBidButton *>(b))->disable();
-    foreach (QPushButton *button, m_otherButtons)
-        button->setEnabled(false);
+        static_cast<QBidButton *>(b)->disable();
 }
 
 
 void FormBid::disableLessThan (eGameBid gameType) {
   foreach (QPushButton *b, m_bidButtons) {
-      if (gameName2Type(b->objectName()) < gameType)
-          (static_cast<QBidButton *>(b))->disable();
+    if (gameName2Type(b->objectName()) < gameType)
+      static_cast<QBidButton *>(b)->disable();
   }
 }
 
 
-void FormBid::disableItem (eGameBid gameType) {
-  if (gameType < g61) {
-    foreach(QPushButton *b, m_otherButtons) {
-      if (gameName2Type(b->objectName()) == gameType)
-        b->setEnabled(false);
-    }
-  } else {
-    foreach(QPushButton *b, m_bidButtons) {
-      if (gameName2Type(b->objectName()) == gameType)
-        (static_cast<QBidButton *>(b))->disable();
-    }
-  }
-}
-
-
-void FormBid::enableItem (eGameBid gameType) {
-  if (gameType < g61) {
-    foreach(QPushButton *b, m_otherButtons) {
-      if (gameName2Type(b->objectName()) == gameType)
-        b->setEnabled(true);
-    }
-  } else {
-    foreach(QPushButton *b, m_bidButtons) {
-      if (gameName2Type(b->objectName()) == gameType)
-        (static_cast<QBidButton *>(b))->enable();
-    }
-  }
-}
-
-void FormBid::disableMisere()
+void FormBid::setActiveButtons(const ActiveButtons buttons)
 {
-    (static_cast<QBidButton *>(btnMisere))->disable();
-}
+  if (buttons & Whist)
+    btnWhist->setEnabled(true);
+  else
+    btnWhist->setEnabled(false);
 
-void FormBid::enableWithoutThree()
-{
+  if (buttons & Pass)
+    btnPass->setEnabled(true);
+  else
+    btnPass->setEnabled(false);
+
+  if (buttons & HalfWhist)
+    btnHalfWhist->setEnabled(true);
+  else
+    btnHalfWhist->setEnabled(false);
+
+  if (buttons & WithoutThree)
     btnWithoutThree->setEnabled(true);
-}
-
-void FormBid::disableWithoutThree()
-{
+  else
     btnWithoutThree->setEnabled(false);
-}
 
-void FormBid::enableScore()
-{
-    btnShowScore->setEnabled(true);
+  if (buttons & Misere)
+    btnMisere->setEnabled(true);
+  else
+    btnMisere->setEnabled(false);
+
+  if (buttons & Score)
+    btnScore->setEnabled(true);
+  else
+    btnScore->setEnabled(false);
 }
 
 
@@ -282,13 +264,13 @@ void FormBid::initDialog () {
   btnHalfWhist->setIcon(QIcon(QString(":/pics/halfwhist.png")));
   m_otherButtons.append(btnHalfWhist);
 
-  btnShowScore = new QPushButton(this);
-  btnShowScore->setGeometry(116, 220, 94, 27);
-  btnShowScore->setMinimumSize(0, 0);
-  btnShowScore->setText(tr("S&core"));
-  btnShowScore->setToolTip(tr("Show game table with calculated scores"));
-  btnShowScore->setIcon(QIcon(QString(":/pics/paper.png")));
-  m_otherButtons.append(btnShowScore);
+  btnScore = new QPushButton(this);
+  btnScore->setGeometry(116, 220, 94, 27);
+  btnScore->setMinimumSize(0, 0);
+  btnScore->setText(tr("S&core"));
+  btnScore->setToolTip(tr("Show game table with calculated scores"));
+  btnScore->setIcon(QIcon(QString(":/pics/paper.png")));
+  m_otherButtons.append(btnScore);
 
   btnWithoutThree = new QPushButton(this);
   btnWithoutThree->setGeometry(10, 220, 106, 27);
@@ -303,6 +285,6 @@ void FormBid::initDialog () {
   connect(btnWhist, SIGNAL(clicked()), this, SLOT(slotWhist()));
   connect(btnHalfWhist, SIGNAL(clicked()), this, SLOT(slotHalfWhist()));
   connect(btnWithoutThree, SIGNAL(clicked()), this, SLOT(slotWithoutThree()));
-  connect(btnShowScore, SIGNAL(clicked()), this, SLOT(score()));
+  connect(btnScore, SIGNAL(clicked()), this, SLOT(score()));
 
 }

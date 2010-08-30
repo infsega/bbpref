@@ -62,33 +62,30 @@ eGameBid HumanPlayer::dropForGame ()
   makeMove(0, 0, 0, 0);
 
   FormBid *formBid = FormBid::instance();
-  formBid->enableAll();
-  formBid->disableItem(whist);
-  formBid->disableItem(halfwhist);
-  formBid->disableItem(gtPass);
-  if (mMyGame != g86) formBid->disableItem(g86);
+  formBid->enableBids();
   formBid->disableLessThan(mMyGame);
-  formBid->enableScore();
+  FormBid::ActiveButtons buttons = FormBid::Score;
   if (m_model->optWithoutThree)
-    formBid->enableWithoutThree();
+    buttons |= FormBid::WithoutThree;
 
   do {
-    tmpGamesType = mDeskView->selectBid(zerogame, zerogame);
+    tmpGamesType = mDeskView->selectBid(buttons);
     if (tmpGamesType == 0) {
-      // вернуть снос
+      // return drop back
       clearCardArea();
       returnDrop();
       makeMove(0, 0, 0, 0);
       makeMove(0, 0, 0, 0);
-    } else if (tmpGamesType == 1) {
+    } /*else if (tmpGamesType == 1) {
       // показать пулю
       mDeskView->drawBidBoard();
-    }
+    }*/
+    Q_ASSERT(tmpGamesType != 1);
   } while (tmpGamesType <= 1);
   if ( tmpGamesType != withoutThree)
   	mMyGame = tmpGamesType;
 
-  formBid->enableAll();
+  formBid->enableBids();
   mWaitingForClick = false;
   return tmpGamesType;
 }
@@ -101,7 +98,7 @@ eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove)
   mClickX = mClickY = 0; mWaitingForClick = true;
 
   FormBid *formBid = FormBid::instance();
-  formBid->enableAll();
+  formBid->enableBids();
   
   if (m_model->optAggPass && m_model->optPassCount > 0)
     formBid->disableLessThan(g71);
@@ -114,15 +111,12 @@ eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove)
     else
       formBid->disableLessThan(qMax((eGameBid)succBid(lMove), (eGameBid)succBid(rMove)));
   }
-  if (mMyGame != undefined)
-    formBid->disableMisere();
-  formBid->enableItem(gtPass);
-  formBid->disableItem(whist);
-  formBid->disableItem(halfwhist);
-  formBid->enableScore();
-  formBid->disableWithoutThree();
+  FormBid::ActiveButtons buttons = FormBid::Pass | FormBid::Score;
+  if (mMyGame == undefined)
+    buttons |= FormBid::Misere;
+
   do {
-    tmpGamesType = mDeskView->selectBid(lMove, rMove);
+    tmpGamesType = mDeskView->selectBid(buttons);
     if (tmpGamesType == 0) {
       // вернуть снос (если есть) и снести заново
       clearCardArea();
@@ -137,7 +131,7 @@ eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove)
   } while (tmpGamesType <= 1);
   mMyGame = tmpGamesType;
   mWaitingForClick = false;
-  formBid->enableAll();
+  formBid->enableBids();
   return mMyGame;
 }
 
@@ -191,14 +185,12 @@ eGameBid HumanPlayer::makeFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerP
       || (m_model->optStalingrad && MaxGame == g61)) {
 	mMyGame = whist;
   } else {
-    formBid->disableAll();
-    formBid->enableItem(gtPass);
-    formBid->enableItem(whist);
-    formBid->enableScore();
+    formBid->disableBids();
+    FormBid::ActiveButtons buttons = FormBid::Pass | FormBid::Whist | FormBid::Score;
     if (nGamerPass == 1 && MaxGame <= 81)
-        formBid->enableItem(halfwhist);
-    mMyGame = mDeskView->selectBid(zerogame, zerogame);
-    formBid->enableAll();
+        buttons |= FormBid::HalfWhist;
+    mMyGame = mDeskView->selectBid(buttons);
+    formBid->enableBids();
   }
   return mMyGame;
 }
