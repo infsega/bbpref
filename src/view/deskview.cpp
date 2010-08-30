@@ -188,7 +188,6 @@ bool DeskView::loadCards () {
     }
   }
   cardI.squeeze();
-  bidIcons.squeeze();
 
   // done
   return true;

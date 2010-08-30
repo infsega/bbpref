@@ -26,6 +26,7 @@
 #define DESKVIEW_H
 
 #include <QtCore/QHash>
+#include <QtCore/QMap>
 #include <QtCore/QString>
 #include <QtCore/QEventLoop>
 
@@ -127,7 +128,7 @@ private:
   int bidBmpX, bidBmpY;
   int m_leftRightMargin, m_topBottomMargin;
   QHash<QString, QPixmap *> cardI;
-  QHash<int, QPixmap *> bidIcons;
+  QMap<int, QPixmap *> bidIcons;
   int m_backgroundType;
   QRgb m_backgroundColor;
   QBrush m_deskBackground;
