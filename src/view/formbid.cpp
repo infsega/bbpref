@@ -105,7 +105,7 @@ namespace {
 } // end of namespace
 
 
-FormBid::FormBid (DeskView *parent) : QDialog (parent) {
+BidDialog::BidDialog (DeskView *parent) : QDialog (parent) {
   //this->setModal(true);
   m_deskview = parent;
   setWindowTitle(tr("Bidding"));
@@ -113,20 +113,20 @@ FormBid::FormBid (DeskView *parent) : QDialog (parent) {
 }
 
 
-FormBid::~FormBid () {
+BidDialog::~BidDialog () {
 }
 
-FormBid* FormBid::instance(DeskView *parent)
+BidDialog* BidDialog::instance(DeskView *parent)
 {
-  static FormBid *obj = 0;
+  static BidDialog *obj = 0;
 
     if (!obj)
-      obj = new FormBid(parent);
+      obj = new BidDialog(parent);
 
     return obj;
 }
 
-void FormBid::closeEvent(QCloseEvent *event) {
+void BidDialog::closeEvent(QCloseEvent *event) {
 	int ret = QMessageBox::question(this, tr("OpenPref"),
         tr("Do you really want to quit the game?"),
         QMessageBox::Yes | QMessageBox::Default,
@@ -138,19 +138,19 @@ void FormBid::closeEvent(QCloseEvent *event) {
          event->ignore();
 }
 
-void FormBid::misere () { _GamesType = g86; accept(); }
-void FormBid::pass () { _GamesType = gtPass; accept(); }
-void FormBid::slotWhist () { _GamesType = whist; accept(); }
-void FormBid::slotHalfWhist () { _GamesType = halfwhist; accept(); }
-void FormBid::slotWithoutThree () { _GamesType = withoutThree; accept(); }
+void BidDialog::misere () { _GamesType = g86; accept(); }
+void BidDialog::pass () { _GamesType = gtPass; accept(); }
+void BidDialog::slotWhist () { _GamesType = whist; accept(); }
+void BidDialog::slotHalfWhist () { _GamesType = halfwhist; accept(); }
+void BidDialog::slotWithoutThree () { _GamesType = withoutThree; accept(); }
 
-void FormBid::score ()
+void BidDialog::score ()
 {
   m_deskview->drawPool();
 }
 
 
-void FormBid::onBidClick () {
+void BidDialog::onBidClick () {
   QBidButton *b = static_cast<QBidButton *>(sender());
   if (!b) return;
   _GamesType = b->bid();
@@ -158,20 +158,20 @@ void FormBid::onBidClick () {
 }
 
 
-void FormBid::enableBids () {
+void BidDialog::enableBids () {
   foreach (QPushButton *b, m_bidButtons) {
       static_cast<QBidButton *>(b)->enable();
   }
 }
 
 
-void FormBid::disableBids () {
+void BidDialog::disableBids () {
     foreach (QPushButton *b, m_bidButtons)
         static_cast<QBidButton *>(b)->disable();
 }
 
 
-void FormBid::disableLessThan (eGameBid gameType) {
+void BidDialog::disableLessThan (eGameBid gameType) {
   foreach (QPushButton *b, m_bidButtons) {
     if (gameName2Type(b->objectName()) < gameType)
       static_cast<QBidButton *>(b)->disable();
@@ -179,7 +179,7 @@ void FormBid::disableLessThan (eGameBid gameType) {
 }
 
 
-void FormBid::setActiveButtons(const ActiveButtons buttons)
+void BidDialog::setActiveButtons(const ActiveButtons buttons)
 {
   if (buttons & Whist)
     btnWhist->setEnabled(true);
@@ -213,7 +213,7 @@ void FormBid::setActiveButtons(const ActiveButtons buttons)
 }
 
 
-void FormBid::initDialog () {
+void BidDialog::initDialog () {
   this->resize(220, 260);
   this->setMinimumSize(220, 260);
   this->setMaximumSize(220, 260);

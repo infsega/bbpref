@@ -33,7 +33,7 @@
 
 class DeskView;
 
-class FormBid : public QDialog  {
+class BidDialog : public QDialog  {
  Q_OBJECT
 
 public:
@@ -48,7 +48,7 @@ public:
   };
   Q_DECLARE_FLAGS(ActiveButtons, ActiveButtonFlag)
 
-  static FormBid* instance(DeskView *parent=0);
+  static BidDialog* instance(DeskView *parent=0);
 
   void enableBids ();
   void disableBids ();
@@ -65,8 +65,8 @@ private slots:
   void score ();
 
 protected:
-  explicit FormBid (DeskView *parent=0);
-  ~FormBid ();
+  explicit BidDialog (DeskView *parent=0);
+  ~BidDialog ();
   void initDialog ();
   void closeEvent(QCloseEvent *event);
 
@@ -85,6 +85,6 @@ private:
   DeskView *m_deskview;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(FormBid::ActiveButtons)
+Q_DECLARE_OPERATORS_FOR_FLAGS(BidDialog::ActiveButtons)
 
 #endif

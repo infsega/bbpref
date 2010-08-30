@@ -75,7 +75,7 @@ public:
 
   void MessageBox (const QString & text, const QString & caption);
   //----------------------------- for human player
-  eGameBid selectBid (FormBid::ActiveButtons);
+  eGameBid selectBid (BidDialog::ActiveButtons);
 
   void getLeftTop (int player, int & left, int & top);
   

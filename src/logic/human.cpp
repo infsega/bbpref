@@ -61,12 +61,12 @@ eGameBid HumanPlayer::dropForGame ()
   makeMove(0, 0, 0, 0);
   makeMove(0, 0, 0, 0);
 
-  FormBid *formBid = FormBid::instance();
-  formBid->enableBids();
-  formBid->disableLessThan(mMyGame);
-  FormBid::ActiveButtons buttons = FormBid::Score;
+  BidDialog *bidDialog = BidDialog::instance();
+  bidDialog->enableBids();
+  bidDialog->disableLessThan(mMyGame);
+  BidDialog::ActiveButtons buttons = BidDialog::Score;
   if (m_model->optWithoutThree)
-    buttons |= FormBid::WithoutThree;
+    buttons |= BidDialog::WithoutThree;
 
   do {
     tmpGamesType = mDeskView->selectBid(buttons);
@@ -85,7 +85,7 @@ eGameBid HumanPlayer::dropForGame ()
   if ( tmpGamesType != withoutThree)
   	mMyGame = tmpGamesType;
 
-  formBid->enableBids();
+  bidDialog->enableBids();
   mWaitingForClick = false;
   return tmpGamesType;
 }
@@ -97,23 +97,23 @@ eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove)
   eGameBid tmpGamesType;
   mClickX = mClickY = 0; mWaitingForClick = true;
 
-  FormBid *formBid = FormBid::instance();
-  formBid->enableBids();
+  BidDialog *bidDialog = BidDialog::instance();
+  bidDialog->enableBids();
   
   if (m_model->optAggPass && m_model->optPassCount > 0)
-    formBid->disableLessThan(g71);
+    bidDialog->disableLessThan(g71);
   
   if (qMax(lMove, rMove) != gtPass)
   {
     if (mIStart)
-      formBid->disableLessThan(qMax(lMove, rMove));
+      bidDialog->disableLessThan(qMax(lMove, rMove));
     // otherwise he must increase
     else
-      formBid->disableLessThan(qMax((eGameBid)succBid(lMove), (eGameBid)succBid(rMove)));
+      bidDialog->disableLessThan(qMax((eGameBid)succBid(lMove), (eGameBid)succBid(rMove)));
   }
-  FormBid::ActiveButtons buttons = FormBid::Pass | FormBid::Score;
+  BidDialog::ActiveButtons buttons = BidDialog::Pass | BidDialog::Score;
   if (mMyGame == undefined)
-    buttons |= FormBid::Misere;
+    buttons |= BidDialog::Misere;
 
   do {
     tmpGamesType = mDeskView->selectBid(buttons);
@@ -131,7 +131,7 @@ eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove)
   } while (tmpGamesType <= 1);
   mMyGame = tmpGamesType;
   mWaitingForClick = false;
-  formBid->enableBids();
+  bidDialog->enableBids();
   return mMyGame;
 }
 
@@ -177,7 +177,7 @@ eGameBid HumanPlayer::makeFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerP
 {
   Q_UNUSED(HaveAVist)
 
-  FormBid *formBid = FormBid::instance();
+  BidDialog *bidDialog = BidDialog::instance();
 
   if (MaxGame == g86) {
     mMyGame = g86catch;
@@ -185,12 +185,12 @@ eGameBid HumanPlayer::makeFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerP
       || (m_model->optStalingrad && MaxGame == g61)) {
 	mMyGame = whist;
   } else {
-    formBid->disableBids();
-    FormBid::ActiveButtons buttons = FormBid::Pass | FormBid::Whist | FormBid::Score;
+    bidDialog->disableBids();
+    BidDialog::ActiveButtons buttons = BidDialog::Pass | BidDialog::Whist | BidDialog::Score;
     if (nGamerPass == 1 && MaxGame <= 81)
-        buttons |= FormBid::HalfWhist;
+        buttons |= BidDialog::HalfWhist;
     mMyGame = mDeskView->selectBid(buttons);
-    formBid->enableBids();
+    bidDialog->enableBids();
   }
   return mMyGame;
 }

@@ -517,14 +517,14 @@ void DeskView::MessageBox (const QString & text, const QString & caption) {
   mb.exec();
 }
 
-eGameBid DeskView::selectBid (FormBid::ActiveButtons buttons) {
-  FormBid *formBid = FormBid::instance();
-  formBid->_GamesType = undefined;
-  formBid->setActiveButtons(buttons);
+eGameBid DeskView::selectBid (BidDialog::ActiveButtons buttons) {
+  BidDialog *bidDialog = BidDialog::instance();
+  bidDialog->_GamesType = undefined;
+  bidDialog->setActiveButtons(buttons);
   do
-  	formBid->exec();
-  while (formBid->_GamesType == undefined);
-  return formBid->_GamesType;
+    bidDialog->exec();
+  while (bidDialog->_GamesType == undefined);
+  return bidDialog->_GamesType;
 }
 
 void DeskView::drawPlayerMessage (int player, const QString & msg, bool dim)

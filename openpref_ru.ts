@@ -2,6 +2,57 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="ru_RU">
 <context>
+    <name>BidDialog</name>
+    <message>
+        <source>Bidding</source>
+        <translation>Торги</translation>
+    </message>
+    <message>
+        <source>OpenPref</source>
+        <translation>OpenPref</translation>
+    </message>
+    <message>
+        <source>Do you really want to quit the game?</source>
+        <translation>Вы действительно хотите покинуть игру?</translation>
+    </message>
+    <message>
+        <source>no trump</source>
+        <translation>без козыря</translation>
+    </message>
+    <message>
+        <source>&amp;Misere</source>
+        <translation>&amp;Мизер</translation>
+    </message>
+    <message>
+        <source>&amp;Pass</source>
+        <translation>&amp;Пас</translation>
+    </message>
+    <message>
+        <source>&amp;Whist</source>
+        <translation>&amp;Вист</translation>
+    </message>
+    <message>
+        <source>&amp;HalfWhist</source>
+        <translation>По&amp;лвиста</translation>
+    </message>
+    <message>
+        <source>S&amp;core</source>
+        <translation>С&amp;чет</translation>
+    </message>
+    <message>
+        <source>Show game table with calculated scores</source>
+        <translation>Отображает пулю с рассчитанным счетом</translation>
+    </message>
+    <message>
+        <source>Without &amp;Three</source>
+        <translation>&amp;Без трех</translation>
+    </message>
+    <message>
+        <source>Cancel game with penalty of three untaken tricks. No whists are written</source>
+        <translation>Отменить игру с штрафом в три недобранные взятки. Висты не пишутся</translation>
+    </message>
+</context>
+<context>
     <name>DeskView</name>
     <message>
         <source>Choose whist type</source>
@@ -16,31 +67,31 @@
     <name>FormBid</name>
     <message>
         <source>Show game table with calculated scores</source>
-        <translation>Отображает пулю с рассчитанным счетом</translation>
+        <translation type="obsolete">Отображает пулю с рассчитанным счетом</translation>
     </message>
     <message>
         <source>&amp;Pass</source>
-        <translation>&amp;Пас</translation>
+        <translation type="obsolete">&amp;Пас</translation>
     </message>
     <message>
         <source>&amp;Whist</source>
-        <translation>&amp;Вист</translation>
+        <translation type="obsolete">&amp;Вист</translation>
     </message>
     <message>
         <source>&amp;Misere</source>
-        <translation>&amp;Мизер</translation>
+        <translation type="obsolete">&amp;Мизер</translation>
     </message>
     <message>
         <source>S&amp;core</source>
-        <translation>С&amp;чет</translation>
+        <translation type="obsolete">С&amp;чет</translation>
     </message>
     <message>
         <source>Without &amp;Three</source>
-        <translation>&amp;Без трех</translation>
+        <translation type="obsolete">&amp;Без трех</translation>
     </message>
     <message>
         <source>&amp;HalfWhist</source>
-        <translation>По&amp;лвиста</translation>
+        <translation type="obsolete">По&amp;лвиста</translation>
     </message>
     <message>
         <source>&amp;Halfwhist</source>
@@ -48,23 +99,38 @@
     </message>
     <message>
         <source>Bidding</source>
-        <translation>Торги</translation>
+        <translation type="obsolete">Торги</translation>
     </message>
     <message>
         <source>Cancel game with penalty of three untaken tricks. No whists are written</source>
-        <translation>Отменить игру с штрафом в три недобранные взятки. Висты не пишутся</translation>
+        <translation type="obsolete">Отменить игру с штрафом в три недобранные взятки. Висты не пишутся</translation>
     </message>
     <message>
         <source>no trump</source>
-        <translation>без козыря</translation>
+        <translation type="obsolete">без козыря</translation>
     </message>
     <message>
         <source>OpenPref</source>
-        <translation>OpenPref</translation>
+        <translation type="obsolete">OpenPref</translation>
     </message>
     <message>
         <source>Do you really want to quit the game?</source>
-        <translation>Вы действительно хотите покинуть игру?</translation>
+        <translation type="obsolete">Вы действительно хотите покинуть игру?</translation>
+    </message>
+</context>
+<context>
+    <name>GameLogModel</name>
+    <message>
+        <source>Show</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deal</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -296,6 +362,14 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     <message>
         <source>Players...</source>
         <translation>Игроки...</translation>
+    </message>
+    <message>
+        <source>Game Log...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;h2 align=center&gt;&amp;spades; &lt;font color=red&gt;&amp;diams;&lt;/font&gt; OpenPref </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -697,6 +771,13 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     </message>
 </context>
 <context>
+    <name>ScoreHistoryDialog</name>
+    <message>
+        <source>Score History</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ScoreWidget</name>
     <message>
         <source>Score</source>
@@ -724,6 +805,10 @@ See http://en.wikipedia.org/wiki/Preferans</source>
         <source>Updated Version of OpenPref Available</source>
         <comment>Indicates an updated OpenPref version is available</comment>
         <translation>Доступна новая версия OpenPref</translation>
+    </message>
+    <message>
+        <source>Remind Later</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

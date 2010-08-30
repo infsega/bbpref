@@ -69,8 +69,7 @@ MainWindow::MainWindow (bool fullScreen) : m_fullScreen(fullScreen)
   readSettings();
   doConnects();
   HintBar->showMessage(tr("Welcome to OpenPref!"));
-  FormBid *formBid = FormBid::instance(mDeskView);
-  formBid->hide();
+  BidDialog::instance(mDeskView)->hide();
 }
 
 
