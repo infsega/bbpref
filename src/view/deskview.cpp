@@ -521,9 +521,8 @@ eGameBid DeskView::selectBid (BidDialog::ActiveButtons buttons) {
   BidDialog *bidDialog = BidDialog::instance();
   bidDialog->_GamesType = undefined;
   bidDialog->setActiveButtons(buttons);
-  do
-    bidDialog->exec();
-  while (bidDialog->_GamesType == undefined);
+  bidDialog->exec();
+  Q_ASSERT(bidDialog->_GamesType != undefined);
   return bidDialog->_GamesType;
 }
 
