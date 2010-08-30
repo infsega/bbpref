@@ -295,6 +295,7 @@ void DeskView::setBackgroundColor(const QRgb color)
 
 void DeskView::drawIMove (QPainter &p) {
   int x, y;
+  Q_ASSERT(m_model->nCurrentStart.nValue >= 1 && m_model->nCurrentStart.nValue <= 3);
   switch (m_model->nCurrentStart.nValue) {
       case 1:
         x = width()/2-15;
@@ -307,10 +308,6 @@ void DeskView::drawIMove (QPainter &p) {
       case 3:
         x = width() - m_leftRightMargin - 20;
         y = m_topBottomMargin + CardHeight + 20;
-        break;
-      default:
-        qDebug() << "Invalid nCurrentStart.nValue =" << m_model->nCurrentStart.nValue;
-        x = y = -1;
         break;
   }
   p.drawPixmap(x, y, *mIMoveBmp);
