@@ -52,7 +52,7 @@ MainWindow::MainWindow (bool fullScreen) : m_fullScreen(fullScreen)
 {
   setWindowTitle("OpenPref");
   setWindowIcon(QIcon(":/pics/newgame.png"));
-  
+
   initMenuBar();
   mDeskView = 0;
   m_PrefModel = 0;
@@ -119,7 +119,7 @@ void MainWindow::initMenuBar () {
 
   fileMenu->addSeparator();
 
-  QAction *actOptions = fileMenu->addAction(toolicon, tr("&Options..."), this, SLOT(options()), Qt::CTRL+Qt::Key_P);
+  QAction *actOptions = fileMenu->addAction(toolicon, tr("&Options..."), this, SLOT(showOptions()), Qt::CTRL+Qt::Key_P);
   fileMenu->addSeparator();
   //actQuit = fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), qApp, SLOT(quit()), Qt::CTRL+Qt::Key_Q);
   fileMenu->addAction(exiticon, tr("&Quit"), this, SLOT(quitGame()), Qt::CTRL+Qt::Key_Q);
@@ -320,7 +320,7 @@ void MainWindow::readSettings () {
 }
 
 
-void MainWindow::options () {
+void MainWindow::showOptions () {
   int oldBackgroundType = mDeskView->backgroundType();
   QRgb oldBackgroundColor = mDeskView->backgroundColor();
   bool oldPrefClub = mDeskView->optPrefClub;

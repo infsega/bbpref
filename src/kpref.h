@@ -46,7 +46,7 @@ public slots:
   void saveFile ();
   void helpAbout ();
   void helpRules ();
-  void options ();
+  void showOptions ();
 
   bool quitGame ();
 
