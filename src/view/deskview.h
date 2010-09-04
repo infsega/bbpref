@@ -55,6 +55,8 @@ public:
   void setBackgroundType(const int type);
   QRgb backgroundColor() const { return m_backgroundColor; }
   void setBackgroundColor(const QRgb color);
+  int takeAnimQuality() const { return m_takeQuality; }
+  void setTakeQuality(const int q) { m_takeQuality = q; }
 
   void readSettings();
   void writeSettings() const;
@@ -132,6 +134,7 @@ private:
   int m_backgroundType;
   QRgb m_backgroundColor;
   QBrush m_deskBackground;
+  int m_takeQuality;
 };
 
 

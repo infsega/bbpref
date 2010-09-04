@@ -219,7 +219,8 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_
  optDealAnim(true),
  optTakeAnim(true),
  optPrefClub(false),
- m_backgroundColor(qRgb(0,128,0))
+ m_backgroundColor(qRgb(0,128,0)),
+ m_takeQuality(2)
 {
   setAttribute(Qt::WA_OpaquePaintEvent);
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -690,7 +691,8 @@ void DeskView::inGameCardLeftTop (int mCardNo, int &left, int &top)
 
 void DeskView::animateTrick (int plrNo, Card *cAni[])
 {
-  const int steps = 20;
+  const int steps = 5 * (1 << m_takeQuality);
+  qDebug() << steps;
   int left, top;
 
   getLeftTop(plrNo, left, top);
@@ -814,6 +816,7 @@ void DeskView::readSettings()
     m_backgroundColor = st.value("background_color", qRgb(0,128,0)).toUInt();
     optDealAnim = st.value("animdeal", true).toBool();
     optTakeAnim = st.value("animtake", true).toBool();
+    m_takeQuality = st.value("takequality", 2).toInt();
     optDebugHands = st.value("debughand", false).toBool();
     optPrefClub = st.value("prefclub", false).toBool();
 }
@@ -827,4 +830,5 @@ void DeskView::writeSettings() const
     st.setValue("animdeal", optDealAnim);
     st.setValue("animtake", optTakeAnim);
     st.setValue("debughand", optDebugHands);
+    st.setValue("takequality", m_takeQuality);
 }

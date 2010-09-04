@@ -331,6 +331,8 @@ void MainWindow::showOptions () {
   dlg->setBackgroundColor(mDeskView->backgroundColor());
   dlg->cbAnimDeal->setChecked(mDeskView->optDealAnim);
   dlg->cbAnimTake->setChecked(mDeskView->optTakeAnim);
+  dlg->hsTakeQuality->setEnabled(mDeskView->optTakeAnim);
+  dlg->hsTakeQuality->setValue(mDeskView->takeAnimQuality());
   dlg->cbDebugHands->setChecked(mDeskView->optDebugHands);
   dlg->cbPrefClub->setChecked(mDeskView->optPrefClub);
   
@@ -339,6 +341,7 @@ void MainWindow::showOptions () {
     mDeskView->setBackgroundColor(dlg->backgroundColor());
     mDeskView->optDealAnim = dlg->cbAnimDeal->isChecked();
     mDeskView->optTakeAnim = dlg->cbAnimTake->isChecked();
+    mDeskView->setTakeQuality(dlg->hsTakeQuality->value());
     mDeskView->optPrefClub = dlg->cbPrefClub->isChecked();
     mDeskView->optDebugHands = dlg->cbDebugHands->isChecked();
   }

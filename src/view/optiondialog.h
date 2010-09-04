@@ -45,6 +45,7 @@ public:
 private slots:
   void changeTexture(bool);
   void chooseColor();
+  void toggleTakeQuality(int);
 
 private:
   QRgb m_color;

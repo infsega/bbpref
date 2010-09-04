@@ -30,6 +30,7 @@ OptionDialog::OptionDialog (QWidget *parent) : QDialog(parent), m_color(qRgb(0,1
   connect(rbTexture0, SIGNAL(toggled(bool)), this, SLOT(changeTexture(bool)));
   connect(rbTexture1, SIGNAL(toggled(bool)), this, SLOT(changeTexture(bool)));
   connect(rbTexture2, SIGNAL(toggled(bool)), this, SLOT(changeTexture(bool)));
+  connect(cbAnimTake, SIGNAL(stateChanged(int)), this, SLOT(toggleTakeQuality(int)));
 }
 
 int OptionDialog::backgroundType() const
@@ -97,4 +98,9 @@ void OptionDialog::chooseColor()
   if (color.isValid() && color.rgb() != m_color)
     m_color = color.rgb();
   changeTexture(true);
+}
+
+void OptionDialog::toggleTakeQuality(int checked)
+{
+  hsTakeQuality->setEnabled(checked == Qt::Checked);
 }
