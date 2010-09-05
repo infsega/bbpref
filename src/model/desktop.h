@@ -28,7 +28,11 @@
 #include "cardlist.h"
 #include "ncounter.h"
 
+const char * sGameName (eGameBid game);
+
 struct GameLogEntry {
+    eGameBid game;
+    int player;
     int score[3];
     int pool[3];
     int mountain[3];

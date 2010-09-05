@@ -1,8 +1,12 @@
 #include <QtCore/QAbstractTableModel>
+#include <QtGui/QApplication>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>
+#include <QtGui/QStyledItemDelegate>
+#include <QtGui/QStyleOptionButton>
+#include <QtGui/QPainter>
 #include <QDebug>
 
 #include "scorehistory.h"
@@ -32,7 +36,7 @@ namespace {
     int columnCount(const QModelIndex &parent = QModelIndex()) const
     {
       Q_UNUSED(parent)
-      return 5;
+      return 6;
     }
 
     QVariant data(const QModelIndex &index, int role) const
@@ -45,12 +49,24 @@ namespace {
       } else if (role == Qt::DisplayRole) {
         switch(index.column()) {
         case 0:
+          {
+          QString s(sGameName(m_log.at(index.row()).game));
+//          if (s.indexOf("\1d") >= 0 || s.indexOf("\1h") >= 0) textRGB = qRgb(255, 0, 0);
+          s.replace("\1s", QChar((ushort)0x2660));
+          s.replace("\1c", QChar((ushort)0x2663));
+          s.replace("\1d", QChar((ushort)0x2666));
+          s.replace("\1h", QChar((ushort)0x2665));
+          s = s.trimmed();
+          return s;
+          }
         case 1:
         case 2:
-          return QString::number(m_log.at(index.row()).score[index.column()]);
         case 3:
-          return QString::number(m_log.at(index.row()).time, 'f', 1);
+          return QString::number(m_log.at(index.row()).score[index.column()-1])
+              + (index.column() == m_log.at(index.row()).player ? "*" : "");
         case 4:
+          return QString::number(m_log.at(index.row()).time, 'f', 1);
+        case 5:
           return tr("Show");
         }
       } else {
@@ -74,23 +90,53 @@ namespace {
         }
       }
 
+      if (role == Qt::SizeHintRole && orientation == Qt::Horizontal
+          && section == 5) {
+        return QApplication::fontMetrics().boundingRect("##Deal##").size();
+      }
+
       if (role != Qt::DisplayRole)
         return QVariant();
 
       if (orientation == Qt::Horizontal) {
         switch (section) {
         case 0:
+          return tr("Game");
         case 1:
         case 2:
-          return m_model->player(section+1)->nick();
         case 3:
-          return tr("Time");
+          return m_model->player(section)->nick();
         case 4:
+          return tr("Time");
+        case 5:
           return tr("Deal");
         }
       } else {
         return QVariant();
       }
+    }
+  };
+
+  class DealDelegate : public QStyledItemDelegate
+  {
+  public:
+    void paint(QPainter *painter, const QStyleOptionViewItem &option,
+                    const QModelIndex &index) const
+    {
+      Q_UNUSED(index)
+      QStyleOptionButton opt;
+      opt.rect = option.rect;
+//      opt.rect = painter->boundingRect(option.rect, Qt::AlignHCenter, "Deal");
+      //opt.rect = option.rect.united(painter->boundingRect(option.rect, Qt::AlignHCenter, "##Deal##"));
+      opt.text = "Deal";
+//      opt.features =
+//      opt.textVisible = true;
+      QApplication::style()->drawControl(QStyle::CE_PushButton, &opt, painter);
+    }
+
+    QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
+    {
+      return QApplication::fontMetrics().boundingRect("##Deal##").size();
     }
   };
 }
@@ -100,10 +146,11 @@ ScoreHistoryDialog::ScoreHistoryDialog(PrefModel *model, QWidget *parent, Qt::Wi
 {
     setWindowTitle(tr("Score History"));
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->setSpacing(0);
+    layout->setSpacing(5);
     layout->setContentsMargins(0,0,0,0);
     m_table = new QTableView(this);
     m_table->setModel(new GameLogModel(model, this));
+    m_table->setItemDelegateForColumn(5, new DealDelegate);
     connect(m_table, SIGNAL(clicked(QModelIndex)), this, SLOT(showDeal(QModelIndex)));
     layout->addWidget(m_table);
     setLayout(layout);

@@ -53,7 +53,8 @@ typedef struct {
 
 static QHash<int, const char *> gameNames;
 
-static const char * sGameName (eGameBid game) {
+const char * sGameName (eGameBid game)
+{
   if(gameNames.isEmpty()) {
   gameNames[g86catch] = " ";
   gameNames[raspass] = "pass-out";
@@ -896,6 +897,8 @@ LabelRecordOnPaper:
 
     if(m_keepLog) {
         GameLogEntry entry;
+        entry.game = m_currentGame;
+        entry.player = mPlayerActive;
         for (int f=1; f<=3; f++) {
             const Player *plr = player(f);
             entry.score[f-1] = plr->mScore.score();
