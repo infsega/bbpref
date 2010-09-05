@@ -1371,8 +1371,8 @@ Card *AiPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player 
 
 ///////////////////////////////////////////////////////////////////////////////
 // Pass or Whist or Halfwhist
-eGameBid AiPlayer::makeFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerPass) {
-  Q_UNUSED(nGamerPass)
+eGameBid AiPlayer::makeFinalBid (eGameBid MaxGame, int HaveAWhist, int nPlayerPass)
+{
   eGameBid Answer;
   eGameBid MyMaxGame = moveCalcDrop();
   int vz = MyMaxGame/10;
@@ -1391,16 +1391,26 @@ eGameBid AiPlayer::makeFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerPas
   }
 
   
-  if (HaveAWhist == gtPass)
-	  Answer = (vz > gameWhistsMin(MaxGame)) ? whist : gtPass;
-  else
+  if (HaveAWhist == gtPass) {
+    if (MaxGame < g81) {
+      Answer = (vz >= m_model->gameWhists(MaxGame)/2) ? whist : gtPass;
+    } else {
+      Answer = (vz >= m_model->gameWhists(MaxGame)) ? whist : gtPass;
+    }
+  } else {
+    if (MaxGame < g81) {
   	  Answer = (vz > m_model->gameWhists(MaxGame)) ? whist : gtPass;
+    } else if (MaxGame < g91) {
+      Answer = (vz > m_model->gameWhists(MaxGame) && qrand()%8 == 0) ? whist : gtPass;
+    } else
+      Answer = gtPass;
+  }
       
   //Answer = (HaveAWhist != whist && vz >= gameWhistsMin(MaxGame)) ? whist : gtPass ;
   //if (HaveAWhist == gtPass && vz < gameWhistsMin(MaxGame)) Answer = gtPass;
 
 myGame:  
-  if ((Answer == gtPass) && (nGamerPass == 1) && MaxGame <= 81)
+  if ((Answer == gtPass) && (nPlayerPass == 1) && MaxGame <= 81)
   	Answer = halfwhist;
 	
   mMyGame = Answer;
@@ -1759,9 +1769,18 @@ void AiPlayer::makestatfill (int nCards, int maxmin) {
 */
 
 bool AiPlayer::chooseClosedWhist () {
-	//tSuitProbs countGameTricks((eSuit)f, 1)
+  if(m_model->currentGame() < g81) {
+    //tSuitProbs countGameTricks((eSuit)f, 1)
 	if (qrand()%4 == 0)
 		return true;
 	else
 		return false;
+  } else if(m_model->currentGame() < g91) {
+    if (qrand()%8 == 0)
+        return true;
+    else
+        return false;
+  } else {
+    return false;
+  }
 }
