@@ -29,8 +29,13 @@
 #include "prfconst.h"
 #include "card.h"
 
-
-// doesn't own the cards
+/**
+ * @class CardList cardlist.h
+ * @brief Wrapper for QList<Card>
+ *
+ * This class provides lists of cards with set of sonvenience functions
+ * List doesn't own Card pointers, they will not be deleted on list destruction
+ */
 class CardList {
 public:
   CardList ();
