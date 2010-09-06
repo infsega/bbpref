@@ -30,6 +30,11 @@
 
 const char * sGameName (eGameBid game);
 
+/**
+ * @struct GameLogEntry
+ *
+ * Keeps information about all played rounds
+ */
 struct GameLogEntry {
     eGameBid game;
     int player;
@@ -45,6 +50,13 @@ struct GameLogEntry {
 class DeskView;
 class Player;
 
+/**
+ * @class PrefModel desktop.h
+ * @brief Model of preferans game
+ *
+ * Manages all game process but doesn't respond for any visual representation of
+ * game events
+ */
 class PrefModel : public QObject {
   Q_OBJECT
 

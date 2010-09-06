@@ -32,6 +32,9 @@ typedef struct {
   int sum;
 } tSuitProbs;
 
+/**
+ * @class AiPlayer aiplayer.h
+ */
 class AiPlayer : public Player {
 public:
   AiPlayer(int aMyNumber, PrefModel *model);

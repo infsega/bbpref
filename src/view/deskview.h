@@ -43,6 +43,13 @@ class Card;
 class PrefModel;
 class DeskViewPrivate;
 
+/**
+ * @class DeskView deskview.h
+ * @brief Widget for visualization of preferans game
+ *
+ * Provides a self-contained widget capabla of preferans game visualization.
+ * Works in pair with PrefModel.
+ */
 class DeskView : public QWidget {
   Q_OBJECT
 public:

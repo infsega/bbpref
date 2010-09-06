@@ -33,6 +33,14 @@
 
 class DeskView;
 
+/**
+ * @class BidDialog formbid.h
+ * @brief Helper dialog for bidding
+ *
+ * Provides a dialog for getting bidding-related actions from human player
+ * Set of available choices may be configured using enableBids, disableBids,
+ * disableLessThan, and setActiveButtons
+ */
 class BidDialog : public QDialog  {
  Q_OBJECT
 

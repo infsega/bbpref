@@ -29,6 +29,13 @@ class PrefModel;
 class DeskView;
 class UpdateCheck;
 
+/**
+ * @class MainWindow kpref.h
+ * @brief Main window of OpenPref
+ *
+ * Draws main window, creates PrefModel and DeskView and connects them
+ * to helper dialogs
+ */
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
