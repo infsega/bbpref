@@ -889,6 +889,7 @@ LabelRecordOnPaper:
       //  
       for (int f = 1; f <= 3; f++) {
         Player *plr = player(f);
+        /// @todo why we need this tmplist?
         tmplist[f-1] = plr->mCards;
         plr->mCards = plr->mCardsOut;
         plr->setInvisibleHand(false);
@@ -901,6 +902,7 @@ LabelRecordOnPaper:
         entry.player = mPlayerActive;
         for (int f=1; f<=3; f++) {
             const Player *plr = player(f);
+            entry.takes[f-1] = plr->tricksTaken();
             entry.score[f-1] = plr->mScore.score();
             entry.mountain[f-1] = plr->mScore.mountain();
             entry.pool[f-1] = plr->mScore.pool();
@@ -908,8 +910,8 @@ LabelRecordOnPaper:
             entry.rightWhists[f-1] = plr->mScore.rightWhists();
 //            entry.cardList[f-1] = tmplist[f-1];
             entry.time = elapsedTime / 1000.0;
-            for (int i=0; i<tmplist[f-1].size(); i++) {
-              const Card *c = tmplist[f-1].at(i);
+            for (int i=0; i<plr->mCards.size(); i++) {
+              const Card *c = plr->mCards.at(i);
               if(c)
                 entry.cardList[f-1] << *c;
             }

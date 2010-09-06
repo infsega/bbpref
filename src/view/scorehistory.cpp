@@ -3,10 +3,10 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
-#include <QtGui/QPushButton>
 #include <QtGui/QStyledItemDelegate>
 #include <QtGui/QStyleOptionButton>
 #include <QtGui/QPainter>
+#include <QtGui/QMessageBox>
 #include <QDebug>
 
 #include "scorehistory.h"
@@ -62,8 +62,8 @@ namespace {
         case 1:
         case 2:
         case 3:
-          return QString::number(m_log.at(index.row()).score[index.column()-1])
-              + (index.column() == m_log.at(index.row()).player ? "*" : "");
+            return QString::number(m_log.at(index.row()).takes[index.column()-1])
+                + (index.column() == m_log.at(index.row()).player ? "*" : "");
         case 4:
           return QString::number(m_log.at(index.row()).time, 'f', 1);
         case 5:
@@ -77,7 +77,7 @@ namespace {
     Qt::ItemFlags flags(const QModelIndex &index) const
     {
       Q_UNUSED(index)
-      return Qt::ItemIsEnabled;//QAbstractItemModel::flags(index);
+      return Qt::ItemIsEnabled;
     }
 
     QVariant headerData(int section, Qt::Orientation orientation,
@@ -88,11 +88,6 @@ namespace {
         if (orientation == Qt::Vertical) {
           return Qt::AlignHCenter; // XYZ coordinates
         }
-      }
-
-      if (role == Qt::SizeHintRole && orientation == Qt::Horizontal
-          && section == 5) {
-        return QApplication::fontMetrics().boundingRect("##Deal##").size();
       }
 
       if (role != Qt::DisplayRole)
@@ -116,30 +111,15 @@ namespace {
       }
     }
   };
-
-  class DealDelegate : public QStyledItemDelegate
-  {
-  public:
-    void paint(QPainter *painter, const QStyleOptionViewItem &option,
-                    const QModelIndex &index) const
-    {
-      Q_UNUSED(index)
-      QStyleOptionButton opt;
-      opt.rect = option.rect;
-//      opt.rect = painter->boundingRect(option.rect, Qt::AlignHCenter, "Deal");
-      //opt.rect = option.rect.united(painter->boundingRect(option.rect, Qt::AlignHCenter, "##Deal##"));
-      opt.text = "Deal";
-//      opt.features =
-//      opt.textVisible = true;
-      QApplication::style()->drawControl(QStyle::CE_PushButton, &opt, painter);
-    }
-
-    QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-    {
-      return QApplication::fontMetrics().boundingRect("##Deal##").size();
-    }
-  };
 }
+
+
+DealButton::DealButton(int rowNum, const QString & text, QWidget * parent)
+  : m_rowNum(rowNum), QPushButton(text, parent)
+{
+  connect(this, SIGNAL(clicked()), this, SLOT(doClick()));
+}
+
 
 ScoreHistoryDialog::ScoreHistoryDialog(PrefModel *model, QWidget *parent, Qt::WindowFlags f) :
     QDialog(parent, f), m_model(model)
@@ -149,9 +129,13 @@ ScoreHistoryDialog::ScoreHistoryDialog(PrefModel *model, QWidget *parent, Qt::Wi
     layout->setSpacing(5);
     layout->setContentsMargins(0,0,0,0);
     m_table = new QTableView(this);
+    m_table->setAlternatingRowColors(true);
     m_table->setModel(new GameLogModel(model, this));
-    m_table->setItemDelegateForColumn(5, new DealDelegate);
-    connect(m_table, SIGNAL(clicked(QModelIndex)), this, SLOT(showDeal(QModelIndex)));
+    for (int i=0; i<model->gameLog().size(); i++) {
+      DealButton *btnDeal = new DealButton(i, tr("Deal #") + QString::number(i+1), m_table);
+      m_table->setIndexWidget(m_table->model()->index(i, 5), btnDeal);
+      connect(btnDeal, SIGNAL(clicked(int)), this, SLOT(showDeal(int)));
+    }
     layout->addWidget(m_table);
     setLayout(layout);
 }
@@ -167,8 +151,18 @@ void ScoreHistoryDialog::showEvent(QShowEvent *event)
   resize(dialogSize);
 }
 
-void ScoreHistoryDialog::showDeal(const QModelIndex &index)
+void ScoreHistoryDialog::showDeal(const int row)
 {
-  foreach(const Card &c, m_model->gameLog().at(index.row()).cardList[0])
-    qDebug() << c.toString();
+  Q_ASSERT(row < m_model->gameLog().size());
+  QString output;
+  for (int i=1; i<=3; i++) {
+    output += QString("%1").arg(m_model->player(i)->nick(), -12);
+    output += ": ";
+    foreach(const Card &c, m_model->gameLog().at(row).cardList[i-1]) {
+      output += c.toUniString();
+      output += " ";
+    }
+    output += "\n";
+  }
+  QMessageBox::about(0, tr("Deal #") + QString::number(row + 1), output);
 }
