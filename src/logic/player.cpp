@@ -30,8 +30,8 @@
 #define NEW_SUIT_OFFSET     ((mDeskView->CardWidth)+8)
 #define CLOSED_CARD_OFFSET  ((mDeskView->CardWidth)*0.55)
 
-Player::Player (int aMyNumber, PrefModel *model) : mDeskView(model->view()), m_model(model),
-                        mIStart(false), mPlayerNo(aMyNumber), mScore(model) {
+Player::Player (int number, PrefModel *model) : mDeskView(model->view()), m_model(model),
+                        mIStart(false), mPlayerNo(number), mScore(model) {
   internalInit();
 }
 

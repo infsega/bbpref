@@ -36,7 +36,7 @@ class DeskView;
  */
 class Player {
 public:
-  Player (int aMyNumber, PrefModel *model);
+  Player (int number, PrefModel *model);
   //Player (const Player &pl);
   virtual ~Player ();
 
@@ -46,7 +46,7 @@ public:
   virtual bool isHuman() const { return false; }
 
   /// Factory method, creates player of the same subclass as current
-  virtual Player * create(int aMyNumber, PrefModel *model) = 0;
+  virtual Player * create(int number, PrefModel *model) = 0;
 
   //Player &operator = (const Player &pl);
 
