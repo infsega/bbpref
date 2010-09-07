@@ -38,6 +38,7 @@ const char * sGameName (eGameBid game);
 struct GameLogEntry {
     eGameBid game;
     int player;
+    bool whist[3];
     int takes[3];
     int score[3];
     int pool[3];

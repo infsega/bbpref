@@ -902,6 +902,7 @@ LabelRecordOnPaper:
         entry.player = mPlayerActive;
         for (int f=1; f<=3; f++) {
             const Player *plr = player(f);
+            entry.whist[f-1] = (plr->myGame() == whist);
             entry.takes[f-1] = plr->tricksTaken();
             entry.score[f-1] = plr->mScore.score();
             entry.mountain[f-1] = plr->mScore.mountain();

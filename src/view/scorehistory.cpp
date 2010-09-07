@@ -63,7 +63,8 @@ namespace {
         case 2:
         case 3:
             return QString::number(m_log.at(index.row()).takes[index.column()-1])
-                + (index.column() == m_log.at(index.row()).player ? "*" : "");
+                + (index.column() == m_log.at(index.row()).player ? "*" : "")
+                + (m_log.at(index.row()).whist[index.column()-1] ? tr("(w)") : "");
         case 4:
           return QString::number(m_log.at(index.row()).time, 'f', 1);
         case 5:
