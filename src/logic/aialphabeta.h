@@ -25,6 +25,9 @@
 
 #include "aiplayer.h"
 
+/**
+ * @class AlphaBetaPlayer aialphabeta.h
+ */
 class AlphaBetaPlayer : public AiPlayer {
 public:
   AlphaBetaPlayer(int aMyNumber, PrefModel *model);

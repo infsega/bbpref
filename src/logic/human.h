@@ -27,6 +27,10 @@
 #include "desktop.h"
 #include "deskview.h"
 
+/**
+ * @class HumanPlayer human.h
+ * @brief Represents player managed by GUI user
+ */
 class HumanPlayer : public Player {
 public:
   HumanPlayer(int aMyNumber, PrefModel *model);

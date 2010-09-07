@@ -25,6 +25,12 @@
 class PrefModel;
 class QPixmap;
 
+/**
+ * @class ScoreWidget scorewidget.h
+ * @brief Visual representation of score board
+ *
+ * @sa ScoreBoard
+ */
 class ScoreWidget : public QDialog
 {
   public:

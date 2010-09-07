@@ -31,6 +31,16 @@
 typedef QList<int>  QIntList;
 
 class PrefModel;
+
+/**
+ * @class ScoreBoard scoreboard.h
+ * @brief Representation of player's scores
+ *
+ * Collects information about game results, calculates player scores, and provides keeps this data
+ * for visualization
+ *
+ * @sa ScoreWidget
+ */
 class ScoreBoard {
 public:
   ScoreBoard (PrefModel *model);

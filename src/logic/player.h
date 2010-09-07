@@ -29,15 +29,23 @@
 
 class DeskView;
 
+/**
+ * @class Player player.h
+ * @brief Base class for all players
+ *
+ */
 class Player {
 public:
   Player (int aMyNumber, PrefModel *model);
   //Player (const Player &pl);
   virtual ~Player ();
 
+  /// String identifier of concrete player
   virtual QString type() const = 0;
+  /// @return true if this player object interacts with GUI user
   virtual bool isHuman() const { return false; }
 
+  /// Factory method, creates player of the same subclass as current
   virtual Player * create(int aMyNumber, PrefModel *model) = 0;
 
   //Player &operator = (const Player &pl);
@@ -53,13 +61,17 @@ public:
 
   void dealCard (Card *aCard) { mCards.insert(aCard); } // get dealed card
 
-  virtual Card *makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) = 0; //move
-  virtual eGameBid makeBid (eGameBid lMove, eGameBid rMove) = 0; //
+  /// Player's decision on move in the game
+  virtual Card *makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) = 0;
+  /// Player's decision on move in the bidding
+  virtual eGameBid makeBid (eGameBid lMove, eGameBid rMove) = 0;
+
   virtual eGameBid makeFinalBid (eGameBid MaxGame, int HaveAWhist, int nGamerWhist) = 0; // после получения игроком прикупа -- пасс или вист
   virtual eGameBid dropForGame () = 0; // сброс для игры
   virtual eGameBid dropForMisere () = 0; // сброс для мизера
   virtual void returnDrop (); // вернуть сброс
 
+  /// Player's decision on open or closed whist
   virtual bool chooseClosedWhist () = 0;
 
   /// @todo Move to view delegate

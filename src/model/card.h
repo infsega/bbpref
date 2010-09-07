@@ -39,7 +39,11 @@ const int FACE_QUEEN = 12;
 const int FACE_KING  = 13;
 const int FACE_ACE   = 14;
 
-
+/**
+ * @class Card card.h
+ * @brief Representation of card
+ *
+ */
 class Card {
 public:
   explicit Card ();
