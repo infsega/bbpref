@@ -63,7 +63,7 @@ eGameBid HumanPlayer::dropForGame ()
 
   BidDialog *bidDialog = BidDialog::instance();
   bidDialog->enableBids();
-  bidDialog->disableLessThan(mMyGame);
+  bidDialog->disableLessThan(m_game);
   BidDialog::ActiveButtons buttons = BidDialog::Score;
   if (m_model->optWithoutThree)
     buttons |= BidDialog::WithoutThree;
@@ -83,7 +83,7 @@ eGameBid HumanPlayer::dropForGame ()
     Q_ASSERT(tmpGamesType != 1);
   } while (tmpGamesType <= 1);
   if ( tmpGamesType != withoutThree)
-  	mMyGame = tmpGamesType;
+  	m_game = tmpGamesType;
 
   bidDialog->enableBids();
   mWaitingForClick = false;
@@ -112,7 +112,7 @@ eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove)
       bidDialog->disableLessThan(qMax((eGameBid)succBid(lMove), (eGameBid)succBid(rMove)));
   }
   BidDialog::ActiveButtons buttons = BidDialog::Pass | BidDialog::Score;
-  if (mMyGame == undefined)
+  if (m_game == undefined)
     buttons |= BidDialog::Misere;
 
   do {
@@ -129,10 +129,10 @@ eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove)
       mDeskView->drawBidBoard();
     }
   } while (tmpGamesType <= 1);
-  mMyGame = tmpGamesType;
+  m_game = tmpGamesType;
   mWaitingForClick = false;
   bidDialog->enableBids();
-  return mMyGame;
+  return m_game;
 }
 
 
@@ -180,19 +180,19 @@ eGameBid HumanPlayer::makeFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerP
   BidDialog *bidDialog = BidDialog::instance();
 
   if (MaxGame == g86) {
-    mMyGame = g86catch;
+    m_game = g86catch;
   } else if ((!m_model->opt10Whist && MaxGame>=101 && MaxGame<=105)
       || (m_model->optStalingrad && MaxGame == g61)) {
-	mMyGame = whist;
+	m_game = whist;
   } else {
     bidDialog->disableBids();
     BidDialog::ActiveButtons buttons = BidDialog::Pass | BidDialog::Whist | BidDialog::Score;
     if (nGamerPass == 1 && MaxGame <= 81)
         buttons |= BidDialog::HalfWhist;
-    mMyGame = mDeskView->selectBid(buttons);
+    m_game = mDeskView->selectBid(buttons);
     bidDialog->enableBids();
   }
-  return mMyGame;
+  return m_game;
 }
 
 

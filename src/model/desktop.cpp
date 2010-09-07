@@ -273,24 +273,24 @@ Card *PrefModel::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
   // 1. Current player is not human
   // Human's move if current he whists whith open cards or catches misere, and current player
   // passes or catches misere
-  if (((player(1)->myGame() == whist && !m_closedWhist) || player(1)->myGame() == g86catch) &&
-      !curPlr->isHuman() && (curPlr->myGame() == gtPass || curPlr->myGame() == g86catch)) {
+  if (((player(1)->game() == whist && !m_closedWhist) || player(1)->game() == g86catch) &&
+      !curPlr->isHuman() && (curPlr->game() == gtPass || curPlr->game() == g86catch)) {
     plr = player(1)->create(nCurrentMove.nValue, this);
   }
 
   // 2. Current player passes
   // if AI whists with open cards, it makes move instead of human or other AI
-  else if (curPlr->myGame() == gtPass && !m_closedWhist) {
-    if (player(2)->myGame() == whist) {
+  else if (curPlr->game() == gtPass && !m_closedWhist) {
+    if (player(2)->game() == whist) {
       plr = player(2)->create(nCurrentMove.nValue, this);
     }
-    else if (player(3)->myGame() == whist) {
+    else if (player(3)->game() == whist) {
       plr = player(3)->create(nCurrentMove.nValue, this);
     }
   #ifndef QT_NO_DEBUG
     else
     {      
-      qDebug() << player(1)->myGame() << player(2)->myGame() << player(3)->myGame();
+      qDebug() << player(1)->game() << player(2)->game() << player(3)->game();
       qFatal("Something went wrong!");
     }
   #endif
@@ -610,7 +610,7 @@ void PrefModel::runGame () {
 	  // who made maximal bid
       for (int i = 1; i <= 3; i++) {
         Player *currentPlayer = player(i);
-        if (currentPlayer->myGame() == playerBids[0]) {
+        if (currentPlayer->game() == playerBids[0]) {
           QString gnS(sGameName(playerBids[0]));
           gnS.prepend("game: ");
           gnS += "; player: ";
@@ -651,7 +651,7 @@ void PrefModel::runGame () {
 
           // throw away
           eGameBid maxBid = m_currentGame;
-		  if (currentPlayer->myGame() != g86) {		//  not misere
+          if (currentPlayer->game() != g86) {		//  not misere
             // not misere
             nCurrentMove.nValue = i;
             mDeskView->draw();
@@ -692,7 +692,7 @@ void PrefModel::runGame () {
 
         if (m_currentGame == withoutThree) {
             m_currentGame = maxBid;
-			currentPlayer->gotPassPassTricks(gameTricks(currentPlayer->myGame())-3);
+            currentPlayer->gotPassPassTricks(gameTricks(currentPlayer->game())-3);
             dlogf("clean out!\n");
             goto LabelRecordOnPaper;
 		}
@@ -700,7 +700,7 @@ void PrefModel::runGame () {
           // pass or whist?
           ++passOrWhistPlayersCounter;
           PassOrVistPlayers = player(passOrWhistPlayersCounter);
-          PassOrVistPlayers->setMyGame(undefined);
+          PassOrVistPlayers->setGame(undefined);
           
 
           // choice of the first player
@@ -712,10 +712,10 @@ void PrefModel::runGame () {
 			if (firstWhistPlayer != 1) mDeskView->mySleep(2);
 		  }
           PassOrVist = PassOrVistPlayers->makeFinalBid(m_currentGame, whist, nPassCounter);
-          if (PassOrVistPlayers->myGame() == gtPass) {
+          if (PassOrVistPlayers->game() == gtPass) {
             nPassCounter++;
             player(passOrWhistPlayersCounter)->setMessage(tr("pass"));
-          } else if (PassOrVistPlayers->myGame() == g86catch)
+          } else if (PassOrVistPlayers->game() == g86catch)
             player(passOrWhistPlayersCounter)->setMessage("");
 		  else
 			player(passOrWhistPlayersCounter)->setMessage(tr("whist"));
@@ -728,26 +728,26 @@ void PrefModel::runGame () {
           mPlayerHi = secondWhistPlayer;
 		  mDeskView->draw(false);
 		  PassOrVistPlayers = player(passOrWhistPlayersCounter);
-          PassOrVistPlayers->setMyGame(undefined);
+          PassOrVistPlayers->setGame(undefined);
           if ((m_currentGame != g86) && !(!opt10Whist && m_currentGame>=101 && m_currentGame<=105)) {
 			player(passOrWhistPlayersCounter)->setMessage(tr("thinking..."));
 			mDeskView->draw(false);
 			if (secondWhistPlayer != 1) mDeskView->mySleep(2);
 		  }
           PassOrVistPlayers->makeFinalBid(m_currentGame, PassOrVist, nPassCounter);
-          if (PassOrVistPlayers->myGame() == gtPass) {
+          if (PassOrVistPlayers->game() == gtPass) {
             nPassCounter++;
             player(passOrWhistPlayersCounter)->setMessage(tr("pass"));
-          } else if (PassOrVistPlayers->myGame() == g86catch)
+          } else if (PassOrVistPlayers->game() == g86catch)
             player(passOrWhistPlayersCounter)->setMessage("");
-		  else if (PassOrVistPlayers->myGame() == halfwhist) 
+          else if (PassOrVistPlayers->game() == halfwhist)
 			player(passOrWhistPlayersCounter)->setMessage(tr("half of whist"));
 		  else
 			player(passOrWhistPlayersCounter)->setMessage(tr("whist"));
 		  mDeskView->draw(false);
 
 		  // if halfwhist, choice of the first player again
-		  if (player(secondWhistPlayer)->myGame() == halfwhist) {
+          if (player(secondWhistPlayer)->game() == halfwhist) {
 			--passOrWhistPlayersCounter;
 			mPlayerHi = firstWhistPlayer;
 			PassOrVistPlayers = player(firstWhistPlayer);
@@ -755,12 +755,12 @@ void PrefModel::runGame () {
 			mDeskView->draw(false);			
 			if (firstWhistPlayer != 1) mDeskView->mySleep(2);
             PassOrVist = PassOrVistPlayers->makeFinalBid(m_currentGame, gtPass, 0);	// no more halfwhists!
-          	if (PassOrVistPlayers->myGame() == gtPass) {
+            if (PassOrVistPlayers->game() == gtPass) {
                 player(firstWhistPlayer)->setMessage(tr("pass"));
           	}
 		  	else {
 				player(firstWhistPlayer)->setMessage(tr("whist"));
-				player(secondWhistPlayer)->setMyGame(gtPass);
+                player(secondWhistPlayer)->setGame(gtPass);
 			}
 			mDeskView->draw(false);
 		  }
@@ -781,9 +781,9 @@ void PrefModel::runGame () {
           dlogS(gnS);
           //!DUMP OTHERS!
 
-      if (player(secondWhistPlayer)->myGame() == halfwhist) {
-        currentPlayer->gotPassPassTricks(gameTricks(currentPlayer->myGame()));
-        int n = gameWhists(currentPlayer->myGame());
+      if (player(secondWhistPlayer)->game() == halfwhist) {
+        currentPlayer->gotPassPassTricks(gameTricks(currentPlayer->game()));
+        int n = gameWhists(currentPlayer->game());
         Q_ASSERT(n > 1);  // Half whist on game >= 8 is illegal
         player(secondWhistPlayer)->gotPassPassTricks(n/2);
         dlogf("halfwhist!\n");
@@ -791,7 +791,7 @@ void PrefModel::runGame () {
       }
           if (nPassCounter == 2) {
             // two players passed
-            currentPlayer->gotPassPassTricks(gameTricks(currentPlayer->myGame()));
+            currentPlayer->gotPassPassTricks(gameTricks(currentPlayer->game()));
             dlogf("clean out!\n");
             goto LabelRecordOnPaper;
           } else {
@@ -806,7 +806,7 @@ void PrefModel::runGame () {
 			else if ((nPassCounter == 1)) {
 				m_closedWhist = false;
 				for (int n=1; n<=3; n++)
-					if (player(n)->myGame() == whist) {
+                    if (player(n)->game() == whist) {
     					player(n)->setMessage(tr("thinking..."));
 						mDeskView->draw(false);
 						if (n != 1)
@@ -823,7 +823,7 @@ void PrefModel::runGame () {
 				// otherwise, whist and pass players open cards
 				if (!m_closedWhist) {
 					for (int n=2; n<=3; n++)
-						if ((player(n)->myGame() == whist) || (player(n)->myGame() == gtPass))
+                        if ((player(n)->game() == whist) || (player(n)->game() == gtPass))
 							player(n)->setInvisibleHand(false);
 				}
 				mDeskView->draw(false);
@@ -843,9 +843,9 @@ void PrefModel::runGame () {
       mPlayerActive = 0;
       mPlayerHi = 0;
       playerBids[0] = m_currentGame = raspass;
-      player(1)->setMyGame(raspass);
-      player(2)->setMyGame(raspass);
-      player(3)->setMyGame(raspass);
+      player(1)->setGame(raspass);
+      player(2)->setGame(raspass);
+      player(3)->setGame(raspass);
       mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = 0;
       mOnDeskClosed = false;
       mDeskView->draw();
@@ -902,7 +902,7 @@ LabelRecordOnPaper:
         entry.player = mPlayerActive;
         for (int f=1; f<=3; f++) {
             const Player *plr = player(f);
-            entry.whist[f-1] = (plr->myGame() == whist);
+            entry.whist[f-1] = (plr->game() == whist);
             entry.takes[f-1] = plr->tricksTaken();
             entry.score[f-1] = plr->mScore.score();
             entry.mountain[f-1] = plr->mScore.mountain();

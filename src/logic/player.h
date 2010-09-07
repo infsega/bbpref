@@ -86,8 +86,8 @@ public:
 
   int number () const { return mPlayerNo; }
 
-  eGameBid myGame () const { return mMyGame; }
-  void setMyGame (eGameBid game) { mMyGame = game; }
+  eGameBid game () const { return m_game; }
+  void setGame (eGameBid game) { m_game = game; }
 
   /// @todo Move to shared score board
   int tricksTaken () const { Q_ASSERT(mTricksTaken >= 0); return mTricksTaken; }
@@ -125,7 +125,7 @@ protected:
   QString mMessage;
   int mPlayerNo; // my number
   bool mInvisibleHand;
-  eGameBid mMyGame;
+  eGameBid m_game;
   int mTricksTaken;
   int mPrevHiCardIdx;
   bool mIStart;

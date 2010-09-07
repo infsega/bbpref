@@ -54,7 +54,7 @@ void Player::clear () {
   mMessage.clear();
   /// @todo should be dispatched by model
   mInvisibleHand = (mPlayerNo != 1);
-  mMyGame = undefined;
+  m_game = undefined;
   /// @todo should be dispatched by model or score board
   mTricksTaken = 0;
   /// @todo should be dispatched by delegate

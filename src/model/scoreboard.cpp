@@ -279,7 +279,7 @@ void ScoreBoard::calculateScore(PrefModel *model, int nPassCounter)
 
     for (int i = 1; i <= 3;i++ ) {
       Player *player_i = model->player(i);
-      int RetValAddRec = player_i->mScore.recordScores(model->currentGame(), player_i->myGame(),
+      int RetValAddRec = player_i->mScore.recordScores(model->currentGame(), player_i->game(),
         plr ? plr->tricksTaken() : 0, player_i->tricksTaken(), plr ? mPlayerActive : 0,
         i, 2-nPassCounter);
       if (RetValAddRec) {

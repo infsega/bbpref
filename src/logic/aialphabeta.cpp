@@ -543,14 +543,14 @@ Card *AlphaBetaPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, 
 
   // find game
   eGameBid bid;
-  if (mMyGame == gtPass || mMyGame == whist) {
-    bid = aLeftPlayer->myGame();
+  if (m_game == gtPass || m_game == whist) {
+    bid = aLeftPlayer->game();
     if (bid == gtPass || bid == whist) {
-      bid = aRightPlayer->myGame();
+      bid = aRightPlayer->game();
       movePlrObj = aRightPlayer;
     } else movePlrObj = aLeftPlayer;
   } else {
-    bid = mMyGame;
+    bid = m_game;
     movePlrObj = this;
   }
 

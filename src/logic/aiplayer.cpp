@@ -507,7 +507,7 @@ Card *AiPlayer::Miser2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPla
 Card *AiPlayer::Miser3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer) {
   // copy from MyPass3
   Card *cur = 0;
-  eGameBid tmpGamesType = mMyGame;
+  eGameBid tmpGamesType = m_game;
   CardList aMaxCardList;
   //int mast = mMyGame-(mMyGame/10)*10;
   // набираем списки
@@ -528,7 +528,7 @@ Card *AiPlayer::Miser3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, 
     if (!cur) cur = GetMinCardWithOutVz(); // лабуду
     if (!cur) cur = mCards.minFace();
   }
-  mMyGame = tmpGamesType;
+  m_game = tmpGamesType;
   Q_ASSERT(cur != 0);
   return cur;
 }
@@ -543,7 +543,7 @@ Card *AiPlayer::MiserCatch1 (Player *aLeftPlayer, Player *aRightPlayer) {
   CardList aMaxCardList;
   CardList *Naparnik;
   eHand Side;
-  if (aRightPlayer->myGame() == g86) {
+  if (aRightPlayer->game() == g86) {
     loadLists(aRightPlayer, aRightPlayer, aMaxCardList);
     Naparnik = &(aLeftPlayer->mCards);
     Side = RightHand;
@@ -596,7 +596,7 @@ Card *AiPlayer::MiserCatch1 (Player *aLeftPlayer, Player *aRightPlayer) {
                     Naparnik->cardsInSuit(k) < aMaxCardList.cardsInSuit(k)) {
                   cur = mCards.lesserInSuit(EnemyMax);
                   //MyMax; // на этой он должен пронести NaparnikMax
-                  if (aRightPlayer->myGame() == g86) aRightPlayer->mCardCarryThru = NaparnikMax;
+                  if (aRightPlayer->game() == g86) aRightPlayer->mCardCarryThru = NaparnikMax;
                   else aLeftPlayer->mCardCarryThru = NaparnikMax;
                   goto badlabel;
                 }
@@ -639,7 +639,7 @@ Card *AiPlayer::MiserCatch2 (Card *aRightCard, Player *aLeftPlayer, Player *aRig
   CardList aMaxCardList;
   CardList *Naparnik;
   eHand Side;
-  if (aRightPlayer->myGame() == g86) {
+  if (aRightPlayer->game() == g86) {
     loadLists(aRightPlayer, aRightPlayer, aMaxCardList);
     Naparnik = &(aLeftPlayer->mCards);
     Side = RightHand;
@@ -715,7 +715,7 @@ Card *AiPlayer::MiserCatch3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPla
   CardList aMaxCardList;
   CardList *Naparnik;
   eHand Side;
-  if (aRightPlayer->myGame() == g86) {
+  if (aRightPlayer->game() == g86) {
     loadLists(aRightPlayer, aRightPlayer, aMaxCardList);
     Naparnik = &(aLeftPlayer->mCards);
     Side = RightHand;
@@ -784,9 +784,9 @@ Card *AiPlayer::MiserCatch3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPla
 Card *AiPlayer::MyGame1 (Player *aLeftPlayer, Player *aRightPlayer) {
   // 1-выбить козыря 2-разиграть масти с перехватами 3-без перехватов 4-???
   Card *cur = 0;
-  eGameBid tmpGamesType = mMyGame;
+  eGameBid tmpGamesType = m_game;
   CardList aMaxCardList;
-  int mast = mMyGame-(mMyGame/10)*10;
+  int mast = m_game-(m_game/10)*10;
   // набираем списки
   loadLists(aLeftPlayer, aRightPlayer, aMaxCardList);
   recalcTables(aMaxCardList, 1);
@@ -805,7 +805,7 @@ Card *AiPlayer::MyGame1 (Player *aLeftPlayer, Player *aRightPlayer) {
     if (!cur) cur = mCards.maxInSuit(mast);
     if (!cur) cur = mCards.maxFace();
   }
-  mMyGame = tmpGamesType;
+  m_game = tmpGamesType;
   Q_ASSERT(cur != 0);
   return cur;
 }
@@ -815,11 +815,11 @@ Card *AiPlayer::MyGame1 (Player *aLeftPlayer, Player *aRightPlayer) {
 // game, my move is second
 Card *AiPlayer::MyGame2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer) {
   CardList aMaxCardList;
-  eGameBid tmpGamesType = mMyGame;
+  eGameBid tmpGamesType = m_game;
   Card *cur = 0;
   Card *MaxLeftCard = 0;
   int mast = aRightCard->suit();
-  int koz = mMyGame-(mMyGame/10)*10;
+  int koz = m_game-(m_game/10)*10;
   // набираем списки
   loadLists(aLeftPlayer, aRightPlayer, aMaxCardList);
   recalcTables(aMaxCardList, 23);
@@ -859,7 +859,7 @@ Card *AiPlayer::MyGame2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPl
       }
     }
   }
-  mMyGame = tmpGamesType;
+  m_game = tmpGamesType;
   Q_ASSERT(cur != 0);
   return cur;
 }
@@ -870,9 +870,9 @@ Card *AiPlayer::MyGame2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPl
 Card *AiPlayer::MyGame3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer) {
   Card *cur = 0;
   Card *maxInSuit;
-  eGameBid tmpGamesType = mMyGame;
+  eGameBid tmpGamesType = m_game;
   CardList aMaxCardList;
-  int mast = mMyGame-(mMyGame/10)*10;
+  int mast = m_game-(m_game/10)*10;
   // набираем списки
   loadLists(aLeftPlayer, aRightPlayer, aMaxCardList);
   recalcTables(aMaxCardList, 23);
@@ -907,7 +907,7 @@ Card *AiPlayer::MyGame3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer,
     if (!cur) cur = GetMinCardWithOutVz(); // нет коз.
     if (!cur) cur = mCards.minFace();
   }
-  mMyGame = tmpGamesType;
+  m_game = tmpGamesType;
   Q_ASSERT(cur != 0);
   return cur;
 }
@@ -920,19 +920,19 @@ Card *AiPlayer::MyGame3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer,
 Card *AiPlayer::MyWhist1 (Player *aLeftPlayer, Player *aRightPlayer) {
   // 1 - выбить козыря 2-разиграть масти с перехватами 3-без перехватов 4-???
   Card *cur = 0;
-  eGameBid tmpGamesType = mMyGame;
+  eGameBid tmpGamesType = m_game;
   CardList aMaxCardList;
   Player *aEnemy, *aFriend;
   int trump;
   // Кто игрок а кто напарник
-  if (aLeftPlayer->myGame() != gtPass && aLeftPlayer->myGame() != whist) {
+  if (aLeftPlayer->game() != gtPass && aLeftPlayer->game() != whist) {
     aEnemy = aLeftPlayer;
     aFriend = aRightPlayer;
   } else {
     aEnemy = aRightPlayer;
     aFriend = aLeftPlayer;
   }
-  trump = aEnemy->myGame() % 10; //aEnemy->myGame()-(aEnemy->myGame()/10)*10;
+  trump = aEnemy->game() % 10; //aEnemy->myGame()-(aEnemy->myGame()/10)*10;
   Q_ASSERT(trump != 0);
   int suit = trump;
   // build lists
@@ -1029,7 +1029,7 @@ Card *AiPlayer::MyWhist1 (Player *aLeftPlayer, Player *aRightPlayer) {
       if (!cur) {cur = mCards.maxFace();           qDebug() << "13";} // под вистующего - с тузующего
     }
   }
-  mMyGame = tmpGamesType;
+  m_game = tmpGamesType;
   Q_ASSERT(cur != 0);
   return cur;
 }
@@ -1039,20 +1039,20 @@ Card *AiPlayer::MyWhist1 (Player *aLeftPlayer, Player *aRightPlayer) {
 // мой вист или пас 2 заход - мой
 Card *AiPlayer::MyWhist2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer) {
   Card *cur = 0;
-  eGameBid tmpGamesType = mMyGame;
+  eGameBid tmpGamesType = m_game;
   CardList aMaxCardList;
   Player *aEnemy, *aFriend;
   int mast;
 
   // Кто игрок а кто напарник
-  if (aLeftPlayer->myGame() != gtPass && aLeftPlayer->myGame() != whist) {
+  if (aLeftPlayer->game() != gtPass && aLeftPlayer->game() != whist) {
     aEnemy = aLeftPlayer;
     aFriend = aRightPlayer;
   } else {
     aEnemy = aRightPlayer;
     aFriend = aLeftPlayer;
   }
-  mast = aEnemy->myGame()-(aEnemy->myGame()/10)*10;
+  mast = aEnemy->game()-(aEnemy->game()/10)*10;
   // набираем списки
   if (aEnemy == aLeftPlayer) {
     // Слева игрок
@@ -1072,7 +1072,7 @@ Card *AiPlayer::MyWhist2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightP
     if (!cur) cur = mCards.minInSuit(mast); // Нет масти пробуем козырь
     if (!cur) cur = GetMinCardWithOutVz(); // Нет масти и козыря
   }
-  mMyGame = tmpGamesType;
+  m_game = tmpGamesType;
   Q_ASSERT(cur != 0);
   return cur;
 }
@@ -1083,20 +1083,20 @@ Card *AiPlayer::MyWhist2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightP
 Card *AiPlayer::MyWhist3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer) {
   Card *cur = 0;
   Card *maxInSuit;
-  eGameBid tmpGamesType = mMyGame;
+  eGameBid tmpGamesType = m_game;
   CardList aMaxCardList;
   Player *aEnemy, *aFriend;
   int mast;
 
   // Кто игрок а кто напарник
-  if (aLeftPlayer->myGame() != gtPass && aLeftPlayer->myGame() != whist) {
+  if (aLeftPlayer->game() != gtPass && aLeftPlayer->game() != whist) {
     aEnemy = aLeftPlayer;
     aFriend = aRightPlayer;
   } else {
     aEnemy = aRightPlayer;
     aFriend = aLeftPlayer;
   }
-  mast = aEnemy->myGame()-(aEnemy->myGame()/10)*10;
+  mast = aEnemy->game()-(aEnemy->game()/10)*10;
   // набираем списки
   //loadLists(aLeftPlayer,aRightPlayer,aMaxCardList);
   //recalcTables(aMaxCardList,23);
@@ -1185,7 +1185,7 @@ Card *AiPlayer::MyWhist3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer
     if (!cur) cur = GetMinCardWithOutVz(); // нет коз.
     if (!cur) cur = mCards.minFace();
   }
-  mMyGame = tmpGamesType;
+  m_game = tmpGamesType;
   Q_ASSERT(cur != 0);
   return cur;
 }
@@ -1197,7 +1197,7 @@ Card *AiPlayer::MyWhist3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer
 // my passout first
 Card *AiPlayer::MyPass1 (Card *rMove, Player *aLeftPlayer, Player *aRightPlayer) {
   Card *cur = 0;
-  eGameBid tmpGamesType = mMyGame;
+  eGameBid tmpGamesType = m_game;
   CardList aMaxCardList;
   CardList aTmpList, aStackStore;
   //int doRest = 0;
@@ -1261,7 +1261,7 @@ Card *AiPlayer::MyPass1 (Card *rMove, Player *aLeftPlayer, Player *aRightPlayer)
 // my passout second
 Card *AiPlayer::MyPass2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer) {
   Card *cur = 0;
-  eGameBid tmpGamesType = mMyGame;
+  eGameBid tmpGamesType = m_game;
   int mast = aRightCard->suit();
   CardList aMaxCardList;
   loadLists(aLeftPlayer, aRightPlayer, aMaxCardList);
@@ -1292,7 +1292,7 @@ Card *AiPlayer::MyPass2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPl
     }
   }
   /////////////////////////////////////////////////////////
-  mMyGame = tmpGamesType;
+  m_game = tmpGamesType;
   Q_ASSERT(cur != 0);
   return cur;
 }
@@ -1303,7 +1303,7 @@ Card *AiPlayer::MyPass2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPl
 Card *AiPlayer::MyPass3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer) {
   Card *cur=0;
   /*Card *maxInSuit;*/
-  eGameBid tmpGamesType = mMyGame;
+  eGameBid tmpGamesType = m_game;
   CardList aMaxCardList;
   //int mast = mMyGame-(mMyGame/10)*10;
   // набираем списки
@@ -1324,7 +1324,7 @@ Card *AiPlayer::MyPass3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer,
     if (!cur) cur = GetMinCardWithOutVz(); // лабуду
     if (!cur) cur = mCards.minFace();
   }
-  mMyGame = tmpGamesType;
+  m_game = tmpGamesType;
   Q_ASSERT(cur != 0);
   return cur;
 }
@@ -1340,26 +1340,26 @@ Card *AiPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player 
   Card *cur = 0;
   if (lMove == 0 && rMove == 0) {
     // мой заход - первый
-    if (mMyGame == gtPass || mMyGame == whist) cur = MyWhist1(aLeftPlayer, aRightPlayer); // кто-то играет а я как бы вистую
-    else if (mMyGame == g86catch) cur = MiserCatch1(aLeftPlayer, aRightPlayer);
-    else if (mMyGame == g86) cur = Miser1(aLeftPlayer,aRightPlayer);
-    else if (mMyGame == raspass) cur = MyPass1(rMove, aLeftPlayer, aRightPlayer); // ну типа распасы или мизер
+    if (m_game == gtPass || m_game == whist) cur = MyWhist1(aLeftPlayer, aRightPlayer); // кто-то играет а я как бы вистую
+    else if (m_game == g86catch) cur = MiserCatch1(aLeftPlayer, aRightPlayer);
+    else if (m_game == g86) cur = Miser1(aLeftPlayer,aRightPlayer);
+    else if (m_game == raspass) cur = MyPass1(rMove, aLeftPlayer, aRightPlayer); // ну типа распасы или мизер
     else cur = MyGame1(aLeftPlayer, aRightPlayer); // ну типа моя игра
   }
   if (lMove == 0 && rMove != 0) {
     // мой заход - второй
-    if (mMyGame == gtPass || mMyGame == whist) cur = MyWhist2(rMove, aLeftPlayer, aRightPlayer); // кто-то играет а я как бы вистую
-    else if (mMyGame == g86catch) cur = MiserCatch2(rMove, aLeftPlayer, aRightPlayer);
-    else if (mMyGame == g86) cur = Miser2(rMove, aLeftPlayer, aRightPlayer);
-    else if (mMyGame == raspass) cur = MyPass2(rMove, aLeftPlayer, aRightPlayer); // ну типа распасы или мизер
+    if (m_game == gtPass || m_game == whist) cur = MyWhist2(rMove, aLeftPlayer, aRightPlayer); // кто-то играет а я как бы вистую
+    else if (m_game == g86catch) cur = MiserCatch2(rMove, aLeftPlayer, aRightPlayer);
+    else if (m_game == g86) cur = Miser2(rMove, aLeftPlayer, aRightPlayer);
+    else if (m_game == raspass) cur = MyPass2(rMove, aLeftPlayer, aRightPlayer); // ну типа распасы или мизер
     else cur = MyGame2(rMove, aLeftPlayer, aRightPlayer); // ну типа моя игра
   }
   if (lMove != 0 && rMove != 0) {
     // мой заход - 3
-    if (mMyGame == gtPass || mMyGame == whist ) cur = MyWhist3(lMove, rMove, aLeftPlayer, aRightPlayer); // кто-то играет а я как бы вистую
-    else if (mMyGame == g86catch) cur = MiserCatch3(lMove, rMove, aLeftPlayer, aRightPlayer);
-    else if (mMyGame == g86) cur = Miser3(lMove, rMove, aLeftPlayer, aRightPlayer);
-    else if (mMyGame == raspass) cur = MyPass3(lMove, rMove, aLeftPlayer, aRightPlayer); // ну типа распасы или мизер
+    if (m_game == gtPass || m_game == whist ) cur = MyWhist3(lMove, rMove, aLeftPlayer, aRightPlayer); // кто-то играет а я как бы вистую
+    else if (m_game == g86catch) cur = MiserCatch3(lMove, rMove, aLeftPlayer, aRightPlayer);
+    else if (m_game == g86) cur = Miser3(lMove, rMove, aLeftPlayer, aRightPlayer);
+    else if (m_game == raspass) cur = MyPass3(lMove, rMove, aLeftPlayer, aRightPlayer); // ну типа распасы или мизер
     else cur = MyGame3(lMove, rMove, aLeftPlayer, aRightPlayer); // ну типа моя игра
   }
   mCards.remove(cur);
@@ -1399,7 +1399,7 @@ eGameBid AiPlayer::makeFinalBid (eGameBid MaxGame, int HaveAWhist, int nPlayerPa
     }
   } else {
     if (MaxGame < g81) {
-  	  Answer = (vz > m_model->gameWhists(MaxGame)) ? whist : gtPass;
+      Answer = (vz > m_model->gameWhists(MaxGame)/2) ? whist : gtPass;
     } else if (MaxGame < g91) {
       Answer = (vz > m_model->gameWhists(MaxGame) && qrand()%8 == 0) ? whist : gtPass;
     } else
@@ -1413,7 +1413,7 @@ myGame:
   if ((Answer == gtPass) && (nPlayerPass == 1) && MaxGame <= 81)
   	Answer = halfwhist;
 	
-  mMyGame = Answer;
+  m_game = Answer;
   return Answer;
 }
 
@@ -1554,18 +1554,18 @@ eGameBid AiPlayer::dropForGame () {
   draw();
   //Hight = moveBidding(undefined,undefined);
   Hight = moveCalcDrop();
-  if (Hight < mMyGame)  {
+  if (Hight < m_game)  {
     // Вот такая ерунда
     int tmpvz = Hight/10, tmpmast = Hight-tmpvz*10;
-    while (tmpHight < mMyGame)  {
+    while (tmpHight < m_game)  {
       tmpvz++;
       tmpHight = (eGameBid)(tmpvz*10+tmpmast);
     }
-    mMyGame = tmpHight;
+    m_game = tmpHight;
   } else {
-    mMyGame = Hight;
+    m_game = Hight;
   }
-  return mMyGame;
+  return m_game;
 }
 
 
@@ -1579,7 +1579,7 @@ eGameBid AiPlayer::makeBid (eGameBid lMove, eGameBid rMove) {
   } else {
 */
   //mMyGame = gtPass;
-  if (mMyGame != gtPass)  {
+  if (m_game != gtPass)  {
     int f;
     int nMaxMastLen = 0;
     eSuit nMaxMast = SuitNone;
@@ -1620,32 +1620,32 @@ eGameBid AiPlayer::makeBid (eGameBid lMove, eGameBid rMove) {
     }
     // масть и взятки уже посчитали
     if (curMaxGame <= g75) {
-      mMyGame = (eGameBid)((LocalMastTable[0].tricks+1)*10+nMaxMast);
+      m_game = (eGameBid)((LocalMastTable[0].tricks+1)*10+nMaxMast);
     } else {
-      mMyGame = (eGameBid)((LocalMastTable[0].tricks)*10+nMaxMast);
+      m_game = (eGameBid)((LocalMastTable[0].tricks)*10+nMaxMast);
     }
 	// if first move or one player passed
     if ((rMove == gtPass || rMove == undefined) && (lMove == gtPass || lMove == undefined)) {
       if (LocalMastTable[0].tricks >= 4) {
         /*if (optAggPass && optPassCount > 0) mMyGame = g71;
-        else*/ mMyGame = g61;
+        else*/ m_game = g61;
       } else {
         if (LocalMastTable[0].tricks == 0)  {
           // check for misere !!!
-          mMyGame = checkForMisere() ? g86 : gtPass ;
-        } else mMyGame = gtPass;
+          m_game = checkForMisere() ? g86 : gtPass ;
+        } else m_game = gtPass;
       }
     }
-	else if (mMyGame >= curMaxGame){
-		if ((mIStart) && (mMyGame < succBid(curMaxGame)))
-			mMyGame = curMaxGame;
+	else if (m_game >= curMaxGame){
+		if ((mIStart) && (m_game < succBid(curMaxGame)))
+			m_game = curMaxGame;
 		else
-      		mMyGame = (eGameBid)succBid(curMaxGame);
-		if (m_model->optAggPass && (m_model->optPassCount > 0) && (mMyGame < g71))
-			mMyGame = g71;
+      		m_game = (eGameBid)succBid(curMaxGame);
+		if (m_model->optAggPass && (m_model->optPassCount > 0) && (m_game < g71))
+			m_game = g71;
 	}
 	else
-      mMyGame = gtPass;
+      m_game = gtPass;
     
 /*
     if( mMyGame >= curMaxGame  ) {
@@ -1698,11 +1698,11 @@ eGameBid AiPlayer::makeBid (eGameBid lMove, eGameBid rMove) {
     }*/
   }
   //???
-  if (m_model->optAggPass && m_model->optPassCount > 0 && mMyGame != gtPass && mMyGame < g71) {
+  if (m_model->optAggPass && m_model->optPassCount > 0 && m_game != gtPass && m_game < g71) {
     makeBid(g71, g71);
    // if (optAggPass && optPassCount > 0 && mMyGame != gtPass && mMyGame < g71) moveBidding(g72, g72);
   }
-  return mMyGame;
+  return m_game;
 }
 
 
