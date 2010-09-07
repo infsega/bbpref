@@ -37,14 +37,14 @@ const char * sGameName (eGameBid game);
  */
 struct GameLogEntry {
     eGameBid game;
-    int player;
+    qint8 player;
     bool whist[3];
-    int takes[3];
-    int score[3];
-    int pool[3];
-    int mountain[3];
-    int leftWhists[3];
-    int rightWhists[3];
+    qint16 takes[3];
+    qint16 score[3];
+    qint16 pool[3];
+    qint16 mountain[3];
+    qint16 leftWhists[3];
+    qint16 rightWhists[3];
     float time;
     QList<Card> cardList[3];
 };
