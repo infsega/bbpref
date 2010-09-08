@@ -20,7 +20,6 @@
  *      http://www.gnu.org/licenses 
  */
 
-#include <QApplication>
 #include <QDesktopWidget>
 #include <QMessageBox>
 #include <QObject>

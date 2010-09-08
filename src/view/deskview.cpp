@@ -24,7 +24,6 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
-#include <QtGui/QApplication>
 #include <QtGui/QMessageBox>
 #include <QtGui/QPainter>
 #include <QtGui/QVBoxLayout>
