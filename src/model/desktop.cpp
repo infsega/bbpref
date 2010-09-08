@@ -93,18 +93,14 @@ const char * sGameName (eGameBid game)
   return gameNames[game];
 }
 
-static const char * bidMessage(eGameBid game)
+const QString PrefModel::bidMessage(const eGameBid game)
 {
-		if (game == whist) return QT_TRANSLATE_NOOP("PrefModel", "whist");
-		else if (game == gtPass) return QT_TRANSLATE_NOOP("PrefModel", "pass");
-		else if (game % 10 == 5) return QT_TRANSLATE_NOOP("PrefModel", "6 no trumps");
-		else if (game == g75) return QT_TRANSLATE_NOOP("PrefModel", "7 no trumps");
-		else if (game == g85) return QT_TRANSLATE_NOOP("PrefModel", "8 no trumps");
-		else if (game == g95) return QT_TRANSLATE_NOOP("PrefModel", "9 no trumps");
-		else if (game == g105) return QT_TRANSLATE_NOOP("PrefModel", "10 no trumps");
-		else if (game == g86) return QT_TRANSLATE_NOOP("PrefModel", "Misere");
-		else if (game == withoutThree) return QT_TRANSLATE_NOOP("PrefModel", "without three");
-		else return gameNames.value(game);
+        if (game == whist) return tr("whist");
+        else if (game == gtPass) return tr("pass");
+        else if (game % 10 == 5) return QString::number(game/10) + " " + tr("no trumps");
+        else if (game == g86) return tr("Misere");
+        else if (game == withoutThree) return tr("without three");
+        else return sGameName(game);
 }
 
 
@@ -572,7 +568,8 @@ void PrefModel::runGame () {
             mDeskView->update();
         const eGameBid bid = playerBids[curBidIdx]
                             = currentPlayer->makeBid(playerBids[curBidIdx%3+1], playerBids[(curBidIdx+1)%3+1]);
-        currentPlayer->setMessage(tr(bidMessage(bid)));
+        qDebug() << "bid:" << bid << bidMessage(bid);
+        currentPlayer->setMessage(bidMessage(bid));
         mDeskView->draw();
       }
       ++plrCounter;
@@ -675,7 +672,7 @@ void PrefModel::runGame () {
           passOrWhistPlayersCounter.nValue = i;
 
           // bid
-          player(passOrWhistPlayersCounter)->setMessage(tr(bidMessage(m_currentGame)));
+          player(passOrWhistPlayersCounter)->setMessage(bidMessage(m_currentGame));
           mDeskView->draw();
 
         if (m_currentGame == withoutThree) {
@@ -961,9 +958,9 @@ void PrefModel::playingRound()
       }
       player(mPlayerHi)->setMessage("");
 
-      xxBuf[0] = 0;
+      /*xxBuf[0] = 0;
       cardName(xxBuf, mCardsOnDesk[nCurrentMove.nValue]);
-      dlogf(" (1st) player %i:%s", nCurrentMove.nValue, xxBuf);
+      dlogf(" (1st) player %i:%s", nCurrentMove.nValue, xxBuf);*/
 
       ++nCurrentMove;
       mPlayerHi = nCurrentMove.nValue;
@@ -973,9 +970,9 @@ void PrefModel::playingRound()
       mCardsOnDesk[nCurrentMove.nValue] = mSecondCard = makeGameMove(0, mFirstCard, false);
       player(mPlayerHi)->setMessage("");
 
-      xxBuf[0] = 0;
+      /*xxBuf[0] = 0;
       cardName(xxBuf, mCardsOnDesk[nCurrentMove.nValue]);
-      dlogf(" (2nd) player %i:%s", nCurrentMove.nValue, xxBuf);
+      dlogf(" (2nd) player %i:%s", nCurrentMove.nValue, xxBuf);*/
 
       ++nCurrentMove;
       mPlayerHi = nCurrentMove.nValue;
@@ -985,9 +982,9 @@ void PrefModel::playingRound()
       mCardsOnDesk[nCurrentMove.nValue] = mThirdCard = makeGameMove(mFirstCard, mSecondCard, false);
       player(mPlayerHi)->setMessage("");
 
-      xxBuf[0] = 0;
+      /*xxBuf[0] = 0;
       cardName(xxBuf, mCardsOnDesk[nCurrentMove.nValue]);
-      dlogf(" (3rd) player %i:%s", nCurrentMove.nValue, xxBuf);
+      dlogf(" (3rd) player %i:%s", nCurrentMove.nValue, xxBuf);*/
 
       checkMoves();
       m_outCards << mCardsOnDesk[0] << mCardsOnDesk[1] << mCardsOnDesk[2] << mCardsOnDesk[3];

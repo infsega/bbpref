@@ -128,6 +128,7 @@ public:
   bool optAlphaBeta2;
 
 private:
+  static const QString bidMessage(const eGameBid game);
   void initPlayers ();
   Player *player (const WrapCounter &cnt);
   Card *makeGameMove (Card *lMove, Card *rMove, bool isPassOut);
