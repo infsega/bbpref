@@ -20,7 +20,6 @@
  *      http://www.gnu.org/licenses 
  */
 
-#include <QApplication>
 #include <QDesktopWidget>
 #include <QMessageBox>
 #include <QObject>
@@ -227,7 +226,7 @@ void BidDialog::initDialog () {
       int bid = face*10+suit;
       QBidButton *b = new QBidButton((eGameBid)bid, x, y, this);
 	  if (suit == 5)
-		b->setToolTip(tr("no trump"));
+		b->setToolTip(tr("No trumps"));
 	  m_bidButtons.append(b);
       connect(b, SIGNAL(clicked()), this, SLOT(onBidClick()));
     }

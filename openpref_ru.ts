@@ -2,6 +2,45 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="ru_RU">
 <context>
+    <name>Bid messages</name>
+    <message>
+        <source>whist</source>
+        <translation type="obsolete">вист</translation>
+    </message>
+    <message>
+        <source>pass</source>
+        <translation type="obsolete">пас</translation>
+    </message>
+    <message>
+        <source>6 no trumps</source>
+        <translation type="obsolete">6 без козыря</translation>
+    </message>
+    <message>
+        <source>7 no trumps</source>
+        <translation type="obsolete">7 без козыря</translation>
+    </message>
+    <message>
+        <source>8 no trumps</source>
+        <translation type="obsolete">8 без козыря</translation>
+    </message>
+    <message>
+        <source>9 no trumps</source>
+        <translation type="obsolete">9 без козыря</translation>
+    </message>
+    <message>
+        <source>10 no trumps</source>
+        <translation type="obsolete">10 без козыря</translation>
+    </message>
+    <message>
+        <source>Misere</source>
+        <translation type="obsolete">Мизер</translation>
+    </message>
+    <message>
+        <source>without three</source>
+        <translation type="obsolete">без трех</translation>
+    </message>
+</context>
+<context>
     <name>BidDialog</name>
     <message>
         <source>Bidding</source>
@@ -17,7 +56,7 @@
     </message>
     <message>
         <source>no trump</source>
-        <translation>без козыря</translation>
+        <translation type="obsolete">без козыря</translation>
     </message>
     <message>
         <source>&amp;Misere</source>
@@ -51,6 +90,10 @@
         <source>Cancel game with penalty of three untaken tricks. No whists are written</source>
         <translation>Отменить игру с штрафом в три недобранные взятки. Висты не пишутся</translation>
     </message>
+    <message>
+        <source>No trumps</source>
+        <translation>Без козыря</translation>
+    </message>
 </context>
 <context>
     <name>DeskView</name>
@@ -76,6 +119,14 @@
     <message>
         <source>Deal</source>
         <translation>Расклад</translation>
+    </message>
+    <message>
+        <source>(w)</source>
+        <translation>(в)</translation>
+    </message>
+    <message>
+        <source>Game</source>
+        <translation>Игра</translation>
     </message>
 </context>
 <context>
@@ -435,6 +486,10 @@ See http://en.wikipedia.org/wiki/Preferans</source>
         <source>Wood</source>
         <translation>Дерево</translation>
     </message>
+    <message>
+        <source>Quality:</source>
+        <translation>Качество:</translation>
+    </message>
 </context>
 <context>
     <name>OptionDialog</name>
@@ -474,23 +529,23 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     </message>
     <message>
         <source>6 no trump</source>
-        <translation>6 без козыря</translation>
+        <translation type="obsolete">6 без козыря</translation>
     </message>
     <message>
         <source>7 no trump</source>
-        <translation>7 без козыря</translation>
+        <translation type="obsolete">7 без козыря</translation>
     </message>
     <message>
         <source>8 no trump</source>
-        <translation>8 без козыря</translation>
+        <translation type="obsolete">8 без козыря</translation>
     </message>
     <message>
         <source>9 no trump</source>
-        <translation>9 без козыря</translation>
+        <translation type="obsolete">9 без козыря</translation>
     </message>
     <message>
         <source>10 no trump</source>
-        <translation>10 без козыря</translation>
+        <translation type="obsolete">10 без козыря</translation>
     </message>
     <message>
         <source>Misere</source>
@@ -524,12 +579,44 @@ See http://en.wikipedia.org/wiki/Preferans</source>
         <source>Your move</source>
         <translation>Ваш ход</translation>
     </message>
+    <message>
+        <source>no trumps</source>
+        <translation type="obsolete">без козыря</translation>
+    </message>
+    <message>
+        <source>6 no trumps</source>
+        <translation>6 без козыря</translation>
+    </message>
+    <message>
+        <source>7 no trumps</source>
+        <translation>7 без козыря</translation>
+    </message>
+    <message>
+        <source>8 no trumps</source>
+        <translation>8 без козыря</translation>
+    </message>
+    <message>
+        <source>9 no trumps</source>
+        <translation>9 без козыря</translation>
+    </message>
+    <message>
+        <source>10 no trumps</source>
+        <translation>10 без козыря</translation>
+    </message>
+    <message>
+        <source>without three</source>
+        <translation>без трех</translation>
+    </message>
 </context>
 <context>
     <name>ScoreHistoryDialog</name>
     <message>
         <source>Score History</source>
         <translation>Журнал счета</translation>
+    </message>
+    <message>
+        <source>Deal #</source>
+        <translation>Расклад №</translation>
     </message>
 </context>
 <context>

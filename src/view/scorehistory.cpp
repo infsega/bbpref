@@ -1,5 +1,4 @@
 #include <QtCore/QAbstractTableModel>
-#include <QtGui/QApplication>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
