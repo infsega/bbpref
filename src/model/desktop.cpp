@@ -95,15 +95,15 @@ const char * sGameName (eGameBid game)
 
 static const char * bidMessage(eGameBid game)
 {
-		if (game == whist) return "whist";
-		else if (game == gtPass) return "pass";
-		else if (game == g65) return "6 no trump";
-		else if (game == g75) return "7 no trump";
-		else if (game == g85) return "8 no trump";
-		else if (game == g95) return "9 no trump";
-		else if (game == g105) return "10 no trump";
-		else if (game == g86) return "Misere";
-		else if (game == withoutThree) return "without three";
+		if (game == whist) return QT_TRANSLATE_NOOP("PrefModel", "whist");
+		else if (game == gtPass) return QT_TRANSLATE_NOOP("PrefModel", "pass");
+		else if (game % 10 == 5) return QT_TRANSLATE_NOOP("PrefModel", "6 no trumps");
+		else if (game == g75) return QT_TRANSLATE_NOOP("PrefModel", "7 no trumps");
+		else if (game == g85) return QT_TRANSLATE_NOOP("PrefModel", "8 no trumps");
+		else if (game == g95) return QT_TRANSLATE_NOOP("PrefModel", "9 no trumps");
+		else if (game == g105) return QT_TRANSLATE_NOOP("PrefModel", "10 no trumps");
+		else if (game == g86) return QT_TRANSLATE_NOOP("PrefModel", "Misere");
+		else if (game == withoutThree) return QT_TRANSLATE_NOOP("PrefModel", "without three");
 		else return gameNames.value(game);
 }
 
@@ -113,7 +113,7 @@ static int whoseTrick (Card *p1, Card *p2, Card *p3, int trump) {
   Q_ASSERT(p2 != 0);
   Q_ASSERT(p3 != 0);
   // The next assert doesn't work because of dirty hack passing values > 4 here
-  //Q_ASSERT((trump >= 0) && (trump <= 4)); // 0 is no trump
+  //Q_ASSERT((trump >= 0) && (trump <= 4)); // 0 is no trumps
   Card *maxC = p1;
   int res = 1;
   if ((maxC->suit() == p2->suit() && maxC->face() < p2->face()) || (maxC->suit() != trump && p2->suit() == trump)) {
@@ -565,7 +565,6 @@ void PrefModel::runGame () {
       mPlayerHi = plrCounter.nValue;
       if (playerBids[curBidIdx] != gtPass) {
         currentPlayer->setMessage(tr("thinking..."));
-        //drawBidWindows(bids4win, p);
         mDeskView->draw(false);
         if (currentPlayer->number() != 1)
             mDeskView->mySleep(2);
@@ -573,20 +572,9 @@ void PrefModel::runGame () {
             mDeskView->update();
         const eGameBid bid = playerBids[curBidIdx]
                             = currentPlayer->makeBid(playerBids[curBidIdx%3+1], playerBids[(curBidIdx+1)%3+1]);
-        qDebug() << "bid:" << sGameName(bid) << bid;
-        QString message;
-		if (bid == whist) message = tr("whist");
-		else if (bid == gtPass) message = tr("pass");
-		else if (bid == g65) message = tr("6 no trump");
-		else if (bid == g75) message = tr("7 no trump");
-		else if (bid == g85) message = tr("8 no trump");
-		else if (bid == g95) message = tr("9 no trump");
-		else if (bid == g105) message = tr("10 no trump");
-		else if (bid == g86) message = tr("Misere");
-		else message = sGameName(bid);
-		currentPlayer->setMessage(message);
+        currentPlayer->setMessage(tr(bidMessage(bid)));
         mDeskView->draw();
-      }// else plr->setMessage("PASS");
+      }
       ++plrCounter;
       curBidIdx = curBidIdx%3+1;
 
@@ -865,7 +853,7 @@ void PrefModel::runGame () {
       // Warning! Dirty hack!
       //
       // Assuming trump to be playerBids[0]-(playerBids[0]/10)*10 works
-      // ONLY because of special choice of numerical constants for no trump
+      // ONLY because of special choice of numerical constants for no trumps
       // games!
       // See prfconst.h for more details      
 
