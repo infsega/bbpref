@@ -688,7 +688,7 @@ void DeskView::inGameCardLeftTop (int mCardNo, int &left, int &top)
   left = x; top = y;
 }
 
-void DeskView::animateTrick (int plrNo, Card *cAni[])
+void DeskView::animateTrick (int plrNo, const QCardList & cards)
 {
   const int steps = 5 * (1 << m_takeQuality);
   int left, top;
@@ -702,13 +702,15 @@ void DeskView::animateTrick (int plrNo, Card *cAni[])
     QPixmap cache = *mDeskBmp;
     for (int f = optTakeAnim?0:steps; f <= steps; f++) {
       QRegion newRegion;
-      for (int c = 0; c <= 3; c++) {
-        if (!cAni[c]) continue;
+      for (int c = 0; c < cards.size(); c++) {
+      //foreach(const Card *cAni, cards) {
+        if (!cards.at(c)) continue;
+//        Q_ASSERT(cards.at(c));
         int x, y;
         inGameCardLeftTop(c, x, y);
         x = x + ((left-x)*f/steps);
         y = y + ((top-y)*f/steps);
-        drawCard(cAni[c], x, y, 1, 0);
+        drawCard(cards.at(c), x, y, 1, 0);
         newRegion += QRegion(x, y, CardWidth, CardHeight);
       }
       aniSleep(200/steps, newRegion + oldRegion);

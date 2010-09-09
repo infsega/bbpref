@@ -627,9 +627,9 @@ void PrefModel::runGame () {
 		  // deal talon
           currentPlayer->dealCard(mDeck.at(30));
           currentPlayer->dealCard(mDeck.at(31));
-          Card *cAni[4];
+          QCardList cAni;
           for (int f = 0; f < 4; f++) {
-            cAni[f] = mCardsOnDesk[f];
+            cAni.append(mCardsOnDesk[f]);
             mCardsOnDesk[f] = 0;
           }
           mDeskView->animateTrick(mPlayerActive, cAni); // will clear mCardsOnDesk[]
@@ -998,9 +998,9 @@ void PrefModel::playingRound()
       nCurrentMove = nCurrentMove
         + whoseTrick(firstCard, secondCard, thirdCard, m_trump)-1;
 
-      Card *cAni[4];
+      QCardList cAni;
       for (int f = 0; f < 4; f++) {
-        cAni[f] = mCardsOnDesk[f];
+        cAni.append(mCardsOnDesk[f]);
         mCardsOnDesk[f] = 0;
       }
       mDeskView->animateTrick(nCurrentMove.nValue, cAni); // will clear mCardsOnDesk[]

@@ -38,8 +38,8 @@
 
 #include "prfconst.h"
 #include "formbid.h"
+#include "card.h"
 
-class Card;
 class PrefModel;
 class DeskViewPrivate;
 
@@ -89,7 +89,7 @@ public:
 
   void getLeftTop (int player, int & left, int & top);
   
-  void animateTrick (int plrNo, Card *mCardsOnDesk[]);
+  void animateTrick (int plrNo, const QCardList & cards);
 
   bool askWhistType ();
   void longWait (const int n);
