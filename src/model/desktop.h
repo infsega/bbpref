@@ -139,7 +139,6 @@ private:
   DeskView *mDeskView;
   CardList mDeck;
   QList<Player *> mPlayers;
-  Card *mFirstCard, *mSecondCard, *mThirdCard;
   Card *mCardsOnDesk[4];
   QCardList m_outCards;
   int mPlayerActive; // who plays (if not raspass and mPlayingRound=true)

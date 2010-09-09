@@ -193,7 +193,7 @@ PrefModel::PrefModel (DeskView *aDeskView) : QObject(0), mPlayingRound(false),
   nCurrentStart.nValue = nCurrentMove.nValue = (qrand()%3)+1;
   nCurrentStart.nMin = nCurrentMove.nMin = 1;
   nCurrentStart.nMax = nCurrentMove.nMax = 3;
-  mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard=0;
+  mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = 0;
   mOnDeskClosed = false;
   initPlayers();
 }
@@ -445,7 +445,7 @@ void PrefModel::runGame () {
     int elapsedTime = 0;
     QTime pt;
     playerBids[3] = playerBids[2] = playerBids[1] = playerBids[0] = undefined;
-    mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard = 0;
+    mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = 0;
     mDeck.newDeck();
     mDeck.shuffle();
 
@@ -927,11 +927,13 @@ LabelRecordOnPaper:
 
 void PrefModel::playingRound()
 {
+  Card *firstCard, *secondCard, *thirdCard;
   char xxBuf[1024];
   m_outCards.clear();
     for (int i = 1; i <= 10; i++) {
       Player *tmpg;
-      mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = mFirstCard = mSecondCard = mThirdCard = 0;
+      mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3]
+               = firstCard = secondCard = thirdCard = 0;
       if (m_currentGame == raspass && (i >= 1 && i <= 3)) nCurrentMove = nCurrentStart;
 
       dlogf("------------------------\nmove #%i", i);
@@ -951,10 +953,10 @@ void PrefModel::playingRound()
         mCardsOnDesk[0] = mDeck.at(29+i);
         mDeskView->draw();
         mDeskView->mySleep(0);
-        mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, mDeck.at(29+i), true);
+        mCardsOnDesk[nCurrentMove.nValue] = firstCard = makeGameMove(0, mDeck.at(29+i), true);
       } else {
         mCardsOnDesk[0] = 0;
-        mCardsOnDesk[nCurrentMove.nValue] = mFirstCard = makeGameMove(0, 0, false);
+        mCardsOnDesk[nCurrentMove.nValue] = firstCard = makeGameMove(0, 0, false);
       }
       player(mPlayerHi)->setMessage("");
 
@@ -967,7 +969,7 @@ void PrefModel::playingRound()
       player(mPlayerHi)->setMessage(tr("thinking..."));
       mDeskView->draw();
       mDeskView->mySleep(0);
-      mCardsOnDesk[nCurrentMove.nValue] = mSecondCard = makeGameMove(0, mFirstCard, false);
+      mCardsOnDesk[nCurrentMove.nValue] = secondCard = makeGameMove(0, firstCard, false);
       player(mPlayerHi)->setMessage("");
 
       /*xxBuf[0] = 0;
@@ -979,7 +981,7 @@ void PrefModel::playingRound()
       player(mPlayerHi)->setMessage(tr("thinking..."));
       mDeskView->draw();
       mDeskView->mySleep(0);
-      mCardsOnDesk[nCurrentMove.nValue] = mThirdCard = makeGameMove(mFirstCard, mSecondCard, false);
+      mCardsOnDesk[nCurrentMove.nValue] = thirdCard = makeGameMove(firstCard, secondCard, false);
       player(mPlayerHi)->setMessage("");
 
       /*xxBuf[0] = 0;
@@ -994,7 +996,7 @@ void PrefModel::playingRound()
       mDeskView->longWait(1);
 
       nCurrentMove = nCurrentMove
-        + whoseTrick(mFirstCard, mSecondCard, mThirdCard, m_trump)-1;
+        + whoseTrick(firstCard, secondCard, thirdCard, m_trump)-1;
 
       Card *cAni[4];
       for (int f = 0; f < 4; f++) {
