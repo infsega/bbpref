@@ -39,7 +39,7 @@ class AiPlayer : public Player {
 public:
   AiPlayer(int aMyNumber, PrefModel *model);
 
-  virtual QString type() const { return "Original"; }
+  virtual const QString type() const { return QLatin1String("Original"); }
 
   virtual Player * create(int aMyNumber, PrefModel *model);
 

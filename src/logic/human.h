@@ -35,7 +35,7 @@ class HumanPlayer : public Player {
 public:
   HumanPlayer(int aMyNumber, PrefModel *model);
 
-  virtual QString type() const { return "Human"; }
+  virtual const QString type() const { return QLatin1String("Human"); }
 
   virtual Player * create(int aMyNumber, PrefModel *model);
   virtual bool isHuman() const { return true; }

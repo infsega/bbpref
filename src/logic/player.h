@@ -41,7 +41,7 @@ public:
   virtual ~Player ();
 
   /// String identifier of concrete player
-  virtual QString type() const = 0;
+  virtual const QString type() const = 0;
   /// @return true if this player object interacts with GUI user
   virtual bool isHuman() const { return false; }
 

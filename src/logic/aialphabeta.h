@@ -32,7 +32,7 @@ class AlphaBetaPlayer : public AiPlayer {
 public:
   AlphaBetaPlayer(int aMyNumber, PrefModel *model);
 
-  virtual QString type() const { return "AlphaBeta"; }
+  virtual const QString type() const { return QLatin1String("AlphaBeta"); }
 
   virtual Player * create(int aMyNumber, PrefModel *model);
 

@@ -44,7 +44,7 @@
 #include "scorehistory.h"
 #include "helpbrowser.h"
 
-inline static const char * GenName(QString str, QString ext);
+inline const char * GenName(const QString &str, const QString &ext);
 
 //char *documentation; //see bottom this file
 
@@ -394,10 +394,11 @@ void MainWindow::clearHint()
   HintBar->clearMessage();
 }
 
-const char * GenName(QString str, QString ext)
+const char * GenName(const QString &str, const QString &ext)
 {
   int dot_pos=str.indexOf(ext);
   if (dot_pos == -1)
-    str += ext;
-  return str.toLocal8Bit();
+    return (str + ext).toLocal8Bit();
+  else
+    return str.toLocal8Bit();
 }
