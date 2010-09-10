@@ -77,7 +77,7 @@ public:
 
   void draw (bool emitSignal=true);
   void drawCard (const Card *card, int x, int y, bool opened, bool hilight);
-  void drawText (const QString & str, int x, int y, QRgb textColor=qRgb(255,255,255), QRgb outlineColor=qRgb(0,0,0));
+  void drawOutlinedText (const QString & str, int x, int y, QRgb textColor=qRgb(255,255,255), QRgb outlineColor=qRgb(0,0,0));
   void drawPool ();
   void drawBidBoard();
   void drawMessageWindow (int x0, int y0, const QString & msg, bool dim=false);

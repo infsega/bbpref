@@ -478,7 +478,7 @@ void DeskView::drawCard (const Card *card, int x, int y, bool opened, bool hilig
 }
 
 
-void DeskView::drawText (const QString & str, int x, int y, QRgb textColor, QRgb outlineColor) {
+void DeskView::drawOutlinedText (const QString & str, int x, int y, QRgb textColor, QRgb outlineColor) {
   if (!mDeskBmp) return;
 
   QString s(str);
