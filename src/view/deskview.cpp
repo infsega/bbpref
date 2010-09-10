@@ -26,6 +26,7 @@
 
 #include <QtGui/QMessageBox>
 #include <QtGui/QPainter>
+#include <QtGui/QPixmapCache>
 #include <QtGui/QVBoxLayout>
 
 #include "deskview.h"
@@ -548,58 +549,65 @@ void DeskView::drawPlayerMessage (int player, const QString & msg, bool dim)
   drawMessageWindow(x, y, msg, dim);
 }
 
-void DeskView::drawMessageWindow (int x0, int y0, const QString & msg, bool dim) {
+void DeskView::drawMessageWindow (int x0, int y0, const QString & msg, bool dim, bool useCache) {
   Q_ASSERT(mDeskBmp);
-  QPainter p(mDeskBmp);
-  // change suits to unicode chars
-  QRgb textRGB(qRgb(0, 0, 0));
-  QString s(msg);
-  if (s.indexOf("\1d") >= 0 || s.indexOf("\1h") >= 0) textRGB = qRgb(255, 0, 0);
-  s.replace("\1s", QChar((ushort)0x2660));
-  s.replace("\1c", QChar((ushort)0x2663));
-  s.replace("\1d", QChar((ushort)0x2666));
-  s.replace("\1h", QChar((ushort)0x2665));
-  s = s.trimmed();
-  // now i want to know text extents
-  QRect drawR(0, 0, 0, 0);
-  QRect boundR;
-  p.drawText(drawR, Qt::AlignLeft | Qt::AlignTop | Qt::TextExpandTabs, s, &boundR);
-  // window size
-  // .|.....text.....|.
-  int w = boundR.width()+4+4+2+2, h = boundR.height()+2+2+2+2;
+  QPainter painter(mDeskBmp);
+  QPixmap msgBubble;
+  const QString key = msg + (dim ? "&&d" : "");
+
+  // Find if we've already rendered it (short circuit prevents useless search)
+  if(!useCache || !QPixmapCache::find(key, msgBubble)) {
+    // change suits to unicode chars
+    QRgb textRGB(qRgb(0, 0, 0));
+    QString s(msg);
+    if (s.indexOf("\1d") >= 0 || s.indexOf("\1h") >= 0) textRGB = qRgb(255, 0, 0);
+    s.replace("\1s", QChar((ushort)0x2660));
+    s.replace("\1c", QChar((ushort)0x2663));
+    s.replace("\1d", QChar((ushort)0x2666));
+    s.replace("\1h", QChar((ushort)0x2665));
+    s = s.trimmed();
+    // now i want to know text extents
+    QRect boundR = painter.boundingRect(rect(), Qt::AlignLeft | Qt::AlignTop | Qt::TextExpandTabs, msg);
+    // window size
+    // .|.....text.....|.
+    int w = boundR.width()+16, h = boundR.height()+16;
+    msgBubble = QPixmap(w, h);
+    msgBubble.fill(Qt::transparent);
+    QPainter p(&msgBubble);
+    // draw shadow
+    QBrush brush(qRgba(0, 0, 0, 128));
+    QRect winR(4, 0, w-4, h-8);
+    winR.adjust(-4, 8, -4, 8);
+    p.fillRect(winR, brush);
+    winR.adjust(4, -8, 4, -8);
+    // draw window
+    brush.setColor(qRgb(dim?164:255, dim?164:255, dim?164:255));
+    p.fillRect(winR, brush);
+    // draw frame
+    p.setPen(qRgb(0, 0, 0));
+    p.drawRect(5, 1, w-7, h-11);
+    // draw text
+    boundR.adjust(10, 4, 10, 4);
+    p.setPen(textRGB);
+    p.drawText(boundR, Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextExpandTabs, s);
+    QPixmapCache::insert(key, msgBubble);
+    qDebug() << "caching" << key;
+  } else {
+    qDebug() << "from cache" << key;
+  }
   if (x0 < 0) {
     if (x0 == -666)
-      x0 = (width()-w)/2;
+      x0 = (width()-msgBubble.width())/2;
     else
-      x0 += width()-w;
+      x0 += width()-msgBubble.width();
   }
   if (y0 < 0) {
     if (y0 == -666)
-      y0 = (height()-h)/2;
+      y0 = (height()-msgBubble.height())/2;
     else
-      y0 += height()-h;
+      y0 += height()-msgBubble.height();
   }
-  // draw shadow
-  QBrush brush(qRgba(0, 0, 0, 128));
-  QRect winR(x0, y0, w, h);
-  winR.adjust(-4, 8, -4, 8);
-  p.fillRect(winR, brush);
-  winR.adjust(4, -8, 4, -8);
-  // draw window
-  brush.setColor(qRgb(dim?164:255, dim?164:255, dim?164:255));
-  p.fillRect(winR, brush);
-  // draw frame
-  p.setPen(qRgb(0, 0, 0));
-  p.drawLine(x0+1, y0+1, x0+w-2, y0+1);
-  p.drawLine(x0+1, y0+h-2, x0+w-2, y0+h-2);
-  p.drawLine(x0+1, y0+1, x0+1, y0+h-2);
-  p.drawLine(x0+w-2, y0+1, x0+w-2, y0+h-2);
-  // draw text
-  boundR.adjust(x0+2+4, y0+2+2, x0+2+4, y0+2+2);
-  p.setPen(textRGB);
-  p.drawText(boundR, Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextExpandTabs, s);
-  // done
-  p.end();
+  painter.drawPixmap(x0, y0, msgBubble);
 }
 
 

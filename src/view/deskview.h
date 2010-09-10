@@ -80,7 +80,7 @@ public:
   void drawOutlinedText (const QString & str, int x, int y, QRgb textColor=qRgb(255,255,255), QRgb outlineColor=qRgb(0,0,0));
   void drawPool ();
   void drawBidBoard();
-  void drawMessageWindow (int x0, int y0, const QString & msg, bool dim=false);
+  void drawMessageWindow (int x0, int y0, const QString & msg, bool dim=false, bool useCache=true);
   void drawPlayerMessage (int player, const QString & msg, bool dim=false);
 
   void MessageBox (const QString & text, const QString & caption);
