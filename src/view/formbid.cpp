@@ -244,7 +244,7 @@ void BidDialog::initDialog () {
   btnPass->setMinimumSize(0,0);
   btnPass->setObjectName("pass");
   btnPass->setText(tr("&Pass"));
-  btnPass->setIcon(QIcon(QString(":/pics/pass.png")));
+  btnPass->setIcon(QIcon(":/pics/pass.png"));
   m_otherButtons.append(btnPass);
 
   btnWhist = new QPushButton(this);
@@ -252,7 +252,7 @@ void BidDialog::initDialog () {
   btnWhist->setMinimumSize(0,0);
   btnWhist->setObjectName("whist");
   btnWhist->setText(tr("&Whist"));
-  btnWhist->setIcon(QIcon(QString(":/pics/whist.png")));
+  btnWhist->setIcon(QIcon(":/pics/whist.png"));
   m_otherButtons.append(btnWhist);
 
   btnHalfWhist = new QPushButton(this);
@@ -260,7 +260,7 @@ void BidDialog::initDialog () {
   btnHalfWhist->setMinimumSize(0,0);
   btnHalfWhist->setObjectName("halfwhist");
   btnHalfWhist->setText(tr("&HalfWhist"));
-  btnHalfWhist->setIcon(QIcon(QString(":/pics/halfwhist.png")));
+  btnHalfWhist->setIcon(QIcon(":/pics/halfwhist.png"));
   m_otherButtons.append(btnHalfWhist);
 
   btnScore = new QPushButton(this);
@@ -268,7 +268,7 @@ void BidDialog::initDialog () {
   btnScore->setMinimumSize(0, 0);
   btnScore->setText(tr("S&core"));
   btnScore->setToolTip(tr("Show game table with calculated scores"));
-  btnScore->setIcon(QIcon(QString(":/pics/paper.png")));
+  btnScore->setIcon(QIcon(":/pics/paper.png"));
   m_otherButtons.append(btnScore);
 
   btnWithoutThree = new QPushButton(this);
@@ -276,7 +276,7 @@ void BidDialog::initDialog () {
   btnWithoutThree->setMinimumSize(0, 0);
   btnWithoutThree->setText(tr("Without &Three"));
   btnWithoutThree->setToolTip(tr("Cancel game with penalty of three untaken tricks. No whists are written"));
-  btnWithoutThree->setIcon(QIcon(QString(":/pics/cancel.png")));
+  btnWithoutThree->setIcon(QIcon(":/pics/cancel.png"));
   m_otherButtons.append(btnWithoutThree);
 
   connect(btnMisere, SIGNAL(clicked()), this, SLOT(misere()));
