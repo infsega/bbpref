@@ -23,8 +23,6 @@
 #ifndef PRFCONST_H
 #define PRFCONST_H
 
-#include <QString>
-
 #define OPENPREF_VERSION "0.1.3"
 
 #ifdef Q_WS_QWS
