@@ -698,7 +698,7 @@ void DeskView::inGameCardLeftTop (int mCardNo, int &left, int &top)
 
 void DeskView::animateTrick (int plrNo, const QCardList & cards)
 {
-  const int steps = 5 * (1 << m_takeQuality);
+  const int steps = 5 * (2 << m_takeQuality);
   int left, top;
 
   getLeftTop(plrNo, left, top);

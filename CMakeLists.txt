@@ -68,16 +68,10 @@ IF( MINGW )
                         COMMAND windres.exe -I${CMAKE_CURRENT_SOURCE_DIR} -i${CMAKE_CURRENT_SOURCE_DIR}/openprefres.rc 
                              -o ${CMAKE_CURRENT_BINARY_DIR}/openprefres.o )
     SET( SOURCES ${SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/openprefres.o)
-ELSE( MINGW )
-#    SET( SOURCES ${SOURCES} openpref.rc)
 ENDIF( MINGW )
 
 SET ( RCS
 	openpref.qrc
-)
-
-SET ( QM_SRCS 
-	openpref_ru.ts
 )
 
 set(QT_MIN_VERSION "4.4.0")
@@ -88,19 +82,11 @@ INCLUDE( ${QT_USE_FILE} )
 
 QT4_WRAP_UI( UI_HEADERS ${UIS})
 QT4_WRAP_CPP( MOC_SRCS ${HEADERS} )
-QT4_WRAP_TS( QMS ${QM_SRCS} )
 QT4_ADD_RESOURCES( RC_SRCS ${RCS} )
 
-INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR} )
-
-configure_file(
-  "${CMAKE_MODULE_PATH}/CopyQM.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/CopyQM.cmake"
-  IMMEDIATE
-)
-
 add_custom_target(i18n
-  "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/CopyQM.cmake"
+  ${QT_LRELEASE_EXECUTABLE} openpref.pro
+  WORKING_DIRECTORY ${openpref_SOURCE_DIR}
   DEPENDS ${QMS}
 )
 
