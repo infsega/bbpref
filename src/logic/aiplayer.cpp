@@ -829,8 +829,12 @@ Card *AiPlayer::MyGame2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPl
     if (!aLeftPlayer->mCards.cardsInSuit(mast)) {
       // У левого тож нету
       MaxLeftCard = aLeftPlayer->mCards.maxInSuit(koz); // k8: это заебись, а чо, если у нас нихуя козыря нет?
-      cur = mCards.greaterInSuit(MaxLeftCard); // k8: тогда тут тоже нет нихуя
-      if (!cur) cur = mCards.lesserInSuit(MaxLeftCard); // k8: и тут тоже нихуя
+      if (MaxLeftCard) {
+        cur = mCards.greaterInSuit(MaxLeftCard); // k8: тогда тут тоже нет нихуя
+        if (!cur) cur = mCards.lesserInSuit(MaxLeftCard); // k8: и тут тоже нихуя
+      } else {
+        cur = mCards.minInSuit(koz); // k8: тогда тут тоже нет нихуя
+      }
       if (!cur) cur = GetMinCardWithOutVz(); // лабуду
       if (!cur) cur = mCards.minFace();
     } else {
