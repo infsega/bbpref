@@ -691,7 +691,9 @@ void PrefModel::runGame () {
           // choice of the first player
           int firstWhistPlayer = passOrWhistPlayersCounter.nValue;
           mPlayerHi = firstWhistPlayer;
-          if ((m_currentGame != g86) && !(!opt10Whist && m_currentGame>=101 && m_currentGame<=105)) {
+          if ((m_currentGame != g86)
+            && !(!opt10Whist && m_currentGame>=101 && m_currentGame<=105)
+            && !(optStalingrad && m_currentGame == g61)) {
 			player(passOrWhistPlayersCounter)->setMessage(tr("thinking..."));
 			mDeskView->draw(false);
 			if (firstWhistPlayer != 1) mDeskView->mySleep(2);
@@ -714,7 +716,9 @@ void PrefModel::runGame () {
 		  mDeskView->draw(false);
 		  PassOrVistPlayers = player(passOrWhistPlayersCounter);
           PassOrVistPlayers->setGame(undefined);
-          if ((m_currentGame != g86) && !(!opt10Whist && m_currentGame>=101 && m_currentGame<=105)) {
+          if ((m_currentGame != g86)
+            && !(!opt10Whist && m_currentGame>=101 && m_currentGame<=105)
+            && !(optStalingrad && m_currentGame == g61)) {
 			player(passOrWhistPlayersCounter)->setMessage(tr("thinking..."));
 			mDeskView->draw(false);
 			if (secondWhistPlayer != 1) mDeskView->mySleep(2);
