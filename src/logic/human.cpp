@@ -76,10 +76,7 @@ eGameBid HumanPlayer::dropForGame ()
       returnDrop();
       makeMove(0, 0, 0, 0);
       makeMove(0, 0, 0, 0);
-    } /*else if (tmpGamesType == 1) {
-      // показать пулю
-      mDeskView->drawBidBoard();
-    }*/
+    }
     Q_ASSERT(tmpGamesType != 1);
   } while (tmpGamesType <= 1);
   if ( tmpGamesType != withoutThree)
@@ -124,9 +121,6 @@ eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove)
       makeMove(0, 0, 0, 0);
       //mDeskView->mySleep(1);
       makeMove(0, 0, 0, 0);
-    } else if (tmpGamesType == 1) {
-      // show pool
-      mDeskView->drawBidBoard();
     }
   } while (tmpGamesType <= 1);
   m_game = tmpGamesType;
