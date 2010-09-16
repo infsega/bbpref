@@ -44,7 +44,7 @@ public:
   MainWindow(bool fullScreen=false);
   ~MainWindow();
 
-public slots:
+private slots:
   void newSingleGame ();
   void showScore ();
   void showLog();
