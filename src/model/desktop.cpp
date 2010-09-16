@@ -1049,7 +1049,7 @@ void PrefModel::emitGameChanged(eGameBid game)
         emit gameChanged(QString());
         break;
       case raspass:
-        emit gameChanged(tr("pass-out"));
+        emit gameChanged(tr("Pass-out"));
         break;
       default:
         QString game_name = sGameName(game);
@@ -1057,7 +1057,7 @@ void PrefModel::emitGameChanged(eGameBid game)
         game_name.replace("\1c", QChar((ushort)0x2663));
         game_name.replace("\1d", QChar((ushort)0x2666));
         game_name.replace("\1h", QChar((ushort)0x2665));
-        emit gameChanged(mPlayers.at(mPlayerActive)->nick() + " plays " + game_name);
+        emit gameChanged(mPlayers.at(mPlayerActive)->nick() + " " + tr("plays") + " " + game_name);
         break;
   }
 }

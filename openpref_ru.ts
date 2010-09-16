@@ -2,6 +2,42 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="ru_RU">
 <context>
+    <name></name>
+    <message>
+        <source>(w)</source>
+        <translation type="obsolete">(в)</translation>
+    </message>
+    <message>
+        <source>Show</source>
+        <translation type="obsolete">Показать</translation>
+    </message>
+    <message>
+        <source>Game</source>
+        <translation type="obsolete">Игра</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation type="obsolete">Время</translation>
+    </message>
+    <message>
+        <source>Deal</source>
+        <translation type="obsolete">Расклад</translation>
+    </message>
+    <message>
+        <source>Updated Version of OpenPref Available</source>
+        <comment>Indicates an updated OpenPref version is available</comment>
+        <translation type="obsolete">Доступна новая версия OpenPref</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="obsolete">OK</translation>
+    </message>
+    <message>
+        <source>Remind Later</source>
+        <translation type="obsolete">Напомнить позже</translation>
+    </message>
+</context>
+<context>
     <name>Bid messages</name>
     <message>
         <source>whist</source>
@@ -581,31 +617,43 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     </message>
     <message>
         <source>no trumps</source>
-        <translation type="obsolete">без козыря</translation>
+        <translation>без козыря</translation>
     </message>
     <message>
         <source>6 no trumps</source>
-        <translation>6 без козыря</translation>
+        <translation type="obsolete">6 без козыря</translation>
     </message>
     <message>
         <source>7 no trumps</source>
-        <translation>7 без козыря</translation>
+        <translation type="obsolete">7 без козыря</translation>
     </message>
     <message>
         <source>8 no trumps</source>
-        <translation>8 без козыря</translation>
+        <translation type="obsolete">8 без козыря</translation>
     </message>
     <message>
         <source>9 no trumps</source>
-        <translation>9 без козыря</translation>
+        <translation type="obsolete">9 без козыря</translation>
     </message>
     <message>
         <source>10 no trumps</source>
-        <translation>10 без козыря</translation>
+        <translation type="obsolete">10 без козыря</translation>
     </message>
     <message>
         <source>without three</source>
         <translation>без трех</translation>
+    </message>
+    <message>
+        <source>Bidding</source>
+        <translation>Торги</translation>
+    </message>
+    <message>
+        <source>plays</source>
+        <translation>играет</translation>
+    </message>
+    <message>
+        <source>Pass-out</source>
+        <translation>Распасы</translation>
     </message>
 </context>
 <context>
