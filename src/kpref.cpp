@@ -83,6 +83,7 @@ inline void MainWindow::doConnects()
   connect(m_PrefModel, SIGNAL(deskChanged()), mDeskView, SLOT(update()));
   connect(m_PrefModel, SIGNAL(showHint(const QString&)), this, SLOT(showHint(const QString&)));
   connect(m_PrefModel, SIGNAL(clearHint()), this, SLOT(clearHint()));
+  connect(m_PrefModel, SIGNAL(gameChanged(QString)), this, SLOT(changeTitle(QString)));
 }
 
 
@@ -392,6 +393,14 @@ void MainWindow::showHint(const QString & hint)
 void MainWindow::clearHint()
 {
   HintBar->clearMessage();
+}
+
+void MainWindow::changeTitle(const QString & gameName)
+{
+  if (gameName.isEmpty())
+    setWindowTitle("OpenPref");
+  else
+    setWindowTitle(QString("OpenPref: ") + gameName);
 }
 
 const char * GenName(const QString &str, const QString &ext)

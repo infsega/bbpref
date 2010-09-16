@@ -98,6 +98,7 @@ signals:
   void gameOver ();
   void showHint (const QString & text);
   void clearHint();
+  void gameChanged (const QString & text);
 
 public:
   WrapCounter nCurrentStart, nCurrentMove;
@@ -134,6 +135,7 @@ private:
   Card *makeGameMove (Card *lMove, Card *rMove, bool isPassOut);
   void playingRound();
   bool checkMoves();
+  void emitGameChanged(eGameBid game);
 
 private:
   DeskView *mDeskView;

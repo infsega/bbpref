@@ -554,6 +554,7 @@ void PrefModel::runGame () {
 
     //draw();
 
+    emit gameChanged(tr("Bidding"));
     int curBidIdx = 1;
     forever {
       //      
@@ -636,6 +637,7 @@ void PrefModel::runGame () {
 
           // throw away
           eGameBid maxBid = m_currentGame;
+          emitGameChanged(m_currentGame);
           if (currentPlayer->game() != g86) {		//  not misere
             // not misere
             nCurrentMove.nValue = i;
@@ -646,6 +648,7 @@ void PrefModel::runGame () {
 				mDeskView->mySleep(2);
             playerBids[0] = m_currentGame = currentPlayer->dropForGame();
 			emit clearHint();
+			emitGameChanged(m_currentGame);
           } else {	// playing misere
             // show all cards
             int tempint = nCurrentMove.nValue;
@@ -922,6 +925,7 @@ LabelRecordOnPaper:
         plr->mCards = tmplist[f-1];
       }
     }
+    emitGameChanged(zerogame);
   } // end of pool
   mDeskView->update();
   emit gameOver();
@@ -1030,4 +1034,30 @@ bool PrefModel::checkMoves ()
     }
   }
   return true;
+}
+
+void PrefModel::emitGameChanged(eGameBid game)
+{
+  switch (game) {
+      case zerogame:
+      case showpool:
+      case g86catch:
+      case undefined:
+      case whist:
+      case halfwhist:
+      case gtPass:
+        emit gameChanged(QString());
+        break;
+      case raspass:
+        emit gameChanged(tr("pass-out"));
+        break;
+      default:
+        QString game_name = sGameName(game);
+        game_name.replace("\1s", QChar((ushort)0x2660));
+        game_name.replace("\1c", QChar((ushort)0x2663));
+        game_name.replace("\1d", QChar((ushort)0x2666));
+        game_name.replace("\1h", QChar((ushort)0x2665));
+        emit gameChanged(mPlayers.at(mPlayerActive)->nick() + " plays " + game_name);
+        break;
+  }
 }

@@ -59,6 +59,7 @@ private slots:
 
   void showHint(const QString & hint);
   void clearHint();
+  void changeTitle(const QString & gameName);
 
 private:
   void adjustDesk ();
