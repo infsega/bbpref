@@ -68,32 +68,39 @@ public:
   void readSettings();
   void writeSettings() const;
 
+  void reloadCards () { freeCards(); loadCards(); }
+
   void mySleep (int seconds);
   void aniSleep (int milliseconds, const QRegion & region = QRegion());
+  void longWait (const int n);
 
-  // Background repaint
+  /// Fills whole widget with background
   void ClearScreen ();
+  /// Fills rectangle in widget with background
   void ClearBox (int x1, int y1, int x2, int y2);
 
+  /// Reconstructs the scene completely
   void draw (bool emitSignal=true);
+  /// @todo must be private
   void drawCard (const Card *card, int x, int y, bool opened, bool hilight);
-  void drawOutlinedText (const QString & str, int x, int y, QRgb textColor=qRgb(255,255,255), QRgb outlineColor=qRgb(0,0,0));
+  /// Shows ScoreWidget
   void drawPool ();
-  QPixmap drawMessageWindow (const QString & msg, bool dim=false);
+  /// Draws text "said" by player
   void drawPlayerMessage (int player, const QString & msg, bool dim=false, bool useCache=true);
+  /// Draws outlined text on widget's surface
+  /// @todo unused method
+  void drawOutlinedText (const QString & str, int x, int y, QRgb textColor=qRgb(255,255,255), QRgb outlineColor=qRgb(0,0,0));
 
-  void MessageBox (const QString & text, const QString & caption);
-  //----------------------------- for human player
-  eGameBid selectBid (BidDialog::ActiveButtons);
-
+  /// @todo must be private
   void getLeftTop (int player, int & left, int & top);
   
   void animateTrick (int plrNo, const QCardList & cards);
 
+  /// Ask user if he wants to play open or closed whist
   bool askWhistType ();
-  void longWait (const int n);
-
-  void reloadCards () { freeCards(); loadCards(); }
+  void MessageBox (const QString & text, const QString & caption);
+  //----------------------------- for human player
+  eGameBid selectBid (BidDialog::ActiveButtons);
 
 public:
   int imoveX, imoveY;
@@ -104,18 +111,26 @@ public:
   int CardWidth, CardHeight;
 
 protected:
+  /// Renders pixmap representation of given message
+  /// Override it in your class if you want to change shape
+  QPixmap drawMessageWindow (const QString & msg, bool dim=false);
+
+  /// Renders current game, active player, and trick numbers
+  /// Override it in your class if you want it to look differently
+  void drawBidBoard();
+
   void  paintEvent (QPaintEvent *);
   void  keyPressEvent (QKeyEvent *);
   void  mousePressEvent (QMouseEvent *);
   void  mouseMoveEvent (QMouseEvent *);
   void  resizeEvent(QResizeEvent *event);
 
+
 private:
   void drawPKeyBmp (bool show);
   void inGameCardLeftTop (int mCardNo, int &left, int &top);
   void drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy);
   void drawNumber (QPainter &p, int x0, int y0, int n, bool red);
-  void drawBidBoard();
   void drawGameBid (QPainter &p, eGameBid game);
   void drawIMove (QPainter &p);
 
