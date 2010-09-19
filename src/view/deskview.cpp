@@ -773,6 +773,17 @@ bool DeskView::askWhistType ()
     return true;
 }
 
+bool DeskView::askConfirmDrop ()
+{
+  const int ret = QMessageBox::question(this, tr("Confirm your drop"),
+    tr("Do you confirm your drop?"),
+    QMessageBox::Yes | QMessageBox::Default, QMessageBox::No | QMessageBox::Escape);
+  if (ret == QMessageBox::Yes)
+    return true;
+  else
+    return false;
+}
+
 /// @todo Should be merged with paintEvent (and add method like invalidateCache)
 void DeskView::draw (bool emitSignal) {
   ClearScreen();

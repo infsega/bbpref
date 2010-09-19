@@ -98,6 +98,8 @@ public:
 
   /// Ask user if he wants to play open or closed whist
   bool askWhistType ();
+  /// Ask user if he wants to confirm choice of dropped cards
+  bool askConfirmDrop ();
   void MessageBox (const QString & text, const QString & caption);
   //----------------------------- for human player
   eGameBid selectBid (BidDialog::ActiveButtons);

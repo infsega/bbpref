@@ -56,33 +56,30 @@ eGameBid HumanPlayer::dropForMisere () {
 // после сноса чего играем
 eGameBid HumanPlayer::dropForGame ()
 {
-  eGameBid tmpGamesType;
+  bool confirm;
 
   makeMove(0, 0, 0, 0);
   makeMove(0, 0, 0, 0);
+
+  confirm = mDeskView->askConfirmDrop();
+  while(!confirm) {
+    clearCardArea();
+    returnDrop();
+    makeMove(0, 0, 0, 0);
+    makeMove(0, 0, 0, 0);
+    confirm = mDeskView->askConfirmDrop();
+  }
 
   BidDialog *bidDialog = BidDialog::instance();
-  bidDialog->enableBids();
   bidDialog->disableLessThan(m_game);
   BidDialog::ActiveButtons buttons = BidDialog::Score;
   if (m_model->optWithoutThree)
     buttons |= BidDialog::WithoutThree;
 
-  do {
-    tmpGamesType = mDeskView->selectBid(buttons);
-    if (tmpGamesType == 0) {
-      // return drop back
-      clearCardArea();
-      returnDrop();
-      makeMove(0, 0, 0, 0);
-      makeMove(0, 0, 0, 0);
-    }
-    Q_ASSERT(tmpGamesType != 1);
-  } while (tmpGamesType <= 1);
+  eGameBid tmpGamesType = mDeskView->selectBid(buttons);
   if ( tmpGamesType != withoutThree)
-  	m_game = tmpGamesType;
+    m_game = tmpGamesType;
 
-  bidDialog->enableBids();
   mWaitingForClick = false;
   return tmpGamesType;
 }
@@ -95,7 +92,6 @@ eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove)
   mClickX = mClickY = 0; mWaitingForClick = true;
 
   BidDialog *bidDialog = BidDialog::instance();
-  bidDialog->enableBids();
   
   if (m_model->optAggPass && m_model->optPassCount > 0)
     bidDialog->disableLessThan(g71);
@@ -119,13 +115,11 @@ eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove)
       clearCardArea();
       returnDrop();
       makeMove(0, 0, 0, 0);
-      //mDeskView->mySleep(1);
       makeMove(0, 0, 0, 0);
     }
   } while (tmpGamesType <= 1);
   m_game = tmpGamesType;
   mWaitingForClick = false;
-  bidDialog->enableBids();
   return m_game;
 }
 
