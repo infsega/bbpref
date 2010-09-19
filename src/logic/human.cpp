@@ -108,17 +108,7 @@ eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove)
   if (m_game == undefined)
     buttons |= BidDialog::Misere;
 
-  do {
-    tmpGamesType = mDeskView->selectBid(buttons);
-    if (tmpGamesType == 0) {
-      // вернуть снос (если есть) и снести заново
-      clearCardArea();
-      returnDrop();
-      makeMove(0, 0, 0, 0);
-      makeMove(0, 0, 0, 0);
-    }
-  } while (tmpGamesType <= 1);
-  m_game = tmpGamesType;
+  m_game = mDeskView->selectBid(buttons);
   mWaitingForClick = false;
   return m_game;
 }
