@@ -35,6 +35,11 @@ public:
   NewGameDialog (QWidget *parent=0) : QDialog(parent) { setupUi(this); }
   ~NewGameDialog () { }
 
+protected:
+#ifdef MOBILE
+  void showEvent(QShowEvent *) { showFullScreen(); }
+#endif
+
 private slots:
   void toggleRounds(int checked)
   {
