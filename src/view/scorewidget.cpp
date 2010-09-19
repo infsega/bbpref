@@ -155,12 +155,13 @@ void ScoreWidget::resizeEvent(QResizeEvent *event)
 
 void ScoreWidget::showEvent(QShowEvent *event)
 {
-  Q_UNUSED(event)
   QSettings settings;
 #ifndef MOBILE
   setMaximumSize(500, (int) (static_cast<QWidget *>(parent())->height()));
   restoreGeometry(settings.value("score/geometry").toByteArray());
+  QDialog::showEvent(event);
 #else
+  Q_UNUSED(event)
   QDialog::showFullScreen();
 #endif
   //qDebug() << "restore";
