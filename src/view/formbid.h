@@ -76,6 +76,7 @@ protected:
   explicit BidDialog (DeskView *parent=0);
   ~BidDialog ();
   void initDialog ();
+  void showEvent(QShowEvent *event);
   void closeEvent(QCloseEvent *event);
 
 public:

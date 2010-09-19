@@ -20,11 +20,12 @@
  *      http://www.gnu.org/licenses 
  */
 
-#include <QDesktopWidget>
-#include <QMessageBox>
-#include <QObject>
-#include <QToolTip>
-#include <QDebug>
+#include <QtGui/QMessageBox>
+#include <QtGui/QToolTip>
+#include <QtGui/QGridLayout>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QVBoxLayout>
+#include <QtCore/QDebug>
 
 #include "formbid.h"
 #include "prfconst.h"
@@ -69,24 +70,29 @@ namespace {
   class QBidButton : public QPushButton
   {
   public:
-    QBidButton (eGameBid aBid, int x, int y, QWidget *parent=0);
+    QBidButton (eGameBid aBid, QWidget *parent=0);
     eGameBid bid () const { return mBid; }
     void enable();
     void disable();
+    #ifndef MOBILE
+      QSize sizeHint() const { return QSize(40, 32); }
+    #endif
 
   protected:
     eGameBid mBid;
   };
 
-  QBidButton::QBidButton (eGameBid aBid, int x, int y, QWidget *parent) : QPushButton(parent), mBid(aBid) {
+  QBidButton::QBidButton (eGameBid aBid, QWidget *parent) : QPushButton(parent), mBid(aBid) {
       QString iName, oName;
     iName.sprintf(":/pics/bids/s%i.png", aBid);
     oName.sprintf("g%i", aBid);
     setObjectName(oName);
-    setGeometry(x, y, 40, 27);
-    setMinimumSize(40, 27);
+    setContentsMargins(2,2,0,0);
     setIconSize(QSize(40, 27));
     setIcon(QIcon(iName));
+    #ifdef MOBILE
+      setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    #endif
   }
 
   void QBidButton::enable() {
@@ -108,6 +114,7 @@ BidDialog::BidDialog (DeskView *parent) : QDialog (parent) {
   //this->setModal(true);
   m_deskview = parent;
   setWindowTitle(tr("Bidding"));
+  setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum));
   initDialog();
 }
 
@@ -123,6 +130,15 @@ BidDialog* BidDialog::instance(DeskView *parent)
       obj = new BidDialog(parent);
 
     return obj;
+}
+
+void BidDialog::showEvent(QShowEvent *event)
+{
+  #ifdef MOBILE
+    showFullScreen();
+  #else
+    QDialog::showEvent(event);
+  #endif
 }
 
 void BidDialog::closeEvent(QCloseEvent *event) {
@@ -158,15 +174,14 @@ void BidDialog::onBidClick () {
 
 
 void BidDialog::enableBids () {
-  foreach (QPushButton *b, m_bidButtons) {
-      static_cast<QBidButton *>(b)->enable();
-  }
+  foreach (QPushButton *b, m_bidButtons)
+    static_cast<QBidButton *>(b)->enable();
 }
 
 
 void BidDialog::disableBids () {
-    foreach (QPushButton *b, m_bidButtons)
-        static_cast<QBidButton *>(b)->disable();
+  foreach (QPushButton *b, m_bidButtons)
+    static_cast<QBidButton *>(b)->disable();
 }
 
 
@@ -201,9 +216,9 @@ void BidDialog::setActiveButtons(const ActiveButtons buttons)
     btnWithoutThree->setEnabled(false);
 
   if (buttons & Misere)
-    btnMisere->setEnabled(true);
+    static_cast<QBidButton *>(btnMisere)->enable();
   else
-    btnMisere->setEnabled(false);
+    static_cast<QBidButton *>(btnMisere)->disable();
 
   if (buttons & Score)
     btnScore->setEnabled(true);
@@ -212,72 +227,77 @@ void BidDialog::setActiveButtons(const ActiveButtons buttons)
 }
 
 
-void BidDialog::initDialog () {
-  this->resize(220, 260);
-  this->setMinimumSize(220, 260);
-  this->setMaximumSize(220, 260);
+void BidDialog::initDialog ()
+{
+//  setFixedSize(220, 260);
+  QVBoxLayout *dialogLayout = new QVBoxLayout(this);
+  QGridLayout *bidLayout = new QGridLayout();
+  bidLayout->setSpacing(2);
+  dialogLayout->addLayout(bidLayout);
+  QHBoxLayout *buttonLayout = new QHBoxLayout();
+  buttonLayout->setSpacing(2);
+  dialogLayout->addLayout(buttonLayout);
+  QHBoxLayout *buttonLayout2 = new QHBoxLayout();
+  buttonLayout2->setSpacing(2);
+  dialogLayout->addLayout(buttonLayout2);
+  setLayout(dialogLayout);
 
-  for (int face = 6; face <= 10; face++) {
-    int y = (face-6)*30+10;
-	if (face > 8)
-		y += 30;
-    for (int suit = 1; suit <= 5; suit++) {
-      int x = (suit-1)*40+10;
-      int bid = face*10+suit;
-      QBidButton *b = new QBidButton((eGameBid)bid, x, y, this);
-	  if (suit == 5)
-		b->setToolTip(tr("No trumps"));
-	  m_bidButtons.append(b);
+  eGameBid bid;
+  for (int i=0; i<5; i++) { // 6...10
+    for (int j=0; j<5; j++) {
+      bid = (eGameBid)((i+6)*10+j+1);
+      QBidButton *b = new QBidButton(bid, this);
+      if (j == 4)
+        b->setToolTip(tr("No trumps"));
+      if (i < 3) // 6..8
+        bidLayout->addWidget(b, i, j);
+      else // 9..10
+        bidLayout->addWidget(b, i+1, j);
+      m_bidButtons.append(b);
       connect(b, SIGNAL(clicked()), this, SLOT(onBidClick()));
     }
   }
 
-  btnMisere = new QBidButton(g86, 0, 0, this);
-  btnMisere->setGeometry(10, 100, 200, 27);
-  btnMisere->setMinimumSize(0,0);
+  btnMisere = new QBidButton(g86, this);
   btnMisere->setObjectName("g86");
   btnMisere->setText(tr("&Misere"));
+  bidLayout->addWidget(btnMisere, 3, 0, 1, -1);
   m_bidButtons.append(btnMisere);
-  
-  btnPass = new QPushButton(this);
-  btnPass->setGeometry(10,190,60,30);
-  btnPass->setMinimumSize(0,0);
-  btnPass->setObjectName("pass");
-  btnPass->setText(tr("&Pass"));
-  btnPass->setIcon(QIcon(":/pics/pass.png"));
-  m_otherButtons.append(btnPass);
 
   btnWhist = new QPushButton(this);
-  btnWhist->setGeometry(150,190,60,30);
-  btnWhist->setMinimumSize(0,0);
   btnWhist->setObjectName("whist");
   btnWhist->setText(tr("&Whist"));
   btnWhist->setIcon(QIcon(":/pics/whist.png"));
   m_otherButtons.append(btnWhist);
+  buttonLayout->addWidget(btnWhist);
 
   btnHalfWhist = new QPushButton(this);
-  btnHalfWhist->setGeometry(70, 190, 80, 30);
-  btnHalfWhist->setMinimumSize(0,0);
   btnHalfWhist->setObjectName("halfwhist");
   btnHalfWhist->setText(tr("&HalfWhist"));
   btnHalfWhist->setIcon(QIcon(":/pics/halfwhist.png"));
   m_otherButtons.append(btnHalfWhist);
+  buttonLayout->addWidget(btnHalfWhist);
+
+  btnPass = new QPushButton(this);
+  btnPass->setObjectName("pass");
+  btnPass->setText(tr("&Pass"));
+  btnPass->setIcon(QIcon(":/pics/pass.png"));
+  m_otherButtons.append(btnPass);
+  buttonLayout->addWidget(btnPass);
 
   btnScore = new QPushButton(this);
-  btnScore->setGeometry(116, 220, 94, 27);
-  btnScore->setMinimumSize(0, 0);
   btnScore->setText(tr("S&core"));
   btnScore->setToolTip(tr("Show game table with calculated scores"));
   btnScore->setIcon(QIcon(":/pics/paper.png"));
   m_otherButtons.append(btnScore);
+  buttonLayout2->addWidget(btnScore);
 
   btnWithoutThree = new QPushButton(this);
-  btnWithoutThree->setGeometry(10, 220, 106, 27);
-  btnWithoutThree->setMinimumSize(0, 0);
   btnWithoutThree->setText(tr("Without &Three"));
   btnWithoutThree->setToolTip(tr("Cancel game with penalty of three untaken tricks. No whists are written"));
   btnWithoutThree->setIcon(QIcon(":/pics/cancel.png"));
   m_otherButtons.append(btnWithoutThree);
+  buttonLayout2->addWidget(btnWithoutThree);
 
   connect(btnMisere, SIGNAL(clicked()), this, SLOT(misere()));
   connect(btnPass, SIGNAL(clicked()), this, SLOT(pass()));
