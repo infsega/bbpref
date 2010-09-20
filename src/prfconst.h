@@ -29,6 +29,9 @@
   #define MOBILE
 #endif
 
+const int BidIconWidth = 40;
+const int BidIconHeight = 27;
+
 enum eGameBid {
   zerogame=0,
   showpool=1,
