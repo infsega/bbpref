@@ -267,7 +267,7 @@ Card *PrefModel::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
   Player *curPlr = player(nCurrentMove);
   Player *plr = 0;
   // 1. Current player is not human
-  // Human's move if current he whists whith open cards or catches misere, and current player
+  // Human's move if current he whists with open cards or catches misere, and current player
   // passes or catches misere
   if (((player(1)->game() == whist && !m_closedWhist) || player(1)->game() == g86catch) &&
       !curPlr->isHuman() && (curPlr->game() == gtPass || curPlr->game() == g86catch)) {
