@@ -166,7 +166,7 @@ private:
 class SleepEventLoop : public QEventLoop {
   Q_OBJECT
 public:
-  SleepEventLoop (DeskView *aDeskView, QObject *parent=0) : QEventLoop(parent),
+  explicit SleepEventLoop (DeskView *aDeskView, QObject *parent=0) : QEventLoop(parent),
     mDeskView(aDeskView), mKeyPressed(false), mMousePressed(false), mMouseX(0), mMouseY(0),
     mIgnoreKey(false), mIgnoreMouse(false) { }
 
