@@ -97,7 +97,7 @@ const QString PrefModel::bidMessage(const eGameBid game)
 {
         if (game == whist) return tr("whist");
         else if (game == gtPass) return tr("pass");
-        else if (game % 10 == 5) return QString::number(game/10) + " " + tr("no trumps");
+        else if (game % 10 == 5) return QString::number(game/10) + ' ' + tr("no trumps");
         else if (game == g86) return tr("Misere");
         else if (game == withoutThree) return tr("without three");
         else return sGameName(game);
@@ -1057,7 +1057,7 @@ void PrefModel::emitGameChanged(eGameBid game)
         game_name.replace("\1c", QChar((ushort)0x2663));
         game_name.replace("\1d", QChar((ushort)0x2666));
         game_name.replace("\1h", QChar((ushort)0x2665));
-        emit gameChanged(mPlayers.at(mPlayerActive)->nick() + " " + tr("plays") + " " + game_name);
+        emit gameChanged(mPlayers.at(mPlayerActive)->nick() + ' ' + tr("plays") + ' ' + game_name);
         break;
   }
 }

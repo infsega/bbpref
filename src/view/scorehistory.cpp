@@ -160,9 +160,9 @@ void ScoreHistoryDialog::showDeal(const int row)
     output += ": ";
     foreach(const Card &c, m_model->gameLog().at(row).cardList[i-1]) {
       output += c.toUniString();
-      output += " ";
+      output += ' ';
     }
-    output += "\n";
+    output += '\n';
   }
   QMessageBox::about(0, tr("Deal #") + QString::number(row + 1), output);
 }
