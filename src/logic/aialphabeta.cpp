@@ -176,7 +176,7 @@ static void abcPrune (
     }
     crdNext = crdNo+1;
     crdSuit = hand->suits[crdNo];
-    if (!turn) {
+    if (turn == 0) {
       // первый ход может быть любой ваще, если это не первый и не второй круг распасов
       if (gPassOutSuit >= 0 && crdSuit != gPassOutSuit && hand->suitCount[gPassOutSuit]) {
         // не, это очень херовая масть, начнём с верной масти
