@@ -108,9 +108,6 @@ protected:
   bool isValidMove(const Card *move, const Card *lMove, const Card *rMove, const int trump);
 
 public:
-  DeskView *mDeskView;
-  PrefModel *m_model;
-
   ScoreBoard mScore;
   CardList mCards; // my cards
   CardList mCardsOut; // во взятках мои
@@ -121,6 +118,8 @@ public:
   bool mWaitingForClick;
 
 protected:
+  DeskView *mDeskView;
+  PrefModel *m_model;
   QString m_nick;
   QString mMessage;
   int mPlayerNo; // my number
