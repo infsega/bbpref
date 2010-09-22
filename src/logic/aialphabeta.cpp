@@ -20,13 +20,14 @@
  *      http://www.gnu.org/licenses 
  */
 
-#include <QDebug>
+#include "aialphabeta.h"
 
+#include <QDebug>
 #include <QTime>
 
 #include "prfconst.h"
 #include "formbid.h"
-#include "aialphabeta.h"
+#include "desktop.h"
 
 typedef unsigned char  card_t;
 
@@ -511,7 +512,7 @@ Card *AlphaBetaPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, 
   card_t desk[3];
   int crdLeft = 0;
   int trumpSuit = 0;
-  Player *movePlrObj = 0, *plst[3];
+  Player *plst[3];
 
 //again:
   plst[0] = plst[1] = plst[2] = 0;
@@ -542,17 +543,7 @@ Card *AlphaBetaPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, 
 
 
   // find game
-  eGameBid bid;
-  if (m_game == gtPass || m_game == whist) {
-    bid = aLeftPlayer->game();
-    if (bid == gtPass || bid == whist) {
-      bid = aRightPlayer->game();
-      movePlrObj = aRightPlayer;
-    } else movePlrObj = aLeftPlayer;
-  } else {
-    bid = m_game;
-    movePlrObj = this;
-  }
+  const eGameBid bid = m_model->currentGame();
 
   gPassOut = (bid == g86 || bid == g86catch || bid == raspass);
   trumpSuit = bid%10-1;//(bid-(bid/10)*10)-1;
