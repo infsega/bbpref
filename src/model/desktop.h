@@ -79,6 +79,7 @@ public:
 
   Player *player (int num);
   Player *currentPlayer () const { return mPlayers[nCurrentMove.nValue]; }
+  Player *activePlayer () const { return mPlayers[mPlayerActive]; }
   int activePlayerNumber () const { return mPlayerActive; }
   int playerWithMaxPool (); // except the players who closed the pool
   int trumpSuit () const;
