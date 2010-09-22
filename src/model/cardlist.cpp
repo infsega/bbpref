@@ -45,7 +45,7 @@ void CardList::clear () {
 
 
 Card *CardList::exists (int aFace, int aSuit) const {
-  Card *c = newCard(aFace, aSuit);
+  Card *c = getCard(aFace, aSuit);
   return exists(c);
 }
 
@@ -234,7 +234,7 @@ bool CardList::unserialize (QByteArray &ba, int *pos) {
     if (t < 1 || t > 74) t = 0;
     if (t) {
       int face = (t/10)+7, suit = t%10;
-      if (face >= 7 && face <= FACE_ACE && suit >= 1 && suit <= 4) mList << newCard(face, suit);
+      if (face >= 7 && face <= FACE_ACE && suit >= 1 && suit <= 4) mList << getCard(face, suit);
       else mList << 0;
     } else mList << 0;
   }
@@ -264,7 +264,7 @@ void CardList::newDeck () {
   mList.clear();
   for (int suit = 1; suit <= 4; suit++) {
     for (int face = 7; face <= FACE_ACE; face++) {
-      mList << newCard(face, suit);
+      mList << getCard(face, suit);
     }
   }
 }

@@ -147,7 +147,7 @@ void initCardList () {
 }
 
 
-Card *newCard (int aFace, int aSuit) {
+Card *getCard (int aFace, int aSuit) {
   initCardList();
   int no = 32;
   if (aFace >= 7 && aFace <= FACE_ACE && aSuit >= 1 && aSuit <= 4) no = (aFace-7)*4+(aSuit-1);
@@ -181,5 +181,5 @@ Card *cardFromName (const char *str) {
     case 'H': case 'h': suit = 4; break;
     default: return 0;
   }
-  return newCard(face, suit);
+  return getCard(face, suit);
 }

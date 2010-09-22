@@ -661,7 +661,7 @@ Card *AlphaBetaPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, 
 */
   Q_ASSERT(move >= 0);
 
-  Card *moveCard = newCard(FACE(hands[me][move]), SUIT(hands[me][move])+1);
+  Card *moveCard = getCard(FACE(hands[me][move]), SUIT(hands[me][move])+1);
 
   qDebug() << "move:" << moveCard->toString();
 

@@ -67,7 +67,7 @@ public:
   friend int operator == (const Card &c0, const Card &c1);
   friend int operator != (const Card &c0, const Card &c1);
 
-  friend Card *newCard (int aFace, int aSuit);
+  friend Card *getCard (int aFace, int aSuit);
   friend void initCardList ();
 
 private:
@@ -85,9 +85,7 @@ typedef QList<Card *> QCardList;
 
 
 void initCardList ();
-Card *newCard (int aFace, int aSuit);
-Card *newCard (int aPacked);
-
+Card *getCard (int aFace, int aSuit);
 Card *cardFromName (const char *str);
 
 

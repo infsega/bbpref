@@ -150,7 +150,7 @@ tSuitProbs AiPlayer::countGameTricks (eSuit Mast, int a23) {
   for (int c = 7; c <= FACE_ACE; c++) {
     MyCard = mCards.exists(c, Mast);
     if (MyCard) MyCardStack.insert(MyCard);
-    else EnemyCardStack.insert(newCard(c, Mast));
+    else EnemyCardStack.insert(getCard(c, Mast));
   }
   if (MyCardStack.count() >= 4 && MyCardStack.count() <= 5) EnemyCardStack.remove(EnemyCardStack.minFace());
   if (a23 == 23) suitProb = calcProbsForMaxH23(MyCardStack, EnemyCardStack);
@@ -409,7 +409,7 @@ void AiPlayer::loadLists (Player *aLeftPlayer, Player *aRightPlayer, CardList &a
         mRight.remove(RightMax);
       }
     }
-    if (Max != 0) aMaxCardList.insert(newCard(Max->face(), Max->suit()));
+    if (Max != 0) aMaxCardList.insert(getCard(Max->face(), Max->suit()));
   }
   mLeft.clear();
   mRight.clear();
