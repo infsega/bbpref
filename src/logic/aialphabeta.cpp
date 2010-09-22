@@ -83,7 +83,7 @@ static int gPassOutSuit; // нужная масть для первого или
 static int gIterations;
 
 //static int gTrk = 0;
-static bool gPassOut;
+static bool gPassOutOrMisere;
 
 
 typedef struct {
@@ -323,7 +323,7 @@ doMove:
         x = xHands[player].tricks;
         y = xHands[newPlayer].tricks;
         z = xHands[(player+2)%3].tricks;
-        if (gPassOut) {
+        if (gPassOutOrMisere) {
           x = 10-x;
           y = 10-y;
           z = 10-z;
@@ -545,7 +545,7 @@ Card *AlphaBetaPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, 
   // find game
   const eGameBid bid = m_model->currentGame();
 
-  gPassOut = (bid == g86 || bid == g86catch || bid == raspass);
+  gPassOutOrMisere = (bid == g86 || bid == g86catch || bid == raspass);
   trumpSuit = bid%10-1;//(bid-(bid/10)*10)-1;
 /*
   if (bid == g86catch || bid == g86 || bid == raspass) {
