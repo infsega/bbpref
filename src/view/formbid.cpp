@@ -198,6 +198,8 @@ void BidDialog::disableLessThan (eGameBid gameType)
   foreach (QPushButton *b, m_bidButtons) {
     if (gameName2Type(b->objectName()) < gameType)
       static_cast<QBidButton *>(b)->disable();
+    else
+      static_cast<QBidButton *>(b)->enable();
   }
 }
 
