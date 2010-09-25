@@ -53,7 +53,6 @@ MainWindow::MainWindow (bool fullScreen) : m_fullScreen(fullScreen)
   setWindowTitle("OpenPref");
   setWindowIcon(QIcon(":/pics/newgame.png"));
 
-  initMenuBar();
   mDeskView = 0;
   m_PrefModel = 0;
 
@@ -68,6 +67,7 @@ MainWindow::MainWindow (bool fullScreen) : m_fullScreen(fullScreen)
   m_updateCheck = UpdateCheck::instance(mDeskView);
   readSettings();
   doConnects();
+  initMenuBar();
   HintBar->showMessage(tr("Welcome to OpenPref!"));
   BidDialog::instance(mDeskView)->hide();
 }
@@ -137,6 +137,9 @@ void MainWindow::initMenuBar () {
 
   QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
   helpMenu->addAction(helpicon, tr("&Preferans Rules..."), this, SLOT(helpRules()), Qt::Key_F1);
+  helpMenu->addSeparator();
+  helpMenu->addAction(tr("Check for updates..."), m_updateCheck, SLOT(checkForUpdates()));
+  helpMenu->addSeparator();
   helpMenu->addAction(QIcon(":/pics/newgame.png"), tr("&About OpenPref"), this, SLOT(helpAbout()), 0);
   helpMenu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
 }

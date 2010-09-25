@@ -85,7 +85,7 @@ namespace {
     return obj;
   }
 
-  UpdateCheck::UpdateCheck(QWidget* parent) : QWidget(parent), m_network(0)
+  UpdateCheck::UpdateCheck(QWidget* parent) : QWidget(parent), m_network(0), m_interactive(false)
   {
   }
 
@@ -119,11 +119,15 @@ namespace {
   void UpdateCheck::replyFinished(QNetworkReply *reply)
   {
     // Read in all the data
-    if (!reply->isReadable()) {
-      QMessageBox::warning(qobject_cast<QWidget*>(parent()),
+    if (reply->error() != 0 || !reply->isReadable()) {
+      if (m_interactive) {
+        QMessageBox::warning(qobject_cast<QWidget*>(parent()),
                            tr("Network Update Check Failed"),
-                           tr("Network timeout or other error."));
+                           tr("Network request failed with error:\n\"")+
+                           reply->errorString() + '\"');
+      }
       reply->deleteLater();
+      m_interactive = true;
       return;
     }
 
@@ -154,7 +158,12 @@ namespace {
         m_versionPrompted = version;
       }
       delete info;
+    } else if(m_interactive) {
+      QMessageBox::information(qobject_cast<QWidget*>(parent()),
+                               tr("No updates available"),
+                               tr("You are running the latest version of OpenPref!"));
     }
+    m_interactive = true;
     // We are responsible for deleting the reply object
     reply->deleteLater();
   }

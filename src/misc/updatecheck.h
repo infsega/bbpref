@@ -54,6 +54,7 @@ class QSettings;
 
     QNetworkAccessManager *m_network;
     QString m_versionPrompted;
+    bool m_interactive;
 
     /**
      * Compare the two versions, passed in the form of x.y.z.
