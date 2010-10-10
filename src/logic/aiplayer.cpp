@@ -1046,7 +1046,6 @@ Card *AiPlayer::MyWhist2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightP
   eGameBid tmpGamesType = m_game;
   CardList aMaxCardList;
   Player *aEnemy, *aFriend;
-  int mast;
 
   // Кто игрок а кто напарник
   if (aLeftPlayer->game() != gtPass && aLeftPlayer->game() != whist) {
@@ -1056,24 +1055,40 @@ Card *AiPlayer::MyWhist2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightP
     aEnemy = aRightPlayer;
     aFriend = aLeftPlayer;
   }
-  mast = aEnemy->game()-(aEnemy->game()/10)*10;
+  const int trump = aEnemy->game()-(aEnemy->game()/10)*10;
   // набираем списки
   if (aEnemy == aLeftPlayer) {
     // Слева игрок
     loadLists(aLeftPlayer, aLeftPlayer, aMaxCardList);
     recalcTables(aMaxCardList, 23);
     // Ну если он заходил под вистуза с туза
-    if ( aRightCard->face() >= 10 ) cur = mCards.minInSuit(aRightCard->suit());
-    else cur = mCards.maxInSuit(aRightCard->suit()); // может умный и больше заходов у него нет в данную масть а есть козырь
-    if (!cur) cur = mCards.maxInSuit(mast); // а у меня масти и нет !!! прибъем максимальной
-    if (!cur) cur = GetMinCardWithOutVz();
+    if (aLeftPlayer->mCards.hasSuit(aRightCard) && (*aRightCard > *aLeftPlayer->mCards.maxInSuit(aRightCard)) ) {
+      cur = mCards.minInSuit(aRightCard);
+      qDebug() << "1";
+    } else {
+      if ( mCards.greaterInSuit(aRightCard) && aLeftPlayer->mCards.hasSuit(aRightCard)
+        && *mCards.maxInSuit(aRightCard) > *aLeftPlayer->mCards.maxInSuit(aRightCard) )
+      //cur = mCards.maxInSuit(aRightCard->suit()); // может умный и больше заходов у него нет в данную масть а есть козырь
+      cur = mCards.greaterInSuit(aLeftPlayer->mCards.maxInSuit(aRightCard));
+      qDebug() << "2";
+    }
+    if(!cur) { cur = mCards.minInSuit(aRightCard);
+      qDebug() << "3";}
+    if (!cur) {
+      // No cards in this suit - using trump
+      if (aLeftPlayer->mCards.hasSuit(trump))
+        cur = mCards.greaterInSuit(aLeftPlayer->mCards.maxInSuit(trump));
+      // Enemy has no trumps or I cannot beat them
+      if (!cur) {cur = mCards.minInSuit(trump); qDebug() << "4"; }
+    }
+    if (!cur) {cur = GetMinCardWithOutVz(); qDebug() << "5"; }
   } else {
     // слева - напарник
     loadLists(aRightPlayer, aRightPlayer, aMaxCardList);
     recalcTables(aMaxCardList, 23);
     cur = mCards.greaterInSuit(aRightCard);
     if (!cur) cur = mCards.minInSuit(aRightCard->suit());
-    if (!cur) cur = mCards.minInSuit(mast); // Нет масти пробуем козырь
+    if (!cur) cur = mCards.minInSuit(trump); // Нет масти пробуем козырь
     if (!cur) cur = GetMinCardWithOutVz(); // Нет масти и козыря
   }
   m_game = tmpGamesType;
