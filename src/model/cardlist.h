@@ -48,12 +48,26 @@ public:
   Card *exists (int aFace, int aSuit) const;
   Card *exists (Card *cc) const;
 
+  /// Returns card with minimal face and given suit @a aSuit
   Card *minInSuit (int aSuit) const;
+  /// @overload
+  /// Returns card with minimal face and suit of card @a c
+  Card *minInSuit (Card *c) const { Q_ASSERT(c != 0); return minInSuit(c->suit()); }
+  /// Returns card with maximal face and given suit @a aSuit
   Card *maxInSuit (int aSuit) const;
+  /// @overload
+  /// Returns card with maximal face and suit of card @a c
+  Card *maxInSuit (Card *c) const { Q_ASSERT(c != 0); return maxInSuit(c->suit()); }
+  /// Returns card with minimal face
   Card *minFace () const;
+  /// Returns card with maximal face
   Card *maxFace () const;
 
+  /// Returns true if card with suit @a aSuit is present
   bool hasSuit (int aSuit) const;
+  /// @overload
+  /// Returns true if card with suit of card @a c is present
+  bool hasSuit (Card *c) const { Q_ASSERT(c != 0); return hasSuit(c->suit()); }
 
   /// Returns first card bigger than defined by aFace and aSuit
   Card *greaterInSuit (int aFace, int aSuit) const; //первая больше чем переданная
