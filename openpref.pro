@@ -6,24 +6,18 @@ QT += gui network
 CONFIG += qt warn_on
 CONFIG += debug_and_release
 
+# Universal binary
+mac {
+  CONFIG += x86 ppc
+  QMAKE_MAC_SDK=/Developer/SDKs/MacOSX10.5.sdk
+}
+
 !isEmpty(USE_CONAN) {
     INCLUDEPATH += /usr/local/include/conan/include
     LIBS += -L/usr/local/lib64 -lConan
 }
 
-#QMAKE_CFLAGS_RELEASE ~= s/\-O./-Os
-#QMAKE_CXXFLAGS_RELEASE ~= s/\-O./-Os
-
-##QMAKE_CFLAGS_RELEASE ~= s/\-O./-O2
-##QMAKE_CXXFLAGS_RELEASE ~= s/\-O./-O2
-
-#QMAKE_CFLAGS_RELEASE += -march=native
-#QMAKE_CXXFLAGS_RELEASE += -march=native
-#QMAKE_CFLAGS_RELEASE += -mtune=native
-#QMAKE_CXXFLAGS_RELEASE += -mtune=native
-
 QMAKE_LFLAGS_RELEASE += -s
-
 
 DESTDIR = .
 OBJECTS_DIR = _build/obj
