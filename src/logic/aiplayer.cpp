@@ -924,10 +924,7 @@ Card *AiPlayer::MyGame3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer,
 Card *AiPlayer::MyWhist1 (Player *aLeftPlayer, Player *aRightPlayer) {
   // 1 - выбить козыря 2-разиграть масти с перехватами 3-без перехватов 4-???
   Card *cur = 0;
-  eGameBid tmpGamesType = m_game;
-  CardList aMaxCardList;
   Player *aEnemy, *aFriend;
-  int trump;
   // Кто игрок а кто напарник
   if (aLeftPlayer->game() != gtPass && aLeftPlayer->game() != whist) {
     aEnemy = aLeftPlayer;
@@ -936,13 +933,14 @@ Card *AiPlayer::MyWhist1 (Player *aLeftPlayer, Player *aRightPlayer) {
     aEnemy = aRightPlayer;
     aFriend = aLeftPlayer;
   }
-  trump = aEnemy->game() % 10; //aEnemy->myGame()-(aEnemy->myGame()/10)*10;
+  const int trump = aEnemy->game() % 10; //aEnemy->myGame()-(aEnemy->myGame()/10)*10;
   Q_ASSERT(trump != 0);
-  int suit = trump;
+  Q_ASSERT(trump == m_model->trumpSuit());
+//  int suit = trump;
   // build lists
   //loadLists(aLeftPlayer,aRightPlayer,aMaxCardList);
   //recalcTables(aMaxCardList,1);
-  if (aEnemy == aLeftPlayer) {
+/*  if (aEnemy == aLeftPlayer) {
     // Слева игрок
     loadLists(aLeftPlayer, aLeftPlayer, aMaxCardList);
     recalcTables(aMaxCardList, 1);
@@ -955,14 +953,15 @@ Card *AiPlayer::MyWhist1 (Player *aLeftPlayer, Player *aRightPlayer) {
         && (aRightPlayer->mCards.cardsInSuit(trump) > 0)) {
           qDebug() << "1";
           // Enemy has this suite, but friend doesn't, and friend has a trump
-          return mCards.minInSuit(i);
+          cur = mCards.minInSuit(i);
       } else if (aLeftPlayer->mCards.cardsInSuit(i) == 0) {
         if (aLeftPlayer->mCards.cardsInSuit(trump) > 0)
           continue; // he will beat our suit
         else {
                     qDebug() << "2";
-          return mCards.minInSuit(i);}
+          cur = mCards.minInSuit(i);}
       }
+      if (cur) return cur;
     }
 /*    if (aLeftPlayer->mCards.cardsInSuit(suit) <= 2) {
       Card *m = mCards.maxInSuit(suit);
@@ -971,7 +970,7 @@ Card *AiPlayer::MyWhist1 (Player *aLeftPlayer, Player *aRightPlayer) {
       else cur = mCards.minInSuit(aLeftPlayer->mCards.emptySuit(suit));
     } else {
       cur = mCards.minInSuit(aLeftPlayer->mCards.emptySuit(suit));
-    }*/
+    }*
     int s1=0, s2=0;
     for (int i=1; i<=4; i++) {
       if (aLeftPlayer->mCards.cardsInSuit(i) == 0) {
@@ -983,7 +982,9 @@ Card *AiPlayer::MyWhist1 (Player *aLeftPlayer, Player *aRightPlayer) {
     }
     qDebug() << "bad suits: " << trump << s1 << s2;
     if(aLeftPlayer->mCards.cardsInSuit(trump) > 0) {
+      //!
       if (!cur) {cur = GetMaxCardPere(trump, s1, s2);           qDebug() << "3";}
+      //!
       if (!cur) {cur = GetMaxCardWithOutPere(trump, s1, s2);           qDebug() << "4";}
       if (!cur) {cur = GetMinCardWithOutVz(trump, s1, s2);           qDebug() << "5";}  // под игрока - с семака
     } else {
@@ -996,7 +997,7 @@ Card *AiPlayer::MyWhist1 (Player *aLeftPlayer, Player *aRightPlayer) {
       cur = 0;
       cur = mCards.minInSuit(aMaxCardList->emptySuit(0));
     }
-*/
+*
 
     //if (!cur) cur = mCards.minInSuit(mast);
   } else {
@@ -1017,7 +1018,9 @@ Card *AiPlayer::MyWhist1 (Player *aLeftPlayer, Player *aRightPlayer) {
     qDebug() << "bad suits: " << trump << s1 << s2;
 
     if(aRightPlayer->mCards.cardsInSuit(trump) > 0) {
+      // !!!
       cur = GetMaxCardWithOutPere(trump, s1, s2);           qDebug() << "9";
+      // !!!
       if (!cur) { cur = GetMaxCardPere(trump, s1, s2);           qDebug() << "10";}
       if (!cur) {
         for (int f=1; f<=4; f++) {
@@ -1032,8 +1035,16 @@ Card *AiPlayer::MyWhist1 (Player *aLeftPlayer, Player *aRightPlayer) {
       if (!cur) {cur = GetMaxCardPere();           qDebug() << "12";}
       if (!cur) {cur = mCards.maxFace();           qDebug() << "13";} // под вистующего - с тузующего
     }
-  }
-  m_game = tmpGamesType;
+  }*/
+  cur = sureTrick(aEnemy->mCards, aFriend->mCards, aFriend->mCards.hasSuit(trump));
+  if(cur)
+    return cur;
+  else
+    qDebug() << "No sure trick";
+
+  cur = GetMinCardWithOutVz(trump);
+  if (!cur) cur = GetMinCardWithOutVz();
+  if(!cur) cur = mCards.minFace();
   Q_ASSERT(cur != 0);
   return cur;
 }
@@ -1802,4 +1813,54 @@ bool AiPlayer::chooseClosedWhist () {
   } else {
     return false;
   }
+}
+
+Card * AiPlayer::sureTrick(const CardList & enemyCards, const CardList & friendCards, const bool keepTrumps)
+{
+  Card *cur = 0;
+  const int trump = m_model->trumpSuit();
+  for (int i=1; i<=4; i++) {
+    if ((keepTrumps && i == trump) || !mCards.hasSuit(i))
+      continue; // skip trumps and suits I don't own
+    cur = sureTrick(i, enemyCards, friendCards);
+    if(cur)
+      return cur;
+  }
+  if(!cur && keepTrumps)
+    cur = sureTrick(trump, enemyCards, friendCards);
+  return cur;
+}
+
+Card * AiPlayer::sureTrick(const int suit, const CardList & enemyCards, const CardList & friendCards)
+{
+  qDebug() << "suit" << suit << "me:" << mCards.hasSuit(suit) << "enemy:" << enemyCards.hasSuit(suit)
+      << "friend:" << friendCards.hasSuit(suit);
+  const int trump = m_model->trumpSuit();
+  // 1. Me and enemy have this suit
+  if (mCards.hasSuit(suit) && enemyCards.hasSuit(suit)) {
+    // 1a.
+    if (*mCards.maxInSuit(suit) > *enemyCards.maxInSuit(suit)) {
+      qDebug() << "1a" << suit << mCards.maxInSuit(suit)->toUniString() << enemyCards.maxInSuit(suit)->toUniString();
+      qDebug() << mCards.greaterInSuit(enemyCards.maxInSuit(suit))->toUniString();
+      return mCards.greaterInSuit(enemyCards.maxInSuit(suit));
+    }
+    // 1b.
+    if (friendCards.hasSuit(suit) && *friendCards.maxInSuit(suit) > *enemyCards.maxInSuit(suit)) {
+      qDebug() << "1b" << suit << friendCards.maxInSuit(suit)->toUniString() << enemyCards.maxInSuit(suit)->toUniString();
+      qDebug() << mCards.minInSuit(suit)->toUniString();
+      return mCards.minInSuit(suit);
+    }
+  }
+  // 2. Сюркуп
+  if (enemyCards.hasSuit(suit) && !friendCards.hasSuit(suit) && friendCards.hasSuit(trump)) {
+    qDebug() << "2a" << suit << mCards.minInSuit(suit)->toUniString();
+    // Enemy has this suite, but friend doesn't, and friend has a trump
+    return mCards.minInSuit(suit);
+  }
+  // 3. Enemy does not have both this suit and trumps
+  if (!enemyCards.hasSuit(suit) && !enemyCards.hasSuit(trump)) {
+    qDebug() << "2b" << suit << mCards.minInSuit(suit)->toUniString();
+    return mCards.minInSuit(suit);
+  }
+  return 0;
 }

@@ -96,6 +96,9 @@ protected:
   Card *MiserCatch2 (Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer);
   Card *MiserCatch3 (Card *aLeftCard, Card *aRightCard, Player *aLeftPlayer, Player *aRightPlayer);
 
+  Card * sureTrick(const CardList & enemyCards, const CardList & friendCards, const bool keepTrumps);
+  Card * sureTrick(const int suit, const CardList & enemyCards, const CardList & friendCards);
+
 protected:
   tSuitProbs mSuitProb[5];
   CardList mLeft;  // cards of left player (supposed or open)
