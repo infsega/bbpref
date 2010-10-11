@@ -69,6 +69,9 @@ eGameBid HumanPlayer::dropForGame ()
     makeMove(0, 0, 0, 0);
     confirm = mDeskView->askConfirmDrop();
   }
+  // Confirmed - remove dropped cards
+  mCards.clearNulls();
+  mCardsOut.clear();
 
   BidDialog *bidDialog = BidDialog::instance();
   bidDialog->disableLessThan(m_game);
@@ -88,10 +91,10 @@ eGameBid HumanPlayer::dropForGame ()
 // ход при торговле
 eGameBid HumanPlayer::makeBid (eGameBid lMove, eGameBid rMove)
 {
-  eGameBid tmpGamesType;
-  mClickX = mClickY = 0; mWaitingForClick = true;
-
+  mClickX = mClickY = 0;
+  mWaitingForClick = true;
   BidDialog *bidDialog = BidDialog::instance();
+  bidDialog->enableBids();
   
   if (m_model->optAggPass && m_model->optPassCount > 0)
     bidDialog->disableLessThan(g71);
