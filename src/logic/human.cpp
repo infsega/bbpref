@@ -44,18 +44,20 @@ void HumanPlayer::clear () {
 
 
 // после сноса чего играем
-eGameBid HumanPlayer::dropForMisere () {
+/*eGameBid HumanPlayer::dropForMisere () {
   mClickX = mClickY = 0; mWaitingForClick = true;
   makeMove(0, 0, 0, 0);
   makeMove(0, 0, 0, 0);
   mWaitingForClick = false;
   return g86;
-}
+}*/
 
 
 // после сноса чего играем
-eGameBid HumanPlayer::dropForGame ()
+eGameBid HumanPlayer::makeDrop ()
 {
+  mClickX = mClickY = 0;
+  mWaitingForClick = true;
   bool confirm;
 
   makeMove(0, 0, 0, 0);
@@ -73,18 +75,21 @@ eGameBid HumanPlayer::dropForGame ()
   mCards.clearNulls();
   mCardsOut.clear();
 
-  BidDialog *bidDialog = BidDialog::instance();
-  bidDialog->disableLessThan(m_game);
-  BidDialog::ActiveButtons buttons = BidDialog::Score;
-  if (m_model->optWithoutThree)
-    buttons |= BidDialog::WithoutThree;
-
-  eGameBid tmpGamesType = mDeskView->selectBid(buttons);
-  if ( tmpGamesType != withoutThree)
-    m_game = tmpGamesType;
-
-  mWaitingForClick = false;
-  return tmpGamesType;
+  if(m_game != g86) {
+    BidDialog *bidDialog = BidDialog::instance();
+    BidDialog::ActiveButtons buttons = BidDialog::Score;
+    bidDialog->disableLessThan(m_game);
+    if (m_model->optWithoutThree)
+      buttons |= BidDialog::WithoutThree;
+    eGameBid tmpGamesType = mDeskView->selectBid(buttons);
+    if ( tmpGamesType != withoutThree)
+      m_game = tmpGamesType;
+    mWaitingForClick = false;
+    return tmpGamesType;
+  } else {
+    mWaitingForClick = false;
+    return g86;
+  }
 }
 
 

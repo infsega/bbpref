@@ -47,8 +47,7 @@ public:
   virtual Card *makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut); //ход
   virtual eGameBid makeBid (eGameBid lMove, eGameBid rMove); //ход при торговле
   virtual eGameBid makeFinalBid (eGameBid MaxGame, int nPlayerPass); // после получения игроком прикупа - пасс или вист
-  virtual eGameBid dropForGame ();
-  virtual eGameBid dropForMisere ();
+  virtual eGameBid makeDrop();
 
   virtual bool chooseClosedWhist ();
 
@@ -56,6 +55,8 @@ public:
 
 protected:
   bool checkForMisere ();
+  virtual eGameBid dropForGame ();
+  virtual eGameBid dropForMisere ();
   eGameBid moveCalcDrop (); //для расчета сноса
   tSuitProbs countGameTricks (eSuit, int a23);
   tSuitProbs countTricks (eSuit, CardList &, int a23);

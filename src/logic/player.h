@@ -67,8 +67,7 @@ public:
   virtual eGameBid makeBid (eGameBid lMove, eGameBid rMove) = 0;
 
   virtual eGameBid makeFinalBid (eGameBid MaxGame, int nPlayerPass) = 0; // после получения игроком прикупа -- пасс или вист
-  virtual eGameBid dropForGame () = 0; // сброс для игры
-  virtual eGameBid dropForMisere () = 0; // сброс для мизера
+  virtual eGameBid makeDrop() = 0;
   virtual void returnDrop (); // вернуть сброс
 
   /// Player's decision on open or closed whist

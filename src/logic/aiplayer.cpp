@@ -1487,7 +1487,15 @@ eGameBid AiPlayer::moveCalcDrop () {
 
 ///////////////////////////////////////////////////////////////////////////////
 //
+eGameBid AiPlayer::makeDrop() {
+  if(m_game == g86)
+    return dropForMisere();
+  else
+    return dropForGame();
+}
+
 eGameBid AiPlayer::dropForMisere () {
+  qDebug() << "dropForMisere";
   Card *FirstCardOut = 0, *SecondCardOut = 0;
   Card *tmpFirstCardOut, *tmpSecondCardOut;
   Card *RealFirstCardOut, *RealSecondCardOut;
