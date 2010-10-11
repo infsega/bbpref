@@ -701,7 +701,7 @@ void PrefModel::runGame () {
 			mDeskView->draw(false);
 			if (firstWhistPlayer != 1) mDeskView->mySleep(2);
 		  }
-          PassOrVist = PassOrVistPlayers->makeFinalBid(m_currentGame, whist, nPassCounter);
+          PassOrVist = PassOrVistPlayers->makeFinalBid(m_currentGame, nPassCounter);
           if (PassOrVistPlayers->game() == gtPass) {
             nPassCounter++;
             player(passOrWhistPlayersCounter)->setMessage(tr("pass"));
@@ -726,7 +726,7 @@ void PrefModel::runGame () {
 			mDeskView->draw(false);
 			if (secondWhistPlayer != 1) mDeskView->mySleep(2);
 		  }
-          PassOrVistPlayers->makeFinalBid(m_currentGame, PassOrVist, nPassCounter);
+          PassOrVistPlayers->makeFinalBid(m_currentGame, nPassCounter);
           if (PassOrVistPlayers->game() == gtPass) {
             nPassCounter++;
             player(passOrWhistPlayersCounter)->setMessage(tr("pass"));
@@ -746,7 +746,7 @@ void PrefModel::runGame () {
 			PassOrVistPlayers->setMessage(tr("thinking..."));
 			mDeskView->draw(false);			
 			if (firstWhistPlayer != 1) mDeskView->mySleep(2);
-            PassOrVist = PassOrVistPlayers->makeFinalBid(m_currentGame, gtPass, 0);	// no more halfwhists!
+            PassOrVist = PassOrVistPlayers->makeFinalBid(m_currentGame, 2);	// no more halfwhists!
             if (PassOrVistPlayers->game() == gtPass) {
                 player(firstWhistPlayer)->setMessage(tr("pass"));
           	}

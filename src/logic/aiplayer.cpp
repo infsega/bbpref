@@ -1401,7 +1401,7 @@ Card *AiPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player 
 
 ///////////////////////////////////////////////////////////////////////////////
 // Pass or Whist or Halfwhist
-eGameBid AiPlayer::makeFinalBid (eGameBid MaxGame, int HaveAWhist, int nPlayerPass)
+eGameBid AiPlayer::makeFinalBid (eGameBid MaxGame, int nPlayerPass)
 {
   eGameBid Answer;
   eGameBid MyMaxGame = moveCalcDrop();

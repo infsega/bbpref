@@ -47,7 +47,7 @@ public:
 
   virtual Card *makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut=false); //ход
   virtual eGameBid makeBid (eGameBid lMove, eGameBid rMove); //ход при торговле
-  virtual eGameBid makeFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerVist); // после получения игроком прикупа - пасс или вист
+  virtual eGameBid makeFinalBid (eGameBid MaxGame, int nPlayerPass); // после получения игроком прикупа - пасс или вист
   virtual eGameBid dropForGame (); // после сноса чего играем
   virtual eGameBid dropForMisere ();
 

@@ -154,10 +154,8 @@ Card *HumanPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Play
 }
 
 
-eGameBid HumanPlayer::makeFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerPass)
+eGameBid HumanPlayer::makeFinalBid (eGameBid MaxGame, int nPlayerPass)
 {
-  Q_UNUSED(HaveAVist)
-
   BidDialog *bidDialog = BidDialog::instance();
 
   if (MaxGame == g86) {
@@ -168,7 +166,7 @@ eGameBid HumanPlayer::makeFinalBid (eGameBid MaxGame, int HaveAVist, int nGamerP
   } else {
     bidDialog->disableBids();
     BidDialog::ActiveButtons buttons = BidDialog::Pass | BidDialog::Whist | BidDialog::Score;
-    if (nGamerPass == 1 && MaxGame < 81)
+    if (nPlayerPass == 1 && MaxGame < 81)
         buttons |= BidDialog::HalfWhist;
     m_game = mDeskView->selectBid(buttons);
     bidDialog->enableBids();
