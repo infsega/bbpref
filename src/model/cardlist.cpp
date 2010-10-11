@@ -43,6 +43,12 @@ void CardList::clear () {
   mList.clear();
 }
 
+void CardList::clearNulls() {
+  int j;
+  while((j = mList.indexOf(0)) != -1)
+    mList.removeAt(j);
+}
+
 
 Card *CardList::exists (int aFace, int aSuit) const {
   Card *c = getCard(aFace, aSuit);

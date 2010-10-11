@@ -42,7 +42,10 @@ public:
   CardList (const CardList &cl);
   ~CardList ();
 
+  /// Clears list
   void clear ();
+  /// Removes all null elements from list
+  void clearNulls();
 
   void mySort ();
   Card *exists (int aFace, int aSuit) const;
