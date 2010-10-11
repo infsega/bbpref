@@ -1421,19 +1421,19 @@ eGameBid AiPlayer::makeFinalBid (eGameBid MaxGame, int HaveAWhist, int nPlayerPa
   }
 
   
-  if (HaveAWhist == gtPass) {
-    if (MaxGame < g81) {
+  //if (HaveAWhist == gtPass) {
+  if (nPlayerPass > 0) {
+    if (MaxGame < g71)
       Answer = (vz >= m_model->gameWhists(MaxGame)/2) ? whist : gtPass;
-    } else {
+    else
       Answer = (vz >= m_model->gameWhists(MaxGame)) ? whist : gtPass;
-    }
   } else {
-    if (MaxGame < g81) {
+    if (MaxGame < g81)
       Answer = (vz > m_model->gameWhists(MaxGame)/2) ? whist : gtPass;
-    } else if (MaxGame < g91) {
+    else if (MaxGame < g91)
+      Answer = (vz > m_model->gameWhists(MaxGame) && qrand()%4 == 0) ? whist : gtPass;
+    else
       Answer = (vz > m_model->gameWhists(MaxGame) && qrand()%8 == 0) ? whist : gtPass;
-    } else
-      Answer = gtPass;
   }
       
   //Answer = (HaveAWhist != whist && vz >= gameWhistsMin(MaxGame)) ? whist : gtPass ;
