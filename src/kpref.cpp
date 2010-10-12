@@ -207,7 +207,7 @@ void MainWindow::newSingleGame ()
     dlg->sbRounds->setValue(st.value("maxrounds", -1).toInt());
   }
   dlg->cbGreedy->setChecked(st.value("whistgreedy", true).toBool());
-  dlg->rbTenWhist->setChecked(st.value("whist10", false).toBool());
+  dlg->cbTenWhist->setChecked(st.value("whist10", false).toBool());
   dlg->cbStalin->setChecked(st.value("stalin", false).toBool());
   dlg->cbAggPass->setChecked(st.value("aggpass", false).toBool());
   dlg->cbWithoutThree->setChecked(st.value("without3", false).toBool());
@@ -226,7 +226,7 @@ void MainWindow::newSingleGame ()
       m_PrefModel->optMaxRounds = dlg->sbRounds->value();
     }
     m_PrefModel->optWhistGreedy = dlg->cbGreedy->isChecked();
-    m_PrefModel->opt10Whist = dlg->rbTenWhist->isChecked();
+    m_PrefModel->opt10Whist = dlg->cbTenWhist->isChecked();
     m_PrefModel->optStalingrad = dlg->cbStalin->isChecked();
     m_PrefModel->optAggPass = dlg->cbAggPass->isChecked();
     m_PrefModel->optWithoutThree = dlg->cbWithoutThree->isChecked();
