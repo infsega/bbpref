@@ -1826,14 +1826,17 @@ bool AiPlayer::chooseClosedWhist () {
 Card * AiPlayer::sureTrick(const CardList & enemyCards, const CardList & friendCards, const bool keepTrumps)
 {
   Card *cur = 0;
+  CardList cl;
   const int trump = m_model->trumpSuit();
   for (int i=1; i<=4; i++) {
     if ((keepTrumps && i == trump) || !mCards.hasSuit(i))
       continue; // skip trumps and suits I don't own
-    cur = sureTrick(i, enemyCards, friendCards);
-    if(cur)
-      return cur;
+    cl << sureTrick(i, enemyCards, friendCards);
   }
+  cl.clearNulls();
+  qDebug() << "trick choices:" << cl.size();
+  if(cl.size() != 0)
+    cur = cl.minFace();
   if(!cur && keepTrumps)
     cur = sureTrick(trump, enemyCards, friendCards);
   return cur;
