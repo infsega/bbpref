@@ -95,6 +95,7 @@ void MainWindow::adjustDesk () {
 
 void MainWindow::initMenuBar () {
   // Load icons
+#ifndef Q_WS_MAC
   #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     const QIcon openicon = QIcon::fromTheme("document-open", QIcon(":/pics/fileopen.png"));
     const QIcon saveicon = QIcon::fromTheme("document-save", QIcon(":/pics/filesave.png"));
@@ -109,6 +110,14 @@ void MainWindow::initMenuBar () {
     const QIcon exiticon(":/pics/exit.png");
     const QIcon helpicon(":/pics/help.png");
   #endif
+#else
+  const QIcon openicon;
+  const QIcon saveicon;
+  const QIcon toolicon;
+  const QIcon quiticon;
+  const QIcon exiticon;
+  const QIcon helpicon;
+#endif
   QMenu *fileMenu = menuBar()->addMenu(tr("&Game"));
 
   fileMenu->addAction(QIcon(":/pics/newgame.png"), tr("&New game..."), this, SLOT(newSingleGame()), Qt::CTRL+Qt::Key_N);
@@ -121,10 +130,16 @@ void MainWindow::initMenuBar () {
   fileMenu->addSeparator();
 
   QAction *actOptions = fileMenu->addAction(toolicon, tr("&Options..."), this, SLOT(showOptions()), Qt::CTRL+Qt::Key_P);
+#ifdef Q_WS_MAC
+  actOptions->setMenuRole(QAction::PreferencesRole);
+#endif
   fileMenu->addSeparator();
   //actQuit = fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), qApp, SLOT(quit()), Qt::CTRL+Qt::Key_Q);
-  fileMenu->addAction(exiticon, tr("&Quit"), this, SLOT(quitGame()), Qt::CTRL+Qt::Key_Q);
-  
+  QAction *quitAction = fileMenu->addAction(exiticon, tr("&Quit"), this, SLOT(quitGame()), Qt::CTRL+Qt::Key_Q);
+#ifdef Q_WS_MAC
+  quitAction->setMenuRole(QAction::QuitRole);
+#endif
+
   actFileSave->setEnabled(false);
   actOptions->setEnabled(true);
 
@@ -140,8 +155,8 @@ void MainWindow::initMenuBar () {
   helpMenu->addSeparator();
   helpMenu->addAction(tr("Check for updates..."), m_updateCheck, SLOT(checkForUpdates()));
   helpMenu->addSeparator();
-  helpMenu->addAction(QIcon(":/pics/newgame.png"), tr("&About OpenPref"), this, SLOT(helpAbout()), 0);
-  helpMenu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
+  helpMenu->addAction(QIcon(":/pics/newgame.png"), tr("&About..."), this, SLOT(helpAbout()), 0);
+//  helpMenu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
 }
 
 
