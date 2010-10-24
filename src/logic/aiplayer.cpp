@@ -1403,47 +1403,37 @@ Card *AiPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player 
 // Pass or Whist or Halfwhist
 eGameBid AiPlayer::makeFinalBid (eGameBid MaxGame, int nPlayerPass)
 {
-  eGameBid Answer;
   int vz = numTricks(MaxGame % 10);
 
   if (MaxGame == g86) {
-  	Answer = g86catch; // Misere
-	goto myGame;
-  }
-  if (m_model->optStalingrad && MaxGame == g61) {
-  	Answer = whist; // Stalingrad  
-	goto myGame;
-  }
-  if (!m_model->opt10Whist && MaxGame>=101 && MaxGame<=105) {
-	Answer = whist;
-	goto myGame;
-  }
-
-  
-  //if (HaveAWhist == gtPass) {
-  if (nPlayerPass > 0) {
-    if (MaxGame < g71)
-      Answer = (vz >= m_model->gameWhists(MaxGame)/2) ? whist : gtPass;
-    else
-      Answer = (vz >= m_model->gameWhists(MaxGame)) ? whist : gtPass;
+    m_game = g86catch; // Misere
+  } else if (m_model->optStalingrad && MaxGame == g61) {
+    m_game = whist; // Stalingrad
+  } else if (!m_model->opt10Whist && MaxGame>=101 && MaxGame<=105) {
+    m_game = whist;
   } else {
-    if (MaxGame < g81)
-      Answer = (vz > m_model->gameWhists(MaxGame)/2) ? whist : gtPass;
-    else if (MaxGame < g91)
-      Answer = (vz > m_model->gameWhists(MaxGame) && qrand()%4 == 0) ? whist : gtPass;
-    else
-      Answer = (vz > m_model->gameWhists(MaxGame) && qrand()%8 == 0) ? whist : gtPass;
+    if (nPlayerPass > 0) {
+      if (MaxGame < g71)
+        m_game = (vz >= m_model->gameWhists(MaxGame)/2) ? whist : gtPass;
+      else
+        m_game = (vz >= m_model->gameWhists(MaxGame)) ? whist : gtPass;
+    } else {
+      if (MaxGame < g81)
+        m_game = (vz > m_model->gameWhists(MaxGame)/2) ? whist : gtPass;
+      else if (MaxGame < g91)
+        m_game = (vz > m_model->gameWhists(MaxGame) && qrand()%4 == 0) ? whist : gtPass;
+      else
+        m_game = (vz > m_model->gameWhists(MaxGame) && qrand()%8 == 0) ? whist : gtPass;
+    }
   }
       
   //Answer = (HaveAWhist != whist && vz >= gameWhistsMin(MaxGame)) ? whist : gtPass ;
   //if (HaveAWhist == gtPass && vz < gameWhistsMin(MaxGame)) Answer = gtPass;
 
-myGame:  
-  if ((Answer == gtPass) && (nPlayerPass == 1) && MaxGame <= 81)
-  	Answer = halfwhist;
-	
-  m_game = Answer;
-  return Answer;
+  if ((m_game == gtPass) && (nPlayerPass == 1) && MaxGame <= 81)
+    m_game = halfwhist;
+
+  return m_game;
 }
 
 
