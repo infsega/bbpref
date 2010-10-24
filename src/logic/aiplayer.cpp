@@ -1404,8 +1404,7 @@ Card *AiPlayer::makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player 
 eGameBid AiPlayer::makeFinalBid (eGameBid MaxGame, int nPlayerPass)
 {
   eGameBid Answer;
-  eGameBid MyMaxGame = moveCalcDrop();
-  int vz = MyMaxGame/10;
+  int vz = numTricks(MaxGame % 10);
 
   if (MaxGame == g86) {
   	Answer = g86catch; // Misere
@@ -1874,4 +1873,11 @@ Card * AiPlayer::sureTrick(const int suit, const CardList & enemyCards, const Ca
     return mCards.minInSuit(suit);
   }
   return 0;
+}
+
+int AiPlayer::numTricks(const int trump)
+{
+  Q_UNUSED(trump)
+  eGameBid MyMaxGame = moveCalcDrop();
+  return MyMaxGame/10;
 }

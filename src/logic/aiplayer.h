@@ -61,6 +61,7 @@ protected:
   tSuitProbs countGameTricks (eSuit, int a23);
   tSuitProbs countTricks (eSuit, CardList &, int a23);
   tSuitProbs countPassTricks (eSuit, CardList &);
+  int numTricks(const int suit);
 
   // Два списка
   tSuitProbs calcProbsForMax (CardList &my, CardList &enemy); // Для максимального результата на 1 руке
