@@ -646,7 +646,7 @@ void PrefModel::runGame () {
                 emit showHint(tr("Select two cards to drop"));
             else
 				mDeskView->mySleep(2);
-            playerBids[0] = m_currentGame = currentPlayer->dropForGame();
+            playerBids[0] = m_currentGame = currentPlayer->makeDrop();
 			emit clearHint();
 			emitGameChanged(m_currentGame);
           } else {	// playing misere
@@ -668,7 +668,7 @@ void PrefModel::runGame () {
             if (mPlayerActive != 1) 
 				mDeskView->mySleep(2);
 
-            playerBids[0] = m_currentGame = currentPlayer->dropForMisere();
+            playerBids[0] = m_currentGame = currentPlayer->makeDrop();
 			emit clearHint();
 			nCurrentMove.nValue = tempint;
           }		  	
