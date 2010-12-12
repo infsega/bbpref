@@ -44,6 +44,11 @@
 #include "scorehistory.h"
 #include "helpbrowser.h"
 
+// This is a "hidden" exported Qt function on the Mac for Qt-4.x.
+#ifdef Q_WS_MAC
+ void qt_mac_set_menubar_icons(bool enable);
+#endif
+
 inline const char * GenName(const QString &str, const QString &ext);
 
 //char *documentation; //see bottom this file
@@ -117,6 +122,10 @@ void MainWindow::initMenuBar () {
   const QIcon quiticon;
   const QIcon exiticon;
   const QIcon helpicon;
+  // Remove all menu icons (violates Apple interface guidelines)
+  // This is a not-quite-hidden Qt call on the Mac
+  //    http://doc.trolltech.com/exportedfunctions.html
+  qt_mac_set_menubar_icons(false);
 #endif
   QMenu *fileMenu = menuBar()->addMenu(tr("&Game"));
 
