@@ -165,7 +165,7 @@ void MainWindow::initMenuBar () {
   menuBar()->addSeparator();
 
   QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
-  helpMenu->addAction(helpicon, tr("&Preferans Rules..."), this, SLOT(helpRules()), Qt::Key_F1);
+  helpMenu->addAction(helpicon, tr("&Preferans Rules..."), this, SLOT(helpRules()), QKeySequence::HelpContents);
   helpMenu->addSeparator();
   helpMenu->addAction(tr("Check for updates..."), m_updateCheck, SLOT(checkForUpdates()));
   helpMenu->addSeparator();
