@@ -726,7 +726,7 @@ void DeskView::drawPool () {
 //#ifdef MOBILE
 //  d_ptr->m_scorew->showFullScreen();
 //#endif
-  d_ptr->m_scorew->exec();
+  d_ptr->m_scorew->open();
 //#endif
 }
 
