@@ -25,8 +25,10 @@
 
 #include <QMainWindow>
 
-class PrefModel;
+
 class DeskView;
+class OptionDialog;
+class PrefModel;
 class UpdateCheck;
 
 /**
@@ -54,6 +56,7 @@ private slots:
   void helpAbout ();
   void helpRules ();
   void showOptions ();
+  void applyOptions();
 
   bool quitGame ();
 
@@ -72,6 +75,7 @@ private:
   QAction *actFileSave;
   QStatusBar * HintBar;
   UpdateCheck * m_updateCheck;
+  OptionDialog *m_optionDialog;
   bool m_fullScreen;
 
 public:

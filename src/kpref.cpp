@@ -69,6 +69,7 @@ MainWindow::MainWindow (bool fullScreen) : m_fullScreen(fullScreen)
   setCentralWidget(mDeskView);
   m_PrefModel = new PrefModel(mDeskView);
   mDeskView->setModel(m_PrefModel);
+  m_optionDialog = new OptionDialog(this);
   m_updateCheck = UpdateCheck::instance(mDeskView);
   readSettings();
   doConnects();
@@ -89,6 +90,7 @@ inline void MainWindow::doConnects()
   connect(m_PrefModel, SIGNAL(showHint(const QString&)), this, SLOT(showHint(const QString&)));
   connect(m_PrefModel, SIGNAL(clearHint()), this, SLOT(clearHint()));
   connect(m_PrefModel, SIGNAL(gameChanged(QString)), this, SLOT(changeTitle(QString)));
+  connect(m_optionDialog, SIGNAL(accepted()), this, SLOT(applyOptions()));
 }
 
 
@@ -354,39 +356,41 @@ void MainWindow::readSettings () {
 
 
 void MainWindow::showOptions () {
-  int oldBackgroundType = mDeskView->backgroundType();
-  QRgb oldBackgroundColor = mDeskView->backgroundColor();
-  bool oldPrefClub = mDeskView->optPrefClub;
-  bool oldDebugHands = mDeskView->optDebugHands;
+//  int oldBackgroundType = mDeskView->backgroundType();
+//  QRgb oldBackgroundColor = mDeskView->backgroundColor();
+//  bool oldPrefClub = mDeskView->optPrefClub;
+//  bool oldDebugHands = mDeskView->optDebugHands;
   
-  OptionDialog *dlg = new OptionDialog(this);
-  dlg->setBackgroundType(mDeskView->backgroundType());
-  dlg->setBackgroundColor(mDeskView->backgroundColor());
-  dlg->cbAnimDeal->setChecked(mDeskView->optDealAnim);
-  dlg->cbAnimTake->setChecked(mDeskView->optTakeAnim);
-  dlg->hsTakeQuality->setEnabled(mDeskView->optTakeAnim);
-  dlg->hsTakeQuality->setValue(mDeskView->takeAnimQuality());
-  dlg->cbDebugHands->setChecked(mDeskView->optDebugHands);
-  dlg->cbPrefClub->setChecked(mDeskView->optPrefClub);
-  
-  if (dlg->exec() == QDialog::Accepted) {
-    mDeskView->setBackgroundType(dlg->backgroundType());
-    mDeskView->setBackgroundColor(dlg->backgroundColor());
-    mDeskView->optDealAnim = dlg->cbAnimDeal->isChecked();
-    mDeskView->optTakeAnim = dlg->cbAnimTake->isChecked();
-    mDeskView->setTakeQuality(dlg->hsTakeQuality->value());
-    mDeskView->optPrefClub = dlg->cbPrefClub->isChecked();
-    mDeskView->optDebugHands = dlg->cbDebugHands->isChecked();
-  }
-  delete dlg;
+  m_optionDialog->setBackgroundType(mDeskView->backgroundType());
+  m_optionDialog->setBackgroundColor(mDeskView->backgroundColor());
+  m_optionDialog->cbAnimDeal->setChecked(mDeskView->optDealAnim);
+  m_optionDialog->cbAnimTake->setChecked(mDeskView->optTakeAnim);
+  m_optionDialog->hsTakeQuality->setEnabled(mDeskView->optTakeAnim);
+  m_optionDialog->hsTakeQuality->setValue(mDeskView->takeAnimQuality());
+  m_optionDialog->cbDebugHands->setChecked(mDeskView->optDebugHands);
+  m_optionDialog->cbPrefClub->setChecked(mDeskView->optPrefClub);
 
-  if ( /*(mDeskView->backgroundType() != oldBackgroundType)
-    || (mDeskView->m_backgroundColor != oldBackgroundColor)
-    ||*/ (mDeskView->optPrefClub != oldPrefClub)
-    || (mDeskView->optDebugHands != oldDebugHands) )
-  {
-    mDeskView->reloadCards();
-  }
+  m_optionDialog->open();
+}
+
+void MainWindow::applyOptions()
+{
+    mDeskView->setBackgroundType(m_optionDialog->backgroundType());
+    mDeskView->setBackgroundColor(m_optionDialog->backgroundColor());
+    mDeskView->optDealAnim = m_optionDialog->cbAnimDeal->isChecked();
+    mDeskView->optTakeAnim = m_optionDialog->cbAnimTake->isChecked();
+    mDeskView->setTakeQuality(m_optionDialog->hsTakeQuality->value());
+    mDeskView->optPrefClub = m_optionDialog->cbPrefClub->isChecked();
+    mDeskView->optDebugHands = m_optionDialog->cbDebugHands->isChecked();
+
+//  if ( /*(mDeskView->backgroundType() != oldBackgroundType)
+//    || (mDeskView->m_backgroundColor != oldBackgroundColor)
+//    ||*/ (mDeskView->optPrefClub != oldPrefClub)
+//    || (mDeskView->optDebugHands != oldDebugHands) )
+//  {
+    if(m_optionDialog->optionsModified())
+        mDeskView->reloadCards();
+//  }
   mDeskView->draw(true);
 }
 

@@ -102,5 +102,10 @@ void OptionDialog::chooseColor()
 
 void OptionDialog::toggleTakeQuality(int checked)
 {
-  hsTakeQuality->setEnabled(checked == Qt::Checked);
+    hsTakeQuality->setEnabled(checked == Qt::Checked);
+}
+
+bool OptionDialog::optionsModified() const
+{
+    return true;
 }

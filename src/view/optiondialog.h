@@ -42,6 +42,8 @@ public:
   QRgb backgroundColor() const { return m_color; }
   void setBackgroundColor(const QRgb color);
 
+  bool optionsModified() const;
+
 private slots:
   void changeTexture(bool);
   void chooseColor();
@@ -49,6 +51,7 @@ private slots:
 
 private:
   QRgb m_color;
+  bool m_modified;
 };
 
 
