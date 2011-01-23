@@ -66,24 +66,24 @@ static eGameBid gameName2Type (const QString s) {
   return undefined;
 }
 
-namespace {
-  class QBidButton : public QPushButton
-  {
-  public:
+
+class QBidButton : public QPushButton
+{
+public:
     QBidButton (eGameBid aBid, QWidget *parent=0);
     eGameBid bid () const { return mBid; }
     void enable();
     void disable();
-    #ifndef MOBILE
-      QSize sizeHint() const { return QSize(BidIconWidth+5, BidIconHeight+5); }
-    #endif
+#ifndef MOBILE
+    QSize sizeHint() const { return QSize(BidIconWidth+5, BidIconHeight+5); }
+#endif
 
-  protected:
+protected:
     eGameBid mBid;
-  };
+};
 
-  QBidButton::QBidButton (eGameBid aBid, QWidget *parent) : QPushButton(parent), mBid(aBid)
-  {
+QBidButton::QBidButton (eGameBid aBid, QWidget *parent) : QPushButton(parent), mBid(aBid)
+{
     QString iName, oName;
     iName.sprintf(":/pics/bids/s%i.png", aBid);
     oName.sprintf("g%i", aBid);
@@ -91,26 +91,26 @@ namespace {
     setContentsMargins(2,2,0,0);
     setIconSize(QSize(BidIconWidth, BidIconHeight));
     setIcon(QIcon(iName));
-    #ifdef MOBILE
-      setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    #endif
-  }
+#ifdef MOBILE
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+#endif
+}
 
-  void QBidButton::enable()
-  {
-      if(!isEnabled()) {
-          setEnabled(true);
-          setFlat(false);
-      }
-  }
-  void QBidButton::disable()
-  {
-      if(isEnabled()) {
-          setFlat(true);
-          setEnabled(false);
-      }
-  }
-} // end of namespace
+void QBidButton::enable()
+{
+    if(!isEnabled()) {
+        setEnabled(true);
+        setFlat(false);
+    }
+}
+void QBidButton::disable()
+{
+    if(isEnabled()) {
+        setFlat(true);
+        setEnabled(false);
+    }
+}
+
 
 
 BidDialog::BidDialog (DeskView *parent) : QDialog (parent)

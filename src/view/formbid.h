@@ -32,6 +32,7 @@
 #include "prfconst.h"
 
 class DeskView;
+class QBidButton;
 
 /**
  * @class BidDialog formbid.h
@@ -83,9 +84,9 @@ public:
   eGameBid _GamesType;
   
 private:
-  QList<QPushButton *> m_bidButtons;
+  QList<QBidButton *> m_bidButtons;
   QList<QPushButton *> m_otherButtons;
-  QPushButton *btnMisere;
+  QBidButton *btnMisere;
   QPushButton *btnPass;
   QPushButton *btnWhist;
   QPushButton *btnWithoutThree;
