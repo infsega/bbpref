@@ -83,6 +83,10 @@ int main (int argc, char *argv[]) {
     const bool fullScreen = false;
   #endif
 
+  #if defined(Q_WS_MAC) && (QT_VERSION >= QT_VERSION_CHECK(4,5,0))
+    a.setGraphicsSystem("raster");
+  #endif
+
   MainWindow kpref(fullScreen);
   if(!fullScreen)
       kpref.show();
