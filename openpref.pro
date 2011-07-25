@@ -1,8 +1,8 @@
+include($$PWD/src/main.pri)
+
 TEMPLATE = app
 TARGET = openpref
-
 QT += gui network
-
 CONFIG += qt warn_on
 CONFIG += debug_and_release
 QMAKE_MAC_SDK=/Developer/SDKs/MacOSX10.4u.sdk
@@ -31,14 +31,25 @@ OBJECTS_DIR = _build/obj
 UI_DIR = _build/uic
 MOC_DIR = _build/moc
 RCC_DIR = _build/rcc
-
-#include($$PWD/src/qtstatemachine/src/qtstatemachine.pri)
-include($$PWD/src/main.pri)
-
 RESOURCES += $$PWD/openpref.qrc
-
 TRANSLATIONS = openpref_ru.ts
 
+## Build qm files ##
+
+isEmpty(QMAKE_LRELEASE) {
+  win32:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]\lrelease.exe
+  else:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
+}
+
+updateqm.input = TRANSLATIONS
+updateqm.output = ${QMAKE_FILE_PATH}/${QMAKE_FILE_BASE}.qm
+updateqm.commands = $$QMAKE_LRELEASE ${QMAKE_FILE_IN} -qm ${QMAKE_FILE_PATH}/${QMAKE_FILE_BASE}.qm
+updateqm.CONFIG += no_link target_predeps
+
+QMAKE_EXTRA_COMPILERS += updateqm
+PRE_TARGETDEPS += compiler_updateqm_make_all
+
+## Handle installation ##
 
 isEmpty(BIN_INSTALL_DIR) {
   BIN_INSTALL_DIR = games
