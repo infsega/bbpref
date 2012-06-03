@@ -25,16 +25,19 @@
 #include "deskview.h"
 
 #include <QSettings>
-
-//#include <QTextBrowser>
-
 #include <QDebug>
-
 #include <QFileDialog>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QPainter>
 #include <QStatusBar>
+
+#include <stdbool.h>
+#include <sys/platform.h>
+#include <bps/bps.h>
+#include "bps/event.h"
+#include <bps/locale.h>
+#include <bps/navigator.h>
 
 #include "formbid.h"
 #include "newgameform.h"
@@ -64,7 +67,7 @@ MainWindow::MainWindow()
   readSettings();
   doConnects();
   initMenuBar();
-  HintBar->showMessage(tr("Welcome to OpenPref!"));
+  HintBar->showMessage(tr("Welcome to BB Pref!"));
   BidDialog::instance(mDeskView)->hide();
 }
 
@@ -91,35 +94,14 @@ void MainWindow::adjustDesk () {
 }
 
 
-void MainWindow::initMenuBar () {
+void MainWindow::initMenuBar()
+{
   // Load icons
-#ifndef Q_WS_MAC
-  #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
-    const QIcon openicon = QIcon::fromTheme("document-open", QIcon(":/pics/fileopen.png"));
-    const QIcon saveicon = QIcon::fromTheme("document-save", QIcon(":/pics/filesave.png"));
-    const QIcon toolicon = QIcon::fromTheme("preferences-system", QIcon(":/pics/tool.png"));
-    const QIcon exiticon = QIcon::fromTheme("application-exit", QIcon(":/pics/exit.png"));
-    const QIcon helpicon = QIcon::fromTheme("system-help", QIcon(":/pics/help.png"));
-  #else
-    const QIcon openicon(":/pics/fileopen.png");
-    const QIcon saveicon(":/pics/filesave.png");
-    const QIcon toolicon(":/pics/tool.png");
-    const QIcon quiticon(":/pics/exit.png");
-    const QIcon exiticon(":/pics/exit.png");
-    const QIcon helpicon(":/pics/help.png");
-  #endif
-#else
-  const QIcon openicon;
-  const QIcon saveicon;
-  const QIcon toolicon;
-  const QIcon quiticon;
-  const QIcon exiticon;
-  const QIcon helpicon;
-  // Remove all menu icons (violates Apple interface guidelines)
-  // This is a not-quite-hidden Qt call on the Mac
-  //    http://doc.trolltech.com/exportedfunctions.html
-  qt_mac_set_menubar_icons(false);
-#endif
+  const QIcon openicon = QIcon::fromTheme("document-open", QIcon(":/pics/fileopen.png"));
+  const QIcon saveicon = QIcon::fromTheme("document-save", QIcon(":/pics/filesave.png"));
+  const QIcon toolicon = QIcon::fromTheme("preferences-system", QIcon(":/pics/tool.png"));
+  const QIcon exiticon = QIcon::fromTheme("application-exit", QIcon(":/pics/exit.png"));
+  const QIcon helpicon = QIcon::fromTheme("system-help", QIcon(":/pics/help.png"));
   QMenu *fileMenu = menuBar()->addMenu(tr("&Game"));
 
   fileMenu->addAction(QIcon(":/pics/newgame.png"), tr("&New game..."),
@@ -155,9 +137,11 @@ void MainWindow::initMenuBar () {
 ///////////////////////////////////////////////////////////////////////////////
 // slots
 ///////////////////////////////////////////////////////////////////////////////
-void MainWindow::openFile () {
+void MainWindow::openFile()
+{
   QString fileName = QFileDialog::getOpenFileName(this, "Select saved game", "", "*.prf");
-  if (!fileName.isEmpty())  {
+  if (!fileName.isEmpty())
+  {
     m_PrefModel->loadGame(fileName);
     actFileSave->setEnabled(true);
     m_PrefModel->runGame();
@@ -165,18 +149,22 @@ void MainWindow::openFile () {
 }
 
 
-void MainWindow::saveFile () {
-  if (m_PrefModel) {
+void MainWindow::saveFile()
+{
+  if (m_PrefModel)
+  {
     QString fn = QFileDialog::getSaveFileName(this, "Select file to save the current game", "", "*.prf");
-    if (!fn.isEmpty()) {
-		fn = GenName(fn, ".prf");
-		m_PrefModel->saveGame(fn);
+    if (!fn.isEmpty())
+    {
+      fn = GenName(fn, ".prf");
+      m_PrefModel->saveGame(fn);
 	}
   }
 }
 
 
-void MainWindow::showScore () {
+void MainWindow::showScore()
+{
   m_PrefModel->closePool();
   mDeskView->drawPool();
 }
@@ -195,7 +183,7 @@ void MainWindow::showLog()
     delete dlg;
 }
 
-void MainWindow::newSingleGame ()
+void MainWindow::newSingleGame()
 {
   QSettings st;
   NewGameDialog *dlg = new NewGameDialog(this);
@@ -219,7 +207,8 @@ void MainWindow::newSingleGame ()
   dlg->cbAggPass->setChecked(st.value("aggpass", false).toBool());
   dlg->cbWithoutThree->setChecked(st.value("without3", false).toBool());
   
-  if (dlg->exec() == QDialog::Accepted) {
+  if (dlg->exec() == QDialog::Accepted)
+  {
     mDeskView->ClearScreen();
     delete m_PrefModel;
     m_PrefModel = new PrefModel(mDeskView);
@@ -257,31 +246,42 @@ void MainWindow::newSingleGame ()
 }
 
 
-void  MainWindow::keyPressEvent (QKeyEvent *event) {
+void  MainWindow::keyPressEvent (QKeyEvent *event)
+{
   qApp->notify(mDeskView, event);
 }
 
-void MainWindow::closeEvent(QCloseEvent *event) {
+void MainWindow::closeEvent(QCloseEvent *event)
+{
   if (quitGame())
     exit(0);
   else
     event->ignore();
  }
 
-void MainWindow::helpAbout () {
+void MainWindow::helpAbout()
+{
   QMessageBox::about(this, tr("About"),
-    tr("<h2 align=center>&spades; <font color=red>&diams;</font> OpenPref " OPENPREF_VERSION " &clubs; <font color=red>&hearts;</font></h2>"
-  "<p align=center>Open source cross-platform Preferans game</p>"
-  "<p align=center><a href=\"http://openpref.sourceforge.net/\">http://openpref.sourceforge.net</a></p>\n"
-  "<p align=center>Copyright &copy;2000-2010, OpenPref Developers:<br/>I.Azarniy<br/>A.V.Fedotov<br/>Ketmar Dark<br/>K.Tokarev</p>"
-	"<p>OpenPref is free software; you can redistribute it and/or modify<br/>"
-    "it under the terms of the GNU General Public License (see file<br/>"
-    "COPYING or <a href=\"http://www.gnu.org/licenses\">http://www.gnu.org/licenses</a>)</p>")
+    tr("<h2 align=center>&spades; <font color=red>&diams;</font> BB Pref " OPENPREF_VERSION " &clubs; <font color=red>&hearts;</font></h2>"
+    "<p align=center>Open source Preferans game</p>"
+    "<p align=center><a href=\"http://vk.com/bbpref/\">http://vk.com/bbpref</a></p>\n"
+    "<p align=center>Copyright &copy;2012, Sergey Gagarin a.k.a. infsega</p>\n"
+    "<p align=center>Based on OpenPref, cross-platform open source preferans game</p>\n"
+    "<h3 align=center>Thanks to:</h3>\n"
+    "<h4 align=center>Original OpenPref Developers:</h4>\n"
+    "<p align=center>Azarniy I.V., initial developer of KPref<br/>"
+    "Fedotov A.V., developer of OpenPref 0.1.0<br/>"
+    "Ketmar Dark, author of new alphabeta engine, Qt4 port and massive refactorization<br/>"
+    "Konstantin Tokarev, developer of 0.1.2 and 0.1.3</p>"
+    "<h4 align=center>OpenPref testers</h4>\n"
+    "<p align=center>O. Gromov<br/>U. Zhumaev<br/>V. Savin<br/>G. Veryasov<br/>ZTX18</p>"
+    "<p>BB Pref is free software; you can redistribute it and/or modify<br/>"
+    "it under the terms of the GNU General Public License (see http://www.gnu.org/licenses)</p>")
   );
 }
 
-
-void MainWindow::writeSettings () {
+void MainWindow::writeSettings()
+{
   QSettings st;
   // Conventions
   st.setValue("maxpool", m_PrefModel->optMaxPool);
@@ -300,32 +300,18 @@ void MainWindow::writeSettings () {
   st.setValue("alphabeta2", m_PrefModel->optAlphaBeta2);
 }
 
-
-void MainWindow::readSettings () {
+void MainWindow::readSettings()
+{
   QSettings st;
-  //m_PrefModel->optMaxPool = st.value("maxpool", 10).toInt();
-  //if (m_PrefModel->optMaxPool < 4)
-    //m_PrefModel->optMaxPool = 4;
-  //else if (m_PrefModel->optMaxPool > 1000)
-    //m_PrefModel->optMaxPool = 1000;
-  //optStalingrad = st.value("stalin", false).toBool();
-  //opt10Whist = st.value("whist10", false).toBool();// true => radio button checks 'check' nevertheless!
-  //optWhistGreedy = st.value("whistgreedy", true).toBool();
-  #ifndef WIN32	// May be #ifdef POSIX?
-  	m_PrefModel->optHumanName = st.value("humanname", getenv("USER")).toString();
-  #else
-  	m_PrefModel->optHumanName = st.value("humanname", "").toString();
-  #endif
+  m_PrefModel->optHumanName   = st.value("humanname", getenv("USER")).toString();
   m_PrefModel->optPlayerName1 = st.value("playername1", tr("Player 1")).toString();
-  m_PrefModel->optAlphaBeta1 = (st.value("alphabeta1", false).toBool());
+  m_PrefModel->optAlphaBeta1  = (st.value("alphabeta1", false).toBool());
   m_PrefModel->optPlayerName2 = st.value("playername2", tr("Player 2")).toString();
-  m_PrefModel->optAlphaBeta2 = (st.value("alphabeta2", false).toBool());
-  //optWithoutThree = st.value("without3", false).toBool();
-  //optAggPass = st.value("aggpass", false).toBool();
+  m_PrefModel->optAlphaBeta2  = (st.value("alphabeta2", false).toBool());
 }
 
 
-void MainWindow::showOptions ()
+void MainWindow::showOptions()
 {
   m_optionDialog->setBackgroundType(mDeskView->backgroundType());
   m_optionDialog->setBackgroundColor(mDeskView->backgroundColor());
@@ -352,8 +338,15 @@ void MainWindow::applyOptions()
   mDeskView->draw(true);
 }
 
-void MainWindow::helpRules () {
-	QMessageBox::about(this, tr("Preferans Rules"), tr("Help system has not been implemented yet!\nSee http://en.wikipedia.org/wiki/Preferans"));
+void MainWindow::helpRules()
+{
+  char* country = NULL;
+  char* language = NULL;
+  locale_get(&language, &country);
+  if ( strcmp(language, "ru") == 0 )
+    navigator_invoke("http://ru.wikipedia.org/wiki/%D0%BF%D1%80%D0%B5%D1%84%D0%B5%D1%80%D0%B0%D0%BD%D1%81", NULL);
+  else
+    navigator_invoke("http://en.wikipedia.org/wiki/Preferans", NULL);
 }
 
 bool MainWindow::quitGame () {
@@ -363,7 +356,7 @@ bool MainWindow::quitGame () {
 		exit(0);
 		return true;
 	}
-	ret = QMessageBox::question(this, tr("OpenPref"),
+    ret = QMessageBox::question(this, tr("BB Pref"),
         tr("Do you really want to quit the game?"),
         QMessageBox::Yes | QMessageBox::Default,
         QMessageBox::No | QMessageBox::Escape);
@@ -388,9 +381,9 @@ void MainWindow::clearHint()
 void MainWindow::changeTitle(const QString & gameName)
 {
   if (gameName.isEmpty())
-    setWindowTitle("OpenPref");
+    setWindowTitle("BB Pref");
   else
-    setWindowTitle(QString("OpenPref: ") + gameName);
+    setWindowTitle(QString("BB Pref: ") + gameName);
 }
 
 const char * GenName(const QString &str, const QString &ext)
