@@ -28,52 +28,34 @@
 
 #include <QApplication>
 #include <QLibraryInfo>
-#include <QLocale>
 #include <QtCore/QTime>
 #include <QTranslator>
-#include <QDebug>
+#include <QCleanlooksStyle>
 
 #include "debug.h"
 #include "kpref.h"
 #include "prfconst.h"
-
-#ifdef USE_CONAN
-  #include "Conan.h"
-#endif
-
-using namespace std;
 
 int main (int argc, char *argv[]) {
   QCoreApplication::setOrganizationName("Inform Group");
   QCoreApplication::setOrganizationDomain("bbpref.card.game.com");
   QCoreApplication::setApplicationName("BB Pref");
 
-#if !defined(WIN32) && !defined(_WIN32)
-  char *e = getenv("DEBUG");
-  if (!(!e || !strcmp(e, "0") || !strcasecmp(e, "off") || strcasecmp(e, "on"))) allowDebugLog = 1;
+#ifdef DEBUG
+  allowDebugLog = 1;
 #endif
-
-  for (int f = 1; f < argc; f++) {
-    if (!strcmp(argv[f], "-d")) {
-      for (int c = f; c < argc; c++) argv[c] = argv[c+1];
-      argc--;
-      f--;
-      allowDebugLog = 1;
-    }
-  }
 
   const QTime t = QTime::currentTime();
   qsrand((double)t.minute()*t.msec()/(t.second()+1)*UINT_MAX/3600);
 
   QApplication app(argc, argv);
+  app.setStyle( new QCleanlooksStyle() );
 
   char* country = NULL;
   char* language = NULL;
-
   bps_initialize();
   locale_get(&language, &country);
   QString translationCode = QString::fromAscii(language);
-  //QString translationCode = QLocale::system().name();
 
   // Load Qt translations first
   QString qtFilename = "qt_" + translationCode + ".qm";
