@@ -42,7 +42,7 @@ class MainWindow : public QMainWindow
   Q_OBJECT
 
 public:
-  MainWindow(bool fullScreen=false);
+  MainWindow();
   ~MainWindow();
 
 private slots:
@@ -74,7 +74,6 @@ private:
   QAction *actFileSave;
   QStatusBar * HintBar;
   OptionDialog *m_optionDialog;
-  bool m_fullScreen;
 
 public:
   PrefModel *m_PrefModel;

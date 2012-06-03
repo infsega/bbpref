@@ -51,7 +51,7 @@ inline const char * GenName(const QString &str, const QString &ext);
 
 //char *documentation; //see bottom this file
 
-MainWindow::MainWindow (bool fullScreen) : m_fullScreen(fullScreen)
+MainWindow::MainWindow()
 {
   setWindowTitle("OpenPref");
   setWindowIcon(QIcon(":/pics/newgame.png"));

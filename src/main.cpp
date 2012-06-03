@@ -21,6 +21,9 @@
  *      http://www.gnu.org/licenses 
  */
 
+#include <bps/bps.h>
+#include <bps/locale.h>
+
 #include "limits.h"
 
 #include <QApplication>
@@ -28,6 +31,7 @@
 #include <QLocale>
 #include <QtCore/QTime>
 #include <QTranslator>
+#include <QDebug>
 
 #include "debug.h"
 #include "kpref.h"
@@ -61,37 +65,30 @@ int main (int argc, char *argv[]) {
   const QTime t = QTime::currentTime();
   qsrand((double)t.minute()*t.msec()/(t.second()+1)*UINT_MAX/3600);
 
-  QApplication a(argc, argv);
-  QString translationCode = QLocale::system().name();
-  dlogf("Translation code is %s\n", translationCode.toAscii().data() );
-  dlogf("Locale is %d\n", QLocale::system().language() );
-  dlogf("Locale is %s\n", QLocale::languageToString( QLocale::system().language() ).toAscii().data() );
+  QApplication app(argc, argv);
+
+  char* country = NULL;
+  char* language = NULL;
+
+  bps_initialize();
+  locale_get(&language, &country);
+  QString translationCode = QString::fromAscii(language);
+  //QString translationCode = QLocale::system().name();
 
   // Load Qt translations first
   QString qtFilename = "qt_" + translationCode + ".qm";
   QTranslator qtTranslator(0);
   if (qtTranslator.load(qtFilename, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
-    a.installTranslator(&qtTranslator);
+    app.installTranslator(&qtTranslator);
 
   // Load translation of OpenPref
   QTranslator openprefTranslator(0);
   QString openprefFilename = ":/openpref_" + translationCode + ".qm";
   if(openprefTranslator.load(openprefFilename))
-  	a.installTranslator(&openprefTranslator);
+    app.installTranslator(&openprefTranslator);
 
-  const bool fullScreen = true;
+  MainWindow kpref;
+  kpref.showFullScreen();
 
-  MainWindow kpref(fullScreen);
-  if(!fullScreen)
-      kpref.show();
-  else
-      kpref.showFullScreen();
-
-  #ifdef USE_CONAN
-    ConanWidget widget;
-    widget.show();
-  #endif
-  int exitCode = 0;
-  exitCode = a.exec();
-  return exitCode;
+  return app.exec();
 }

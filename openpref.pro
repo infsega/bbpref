@@ -15,12 +15,12 @@ MOC_DIR = _build/moc
 RCC_DIR = _build/rcc
 RESOURCES += $$PWD/openpref.qrc
 TRANSLATIONS = openpref_ru.ts
+LIBS += c:/bbndk-2.0.1/target/qnx6/armle-v7/usr/lib/libbps.so
 
 ## Build qm files ##
 
 isEmpty(QMAKE_LRELEASE) {
-  win32:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]\lrelease.exe
-  else:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
+  QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
 }
 
 updateqm.input = TRANSLATIONS
