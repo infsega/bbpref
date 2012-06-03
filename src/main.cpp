@@ -24,7 +24,7 @@
 #include <bps/bps.h>
 #include <bps/locale.h>
 
-#include "limits.h"
+#include <limits>
 
 #include <QApplication>
 #include <QLibraryInfo>
@@ -32,9 +32,7 @@
 #include <QTranslator>
 #include <QCleanlooksStyle>
 
-#include "debug.h"
 #include "kpref.h"
-#include "prfconst.h"
 
 int main (int argc, char *argv[]) {
   QCoreApplication::setOrganizationName("Inform Group");
@@ -46,7 +44,7 @@ int main (int argc, char *argv[]) {
 #endif
 
   const QTime t = QTime::currentTime();
-  qsrand((double)t.minute()*t.msec()/(t.second()+1)*UINT_MAX/3600);
+  qsrand((double)t.minute()*t.msec()/(t.second()+1)* std::numeric_limits<unsigned int>::max()/3600);
 
   QApplication app(argc, argv);
   app.setStyle( new QCleanlooksStyle() );

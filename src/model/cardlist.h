@@ -36,7 +36,8 @@
  * This class provides lists of cards with set of sonvenience functions
  * List doesn't own Card pointers, they will not be deleted on list destruction
  */
-class CardList {
+class CardList
+{
 public:
   CardList ();
   CardList (const CardList &cl);
@@ -47,7 +48,8 @@ public:
   /// Removes all null elements from list
   void clearNulls();
 
-  void mySort ();
+  void mySort();
+  CardList sorted();
   Card *exists (int aFace, int aSuit) const;
   Card *exists (Card *cc) const;
 
@@ -82,6 +84,8 @@ public:
 
   int cardsInSuit (int aSuit) const;
   int count () const;
+  int countSuits() const;
+  bool empty() const { return count() == 0; }
   int emptySuit (int aSuit) const; //возврат масти (за исключение данной) в которой нет карт
 
   int indexOf (Card *cc) const {
@@ -89,7 +93,8 @@ public:
     return mList.indexOf(cc);
   }
   Card *at (int idx) const {
-    if (idx < 0 || idx >= mList.size()) return 0;
+    if (idx < 0 || idx >= mList.size())
+        return 0;
     return mList[idx];
   }
   void putAt (int idx, Card *c) {

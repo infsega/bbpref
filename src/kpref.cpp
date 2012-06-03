@@ -42,18 +42,11 @@
 #include "playersinfodialog.h"
 #include "scorehistory.h"
 
-// This is a "hidden" exported Qt function on the Mac for Qt-4.x.
-#ifdef Q_WS_MAC
- void qt_mac_set_menubar_icons(bool enable);
-#endif
-
 inline const char * GenName(const QString &str, const QString &ext);
-
-//char *documentation; //see bottom this file
 
 MainWindow::MainWindow()
 {
-  setWindowTitle("OpenPref");
+  setWindowTitle("BB Pref");
   setWindowIcon(QIcon(":/pics/newgame.png"));
 
   mDeskView = 0;
@@ -76,7 +69,8 @@ MainWindow::MainWindow()
 }
 
 
-MainWindow::~MainWindow () {
+MainWindow::~MainWindow()
+{
   delete mDeskView;
   delete m_PrefModel;
 }

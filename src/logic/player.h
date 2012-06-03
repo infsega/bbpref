@@ -27,6 +27,8 @@
 #include "cardlist.h"
 #include "scoreboard.h"
 
+#include <QList>
+
 class DeskView;
 
 /**
@@ -47,8 +49,6 @@ public:
 
   /// Factory method, creates player of the same subclass as current
   virtual Player * create(int number, PrefModel *model) = 0;
-
-  //Player &operator = (const Player &pl);
 
   virtual void clear ();
 
@@ -99,9 +99,15 @@ protected:
   virtual void drawAt (int left, int top, int selNo=-1);
   virtual void clearCardArea ();
 
-  // at least 28 ints (14 int pairs); return # of used ints; the last int is -1
-  // result: ofs, cardNo, ..., -1
-  virtual int buildHandXOfs (int *dest, int startX, bool opened);
+  struct CardPosInfo
+  {
+    CardPosInfo() {}
+    CardPosInfo(int i_idx, int i_offset): idx(i_idx), offset(i_offset) {}
+    int idx;
+    int offset;
+  };
+
+  int buildHandXOfs (QList<CardPosInfo>& offsets, int startX, bool opened);
   virtual int cardAt (int lx, int ly, bool opened=true);
 
   bool isValidMove(const Card *move, const Card *lMove, const Card *rMove, const int trump);

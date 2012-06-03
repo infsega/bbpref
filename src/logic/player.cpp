@@ -26,9 +26,14 @@
 
 #include <QDebug>
 
-#define SUIT_OFFSET         22
-#define NEW_SUIT_OFFSET     ((mDeskView->CardWidth)+8)
-#define CLOSED_CARD_OFFSET  ((mDeskView->CardWidth)*0.55)
+#define CARD_WIDTH          (mDeskView->CardWidth)
+#define CARD_HEIGHT         (mDeskView->CardHeight)
+
+const int CARD_OFFSET = 22;
+#define CARD_OFFSET_P1      (CARD_WIDTH - 5)
+#define SUIT_OFFSET         (CARD_WIDTH + 8)
+#define SUIT_OFFSET_P1      (CARD_WIDTH + 20)
+#define CLOSED_CARD_OFFSET  (CARD_WIDTH * 0.55)
 
 Player::Player (int number, PrefModel *model)
 : mScore(model)
@@ -93,74 +98,80 @@ void Player::returnDrop () {
 // build array with cards offsets and indicies
 // at least 28 ints (14 int pairs); return # of used ints; the last int is -1
 // result: ofs, cardNo, ..., -1
-int Player::buildHandXOfs (int *dest, int startX, bool opened) {
-  int cnt = 0, oldXX = startX, *oDest = dest;
-  Card *cur = 0, *prev = 0;
+int Player::buildHandXOfs (QList<CardPosInfo>& offsets, int startX, bool opened)
+{
+  CardList lst = mCards.sorted();
 
-  CardList lst(mCards);
-  lst.mySort();
+  int suitsCount = lst.countSuits();
+  int cardsCount = lst.count();
+  int suitOffset = opened ? ((mPlayerNo == 1) ? SUIT_OFFSET_P1 : SUIT_OFFSET) : CLOSED_CARD_OFFSET;
+  int cardOffset = opened ? ((mPlayerNo == 1) ? CARD_OFFSET_P1 : CARD_OFFSET) : CLOSED_CARD_OFFSET;
+  int cardsWidth = (cardsCount - suitsCount) * cardOffset + (suitsCount - 1) * suitOffset + CARD_WIDTH;
 
-  if (mPlayerNo == 3) startX = 0;
-  // normal
-  startX -= opened ? SUIT_OFFSET : CLOSED_CARD_OFFSET ;
-  for (int f = 0; f < lst.size(); f++) {
-    Card *pp = lst.at(f);
-    if (!pp) continue;
-    prev = cur;
-    cur = pp;
-    if (opened) {
-      startX += (prev && prev->suit() != cur->suit()) ? NEW_SUIT_OFFSET : SUIT_OFFSET ;
-    } else startX += CLOSED_CARD_OFFSET;
-    *dest++ = startX;
-    int idx = mCards.indexOf(cur);
-    *dest++ = idx;
-    Q_ASSERT(idx >= 0);
-    cnt++;
-    Q_ASSERT(cnt <= 12);
-  }
-  *dest++ = -1;
-  *dest = -1;
+  if (mPlayerNo == 3)
+    startX -= cardsWidth;
+  else if (mPlayerNo == 1)
+    startX -= cardsWidth / 2;
 
-  if (mPlayerNo == 3 && cnt) {
-    // righttop
-    startX = oldXX-(oDest[(cnt-1)*2]+mDeskView->CardWidth+4);
-    for (int f = 0; f < cnt; f++) oDest[f*2] += startX;
+  Card* prev = NULL;
+  for(int i = 0; i < lst.size(); i++)
+  {
+    Card* pCard = lst.at(i);
+    if (!pCard)
+        continue;
+    if (prev)
+    {
+      bool suitChanged = prev->suit() != pCard->suit();
+      int offset = suitChanged ? suitOffset : cardOffset;
+      startX += offset;
+    }
+    offsets.push_back( CardPosInfo( mCards.indexOf(pCard), startX ) );
+    prev = pCard;
   }
 
-  return cnt;
+  return cardsCount;
 }
 
 
-int Player::cardAt (int lx, int ly, bool opened) {
-  int res = -1, ofs[28];
+int Player::cardAt(int lx, int ly, bool opened)
+{
   int left, top;
   mDeskView->getLeftTop(mPlayerNo, left, top);
-  buildHandXOfs(ofs, left, opened);
-  for (int f = 0; ofs[f] >= 0; f += 2) {
-    int x1 = ofs[f], y1 = top;//+mDeskView->yBorder;
-    int x2 = x1+mDeskView->CardWidth, y2 = y1+mDeskView->CardHeight;
-    if (x1 < lx && lx < x2 && y1 < ly && ly < y2) res = ofs[f+1];
+  QList<CardPosInfo> offsets;
+  buildHandXOfs(offsets, left, opened);
+
+  int res = -1;
+  foreach( const CardPosInfo& pi, offsets )
+  {
+    int x1 = pi.offset, y1 = top;
+    int x2 = x1 + CARD_WIDTH, y2 = y1 + CARD_HEIGHT;
+    if (x1 < lx && lx < x2 && y1 < ly && ly < y2)
+        res = pi.idx;
   }
   return res;
 }
 
 
-void Player::drawAt (int left, int top, int selNo) {
-  int ofs[28];
-
-  int cnt = buildHandXOfs(ofs, left, !invisibleHand());
-  if (cnt) left = ofs[0];
-  int f;
-  for (f = 0; ofs[f] >= 0; f += 2) {
-    int x = ofs[f], y = top;
-    Card *card = mCards.at(ofs[f+1]);
-    mDeskView->drawCard(card, x, y, !invisibleHand(), ofs[f+1]==selNo);
+void Player::drawAt (int left, int top, int selNo)
+{
+  QList<CardPosInfo> offsets;
+  int cnt = buildHandXOfs(offsets, left, !invisibleHand());
+  if (!cnt)
+    return;
+  left = offsets.begin()->offset;
+  foreach( const CardPosInfo& pi, offsets )
+  {
+    int x = pi.offset, y = top;
+    Card *card = mCards.at(pi.idx);
+    mDeskView->drawCard(card, x, y, !invisibleHand(), pi.idx == selNo);
   }
-  mDeskView->update(left-10, top-10, ofs[f-2]-left+mDeskView->CardWidth+10, mDeskView->CardHeight+10);
+
+  mDeskView->update(left - 100, top - 10, offsets.last().offset - left + CARD_WIDTH + 100, CARD_HEIGHT + 10);
 }
 
 
-void Player::draw () {
+void Player::draw()
+{
   int left, top;
   Q_ASSERT(mDeskView);
   mDeskView->getLeftTop(mPlayerNo, left, top);
@@ -169,18 +180,22 @@ void Player::draw () {
 }
 
 
-void Player::clearCardArea () {
-  int left, top, ofs[28];
-  if (!mDeskView) return;
+void Player::clearCardArea()
+{
+  if (!mDeskView)
+      return;
+  int left, top;
   mDeskView->getLeftTop(mPlayerNo, left, top);
-  int cnt = buildHandXOfs(ofs, left, !invisibleHand());
-  if (!cnt) return;
-  int f;
-  for (f = 0; ofs[f] >= 0; f += 2) {
-    int x = ofs[f], y = top;
-    mDeskView->ClearBox(x, y, mDeskView->CardWidth, mDeskView->CardHeight);
+  QList<CardPosInfo> offsets;
+  int cnt = buildHandXOfs(offsets, left, !invisibleHand());
+  if (!cnt)
+      return;
+  foreach( const CardPosInfo& pi, offsets )
+  {
+    int x = pi.offset, y = top;
+    mDeskView->ClearBox(x, y, CARD_WIDTH, CARD_HEIGHT);
   }
-  mDeskView->update(left-10, top-10, ofs[f-2]-left+mDeskView->CardWidth+10, mDeskView->CardHeight+10);
+  mDeskView->update(left - 100, top - 10, offsets.last().offset - left + CARD_WIDTH + 10, CARD_HEIGHT + 10);
 }
 
 

@@ -444,20 +444,24 @@ void DeskView::ClearBox (int x1, int y1, int x2, int y2) {
 void DeskView::drawCard (const Card *card, int x, int y, bool opened, bool hilight) {
   char cCardName[16];
   cCardName[0] = 0;
-  if (!card) {
+  if (!card)
+  {
     ClearBox(x, y, x+CardWidth, y+CardHeight);
     return;
   }
 
-  //strcpy(cCardName, opened?"empty":"1000");
-  if (opened) {
+  if (opened)
+  {
     Q_ASSERT(card->face() >= 7 && card->face() <= FACE_ACE && card->suit() >= 1 && card->suit() <= 4);
     sprintf(cCardName, "%s%i%i", hilight?"q":"", card->face(), card->suit());
-  } else {
+  }
+  else
+  {
     sprintf(cCardName, "1000");
   }
   QPixmap *bmp = GetImgByName(cCardName);
-  if (!bmp) return;
+  if (!bmp)
+      return;
   QPainter p(mDeskBmp);
   p.drawPixmap(x, y, *bmp);
   p.end();
@@ -598,36 +602,36 @@ void DeskView::resizeEvent(QResizeEvent *event) {
 }
 
 
-void DeskView::mouseMoveEvent (QMouseEvent *event) {
+void DeskView::mouseMoveEvent (QMouseEvent *event)
+{
   m_model->currentPlayer()->highlightCard(event->x(), event->y());
 }
 
-
-void DeskView::mousePressEvent (QMouseEvent *event) {
-  if (event->button() == Qt::LeftButton) {
+void DeskView::mousePressEvent (QMouseEvent *event)
+{
+  if (event->button() == Qt::LeftButton)
+  {
     Player *plr = m_model->currentPlayer();
     plr->mClickX = event->x();
     plr->mClickY = event->y();
   }
 }
 
-
 void DeskView::keyPressEvent (QKeyEvent *event) {
-    switch (event->key()) {
-      case Qt::Key_Escape:
-      case Qt::Key_Enter:
-      case Qt::Key_Return:
-      case Qt::Key_Space:
-        event->accept();
-        break;
-      default: ;
-    }
+  switch (event->key())
+  {
+  case Qt::Key_Escape:
+  case Qt::Key_Enter:
+  case Qt::Key_Return:
+  case Qt::Key_Space:
+    event->accept();
+    break;
+  }
 }
 
-
-void DeskView::paintEvent (QPaintEvent *event) {
+void DeskView::paintEvent (QPaintEvent *event)
+{
   QPainter p(this);
-//  qDebug() << event->region().boundingRect();
   p.setClipRegion(event->region());
   p.drawPixmap(0, 0, *(mDeskBmp));
 }
@@ -635,9 +639,10 @@ void DeskView::paintEvent (QPaintEvent *event) {
 void DeskView::getLeftTop (int player, int & left, int & top)
 {
   left = 0; top = 0;
-  switch (player) {
+  switch (player)
+  {
     case 1:
-      left = width()/4 + m_leftRightMargin;
+      left = width() / 2;
       top = height() - m_topBottomMargin - CardHeight;
       break;
     case 2:
@@ -656,7 +661,8 @@ void DeskView::getLeftTop (int player, int & left, int & top)
 void DeskView::inGameCardLeftTop (int mCardNo, int &left, int &top)
 {
   int x = width()/2, y = height()/2;
-  switch (mCardNo) {
+  switch (mCardNo)
+  {
     case 0:
       x -= CardWidth*2+8;
       y -= CardHeight/2;
@@ -671,7 +677,8 @@ void DeskView::inGameCardLeftTop (int mCardNo, int &left, int &top)
     case 3:
       y -= CardHeight;
       break;
-    default: return;
+    default:
+      return;
   }
   left = x; top = y;
 }
@@ -682,22 +689,25 @@ void DeskView::animateTrick (int plrNo, const QCardList & cards)
   int left, top;
 
   getLeftTop(plrNo, left, top);
-  if (plrNo == 3) left -= CardWidth-4;
+  if (plrNo == 3)
+      left -= CardWidth - 4;
 
-  if(optTakeAnim) {
+  if (optTakeAnim)
+  {
     draw(false);
     QRegion oldRegion;
     QPixmap cache = *mDeskBmp;
-    for (int f = optTakeAnim?0:steps; f <= steps; f++) {
+    for (int f = optTakeAnim ? 0 : steps; f <= steps; f++)
+    {
       QRegion newRegion;
-      for (int c = 0; c < cards.size(); c++) {
-      //foreach(const Card *cAni, cards) {
-        if (!cards.at(c)) continue;
-//        Q_ASSERT(cards.at(c));
+      for (int c = 0; c < cards.size(); c++)
+      {
+        if (!cards.at(c))
+            continue;
         int x, y;
         inGameCardLeftTop(c, x, y);
-        x = x + ((left-x)*f/steps);
-        y = y + ((top-y)*f/steps);
+        x += (left- x) * f / steps;
+        y += (top - y) * f / steps;
         drawCard(cards.at(c), x, y, 1, 0);
         newRegion += QRegion(x, y, CardWidth, CardHeight);
       }
@@ -710,7 +720,8 @@ void DeskView::animateTrick (int plrNo, const QCardList & cards)
 }
 
 
-void DeskView::drawPool () {
+void DeskView::drawPool()
+{
   d_ptr->m_scorew->open();
 }
 
@@ -793,7 +804,8 @@ void DeskView::draw (bool emitSignal) {
   p.end();
   }
   /// @todo Calculate region which really needs updating
-  if (emitSignal) update();
+  if (emitSignal)
+      update();
 }
 
 void DeskView::longWait (const int n)

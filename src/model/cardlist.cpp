@@ -23,7 +23,7 @@
 #include "cardlist.h"
 
 #include "baser.h"
-
+#include <set>
 
 CardList::CardList () {
 }
@@ -103,13 +103,22 @@ int CardList::cardsInSuit (int aSuit) const {
 }
 
 
-int CardList::count () const {
+int CardList::count () const
+{
   int res = 0;
   foreach (Card *c, mList)
     if (c) res++;
   return res;
 }
 
+int CardList::countSuits() const
+{
+  std::set<int> suits;
+  foreach (Card *c, mList)
+    if (c)
+        suits.insert( c->suit() );
+  return suits.size();
+}
 
 void CardList::mySort () {
   int cnt = mList.size();
@@ -131,6 +140,12 @@ void CardList::mySort () {
   }
 }
 
+CardList CardList::sorted()
+{
+  CardList cp(*this);
+  cp.mySort();
+  return cp;
+}
 
 Card *CardList::greaterInSuit (int aFace, int aSuit) const {
   if (aFace > FACE_ACE) return 0;
@@ -161,46 +176,46 @@ Card *CardList::lesserInSuit (int aFace, int aSuit) const {
   return 0;
 }
 
-
-//первая меньше чем переданная
-Card *CardList::lesserInSuit (Card *card) const {
-  if (!card) return 0;
+Card *CardList::lesserInSuit (Card *card) const
+{
+  if (!card)
+      return 0;
   return lesserInSuit(card->face(), card->suit());
 }
 
 
-bool CardList::hasSuit (int aSuit) const {
-  foreach (Card *c, mList) {
-    if (c && c->suit() == aSuit) return true;
-  }
+bool CardList::hasSuit (int aSuit) const
+{
+  foreach (Card *c, mList)
+    if (c && c->suit() == aSuit)
+      return true;
   return false;
 }
 
 
-int CardList::emptySuit (int aSuit) const {
-  for (int f = 1; f <= 4; f++) {
-    if (f == aSuit) continue; //k8:bug? break;
-    if (!hasSuit(f)) return f;
+int CardList::emptySuit (int aSuit) const
+{
+  for (int f = 1; f <= 4; f++)
+  {
+    if (f == aSuit)
+        continue; //k8:bug? break;
+    if (!hasSuit(f))
+        return f;
   }
   return 0;
 }
 
 
 void CardList::copySuit (const CardList *src, eSuit aSuit) {
-  // remove existing cards
-/*
-  QMutableListIterator<Card *> i(mList);
-  while (i.hasNext()) {
-    Card *c = i.next();
-    if (c->suit() == (int)aSuit) i.remove();
-  }
-*/
-  for (int f = mList.size()-1; f >= 0; f--) {
+  for (int f = mList.size()-1; f >= 0; f--)
+  {
     Card *c = mList[f];
-    if (c && c->suit() == aSuit) mList[f] = 0;
+    if (c && c->suit() == aSuit)
+        mList[f] = 0;
   }
   // copy cards
-  foreach (Card *c, src->mList) {
+  foreach (Card *c, src->mList)
+  {
     if (c && c->suit() == (int)aSuit) insert(c);
   }
 }
