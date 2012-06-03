@@ -23,7 +23,6 @@
 #include "kpref.h"
 #include "desktop.h"
 #include "deskview.h"
-#include "updatecheck.h"
 
 #include <QSettings>
 
@@ -42,7 +41,6 @@
 #include "optiondialog.h"
 #include "playersinfodialog.h"
 #include "scorehistory.h"
-#include "helpbrowser.h"
 
 // This is a "hidden" exported Qt function on the Mac for Qt-4.x.
 #ifdef Q_WS_MAC
@@ -70,7 +68,6 @@ MainWindow::MainWindow (bool fullScreen) : m_fullScreen(fullScreen)
   m_PrefModel = new PrefModel(mDeskView);
   mDeskView->setModel(m_PrefModel);
   m_optionDialog = new OptionDialog(this);
-  m_updateCheck = UpdateCheck::instance(mDeskView);
   readSettings();
   doConnects();
   initMenuBar();
@@ -168,8 +165,6 @@ void MainWindow::initMenuBar () {
 
   QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
   helpMenu->addAction(helpicon, tr("&Preferans Rules..."), this, SLOT(helpRules()), QKeySequence::HelpContents);
-  helpMenu->addSeparator();
-  helpMenu->addAction(tr("Check for updates..."), m_updateCheck, SLOT(checkForUpdates()));
   helpMenu->addSeparator();
   helpMenu->addAction(QIcon(":/pics/newgame.png"), tr("&About..."), this, SLOT(helpAbout()), 0);
 //  helpMenu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
@@ -346,12 +341,6 @@ void MainWindow::readSettings () {
   m_PrefModel->optAlphaBeta2 = (st.value("alphabeta2", false).toBool());
   //optWithoutThree = st.value("without3", false).toBool();
   //optAggPass = st.value("aggpass", false).toBool();
-
-  // Load the updated version configuration settings and then run it
-  if (m_updateCheck) {
-    m_updateCheck->readSettings(st);
-    m_updateCheck->checkForUpdates();
-  }
 }
 
 
@@ -396,10 +385,6 @@ void MainWindow::applyOptions()
 
 void MainWindow::helpRules () {
 	QMessageBox::about(this, tr("Preferans Rules"), tr("Help system has not been implemented yet!\nSee http://en.wikipedia.org/wiki/Preferans"));
-  //HelpBrowser *dlg = new HelpBrowser;
-  //dlg->tbHelp->setSearchPaths(QStringList("/home/kostya/projects/Qt/doc/html"));
-  //dlg->tbHelp->loadResource(0, QUrl::fromLocalFile("/home/kostya/projects/Qt/doc/html/index.html"));
-  // delete dlg;
 }
 
 bool MainWindow::quitGame () {

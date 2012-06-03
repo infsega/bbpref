@@ -2,27 +2,9 @@ include($$PWD/src/main.pri)
 
 TEMPLATE = app
 TARGET = openpref
-QT += gui network
+QT += gui
 CONFIG += qt warn_on
 CONFIG += debug_and_release
-QMAKE_MAC_SDK=/Developer/SDKs/MacOSX10.4u.sdk
-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.4
-
-# Universal binary
-mac:release {
-#  CONFIG += x86 ppc
-}
-
-mac {
-  ICON = pics/openpref.icns
-  TARGET = OpenPref
-  QMAKE_INFO_PLIST = Info_mac.plist
-}
-
-!isEmpty(USE_CONAN) {
-    INCLUDEPATH += /usr/local/include/conan/include
-    LIBS += -L/usr/local/lib64 -lConan
-}
 
 QMAKE_LFLAGS_RELEASE += -s
 
@@ -61,3 +43,8 @@ isEmpty(PREFIX) {
 
 target.path = $$PREFIX/$$BIN_INSTALL_DIR
 INSTALLS += target
+
+OTHER_FILES += \
+    splashscreen.png \
+    icon.png \
+    bar-descriptor.xml

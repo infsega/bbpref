@@ -5,3 +5,7 @@ _*
 Makefile*
 openpref
 build
+
+*.bar
+*/Thumbs.db
+*.pro.user

@@ -31,6 +31,11 @@ OptionDialog::OptionDialog (QWidget *parent) : QDialog(parent), m_color(qRgb(0,1
   connect(rbTexture1, SIGNAL(toggled(bool)), this, SLOT(changeTexture(bool)));
   connect(rbTexture2, SIGNAL(toggled(bool)), this, SLOT(changeTexture(bool)));
   connect(cbAnimTake, SIGNAL(stateChanged(int)), this, SLOT(toggleTakeQuality(int)));
+#ifdef DEBUG
+  cbDebugHands->setVisible(true);
+#else
+  cbDebugHands->setVisible(false);
+#endif
 }
 
 int OptionDialog::backgroundType() const

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<qnx xmlns="http://www.qnx.com/schemas/application/1.0">
+    <id>com.games.card.bbpref</id>
+    <name>BB Pref</name>
+    <buildId>1</buildId>
+    <versionNumber>1.0.0</versionNumber>
+    <description>Preferans card game for BlackBerry platform</description>
+    <author>Inform Group</author>
+    <authorId>gYAAgOqkKwwbBgrIM78i7xYWV1E</authorId>
+
+    <initialWindow>
+        <systemChrome>none</systemChrome>
+        <transparent>false</transparent>
+        <autoOrients>true</autoOrients>
+        <aspectRatio>landscape</aspectRatio>
+    </initialWindow>
+
+    <env var="QML_IMPORT_PATH" value="app/native/imports"/>
+    <env var="QT_PLUGIN_PATH" value="app/native/plugins"/>
+    <env var="LD_LIBRARY_PATH" value="app/native/lib"/>
+    <arg>-platform</arg>
+    <arg>blackberry</arg>
+
+    <action system="true">run_native</action>
+
+    <!-- PROJECTPATH should point to the project binary, path can be relative -->
+    <asset entry="true" path="openpref" type="Qnx/Elf">openpref</asset>
+
+    <asset path="splashscreen.png">splashscreen.png</asset>
+    <asset path="icon.png">icon.png</asset>
+
+    <!-- These values will be replaced when deploying in Qt Creator -->
+    <asset path="%QT_INSTALL_PLUGINS%">plugins</asset>
+    <asset path="%QT_INSTALL_LIBS%">lib</asset>
+    <asset path="%QT_INSTALL_IMPORTS%">imports</asset>
+    <!--
+    <asset path="../qtlibs">lib</asset>
+    <asset path="%QT_INSTALL_LIBS%">lib</asset>
+    <asset path="%QT_INSTALL_IMPORTS%">imports</asset>
+    !-->
+
+    <icon><image>icon.png</image></icon>
+    <splashscreen>splashscreen.png</splashscreen>
+</qnx>
+

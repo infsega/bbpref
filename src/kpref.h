@@ -29,7 +29,6 @@
 class DeskView;
 class OptionDialog;
 class PrefModel;
-class UpdateCheck;
 
 /**
  * @class MainWindow kpref.h
@@ -74,7 +73,6 @@ private:
   QAction *actFileOpen;
   QAction *actFileSave;
   QStatusBar * HintBar;
-  UpdateCheck * m_updateCheck;
   OptionDialog *m_optionDialog;
   bool m_fullScreen;
 
