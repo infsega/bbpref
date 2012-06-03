@@ -109,7 +109,6 @@ public:
   bool optDebugHands;
   bool optDealAnim;
   bool optTakeAnim;
-  bool optPrefClub;
   int CardWidth, CardHeight;
 
 protected:
@@ -174,7 +173,6 @@ public:
   void doEventMouse (QMouseEvent *event);
 
 public slots:
-  void keyPicUpdate ();
   void quit();
 
 public:

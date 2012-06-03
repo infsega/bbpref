@@ -103,10 +103,10 @@ signals:
 
 public:
   WrapCounter nCurrentStart, nCurrentMove;
+  bool mPlayingRound;
   bool mGameRunning;
   bool mBiddingDone;
   bool mOnDeskClosed;
-  bool mPlayingRound;
   int mPlayerHi; // highlighted message number
 
   // Conventions

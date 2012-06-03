@@ -26,7 +26,7 @@
 #include <QString>
 
 #ifndef WIN32
-	#define XDEBUG
+    #define XDEBUG
 #endif
 
 

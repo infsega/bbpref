@@ -50,7 +50,6 @@ namespace {
         case 0:
           {
           QString s(sGameName(m_log.at(index.row()).game));
-//          if (s.indexOf("\1d") >= 0 || s.indexOf("\1h") >= 0) textRGB = qRgb(255, 0, 0);
           s.replace("\1s", QChar((ushort)0x2660));
           s.replace("\1c", QChar((ushort)0x2663));
           s.replace("\1d", QChar((ushort)0x2666));
@@ -69,9 +68,8 @@ namespace {
         case 5:
           return tr("Show");
         }
-      } else {
-        return QVariant();
       }
+      return QVariant();
     }
 
     Qt::ItemFlags flags(const QModelIndex &index) const
@@ -109,13 +107,15 @@ namespace {
       } else {
         return QVariant();
       }
+      return QVariant();
     }
   };
 }
 
 
 DealButton::DealButton(int rowNum, const QString & text, QWidget * parent)
-  : m_rowNum(rowNum), QPushButton(text, parent)
+: QPushButton(text, parent)
+, m_rowNum(rowNum)
 {
   connect(this, SIGNAL(clicked()), this, SLOT(doClick()));
 }

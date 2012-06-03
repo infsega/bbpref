@@ -171,25 +171,29 @@ void PrefModel::initPlayers() {
 }
 
 
-PrefModel::PrefModel (DeskView *aDeskView) : QObject(0), mPlayingRound(false),
-                            mGameRunning(false), mDeskView(aDeskView), m_trump(0),
-                            optStalingrad(false), opt10Whist(false), optWhistGreedy(true),
-                            optMaxPool(10), optQuitAfterMaxRounds(false), optMaxRounds(-1),
-                            optAggPass(false), optPassCount(0), optWithoutThree(true),
- optPlayerName1("Player 1"),
- optAlphaBeta1(false),
- optPlayerName2("Player 2"),
- optAlphaBeta2(false),
- m_closedWhist(false),
- m_keepLog(true)
+PrefModel::PrefModel (DeskView *aDeskView)
+    : QObject(0)
+    , mPlayingRound(false)
+    , mGameRunning(false)
+    , optStalingrad(false)
+    , opt10Whist(false)
+    , optWhistGreedy(true)
+    , optMaxPool(10)
+    , optQuitAfterMaxRounds(false)
+    , optMaxRounds(-1)
+    , optAggPass(false)
+    , optPassCount(0)
+    , optWithoutThree(true)
+    , optPlayerName1("Player 1")
+    , optPlayerName2("Player 2")
+    , optAlphaBeta1(false)
+    , optAlphaBeta2(false)
+    , mDeskView(aDeskView)
+    , m_trump(0)
+    , m_closedWhist(false)
+    , m_keepLog(true)
 {
-  #if defined Q_WS_X11 || defined Q_WS_QWS || defined Q_WS_MAC
-	QString optHumanName = getenv("USER");
-#elif defined Q_WS_WIN
-  QString optHumanName = ""; // get user name from WinAPI
-#else
-	QString optHumanName = "";
-#endif
+  optHumanName = getenv("USER");
   nCurrentStart.nValue = nCurrentMove.nValue = (qrand()%3)+1;
   nCurrentStart.nMin = nCurrentMove.nMin = 1;
   nCurrentStart.nMax = nCurrentMove.nMax = 3;

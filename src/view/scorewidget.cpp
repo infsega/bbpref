@@ -55,7 +55,10 @@ static void drawRotatedText (QPainter &p, int x, int y, int width, int height, f
 }
 
 ScoreWidget::ScoreWidget(PrefModel *model, QWidget *parent, Qt::WindowFlags f)
-    : QDialog(parent, f), m_model(model), m_paperBmp(0), m_landscape(false)
+: QDialog(parent, f)
+, m_paperBmp(0)
+, m_model(model)
+, m_landscape(false)
 {
   //setSizeGripEnabled(true);
   // TODO: flexible size

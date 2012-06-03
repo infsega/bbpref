@@ -121,12 +121,12 @@ protected:
   PrefModel *m_model;
   QString m_nick;
   QString mMessage;
+  bool mIStart;
   int mPlayerNo; // my number
   bool mInvisibleHand;
   eGameBid m_game;
   int mTricksTaken;
   int mPrevHiCardIdx;
-  bool mIStart;
 };
 
 

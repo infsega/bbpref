@@ -72,7 +72,7 @@ namespace {
       QMouseEvent *event = static_cast<QMouseEvent *>(e);
       mLoop->doEventMouse(event);
     }
-    return false; // event is not tasty
+    return false;
   }
 } // end of namespace
 
@@ -99,17 +99,10 @@ void SleepEventLoop::doEventMouse (QMouseEvent *event) {
     mMousePressed = true;
     mMouseX = event->x();
     mMouseY = event->y();
-    //qDebug() << "mouse! x:" << mMouseX << "y:" << mMouseY;
     quit();
   }
 }
 
-
-void SleepEventLoop::keyPicUpdate () {
-  if (mDeskView->optPrefClub == true) {
-    mDeskView->drawPKeyBmp(true);
-  }
-}
 
 void SleepEventLoop::quit () {
   mIgnoreKey = false;
@@ -145,16 +138,9 @@ public:
 bool DeskView::loadCards () {
   // load cards from resources
   QString deckPath;
-  if (optPrefClub) {
-  	deckPath = "prefclub/";
-    CardWidth = 56;
-    CardHeight = 67;
-  }
-  else {
-  	deckPath = "classic/";
-    CardWidth = 71;
-    CardHeight = 96;
-  }
+  deckPath = "classic/";
+  CardWidth = 71;
+  CardHeight = 96;
 
   setMinimumWidth(CardWidth*14.42);
   if (CardHeight*6 > 570)
@@ -212,14 +198,16 @@ QPixmap *DeskView::GetImgByName (const char *name) {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_ptr(new DeskViewPrivate(this)),
-                                                           m_model(0), mDeskBmp(0),
- optDebugHands(false),
- optDealAnim(true),
- optTakeAnim(true),
- optPrefClub(false),
- m_backgroundColor(qRgb(0,128,0)),
- m_takeQuality(2)
+DeskView::DeskView (QWidget * parent, Qt::WindowFlags f)
+    : QWidget(parent,f)
+    , optDebugHands(false)
+    , optDealAnim(true)
+    , optTakeAnim(true)
+    , d_ptr(new DeskViewPrivate(this))
+    , m_model(0)
+    , mDeskBmp(0)
+    , m_backgroundColor(qRgb(0,128,0))
+    , m_takeQuality(2)
 {
   setAttribute(Qt::WA_OpaquePaintEvent);
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -233,8 +221,9 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f) : QWidget(parent,f), d_
   mKeyBmp[1] = new QPixmap(QPixmap::fromImage(key1));
   mIMoveBmp = new QPixmap(":/pics/imove.png");
 
-  const bool result = loadCards();
-  Q_ASSERT(result);
+  bool ok = loadCards();
+  Q_ASSERT(ok && "loadCards()");
+  Q_UNUSED(ok);
 
   m_leftRightMargin = 20;
   m_topBottomMargin = 20;
@@ -293,7 +282,7 @@ void DeskView::setBackgroundColor(const QRgb color)
 }
 
 void DeskView::drawIMove (QPainter &p) {
-  int x, y;
+  int x = 0, y = 0;
   Q_ASSERT(m_model->nCurrentStart.nValue >= 1 && m_model->nCurrentStart.nValue <= 3);
   switch (m_model->nCurrentStart.nValue) {
       case 1:
@@ -399,13 +388,10 @@ void DeskView::mySleep (int seconds) {
     connect(d_ptr->m_timer, SIGNAL(timeout()), d_ptr->m_eloop, SLOT(quit()));
     d_ptr->m_timer->start(seconds*1000);
   } else if (seconds == -1) {
-    connect(d_ptr->m_timer, SIGNAL(timeout()), d_ptr->m_eloop, SLOT(keyPicUpdate()));
     d_ptr->m_timer->start(1000);
   } else if (seconds < -1) {
     d_ptr->m_eloop->mIgnoreKey = true;
   }
-  if (optPrefClub == true)
-  drawPKeyBmp(seconds == -1);
 
   if (d_ptr->m_eloop->isRunning())
     d_ptr->m_eloop->exit();
@@ -812,10 +798,7 @@ void DeskView::draw (bool emitSignal) {
 
 void DeskView::longWait (const int n)
 {
-  if (optPrefClub)
-    mySleep(-1);
-  else
-    mySleep(2*n);
+  mySleep(2*n);
 }
 
 void DeskView::readSettings()
@@ -827,7 +810,6 @@ void DeskView::readSettings()
     optTakeAnim = st.value("animtake", true).toBool();
     m_takeQuality = st.value("takequality", 2).toInt();
     optDebugHands = st.value("debughand", false).toBool();
-    optPrefClub = st.value("prefclub", false).toBool();
 }
 
 void DeskView::writeSettings() const
@@ -835,7 +817,6 @@ void DeskView::writeSettings() const
     QSettings st;
     st.setValue("background_type", m_backgroundType);
     st.setValue("background_color", m_backgroundColor);
-    st.setValue("prefclub", optPrefClub);
     st.setValue("animdeal", optDealAnim);
     st.setValue("animtake", optTakeAnim);
     st.setValue("debughand", optDebugHands);

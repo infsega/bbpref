@@ -331,12 +331,8 @@ void MainWindow::readSettings () {
 }
 
 
-void MainWindow::showOptions () {
-//  int oldBackgroundType = mDeskView->backgroundType();
-//  QRgb oldBackgroundColor = mDeskView->backgroundColor();
-//  bool oldPrefClub = mDeskView->optPrefClub;
-//  bool oldDebugHands = mDeskView->optDebugHands;
-  
+void MainWindow::showOptions ()
+{
   m_optionDialog->setBackgroundType(mDeskView->backgroundType());
   m_optionDialog->setBackgroundColor(mDeskView->backgroundColor());
   m_optionDialog->cbAnimDeal->setChecked(mDeskView->optDealAnim);
@@ -344,29 +340,21 @@ void MainWindow::showOptions () {
   m_optionDialog->hsTakeQuality->setEnabled(mDeskView->optTakeAnim);
   m_optionDialog->hsTakeQuality->setValue(mDeskView->takeAnimQuality());
   m_optionDialog->cbDebugHands->setChecked(mDeskView->optDebugHands);
-  m_optionDialog->cbPrefClub->setChecked(mDeskView->optPrefClub);
 
   m_optionDialog->open();
 }
 
 void MainWindow::applyOptions()
 {
-    mDeskView->setBackgroundType(m_optionDialog->backgroundType());
-    mDeskView->setBackgroundColor(m_optionDialog->backgroundColor());
-    mDeskView->optDealAnim = m_optionDialog->cbAnimDeal->isChecked();
-    mDeskView->optTakeAnim = m_optionDialog->cbAnimTake->isChecked();
-    mDeskView->setTakeQuality(m_optionDialog->hsTakeQuality->value());
-    mDeskView->optPrefClub = m_optionDialog->cbPrefClub->isChecked();
-    mDeskView->optDebugHands = m_optionDialog->cbDebugHands->isChecked();
+  mDeskView->setBackgroundType(m_optionDialog->backgroundType());
+  mDeskView->setBackgroundColor(m_optionDialog->backgroundColor());
+  mDeskView->optDealAnim = m_optionDialog->cbAnimDeal->isChecked();
+  mDeskView->optTakeAnim = m_optionDialog->cbAnimTake->isChecked();
+  mDeskView->setTakeQuality(m_optionDialog->hsTakeQuality->value());
+  mDeskView->optDebugHands = m_optionDialog->cbDebugHands->isChecked();
 
-//  if ( /*(mDeskView->backgroundType() != oldBackgroundType)
-//    || (mDeskView->m_backgroundColor != oldBackgroundColor)
-//    ||*/ (mDeskView->optPrefClub != oldPrefClub)
-//    || (mDeskView->optDebugHands != oldDebugHands) )
-//  {
-    if(m_optionDialog->optionsModified())
-        mDeskView->reloadCards();
-//  }
+  if(m_optionDialog->optionsModified())
+    mDeskView->reloadCards();
   mDeskView->draw(true);
 }
 
