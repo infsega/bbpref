@@ -74,9 +74,7 @@ public:
     eGameBid bid () const { return mBid; }
     void enable();
     void disable();
-#ifndef MOBILE
     QSize sizeHint() const { return QSize(BidIconWidth+5, BidIconHeight+5); }
-#endif
 
 protected:
     eGameBid mBid;
@@ -91,9 +89,7 @@ QBidButton::QBidButton (eGameBid aBid, QWidget *parent) : QPushButton(parent), m
     setContentsMargins(2,2,0,0);
     setIconSize(QSize(BidIconWidth, BidIconHeight));
     setIcon(QIcon(iName));
-#ifdef MOBILE
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-#endif
 }
 
 void QBidButton::enable()

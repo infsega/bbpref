@@ -77,15 +77,7 @@ int main (int argc, char *argv[]) {
   if(openprefTranslator.load(openprefFilename))
   	a.installTranslator(&openprefTranslator);
 
-  #ifdef MOBILE
-    const bool fullScreen = true;
-  #else
-    const bool fullScreen = false;
-  #endif
-
-  #if defined(Q_WS_MAC) && (QT_VERSION >= QT_VERSION_CHECK(4,5,0))
-    a.setGraphicsSystem("raster");
-  #endif
+  const bool fullScreen = true;
 
   MainWindow kpref(fullScreen);
   if(!fullScreen)

@@ -31,10 +31,10 @@
 
     <!-- These values will be replaced when deploying in Qt Creator -->
     <asset path="%QT_INSTALL_PLUGINS%">plugins</asset>
-    <asset path="%QT_INSTALL_LIBS%">lib</asset>
     <asset path="%QT_INSTALL_IMPORTS%">imports</asset>
-    <!--
     <asset path="../qtlibs">lib</asset>
+    <!--
+    <asset path="%QT_INSTALL_LIBS%">lib</asset>
     <asset path="%QT_INSTALL_LIBS%">lib</asset>
     <asset path="%QT_INSTALL_IMPORTS%">imports</asset>
     !-->

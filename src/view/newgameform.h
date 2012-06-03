@@ -36,9 +36,7 @@ public:
   ~NewGameDialog () { }
 
 protected:
-#ifdef MOBILE
   void showEvent(QShowEvent *) { showFullScreen(); }
-#endif
 
 private slots:
   void toggleRounds(int checked)

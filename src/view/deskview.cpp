@@ -108,7 +108,6 @@ void SleepEventLoop::doEventMouse (QMouseEvent *event) {
 void SleepEventLoop::keyPicUpdate () {
   if (mDeskView->optPrefClub == true) {
     mDeskView->drawPKeyBmp(true);
-//    mDeskView->update();
   }
 }
 
@@ -726,11 +725,7 @@ void DeskView::animateTrick (int plrNo, const QCardList & cards)
 
 
 void DeskView::drawPool () {
-//#ifdef MOBILE
-//  d_ptr->m_scorew->showFullScreen();
-//#endif
   d_ptr->m_scorew->open();
-//#endif
 }
 
 void DeskView::drawBidBoard()

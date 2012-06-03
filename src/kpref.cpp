@@ -133,26 +133,14 @@ void MainWindow::initMenuBar () {
 
   fileMenu->addSeparator();
 
-  actFileOpen = fileMenu->addAction(openicon, tr("&Open..."),
-                                    this, SLOT(openFile()), QKeySequence::Open);
-  actFileSave = fileMenu->addAction(saveicon, tr("&Save"),
-                                    this, SLOT(saveFile()), QKeySequence::Save);
+  actFileOpen = fileMenu->addAction(openicon, tr("&Open..."), this, SLOT(openFile()), QKeySequence::Open);
+  actFileSave = fileMenu->addAction(saveicon, tr("&Save"), this, SLOT(saveFile()), QKeySequence::Save);
 
   fileMenu->addSeparator();
 
-  QAction *actOptions = fileMenu->addAction(toolicon, tr("&Options..."),
-                                    this, SLOT(showOptions()), QKeySequence::Preferences);
-#ifdef Q_WS_MAC
-  actOptions->setMenuRole(QAction::PreferencesRole);
-#endif
+  QAction *actOptions = fileMenu->addAction(toolicon, tr("&Options..."), this, SLOT(showOptions()), QKeySequence::Preferences);
   fileMenu->addSeparator();
-  //actQuit = fileMenu->addAction(QIcon(QString(":/pics/exit.png")), tr("&Quit"), qApp, SLOT(quit()), Qt::CTRL+Qt::Key_Q);
-  QAction *quitAction = fileMenu->addAction(exiticon, tr("&Quit"),
-                                    this, SLOT(quitGame()), QKeySequence::Quit);
-#ifdef Q_WS_MAC
-  quitAction->setMenuRole(QAction::QuitRole);
-#endif
-
+  fileMenu->addAction(exiticon, tr("&Quit"), this, SLOT(quitGame()), QKeySequence::Quit);
   actFileSave->setEnabled(false);
   actOptions->setEnabled(true);
 
@@ -167,7 +155,6 @@ void MainWindow::initMenuBar () {
   helpMenu->addAction(helpicon, tr("&Preferans Rules..."), this, SLOT(helpRules()), QKeySequence::HelpContents);
   helpMenu->addSeparator();
   helpMenu->addAction(QIcon(":/pics/newgame.png"), tr("&About..."), this, SLOT(helpAbout()), 0);
-//  helpMenu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
 }
 
 
