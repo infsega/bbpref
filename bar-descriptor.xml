@@ -28,6 +28,8 @@
 
     <asset path="splashscreen.png">splashscreen.png</asset>
     <asset path="icon.png">icon.png</asset>
+    <asset path="openpref_en.ts">openpref_en.ts</asset>
+    <asset path="openpref_ru.ts">openpref_ru.ts</asset>
 
     <!-- These values will be replaced when deploying in Qt Creator -->
     <asset path="%QT_INSTALL_PLUGINS%">plugins</asset>

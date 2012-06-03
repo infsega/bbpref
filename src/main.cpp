@@ -40,9 +40,9 @@
 using namespace std;
 
 int main (int argc, char *argv[]) {
-  QCoreApplication::setOrganizationName("OpenPref");
-  QCoreApplication::setOrganizationDomain("openpref.sourceforge.net");
-  QCoreApplication::setApplicationName("OpenPref");
+  QCoreApplication::setOrganizationName("Inform Group");
+  QCoreApplication::setOrganizationDomain("bbpref.card.game.com");
+  QCoreApplication::setApplicationName("BB Pref");
 
 #if !defined(WIN32) && !defined(_WIN32)
   char *e = getenv("DEBUG");
@@ -58,12 +58,14 @@ int main (int argc, char *argv[]) {
     }
   }
 
-  //qsrand((unsigned)time(0));
   const QTime t = QTime::currentTime();
   qsrand((double)t.minute()*t.msec()/(t.second()+1)*UINT_MAX/3600);
 
   QApplication a(argc, argv);
   QString translationCode = QLocale::system().name();
+  dlogf("Translation code is %s\n", translationCode.toAscii().data() );
+  dlogf("Locale is %d\n", QLocale::system().language() );
+  dlogf("Locale is %s\n", QLocale::languageToString( QLocale::system().language() ).toAscii().data() );
 
   // Load Qt translations first
   QString qtFilename = "qt_" + translationCode + ".qm";
