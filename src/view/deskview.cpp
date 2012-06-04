@@ -78,8 +78,8 @@ namespace {
 
 ///////////////////////////////////////////////////////////////////////////////
 void SleepEventLoop::doEventKey (QKeyEvent *event) {
-  //qDebug() << "key" << event->key() << mIgnoreKey;
-  if (mIgnoreKey) return;
+  if (mIgnoreKey)
+      return;
   switch (event->key()) {
     case Qt::Key_Escape:
     case Qt::Key_Enter:
@@ -114,12 +114,11 @@ void SleepEventLoop::quit () {
 class DeskViewPrivate
 {
 public:
-  DeskViewPrivate(DeskView *parent) : m_eloop(0), m_efilter(0), m_timer(0), m_scorew(0)
+  DeskViewPrivate(DeskView *parent) : m_eloop(0), m_efilter(0), m_timer(0)
   {
     m_eloop = new SleepEventLoop(parent);
     m_efilter = new SleepEventFilter(m_eloop);
     m_timer = new QTimer(m_eloop);
-    m_scorew = new ScoreWidget(parent->m_model, parent);
   }
 
   ~DeskViewPrivate()
@@ -132,10 +131,10 @@ public:
   SleepEventLoop *m_eloop;
   SleepEventFilter *m_efilter;
   QTimer *m_timer;
-  ScoreWidget *m_scorew;
 };
 
-bool DeskView::loadCards () {
+bool DeskView::loadCards()
+{
   // load cards from resources
   QString deckPath;
   deckPath = "classic/";
@@ -148,8 +147,10 @@ bool DeskView::loadCards () {
   else
     setMinimumHeight(570);
 
-  for (int face = 7; face <= 14; face++) {
-    for (int suit = 1; suit <= 4; suit++) {
+  for (int face = 7; face <= 14; face++)
+  {
+    for (int suit = 1; suit <= 4; suit++)
+    {
       QString fname, resname;
       resname.sprintf("%i%i", face, suit);
       fname.sprintf(QString(":/pics/cards/"+deckPath+"%i%i.png").toAscii(), face, suit);
@@ -165,8 +166,10 @@ bool DeskView::loadCards () {
   cardI["1000"] = new QPixmap(QString(":/pics/cards/"+deckPath+"1000.png"));
   cardI["empty"] = new QPixmap(QString(":/pics/cards/"+deckPath+"empty.png"));
   // load bid icons
-  for (int f = 6; f <= 10; f++) {
-    for (int s = 1; s <= 5; s++) {
+  for (int f = 6; f <= 10; f++)
+  {
+    for (int s = 1; s <= 5; s++)
+    {
       QString fname;
       fname.sprintf(":/pics/bids/s%i%i.png", f, s);
       bidIcons[f*10+s] = new QPixmap(fname);
@@ -179,7 +182,8 @@ bool DeskView::loadCards () {
 }
 
 
-void DeskView::freeCards () {
+void DeskView::freeCards()
+{
   // erase card images
   foreach (QPixmap *i, bidIcons)
     delete i;
@@ -189,13 +193,12 @@ void DeskView::freeCards () {
   cardI.clear();
 }
 
-
-QPixmap *DeskView::GetImgByName (const char *name) {
-  if (!cardI.contains(name)) cardI["empty"];
+QPixmap *DeskView::GetImgByName(const char *name)
+{
+  if (!cardI.contains(name))
+      cardI["empty"];
   return cardI[name];
 }
-
-
 
 ///////////////////////////////////////////////////////////////////////////////
 DeskView::DeskView (QWidget * parent, Qt::WindowFlags f)
@@ -234,7 +237,8 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f)
 }
 
 
-DeskView::~DeskView () {
+DeskView::~DeskView()
+{
   writeSettings();
 
   delete mDeskBmp;
@@ -247,7 +251,6 @@ DeskView::~DeskView () {
   delete d_ptr;
 }
 
-
 void DeskView::setModel(PrefModel *desktop)
 {
   m_model = desktop;
@@ -258,7 +261,8 @@ void DeskView::setModel(PrefModel *desktop)
 void DeskView::setBackgroundType(const int type)
 {
   m_backgroundType = type;
-  switch(m_backgroundType) {
+  switch(m_backgroundType)
+  {
     case 1:
       m_deskBackground = QPixmap(":/pics/cloth.png");
       break;
@@ -275,7 +279,8 @@ void DeskView::setBackgroundType(const int type)
 void DeskView::setBackgroundColor(const QRgb color)
 {
   m_backgroundColor = color;
-  if (m_backgroundType == 0) {
+  if (m_backgroundType == 0)
+  {
     m_deskBackground.setColor(m_backgroundColor);
     m_deskBackground.setStyle(Qt::SolidPattern);
   }
@@ -302,13 +307,10 @@ void DeskView::drawIMove (QPainter &p) {
 }
 
 
-void DeskView::drawPKeyBmp (bool show) {
+void DeskView::drawPKeyBmp (bool show)
+{
   static int phase = 0;
   if (!mDeskBmp) return;
-/*
-  time_t tt = time(0);
-  int phase = tt%2;
-*/
   QPixmap *i = mKeyBmp[phase];
   if (show) {
     QPainter p(mDeskBmp);	
@@ -322,15 +324,15 @@ void DeskView::drawPKeyBmp (bool show) {
 }
 
 
-void DeskView::drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy) {
+void DeskView::drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy)
+{
   QRect tgt(x0, y0, 8, 14);
   QRect src(cx, cy, 8, 14);
   p.drawPixmap(tgt, *mDigitsBmp, src);
 }
 
-
-void DeskView::drawNumber (QPainter &p, int x0, int y0, int n, bool red) {
-  //if (!mDeskBmp || n < 0 || n > 1024) return;
+void DeskView::drawNumber (QPainter &p, int x0, int y0, int n, bool red)
+{
   char buf[12], *pd;
   sprintf(buf, "%i", n);
   pd = buf;
@@ -343,14 +345,13 @@ void DeskView::drawNumber (QPainter &p, int x0, int y0, int n, bool red) {
   }
 }
 
-
 static int numWidth (int n) {
-  if (n < 0 || n > 1024) return 0;
+  if (n < 0 || n > 1024)
+    return 0;
   char buf[16];
   sprintf(buf, "%i", n);
   return strlen(buf)*8;
 }
-
 
 void DeskView::drawGameBid (QPainter &p, eGameBid game) {
   Q_ASSERT(game == raspass || game == withoutThree || (game >= 61 && game <= 105));
@@ -374,8 +375,8 @@ void DeskView::drawGameBid (QPainter &p, eGameBid game) {
   }
 }
 
-
-void DeskView::mySleep (int seconds) {
+void DeskView::mySleep (int seconds)
+{
   installEventFilter(d_ptr->m_efilter);
 
   if (seconds == 0)
@@ -424,24 +425,25 @@ void DeskView::aniSleep (int milliseconds, const QRegion & region) {
   disconnect(d_ptr->m_timer, SIGNAL(timeout()), 0, 0);
 }
 
-
-void DeskView::ClearScreen () {
-  if (!mDeskBmp || (mDeskBmp->width() != width() || mDeskBmp->height() != height())) {
+void DeskView::ClearScreen()
+{
+  if (!mDeskBmp || (mDeskBmp->width() != width() || mDeskBmp->height() != height()))
+  {
     delete mDeskBmp;
     mDeskBmp = new QPixmap(width(), height());
   }
   ClearBox(0, 0, width(), height());
 }
 
-
-void DeskView::ClearBox (int x1, int y1, int x2, int y2) {
+void DeskView::ClearBox (int x1, int y1, int x2, int y2)
+{
   Q_ASSERT(mDeskBmp);
   QPainter p(mDeskBmp);
   p.fillRect(x1, y1, x2, y2, m_deskBackground);
 }
 
-
-void DeskView::drawCard (const Card *card, int x, int y, bool opened, bool hilight) {
+void DeskView::drawCard (const Card *card, int x, int y, bool opened, bool hilight)
+{
   char cCardName[16];
   cCardName[0] = 0;
   if (!card)
@@ -494,16 +496,15 @@ void DeskView::drawOutlinedText (const QString & str, int x, int y, QRgb textCol
   p.setBrush(b);
   p.drawText(x, y, s);
   p.end();
-  
 }
-
 
 void DeskView::MessageBox (const QString & text, const QString & caption) {
   QMessageBox mb(caption, text, QMessageBox::Information, QMessageBox::Ok | QMessageBox::Default, 0, 0);
   mb.exec();
 }
 
-eGameBid DeskView::selectBid (BidDialog::ActiveButtons buttons) {
+eGameBid DeskView::selectBid (BidDialog::ActiveButtons buttons)
+{
   BidDialog *bidDialog = BidDialog::instance();
   bidDialog->_GamesType = undefined;
   bidDialog->setActiveButtons(buttons);
@@ -595,12 +596,12 @@ QPixmap DeskView::drawMessageWindow (const QString & msg, bool dim) {
 }
 
 
-void DeskView::resizeEvent(QResizeEvent *event) {
+void DeskView::resizeEvent(QResizeEvent *event)
+{
   Q_UNUSED(event)
   setBackgroundType(m_backgroundType);
   draw(false);
 }
-
 
 void DeskView::mouseMoveEvent (QMouseEvent *event)
 {
@@ -617,7 +618,8 @@ void DeskView::mousePressEvent (QMouseEvent *event)
   }
 }
 
-void DeskView::keyPressEvent (QKeyEvent *event) {
+void DeskView::keyPressEvent (QKeyEvent *event)
+{
   switch (event->key())
   {
   case Qt::Key_Escape:
@@ -722,7 +724,8 @@ void DeskView::animateTrick (int plrNo, const QCardList & cards)
 
 void DeskView::drawPool()
 {
-  d_ptr->m_scorew->open();
+  ScoreWidget scorew(m_model, this);
+  scorew.exec();
 }
 
 void DeskView::drawBidBoard()
@@ -762,10 +765,7 @@ bool DeskView::askWhistType ()
   const int ret = QMessageBox::question(this, tr("Choose whist type"),
     tr("Do you want to whist with opened cards?"),
     QMessageBox::Yes | QMessageBox::Default, QMessageBox::No | QMessageBox::Escape);
-  if (ret == QMessageBox::Yes)
-    return false;
-  else
-    return true;
+  return (ret != QMessageBox::Yes);
 }
 
 bool DeskView::askConfirmDrop ()
@@ -773,35 +773,33 @@ bool DeskView::askConfirmDrop ()
   const int ret = QMessageBox::question(this, tr("Confirm your drop"),
     tr("Do you confirm your drop?"),
     QMessageBox::Yes | QMessageBox::Default, QMessageBox::No | QMessageBox::Escape);
-  if (ret == QMessageBox::Yes)
-    return true;
-  else
-    return false;
+  return (ret != QMessageBox::Yes);
 }
 
 /// @todo Should be merged with paintEvent (and add method like invalidateCache)
 void DeskView::draw (bool emitSignal) {
   ClearScreen();
   if(m_model->mGameRunning) {
-  // repaint players
-  for (int f = 1; f <= 3; f++) 
+    // repaint players
+    for (int f = 1; f <= 3; f++)
       m_model->player(f)->draw();
 
-  // repaint in-game cards
-  for (int f = 0; f <= 3; f++)
-    if (m_model->cardOnDesk(f)) {
-      int x, y;
-      inGameCardLeftTop(f, x, y);
-      drawCard(m_model->cardOnDesk(f), x, y, !m_model->mOnDeskClosed, 0);
-    }
+    // repaint in-game cards
+    for (int f = 0; f <= 3; f++)
+      if (m_model->cardOnDesk(f))
+      {
+        int x, y;
+        inGameCardLeftTop(f, x, y);
+        drawCard(m_model->cardOnDesk(f), x, y, !m_model->mOnDeskClosed, 0);
+      }
 
-  // draw bidboard
-  if (m_model->mPlayingRound) {
-    drawBidBoard();
-  }
-  QPainter p(mDeskBmp);
-  drawIMove(p);
-  p.end();
+    // draw bidboard
+    if (m_model->mPlayingRound)
+      drawBidBoard();
+
+    QPainter p(mDeskBmp);
+    drawIMove(p);
+    p.end();
   }
   /// @todo Calculate region which really needs updating
   if (emitSignal)
@@ -815,22 +813,22 @@ void DeskView::longWait (const int n)
 
 void DeskView::readSettings()
 {
-    QSettings st;
-    setBackgroundType(st.value("background_type", 1).toInt());
-    m_backgroundColor = st.value("background_color", qRgb(0,128,0)).toUInt();
-    optDealAnim = st.value("animdeal", true).toBool();
-    optTakeAnim = st.value("animtake", true).toBool();
-    m_takeQuality = st.value("takequality", 2).toInt();
-    optDebugHands = st.value("debughand", false).toBool();
+  QSettings st;
+  setBackgroundType(st.value("background_type", 1).toInt());
+  m_backgroundColor = st.value("background_color", qRgb(0,128,0)).toUInt();
+  optDealAnim       = st.value("animdeal", true).toBool();
+  optTakeAnim       = st.value("animtake", true).toBool();
+  m_takeQuality     = st.value("takequality", 2).toInt();
+  optDebugHands     = st.value("debughand", false).toBool();
 }
 
 void DeskView::writeSettings() const
 {
-    QSettings st;
-    st.setValue("background_type", m_backgroundType);
-    st.setValue("background_color", m_backgroundColor);
-    st.setValue("animdeal", optDealAnim);
-    st.setValue("animtake", optTakeAnim);
-    st.setValue("debughand", optDebugHands);
-    st.setValue("takequality", m_takeQuality);
+  QSettings st;
+  st.setValue("background_type",  m_backgroundType);
+  st.setValue("background_color", m_backgroundColor);
+  st.setValue("animdeal",         optDealAnim);
+  st.setValue("animtake",         optTakeAnim);
+  st.setValue("debughand",        optDebugHands);
+  st.setValue("takequality",      m_takeQuality);
 }

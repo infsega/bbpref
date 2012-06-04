@@ -50,13 +50,11 @@ PlayersInfoDialog::PlayersInfoDialog(PrefModel *model,
       type = new QLabel(QString("<b>") + tr("AI") + "</b> (<i>" + p->type() + "</i>)", this);
       avatar->setPixmap(QPixmap(":/pics/ai-player.png"));
     }
-    //QLabel *num = new QLabel(QString::number(p->number()), this);
     QFrame *separator = new QFrame(this);
     separator->setFrameStyle(QFrame::HLine);
     layout->addWidget(avatar, (i-1)*(nFields+1), 0, nFields, 1, Qt::AlignCenter);
     layout->addWidget(nick, (i-1)*(nFields+1), 1);//, nFields, 1, Qt::AlignCenter);
     layout->addWidget(type, (i-1)*(nFields+1) + 1, 1);
-    //layout->addWidget(num, (i-1)*nFields+2, 1);
     layout->addWidget(separator, (i-1)*(nFields+1) + 2, 0, 1, -1);//, Qt::AlignCenter);
     resize(400,250);
   }  

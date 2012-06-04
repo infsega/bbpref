@@ -84,7 +84,7 @@ public:
   /// @todo must be private
   void drawCard (const Card *card, int x, int y, bool opened, bool hilight);
   /// Shows ScoreWidget
-  void drawPool ();
+  void drawPool();
   /// Draws text "said" by player
   void drawPlayerMessage (int player, const QString & msg, bool dim=false, bool useCache=true);
   /// Draws outlined text on widget's surface
