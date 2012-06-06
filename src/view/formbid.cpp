@@ -31,7 +31,11 @@
 #include "prfconst.h"
 #include "deskview.h"
 
-static eGameBid gameName2Type (const QString s) {
+const int BID_ICON_WIDTH = 40;
+const int BID_ICON_HEIGHT = 27;
+
+static eGameBid gameName2Type (const QString s)
+{
   if (s == "raspass") return raspass;
   if (s == "whist") return whist;
   if (s == "halfwhist") return halfwhist;
@@ -74,7 +78,7 @@ public:
     eGameBid bid () const { return mBid; }
     void enable();
     void disable();
-    QSize sizeHint() const { return QSize(BidIconWidth+5, BidIconHeight+5); }
+    QSize sizeHint() const { return QSize(BID_ICON_WIDTH+5, BID_ICON_HEIGHT+5); }
 
 protected:
     eGameBid mBid;
@@ -87,7 +91,7 @@ QBidButton::QBidButton (eGameBid aBid, QWidget *parent) : QPushButton(parent), m
     oName.sprintf("g%i", aBid);
     setObjectName(oName);
     setContentsMargins(2,2,0,0);
-    setIconSize(QSize(BidIconWidth, BidIconHeight));
+    setIconSize(QSize(BID_ICON_WIDTH, BID_ICON_HEIGHT));
     setIcon(QIcon(iName));
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
@@ -106,8 +110,6 @@ void QBidButton::disable()
         setEnabled(false);
     }
 }
-
-
 
 BidDialog::BidDialog (DeskView *parent) : QDialog (parent)
 {

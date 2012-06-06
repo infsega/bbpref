@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AboutDialog</class>
+ <widget class="QDialog" name="AboutDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>498</width>
+    <height>446</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <widget class="QFrame" name="frame">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLabel" name="titleLabel">
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;♠ &lt;/span&gt;&lt;span style=&quot; font-size:x-large; font-weight:600; color:#ff0000;&quot;&gt;♦&lt;/span&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt; BB Pref BBPREF_VERSION ♣ &lt;/span&gt;&lt;span style=&quot; font-size:x-large; font-weight:600; color:#ff0000;&quot;&gt;♥&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Open source Preferans game&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://vk.com/bbpref&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://vk.com/bbpref&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Copyright ©2012, Sergey Gagarin a.k.a. infsega&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Based on OpenPref, cross-platform open source preferans game&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Thanks to:&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;Original OpenPref Developers:&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Azarniy I.V., initial developer of KPref&lt;br/&gt;Fedotov A.V., developer of OpenPref 0.1.0&lt;br/&gt;Ketmar Dark, author of new alphabeta engine, Qt4 port and massive refactorization&lt;br/&gt;Konstantin Tokarev, developer of 0.1.2 and 0.1.3&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;OpenPref testers&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;O. Gromov&lt;br/&gt;U. Zhumaev&lt;br/&gt;V. Savin&lt;br/&gt;G. Veryasov&lt;br/&gt;ZTX18&lt;/p&gt;&lt;p&gt;BB Pref is free software; you can redistribute it and/or modify&lt;br/&gt;it under the terms of the GNU General Public License (see &lt;a href=&quot;http://www.gnu.org/licenses&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://www.gnu.org/licenses&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

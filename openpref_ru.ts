@@ -24,11 +24,6 @@
         <translation type="obsolete">Расклад</translation>
     </message>
     <message>
-        <source>Updated Version of OpenPref Available</source>
-        <comment>Indicates an updated OpenPref version is available</comment>
-        <translation type="obsolete">Доступна новая версия OpenPref</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation type="obsolete">OK</translation>
     </message>
@@ -83,8 +78,8 @@
         <translation>Торги</translation>
     </message>
     <message>
-        <source>OpenPref</source>
-        <translation>OpenPref</translation>
+        <source>BB Pref</source>
+        <translation>BB Pref</translation>
     </message>
     <message>
         <source>Do you really want to quit the game?</source>
@@ -175,8 +170,8 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <source>Welcome to OpenPref!</source>
-        <translation>Добро пожаловать в OpenPref!</translation>
+        <source>Welcome to BB Pref!</source>
+        <translation>Добро пожаловать в BB Pref!</translation>
     </message>
     <message>
         <source>&amp;Game</source>
@@ -219,16 +214,12 @@
         <translation>&amp;Правила преферанса...</translation>
     </message>
     <message>
-        <source>&amp;About OpenPref</source>
-        <translation>О &amp;программе OpenPref</translation>
+        <source>&amp;About BB Pref</source>
+        <translation>О &amp;программе BB Pref</translation>
     </message>
     <message>
-        <source>About &amp;Qt</source>
-        <translation>&amp;О Qt</translation>
-    </message>
-    <message>
-        <source>OpenPref</source>
-        <translation>OpenPref</translation>
+        <source>BB Pref</source>
+        <translation>BB Pref</translation>
     </message>
     <message>
         <source>Do you really want to quit the game?</source>
@@ -239,22 +230,16 @@
         <translation>О программе</translation>
     </message>
     <message>
-        <source>Player 1</source>
-        <translation>Игрок 1</translation>
+        <source>Mr. West</source>
+        <translation>Балбес</translation>
     </message>
     <message>
-        <source>Player 2</source>
-        <translation>Игрок 2</translation>
+        <source>Dr. East</source>
+        <translation>Студент</translation>
     </message>
     <message>
         <source>Preferans Rules</source>
         <translation>Правила преферанса</translation>
-    </message>
-    <message>
-        <source>Help system has not been implemented yet!
-See http://en.wikipedia.org/wiki/Preferans</source>
-        <translation>Справочная система пока не реализована!
-Смотрите http://ru.wikipedia.org/wiki/Преферанс</translation>
     </message>
     <message>
         <source>This move is impossible</source>
@@ -282,10 +267,10 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     </message>
     <message>
         <source>Game Log...</source>
-        <translation>Лог игры...</translation>
+        <translation>Журнал игры...</translation>
     </message>
     <message>
-        <source>&lt;h2 align=center&gt;&amp;spades; &lt;font color=red&gt;&amp;diams;&lt;/font&gt; OpenPref </source>
+        <source>&lt;h2 align=center&gt;&amp;spades; &lt;font color=red&gt;&amp;diams;&lt;/font&gt; BB Pref </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -660,7 +645,7 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     <name>ScoreHistoryDialog</name>
     <message>
         <source>Score History</source>
-        <translation>Журнал счета</translation>
+        <translation>Журнал</translation>
     </message>
     <message>
         <source>Deal #</source>
@@ -672,33 +657,6 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     <message>
         <source>Score</source>
         <translation>Пуля</translation>
-    </message>
-</context>
-<context>
-    <name>UpdateCheck</name>
-    <message>
-        <source>Network Update Check Failed</source>
-        <translation>Не удалось проверить наличие обновления через интернет</translation>
-    </message>
-    <message>
-        <source>Network timeout or other error.</source>
-        <translation>Истекло время ожидания, или возникла другая ошибка.</translation>
-    </message>
-</context>
-<context>
-    <name>UpdateDialog</name>
-    <message>
-        <source>OK</source>
-        <translation>OK</translation>
-    </message>
-    <message>
-        <source>Updated Version of OpenPref Available</source>
-        <comment>Indicates an updated OpenPref version is available</comment>
-        <translation>Доступна новая версия OpenPref</translation>
-    </message>
-    <message>
-        <source>Remind Later</source>
-        <translation>Напомнить позже</translation>
     </message>
 </context>
 </TS>

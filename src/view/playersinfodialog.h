@@ -33,6 +33,8 @@ class PlayersInfoDialog : public QDialog
   public:
     explicit PlayersInfoDialog(PrefModel *model, QWidget *parent = 0, Qt::WindowFlags f = 0);
 
+    virtual bool eventFilter(QObject* obj, QEvent* event);
+
   protected:
     void keyPressEvent (QKeyEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);

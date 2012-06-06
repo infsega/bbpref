@@ -44,6 +44,7 @@
 #include "optiondialog.h"
 #include "playersinfodialog.h"
 #include "scorehistory.h"
+#include "aboutdialog.h"
 
 inline const char * GenName(const QString &str, const QString &ext);
 
@@ -88,8 +89,10 @@ inline void MainWindow::doConnects()
 }
 
 
-void MainWindow::adjustDesk () {
-  if (mDeskView) mDeskView->ClearScreen();
+void MainWindow::adjustDesk()
+{
+  if (mDeskView)
+    mDeskView->ClearScreen();
   mDeskView->update();
 }
 
@@ -171,43 +174,41 @@ void MainWindow::showScore()
 
 void MainWindow::showPlayers()
 {
-  PlayersInfoDialog *dlg = new PlayersInfoDialog(m_PrefModel, this);
-  dlg->exec();
-  delete dlg;
+  PlayersInfoDialog dlg(m_PrefModel, this);
+  dlg.exec();
 }
 
 void MainWindow::showLog()
 {
-    ScoreHistoryDialog *dlg = new ScoreHistoryDialog(m_PrefModel, this);
-    dlg->exec();
-    delete dlg;
+  ScoreHistoryDialog dlg(m_PrefModel, this);
+  dlg.exec();
 }
 
 void MainWindow::newSingleGame()
 {
   QSettings st;
-  NewGameDialog *dlg = new NewGameDialog(this);
-  connect(dlg->cbRounds, SIGNAL(stateChanged(int)), dlg, SLOT(toggleRounds(int)));
+  NewGameDialog dlg(this);
+  connect(dlg.cbRounds, SIGNAL(stateChanged(int)), &dlg, SLOT(toggleRounds(int)));
   // Players
-  dlg->leHumanName->setText(m_PrefModel->optHumanName);
-  dlg->leName1->setText(st.value("playername1", tr("Player 1")).toString());
-  dlg->leName2->setText(st.value("playername2", tr("Player 2")).toString());
-  dlg->cbAlphaBeta1->setChecked(st.value("alphabeta1", false).toBool());
-  dlg->cbAlphaBeta2->setChecked(st.value("alphabeta2", false).toBool());
+  dlg.leHumanName->setText(m_PrefModel->optHumanName);
+  dlg.leName1->setText(st.value("playername1", tr("Mr. West")).toString());
+  dlg.leName2->setText(st.value("playername2", tr("Dr. East")).toString());
+  dlg.cbAlphaBeta1->setChecked(st.value("alphabeta1", true).toBool());
+  dlg.cbAlphaBeta2->setChecked(st.value("alphabeta2", true).toBool());
 
   // Conventions
-  dlg->sbGame->setValue(st.value("maxpool", 10).toInt());
+  dlg.sbGame->setValue(st.value("maxpool", 10).toInt());
   if(st.value("quitmaxrounds", false).toBool()) {
-    dlg->cbRounds->setCheckState(Qt::Checked);
-    dlg->sbRounds->setValue(st.value("maxrounds", -1).toInt());
+    dlg.cbRounds->setCheckState(Qt::Checked);
+    dlg.sbRounds->setValue(st.value("maxrounds", -1).toInt());
   }
-  dlg->cbGreedy->setChecked(st.value("whistgreedy", true).toBool());
-  dlg->cbTenWhist->setChecked(st.value("whist10", false).toBool());
-  dlg->cbStalin->setChecked(st.value("stalin", false).toBool());
-  dlg->cbAggPass->setChecked(st.value("aggpass", false).toBool());
-  dlg->cbWithoutThree->setChecked(st.value("without3", false).toBool());
+  dlg.cbGreedy->setChecked(st.value("whistgreedy", true).toBool());
+  dlg.cbTenWhist->setChecked(st.value("whist10", false).toBool());
+  dlg.cbStalin->setChecked(st.value("stalin", false).toBool());
+  dlg.cbAggPass->setChecked(st.value("aggpass", false).toBool());
+  dlg.cbWithoutThree->setChecked(st.value("without3", false).toBool());
   
-  if (dlg->exec() == QDialog::Accepted)
+  if (dlg.exec() == QDialog::Accepted)
   {
     mDeskView->ClearScreen();
     delete m_PrefModel;
@@ -216,35 +217,31 @@ void MainWindow::newSingleGame()
     doConnects();
     
     // Conventions
-    m_PrefModel->optMaxPool = dlg->sbGame->value();
-    m_PrefModel->optQuitAfterMaxRounds = (dlg->cbRounds->checkState() == Qt::Checked);
+    m_PrefModel->optMaxPool = dlg.sbGame->value();
+    m_PrefModel->optQuitAfterMaxRounds = (dlg.cbRounds->checkState() == Qt::Checked);
     if (m_PrefModel->optQuitAfterMaxRounds) {
-      m_PrefModel->optMaxRounds = dlg->sbRounds->value();
+      m_PrefModel->optMaxRounds = dlg.sbRounds->value();
     }
-    m_PrefModel->optWhistGreedy = dlg->cbGreedy->isChecked();
-    m_PrefModel->opt10Whist = dlg->cbTenWhist->isChecked();
-    m_PrefModel->optStalingrad = dlg->cbStalin->isChecked();
-    m_PrefModel->optAggPass = dlg->cbAggPass->isChecked();
-    m_PrefModel->optWithoutThree = dlg->cbWithoutThree->isChecked();
+    m_PrefModel->optWhistGreedy = dlg.cbGreedy->isChecked();
+    m_PrefModel->opt10Whist = dlg.cbTenWhist->isChecked();
+    m_PrefModel->optStalingrad = dlg.cbStalin->isChecked();
+    m_PrefModel->optAggPass = dlg.cbAggPass->isChecked();
+    m_PrefModel->optWithoutThree = dlg.cbWithoutThree->isChecked();
     m_PrefModel->optPassCount = 0;
 
     // Players
-    m_PrefModel->optHumanName = dlg->leHumanName->text();
-    m_PrefModel->optPlayerName1 = dlg->leName1->text();
-    m_PrefModel->optAlphaBeta1 = dlg->cbAlphaBeta1->isChecked();
-    m_PrefModel->optPlayerName2 = dlg->leName2->text();
-    m_PrefModel->optAlphaBeta2 = dlg->cbAlphaBeta2->isChecked();
+    m_PrefModel->optHumanName = dlg.leHumanName->text();
+    m_PrefModel->optPlayerName1 = dlg.leName1->text();
+    m_PrefModel->optAlphaBeta1 = dlg.cbAlphaBeta1->isChecked();
+    m_PrefModel->optPlayerName2 = dlg.leName2->text();
+    m_PrefModel->optAlphaBeta2 = dlg.cbAlphaBeta2->isChecked();
   
     writeSettings();
-    //actFileOpen->setEnabled(false);
     actFileSave->setEnabled(true); 
     m_PrefModel->runGame();
-    //actFileOpen->setEnabled(true);
     actFileSave->setEnabled(false);
   }
-  delete dlg;
 }
-
 
 void  MainWindow::keyPressEvent (QKeyEvent *event)
 {
@@ -261,23 +258,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::helpAbout()
 {
-  QMessageBox::about(this, tr("About"),
-    tr("<h2 align=center>&spades; <font color=red>&diams;</font> BB Pref " OPENPREF_VERSION " &clubs; <font color=red>&hearts;</font></h2>"
-    "<p align=center>Open source Preferans game</p>"
-    "<p align=center><a href=\"http://vk.com/bbpref/\">http://vk.com/bbpref</a></p>\n"
-    "<p align=center>Copyright &copy;2012, Sergey Gagarin a.k.a. infsega</p>\n"
-    "<p align=center>Based on OpenPref, cross-platform open source preferans game</p>\n"
-    "<h3 align=center>Thanks to:</h3>\n"
-    "<h4 align=center>Original OpenPref Developers:</h4>\n"
-    "<p align=center>Azarniy I.V., initial developer of KPref<br/>"
-    "Fedotov A.V., developer of OpenPref 0.1.0<br/>"
-    "Ketmar Dark, author of new alphabeta engine, Qt4 port and massive refactorization<br/>"
-    "Konstantin Tokarev, developer of 0.1.2 and 0.1.3</p>"
-    "<h4 align=center>OpenPref testers</h4>\n"
-    "<p align=center>O. Gromov<br/>U. Zhumaev<br/>V. Savin<br/>G. Veryasov<br/>ZTX18</p>"
-    "<p>BB Pref is free software; you can redistribute it and/or modify<br/>"
-    "it under the terms of the GNU General Public License (see http://www.gnu.org/licenses)</p>")
-  );
+  AboutDialog dlg(this);
+  dlg.exec();
 }
 
 void MainWindow::writeSettings()

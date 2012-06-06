@@ -10,7 +10,7 @@
     </message>
     <message>
         <location filename="src/view/formbid.cpp" line="150"/>
-        <source>OpenPref</source>
+        <source>BB Pref</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -127,7 +127,7 @@
     <name>MainWindow</name>
     <message>
         <location filename="src/kpref.cpp" line="77"/>
-        <source>Welcome to OpenPref!</source>
+        <source>Welcome to BB Pref!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -203,13 +203,13 @@
     <message>
         <location filename="src/kpref.cpp" line="229"/>
         <location filename="src/kpref.cpp" line="343"/>
-        <source>Player 1</source>
+        <source>Mr. West</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/kpref.cpp" line="230"/>
         <location filename="src/kpref.cpp" line="345"/>
-        <source>Player 2</source>
+        <source>Mr.East</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -219,7 +219,7 @@
     </message>
     <message>
         <location filename="src/kpref.cpp" line="297"/>
-        <source>&lt;h2 align=center&gt;&amp;spades; &lt;font color=red&gt;&amp;diams;&lt;/font&gt; OpenPref </source>
+        <source>&lt;h2 align=center&gt;&amp;spades; &lt;font color=red&gt;&amp;diams;&lt;/font&gt; BB Pref </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -228,14 +228,8 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/kpref.cpp" line="398"/>
-        <source>Help system has not been implemented yet!
-See http://en.wikipedia.org/wiki/Preferans</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="src/kpref.cpp" line="412"/>
-        <source>OpenPref</source>
+        <source>BB Pref</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -557,49 +551,6 @@ See http://en.wikipedia.org/wiki/Preferans</source>
     <message>
         <location filename="src/view/scorewidget.cpp" line="63"/>
         <source>Score</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>UpdateCheck</name>
-    <message>
-        <location filename="src/misc/updatecheck.cpp" line="125"/>
-        <source>Network Update Check Failed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/misc/updatecheck.cpp" line="126"/>
-        <source>Network request failed with error:
-&quot;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/misc/updatecheck.cpp" line="163"/>
-        <source>No updates available</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/misc/updatecheck.cpp" line="164"/>
-        <source>You are running the latest version of OpenPref!</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>UpdateDialog</name>
-    <message>
-        <location filename="src/misc/updatecheck.cpp" line="45"/>
-        <source>Updated Version of OpenPref Available</source>
-        <comment>Indicates an updated OpenPref version is available</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/misc/updatecheck.cpp" line="49"/>
-        <source>OK</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/misc/updatecheck.cpp" line="50"/>
-        <source>Remind Later</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

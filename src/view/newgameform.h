@@ -20,8 +20,7 @@
  *      http://www.gnu.org/licenses 
  */
 
-#ifndef NEWGAMEFORM_H
-#define NEWGAMEFORM_H
+#pragma once
 
 #include <QDialog>
 
@@ -44,6 +43,3 @@ private slots:
     sbRounds->setEnabled(checked == Qt::Checked);
   }
 };
-
-
-#endif

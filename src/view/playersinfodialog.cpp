@@ -31,14 +31,14 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QLabel>
 
-PlayersInfoDialog::PlayersInfoDialog(PrefModel *model,
-                                    QWidget *parent, Qt::WindowFlags f) : QDialog(parent, f)
+PlayersInfoDialog::PlayersInfoDialog(PrefModel *model, QWidget *parent, Qt::WindowFlags f)
+    : QDialog(parent, f)
 {
   setWindowTitle(tr("Players"));
   const int nFields = 2;
   QGridLayout *layout = new QGridLayout(this);
-  // m_model->numOfPlayers ?
-  for (int i=1; i<=3; i++) {
+  for (int i = 1; i <= 3; i++)
+  {
     Player *p = model->player(i);
     QLabel *nick = new QLabel(QString("<b>") + tr("Name") + "</b>" + ": " + p->nick(), this);
     QLabel *avatar = new QLabel(this);
@@ -53,13 +53,13 @@ PlayersInfoDialog::PlayersInfoDialog(PrefModel *model,
     QFrame *separator = new QFrame(this);
     separator->setFrameStyle(QFrame::HLine);
     layout->addWidget(avatar, (i-1)*(nFields+1), 0, nFields, 1, Qt::AlignCenter);
-    layout->addWidget(nick, (i-1)*(nFields+1), 1);//, nFields, 1, Qt::AlignCenter);
+    layout->addWidget(nick, (i-1)*(nFields+1), 1);
     layout->addWidget(type, (i-1)*(nFields+1) + 1, 1);
-    layout->addWidget(separator, (i-1)*(nFields+1) + 2, 0, 1, -1);//, Qt::AlignCenter);
-    resize(400,250);
-  }  
+    layout->addWidget(separator, (i-1)*(nFields+1) + 2, 0, 1, -1);
+  }
+  showFullScreen();
+  installEventFilter(this);
 }
-
 
 void PlayersInfoDialog::keyPressEvent (QKeyEvent *event)
 {
@@ -77,5 +77,16 @@ void PlayersInfoDialog::keyPressEvent (QKeyEvent *event)
 void PlayersInfoDialog::mouseReleaseEvent(QMouseEvent *event)
 {
   Q_UNUSED(event)
-  hide();
+  done(0);
+}
+
+bool PlayersInfoDialog::eventFilter(QObject* obj, QEvent* event)
+{
+  Q_UNUSED(obj);
+  if (event && event->type() == QEvent::MouseButtonRelease)
+  {
+    done(0);
+    return true;
+  }
+  return false;
 }

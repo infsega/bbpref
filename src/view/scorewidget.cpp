@@ -151,8 +151,8 @@ void ScoreWidget::paintBlankPaper ()
 
   p.setRenderHints(QPainter::Antialiasing);
   QRect NewRect = QRect(0, 0, PaperWidth, PaperHeight);
-  QBrush brush(qRgb(255, 255, 255));
-  p.fillRect(NewRect, brush);
+  QImage img(QString(":/pics/scorepaper.png"));
+  p.drawImage(0, 0, img);
   p.setPen(Qt::black);
 
   // Draw borders of paper
@@ -197,6 +197,7 @@ void ScoreWidget::paintBlankPaper ()
   p.setFont(fnt);
   
   // Players' names
+  QBrush brush(qRgb(255, 255, 255));
   p.setBrush(brush);
   const QRect r1 = p.boundingRect(NewRect, Qt::AlignHCenter, m_model->player(1)->nick());
   const QRect r2 = p.boundingRect(NewRect, Qt::AlignHCenter, m_model->player(2)->nick());
@@ -249,7 +250,7 @@ void ScoreWidget::showPlayerScore (int i, const QString scoreBullet, const QStri
         p.setPen(qRgb(235, 0, 0));
       fnt.setBold(true);
       p.setFont(fnt);
-      p.drawText(center.x()-r1.width()/2, center.y()+80, QString::number(scoreTotal));
+      p.drawText(center.x()-r1.width()/2, center.y()+100, QString::number(scoreTotal));
       break;
     case 2:
       // Bullet
@@ -295,7 +296,7 @@ void ScoreWidget::showPlayerScore (int i, const QString scoreBullet, const QStri
         p.setPen(qRgb(235, 0, 0));
       fnt.setBold(true);
       p.setFont(fnt);
-      drawRotatedText(p, center.x() + 60, (PaperHeight - Pool2Width + r1.width())/2,
+      drawRotatedText(p, center.x() + 80, (PaperHeight - Pool2Width + r1.width())/2,
         -90, QString::number(scoreTotal));
       break;
     default: ;

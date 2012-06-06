@@ -6,6 +6,7 @@
 #include <QtGui/QStyleOptionButton>
 #include <QtGui/QPainter>
 #include <QtGui/QMessageBox>
+#include <QtGui/QDialogButtonBox>
 #include <QDebug>
 
 #include "scorehistory.h"
@@ -121,23 +122,28 @@ DealButton::DealButton(int rowNum, const QString & text, QWidget * parent)
 }
 
 
-ScoreHistoryDialog::ScoreHistoryDialog(PrefModel *model, QWidget *parent, Qt::WindowFlags f) :
-    QDialog(parent, f), m_model(model)
+ScoreHistoryDialog::ScoreHistoryDialog(PrefModel *model, QWidget *parent, Qt::WindowFlags f)
+: QDialog(parent, f), m_model(model)
 {
-    setWindowTitle(tr("Score History"));
-    QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->setSpacing(5);
-    layout->setContentsMargins(0,0,0,0);
-    m_table = new QTableView(this);
-    m_table->setAlternatingRowColors(true);
-    m_table->setModel(new GameLogModel(model, this));
-    for (int i=0; i<model->gameLog().size(); i++) {
-      DealButton *btnDeal = new DealButton(i, tr("Deal #") + QString::number(i+1), m_table);
-      m_table->setIndexWidget(m_table->model()->index(i, 5), btnDeal);
-      connect(btnDeal, SIGNAL(clicked(int)), this, SLOT(showDeal(int)));
-    }
-    layout->addWidget(m_table);
-    setLayout(layout);
+  setWindowTitle(tr("Score History"));
+  QVBoxLayout *layout = new QVBoxLayout(this);
+  layout->setSpacing(5);
+  layout->setContentsMargins(0,0,0,0);
+  m_table = new QTableView(this);
+  m_table->setAlternatingRowColors(true);
+  m_table->setModel(new GameLogModel(model, this));
+  for (int i=0; i<model->gameLog().size(); i++)
+  {
+    DealButton *btnDeal = new DealButton(i, tr("Deal #") + QString::number(i+1), m_table);
+    m_table->setIndexWidget(m_table->model()->index(i, 5), btnDeal);
+    connect(btnDeal, SIGNAL(clicked(int)), this, SLOT(showDeal(int)));
+  }
+  layout->addWidget(m_table);
+  QDialogButtonBox* stdButtons = new QDialogButtonBox(QDialogButtonBox::Ok);
+  connect( stdButtons, SIGNAL(accepted()), this, SLOT(accept()) );
+  layout->addWidget(stdButtons);
+  setLayout(layout);
+  showFullScreen();
 }
 
 void ScoreHistoryDialog::showEvent(QShowEvent *event)
@@ -155,10 +161,12 @@ void ScoreHistoryDialog::showDeal(const int row)
 {
   Q_ASSERT(row < m_model->gameLog().size());
   QString output;
-  for (int i=1; i<=3; i++) {
+  for (int i=1; i<=3; i++)
+  {
     output += QString("%1").arg(m_model->player(i)->nick(), -12);
     output += ": ";
-    foreach(const Card &c, m_model->gameLog().at(row).cardList[i-1]) {
+    foreach(const Card &c, m_model->gameLog().at(row).cardList[i-1])
+    {
       output += c.toUniString();
       output += ' ';
     }

@@ -8,7 +8,8 @@ HEADERS += \
   $$PWD/newgameform.h \
   $$PWD/formbid.h \
   $$PWD/scorewidget.h \
-    src/view/scorehistory.h
+    src/view/scorehistory.h \
+    src/view/aboutdialog.h
 
 SOURCES += \
   $$PWD/deskview.cpp \
@@ -16,8 +17,10 @@ SOURCES += \
   $$PWD/optiondialog.cpp \
   $$PWD/playersinfodialog.cpp \
   $$PWD/scorewidget.cpp \
-    src/view/scorehistory.cpp
+    src/view/scorehistory.cpp \
+    src/view/aboutdialog.cpp
 
 FORMS += \
   $$PWD/optform.ui \
-  $$PWD/newgameform.ui
+  $$PWD/newgameform.ui \
+  $$PWD/aboutdialog.ui

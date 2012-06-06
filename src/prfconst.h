@@ -23,10 +23,7 @@
 #ifndef PRFCONST_H
 #define PRFCONST_H
 
-#define OPENPREF_VERSION "0.1.4"
-
-const int BidIconWidth = 40;
-const int BidIconHeight = 27;
+#define BBPREF_VERSION "1.0"
 
 enum eGameBid {
   zerogame=0,

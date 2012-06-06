@@ -93,9 +93,12 @@ void SleepEventLoop::doEventKey (QKeyEvent *event) {
 }
 
 
-void SleepEventLoop::doEventMouse (QMouseEvent *event) {
-  if (mIgnoreMouse) return;
-  if (event->button() == Qt::LeftButton) {
+void SleepEventLoop::doEventMouse (QMouseEvent *event)
+{
+  if (mIgnoreMouse)
+      return;
+  if (event->button() == Qt::LeftButton)
+  {
     mMousePressed = true;
     mMouseX = event->x();
     mMouseY = event->y();
@@ -103,13 +106,12 @@ void SleepEventLoop::doEventMouse (QMouseEvent *event) {
   }
 }
 
-
-void SleepEventLoop::quit () {
+void SleepEventLoop::quit()
+{
   mIgnoreKey = false;
   mIgnoreMouse = false;
   QEventLoop::quit();
 }
-
 
 class DeskViewPrivate
 {
@@ -760,12 +762,12 @@ void DeskView::drawBidBoard()
     drawGameBid(p, m_model->currentGame());
 }
 
-bool DeskView::askWhistType ()
+bool DeskView::askWhistType()
 {
   const int ret = QMessageBox::question(this, tr("Choose whist type"),
     tr("Do you want to whist with opened cards?"),
     QMessageBox::Yes | QMessageBox::Default, QMessageBox::No | QMessageBox::Escape);
-  return (ret != QMessageBox::Yes);
+  return (ret == QMessageBox::Yes);
 }
 
 bool DeskView::askConfirmDrop ()
@@ -773,7 +775,7 @@ bool DeskView::askConfirmDrop ()
   const int ret = QMessageBox::question(this, tr("Confirm your drop"),
     tr("Do you confirm your drop?"),
     QMessageBox::Yes | QMessageBox::Default, QMessageBox::No | QMessageBox::Escape);
-  return (ret != QMessageBox::Yes);
+  return (ret == QMessageBox::Yes);
 }
 
 /// @todo Should be merged with paintEvent (and add method like invalidateCache)

@@ -30,7 +30,7 @@
 #define CARD_HEIGHT         (mDeskView->CardHeight)
 
 const int CARD_OFFSET = 22;
-#define CARD_OFFSET_P1      (CARD_WIDTH - 5)
+#define CARD_OFFSET_P1      (CARD_WIDTH - 10)
 #define SUIT_OFFSET         (CARD_WIDTH + 8)
 #define SUIT_OFFSET_P1      (CARD_WIDTH + 20)
 #define CLOSED_CARD_OFFSET  (CARD_WIDTH * 0.55)
@@ -166,7 +166,8 @@ void Player::drawAt (int left, int top, int selNo)
     mDeskView->drawCard(card, x, y, !invisibleHand(), pi.idx == selNo);
   }
 
-  mDeskView->update(left - 100, top - 10, offsets.last().offset - left + CARD_WIDTH + 100, CARD_HEIGHT + 10);
+  mDeskView->update();
+  //mDeskView->update(left - 100, top - 100, offsets.last().offset - left + CARD_WIDTH + 100, CARD_HEIGHT + 100);
 }
 
 
@@ -195,9 +196,9 @@ void Player::clearCardArea()
     int x = pi.offset, y = top;
     mDeskView->ClearBox(x, y, CARD_WIDTH, CARD_HEIGHT);
   }
-  mDeskView->update(left - 100, top - 10, offsets.last().offset - left + CARD_WIDTH + 10, CARD_HEIGHT + 10);
+  mDeskView->update();
+  //mDeskView->update(left - 100, top - 100, offsets.last().offset - left + CARD_WIDTH + 100, CARD_HEIGHT + 100);
 }
-
 
 void Player::highlightCard (int lx, int ly) {
   Q_UNUSED(lx)
