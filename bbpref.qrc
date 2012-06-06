@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>openpref_ru.qm</file>
+        <file>bbpref_ru.qm</file>
         <file>pics/unknown-player.png</file>
         <file>pics/ai-player.png</file>
         <file>pics/cards/classic/71.png</file>
@@ -83,5 +83,8 @@
         <file>pics/bids/s94.png</file>
         <file>pics/bids/s95.png</file>
         <file>pics/scorepaper.png</file>
+        <file>pics/bbpref.png</file>
+        <file>pics/log.png</file>
+        <file>pics/about.png</file>
     </qresource>
 </RCC>

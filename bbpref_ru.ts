@@ -262,12 +262,12 @@
         <translation type="obsolete">Вы хотите вистовать с открытыми картами?</translation>
     </message>
     <message>
-        <source>Players...</source>
-        <translation>Игроки...</translation>
+        <source>Players</source>
+        <translation>Игроки</translation>
     </message>
     <message>
-        <source>Game Log...</source>
-        <translation>Журнал игры...</translation>
+        <source>Log</source>
+        <translation>Журнал</translation>
     </message>
     <message>
         <source>&lt;h2 align=center&gt;&amp;spades; &lt;font color=red&gt;&amp;diams;&lt;/font&gt; BB Pref </source>
@@ -369,7 +369,7 @@
         <translation>Ваше имя (для пули)</translation>
     </message>
     <message>
-        <source>In 10 game whister must take at least one trick</source>
+        <source>10 game w&amp;histable</source>
         <translation>В десятерной вистующий обязуется взять хотя бы одну взятку</translation>
     </message>
     <message>

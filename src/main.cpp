@@ -63,7 +63,7 @@ int main (int argc, char *argv[]) {
 
   // Load translation of OpenPref
   QTranslator openprefTranslator(0);
-  QString openprefFilename = ":/openpref_" + translationCode + ".qm";
+  QString openprefFilename = ":/bbpref_" + translationCode + ".qm";
   if(openprefTranslator.load(openprefFilename))
     app.installTranslator(&openprefTranslator);
 

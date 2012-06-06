@@ -31,6 +31,8 @@
 #include <QMessageBox>
 #include <QPainter>
 #include <QStatusBar>
+#include <QToolBar>
+#include <QHBoxLayout>
 
 #include <stdbool.h>
 #include <sys/platform.h>
@@ -60,6 +62,7 @@ MainWindow::MainWindow()
   HintBar = new QStatusBar(this);
   HintBar->setSizeGripEnabled(true);
   setStatusBar(HintBar);
+  initMenuBar();
 
   mDeskView = new DeskView(this);
   setCentralWidget(mDeskView);
@@ -67,7 +70,6 @@ MainWindow::MainWindow()
   mDeskView->setModel(m_PrefModel);
   readSettings();
   doConnects();
-  initMenuBar();
   HintBar->showMessage(tr("Welcome to BB Pref!"));
   BidDialog::instance(mDeskView)->hide();
 }
@@ -87,7 +89,6 @@ inline void MainWindow::doConnects()
   connect(m_PrefModel, SIGNAL(gameChanged(QString)), this, SLOT(changeTitle(QString)));
 }
 
-
 void MainWindow::adjustDesk()
 {
   if (mDeskView)
@@ -95,46 +96,41 @@ void MainWindow::adjustDesk()
   mDeskView->update();
 }
 
-
 void MainWindow::initMenuBar()
 {
+  QToolBar* bar = new QToolBar(this);
+  bar->setIconSize(QSize(48, 48));
+  bar->setOrientation(Qt::Vertical);
+  bar->setMovable(false);
   // Load icons
-  const QIcon openicon = QIcon::fromTheme("document-open", QIcon(":/pics/fileopen.png"));
-  const QIcon saveicon = QIcon::fromTheme("document-save", QIcon(":/pics/filesave.png"));
-  const QIcon toolicon = QIcon::fromTheme("preferences-system", QIcon(":/pics/tool.png"));
-  const QIcon exiticon = QIcon::fromTheme("application-exit", QIcon(":/pics/exit.png"));
-  const QIcon helpicon = QIcon::fromTheme("system-help", QIcon(":/pics/help.png"));
-  QMenu *fileMenu = menuBar()->addMenu(tr("&Game"));
+  QIcon newicon    (":/pics/bbpref.png");
+  QIcon scoreicon  (":/pics/paper.png");
+  //QIcon playersicon(":/pics/unknown-player.png");
+  QIcon abouticon  (":/pics/about.png");
+  QIcon logicon    (":/pics/log.png");
+  QIcon openicon   (":/pics/fileopen.png");
+  QIcon saveicon   (":/pics/filesave.png");
+  QIcon toolicon   (":/pics/tool.png");
+  QIcon exiticon   (":/pics/exit.png");
+  QIcon helpicon   (":/pics/help.png");
 
-  fileMenu->addAction(QIcon(":/pics/newgame.png"), tr("&New game..."),
-                      this, SLOT(newSingleGame()), QKeySequence::New);
-
-  fileMenu->addSeparator();
-
-  actFileOpen = fileMenu->addAction(openicon, tr("&Open..."), this, SLOT(openFile()), QKeySequence::Open);
-  actFileSave = fileMenu->addAction(saveicon, tr("&Save"), this, SLOT(saveFile()), QKeySequence::Save);
-
-  fileMenu->addSeparator();
-
-  QAction *actOptions = fileMenu->addAction(toolicon, tr("&Options..."), this, SLOT(showOptions()), QKeySequence::Preferences);
-  fileMenu->addSeparator();
-  fileMenu->addAction(exiticon, tr("&Quit"), this, SLOT(quitGame()), QKeySequence::Quit);
+  bar->addAction(newicon, tr("New game"), this, SLOT(newSingleGame()));
+  actFileOpen = bar->addAction(openicon, tr("Open"), this, SLOT(openFile()));
+  actFileSave = bar->addAction(saveicon, tr("Save"), this, SLOT(saveFile()));
   actFileSave->setEnabled(false);
-  actOptions->setEnabled(true);
-
-  QMenu *viewMenu = menuBar()->addMenu(tr("&Show"));
-  viewMenu->addAction(QIcon(":/pics/paper.png"), tr("S&core..."), this, SLOT(showScore()), Qt::CTRL+Qt::Key_R);
-  viewMenu->addAction(QIcon(":/pics/unknown-player.png"), tr("Players..."), this, SLOT(showPlayers()));
-  viewMenu->addAction(tr("Game Log..."), this, SLOT(showLog()));
-
-  menuBar()->addSeparator();
-
-  QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
-  helpMenu->addAction(helpicon, tr("&Preferans Rules..."), this, SLOT(helpRules()), QKeySequence::HelpContents);
-  helpMenu->addSeparator();
-  helpMenu->addAction(QIcon(":/pics/newgame.png"), tr("&About..."), this, SLOT(helpAbout()), 0);
+  //bar->addSeparator();
+  bar->addAction(scoreicon, tr("S&core..."), this, SLOT(showScore()));
+  // absoulutely useless feature
+  //bar->addAction(playersicon, tr("Players..."), this, SLOT(showPlayers()));
+  bar->addAction(logicon, tr("Log"), this, SLOT(showLog()));
+  bar->addSeparator();
+  bar->addAction(toolicon, tr("Options"), this, SLOT(showOptions()));
+  bar->addAction(helpicon, tr("Preferans Rules..."), this, SLOT(helpRules()));
+  bar->addAction(abouticon, tr("&About..."), this, SLOT(helpAbout()));
+  bar->addSeparator();
+  bar->addAction(exiticon, tr("&Quit"), this, SLOT(quitGame()));
+  this->addToolBar(Qt::LeftToolBarArea, bar);
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // slots

@@ -13,8 +13,8 @@ OBJECTS_DIR = _build/obj
 UI_DIR = _build/uic
 MOC_DIR = _build/moc
 RCC_DIR = _build/rcc
-RESOURCES += $$PWD/openpref.qrc
-TRANSLATIONS = openpref_ru.ts
+RESOURCES += $$PWD/bbpref.qrc
+TRANSLATIONS = bbpref_ru.ts
 LIBS += c:/bbndk-2.0.1/target/qnx6/armle-v7/usr/lib/libbps.so
 
 ## Build qm files ##
