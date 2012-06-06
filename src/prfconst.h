@@ -20,10 +20,7 @@
  *      http://www.gnu.org/licenses 
  */
 
-#ifndef PRFCONST_H
-#define PRFCONST_H
-
-#define BBPREF_VERSION "1.0"
+#pragma once
 
 enum eGameBid {
   zerogame=0,
@@ -47,5 +44,3 @@ int succBid (eGameBid game);
 int gameTricks (eGameBid gType);
 int gameWhistsMin (eGameBid gType);
 int gamePoolPrice (eGameBid gType);
-
-#endif

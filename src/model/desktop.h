@@ -20,8 +20,7 @@
  *      http://www.gnu.org/licenses 
  */
 
-#ifndef DESKTOP_H
-#define DESKTOP_H
+#pragma once
 
 #include <QObject>
 
@@ -151,6 +150,3 @@ private:
   QList<GameLogEntry> m_gameLog;
   eGameBid m_currentGame;
 };
-
-
-#endif

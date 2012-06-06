@@ -18,7 +18,8 @@ SOURCES += \
   $$PWD/playersinfodialog.cpp \
   $$PWD/scorewidget.cpp \
     src/view/scorehistory.cpp \
-    src/view/aboutdialog.cpp
+    src/view/aboutdialog.cpp \
+    src/view/newgameform.cpp
 
 FORMS += \
   $$PWD/optform.ui \

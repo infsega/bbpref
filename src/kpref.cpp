@@ -38,6 +38,7 @@
 #include "bps/event.h"
 #include <bps/locale.h>
 #include <bps/navigator.h>
+#include <bps/virtualkeyboard.h>
 
 #include "formbid.h"
 #include "newgameform.h"
@@ -64,7 +65,6 @@ MainWindow::MainWindow()
   setCentralWidget(mDeskView);
   m_PrefModel = new PrefModel(mDeskView);
   mDeskView->setModel(m_PrefModel);
-  m_optionDialog = new OptionDialog(this);
   readSettings();
   doConnects();
   initMenuBar();
@@ -85,7 +85,6 @@ inline void MainWindow::doConnects()
   connect(m_PrefModel, SIGNAL(showHint(const QString&)), this, SLOT(showHint(const QString&)));
   connect(m_PrefModel, SIGNAL(clearHint()), this, SLOT(clearHint()));
   connect(m_PrefModel, SIGNAL(gameChanged(QString)), this, SLOT(changeTitle(QString)));
-  connect(m_optionDialog, SIGNAL(accepted()), this, SLOT(applyOptions()));
 }
 
 
@@ -186,56 +185,16 @@ void MainWindow::showLog()
 
 void MainWindow::newSingleGame()
 {
-  QSettings st;
-  NewGameDialog dlg(this);
-  connect(dlg.cbRounds, SIGNAL(stateChanged(int)), &dlg, SLOT(toggleRounds(int)));
-  // Players
-  dlg.leHumanName->setText(m_PrefModel->optHumanName);
-  dlg.leName1->setText(st.value("playername1", tr("Mr. West")).toString());
-  dlg.leName2->setText(st.value("playername2", tr("Dr. East")).toString());
-  dlg.cbAlphaBeta1->setChecked(st.value("alphabeta1", true).toBool());
-  dlg.cbAlphaBeta2->setChecked(st.value("alphabeta2", true).toBool());
-
-  // Conventions
-  dlg.sbGame->setValue(st.value("maxpool", 10).toInt());
-  if(st.value("quitmaxrounds", false).toBool()) {
-    dlg.cbRounds->setCheckState(Qt::Checked);
-    dlg.sbRounds->setValue(st.value("maxrounds", -1).toInt());
-  }
-  dlg.cbGreedy->setChecked(st.value("whistgreedy", true).toBool());
-  dlg.cbTenWhist->setChecked(st.value("whist10", false).toBool());
-  dlg.cbStalin->setChecked(st.value("stalin", false).toBool());
-  dlg.cbAggPass->setChecked(st.value("aggpass", false).toBool());
-  dlg.cbWithoutThree->setChecked(st.value("without3", false).toBool());
-  
+  NewGameDialog dlg(m_PrefModel, this);
   if (dlg.exec() == QDialog::Accepted)
   {
+    virtualkeyboard_hide();
     mDeskView->ClearScreen();
     delete m_PrefModel;
     m_PrefModel = new PrefModel(mDeskView);
     mDeskView->setModel(m_PrefModel);
     doConnects();
-    
-    // Conventions
-    m_PrefModel->optMaxPool = dlg.sbGame->value();
-    m_PrefModel->optQuitAfterMaxRounds = (dlg.cbRounds->checkState() == Qt::Checked);
-    if (m_PrefModel->optQuitAfterMaxRounds) {
-      m_PrefModel->optMaxRounds = dlg.sbRounds->value();
-    }
-    m_PrefModel->optWhistGreedy = dlg.cbGreedy->isChecked();
-    m_PrefModel->opt10Whist = dlg.cbTenWhist->isChecked();
-    m_PrefModel->optStalingrad = dlg.cbStalin->isChecked();
-    m_PrefModel->optAggPass = dlg.cbAggPass->isChecked();
-    m_PrefModel->optWithoutThree = dlg.cbWithoutThree->isChecked();
-    m_PrefModel->optPassCount = 0;
-
-    // Players
-    m_PrefModel->optHumanName = dlg.leHumanName->text();
-    m_PrefModel->optPlayerName1 = dlg.leName1->text();
-    m_PrefModel->optAlphaBeta1 = dlg.cbAlphaBeta1->isChecked();
-    m_PrefModel->optPlayerName2 = dlg.leName2->text();
-    m_PrefModel->optAlphaBeta2 = dlg.cbAlphaBeta2->isChecked();
-  
+    dlg.copyOptions(*m_PrefModel);
     writeSettings();
     actFileSave->setEnabled(true); 
     m_PrefModel->runGame();
@@ -295,29 +254,28 @@ void MainWindow::readSettings()
 
 void MainWindow::showOptions()
 {
-  m_optionDialog->setBackgroundType(mDeskView->backgroundType());
-  m_optionDialog->setBackgroundColor(mDeskView->backgroundColor());
-  m_optionDialog->cbAnimDeal->setChecked(mDeskView->optDealAnim);
-  m_optionDialog->cbAnimTake->setChecked(mDeskView->optTakeAnim);
-  m_optionDialog->hsTakeQuality->setEnabled(mDeskView->optTakeAnim);
-  m_optionDialog->hsTakeQuality->setValue(mDeskView->takeAnimQuality());
-  m_optionDialog->cbDebugHands->setChecked(mDeskView->optDebugHands);
+  OptionDialog opt(this);
+  opt.setBackgroundType(mDeskView->backgroundType());
+  opt.setBackgroundColor(mDeskView->backgroundColor());
+  opt.cbAnimDeal->setChecked(mDeskView->optDealAnim);
+  opt.cbAnimTake->setChecked(mDeskView->optTakeAnim);
+  opt.hsTakeQuality->setEnabled(mDeskView->optTakeAnim);
+  opt.hsTakeQuality->setValue(mDeskView->takeAnimQuality());
+  opt.cbDebugHands->setChecked(mDeskView->optDebugHands);
+  if (opt.exec() == QDialog::Accepted)
+  {
+    mDeskView->setBackgroundType(opt.backgroundType());
+    mDeskView->setBackgroundColor(opt.backgroundColor());
+    mDeskView->optDealAnim = opt.cbAnimDeal->isChecked();
+    mDeskView->optTakeAnim = opt.cbAnimTake->isChecked();
+    mDeskView->setTakeQuality(opt.hsTakeQuality->value());
+    mDeskView->optDebugHands = opt.cbDebugHands->isChecked();
 
-  m_optionDialog->open();
-}
-
-void MainWindow::applyOptions()
-{
-  mDeskView->setBackgroundType(m_optionDialog->backgroundType());
-  mDeskView->setBackgroundColor(m_optionDialog->backgroundColor());
-  mDeskView->optDealAnim = m_optionDialog->cbAnimDeal->isChecked();
-  mDeskView->optTakeAnim = m_optionDialog->cbAnimTake->isChecked();
-  mDeskView->setTakeQuality(m_optionDialog->hsTakeQuality->value());
-  mDeskView->optDebugHands = m_optionDialog->cbDebugHands->isChecked();
-
-  if(m_optionDialog->optionsModified())
-    mDeskView->reloadCards();
+    if (opt.optionsModified())
+      mDeskView->reloadCards();
+  }
   mDeskView->draw(true);
+  this->update();
 }
 
 void MainWindow::helpRules()

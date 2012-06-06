@@ -1,7 +1,10 @@
 #include "aboutdialog.h"
 #include "ui_aboutdialog.h"
 
+#include "prfconst.h"
 #include <bps/navigator.h>
+
+#define BBPREF_VERSION "1.0"
 
 AboutDialog::AboutDialog(QWidget *parent) :
     QDialog(parent),

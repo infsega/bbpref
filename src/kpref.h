@@ -20,14 +20,11 @@
  *      http://www.gnu.org/licenses 
  */
 
-#ifndef KPREF_H
-#define KPREF_H
+#pragma once
 
 #include <QMainWindow>
 
-
 class DeskView;
-class OptionDialog;
 class PrefModel;
 
 /**
@@ -55,7 +52,6 @@ private slots:
   void helpAbout ();
   void helpRules ();
   void showOptions ();
-  void applyOptions();
 
   bool quitGame ();
 
@@ -73,7 +69,6 @@ private:
   QAction *actFileOpen;
   QAction *actFileSave;
   QStatusBar * HintBar;
-  OptionDialog *m_optionDialog;
 
 public:
   PrefModel *m_PrefModel;
@@ -83,5 +78,3 @@ protected:
   void  keyPressEvent (QKeyEvent *);
   void  closeEvent(QCloseEvent *event);
 };
-
-#endif

@@ -23,23 +23,30 @@
 #pragma once
 
 #include <QDialog>
+namespace Ui
+{
+  class NewGameDialog;
+}
 
+class PrefModel;
 
-#include "ui_newgameform.h"
-class NewGameDialog : public QDialog, public Ui_NewGameDialog
+class NewGameDialog : public QDialog
 {
   Q_OBJECT
 
 public:
-  NewGameDialog (QWidget *parent=0) : QDialog(parent) { setupUi(this); }
-  ~NewGameDialog () { }
+  NewGameDialog (PrefModel* i_model, QWidget *parent = NULL);
+  ~NewGameDialog();
+
+  void copyOptions(PrefModel& o_model);
 
 protected:
-  void showEvent(QShowEvent *) { showFullScreen(); }
+  void showEvent(QShowEvent *);
 
 private slots:
-  void toggleRounds(int checked)
-  {
-    sbRounds->setEnabled(checked == Qt::Checked);
-  }
+  void toggleRounds(int checked);
+
+private:
+  Ui::NewGameDialog *ui;
+  PrefModel* model;
 };
