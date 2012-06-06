@@ -20,9 +20,7 @@
  *      http://www.gnu.org/licenses 
  */
 
-#ifndef PLAYERSINFODIALOG_H
-#define PLAYERSINFODIALOG_H
-
+#pragma once
 #include <QDialog>
 
 class PrefModel;
@@ -30,14 +28,12 @@ class QShowEvent;
 
 class PlayersInfoDialog : public QDialog
 {
-  public:
-    explicit PlayersInfoDialog(PrefModel *model, QWidget *parent = 0, Qt::WindowFlags f = 0);
+public:
+  explicit PlayersInfoDialog(PrefModel *model, QWidget *parent = 0, Qt::WindowFlags f = 0);
 
-    virtual bool eventFilter(QObject* obj, QEvent* event);
+  virtual bool eventFilter(QObject* obj, QEvent* event);
 
-  protected:
-    void keyPressEvent (QKeyEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
+protected:
+  void keyPressEvent (QKeyEvent *event);
+  void mouseReleaseEvent(QMouseEvent *event);
 };
-
-#endif
