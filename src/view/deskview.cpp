@@ -603,6 +603,7 @@ void DeskView::resizeEvent(QResizeEvent *event)
   Q_UNUSED(event)
   setBackgroundType(m_backgroundType);
   draw(false);
+  qDebug() << "DeskView " << width() << " " << height() << endl;
 }
 
 void DeskView::mouseMoveEvent (QMouseEvent *event)

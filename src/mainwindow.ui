@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>744</width>
+    <height>520</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>BB Pref</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../bbpref.qrc">
+    <normaloff>:/pics/newgame.png</normaloff>:/pics/newgame.png</iconset>
+  </property>
+  <widget class="DeskView" name="centralwidget"/>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>48</width>
+     <height>48</height>
+    </size>
+   </property>
+   <property name="floatable">
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>LeftToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionNewGame"/>
+   <addaction name="actionOpenGame"/>
+   <addaction name="actionSaveGame"/>
+   <addaction name="actionShowScore"/>
+   <addaction name="actionGameLog"/>
+   <addaction name="separator"/>
+   <addaction name="actionOptions"/>
+   <addaction name="actionRules"/>
+   <addaction name="actionAbout"/>
+   <addaction name="separator"/>
+   <addaction name="actionExit"/>
+  </widget>
+  <action name="actionNewGame">
+   <property name="icon">
+    <iconset resource="../bbpref.qrc">
+     <normaloff>:/pics/bbpref.png</normaloff>
+     <normalon>:/pics/filenew.png</normalon>:/pics/bbpref.png</iconset>
+   </property>
+   <property name="text">
+    <string>New Game</string>
+   </property>
+  </action>
+  <action name="actionOpenGame">
+   <property name="icon">
+    <iconset>
+     <normalon>:/pics/fileopen.png</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Open Game</string>
+   </property>
+  </action>
+  <action name="actionSaveGame">
+   <property name="icon">
+    <iconset>
+     <normalon>:/pics/filesave.png</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Save Game</string>
+   </property>
+  </action>
+  <action name="actionShowScore">
+   <property name="icon">
+    <iconset>
+     <normalon>:/pics/paper.png</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Show Score</string>
+   </property>
+  </action>
+  <action name="actionGameLog">
+   <property name="icon">
+    <iconset>
+     <normalon>:/pics/log.png</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Game Log</string>
+   </property>
+  </action>
+  <action name="actionOptions">
+   <property name="icon">
+    <iconset>
+     <normalon>:/pics/tool.png</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Options</string>
+   </property>
+  </action>
+  <action name="actionRules">
+   <property name="icon">
+    <iconset>
+     <normalon>:/pics/help.png</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Rules</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset>
+     <normalon>:/pics/about.png</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset>
+     <normalon>:/pics/exit.png</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DeskView</class>
+   <extends>QWidget</extends>
+   <header>deskview.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../bbpref.qrc"/>
+ </resources>
+ <connections/>
+</ui>

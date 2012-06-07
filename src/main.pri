@@ -2,14 +2,17 @@ DEPENDPATH += $$PWD
 INCLUDEPATH += $$PWD
 
 HEADERS += \
-  $$PWD/kpref.h \
-  $$PWD/prfconst.h
+  $$PWD/prfconst.h \
+    src/mainwindow.h
 
 SOURCES += \
-  $$PWD/kpref.cpp \
   $$PWD/prfconst.cpp \
-  $$PWD/main.cpp
+  $$PWD/main.cpp \
+    src/mainwindow.cpp
 
 include($$PWD/view/view.pri)
 include($$PWD/logic/logic.pri)
 include($$PWD/model/model.pri)
+
+FORMS += \
+    src/mainwindow.ui

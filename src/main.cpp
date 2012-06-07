@@ -31,10 +31,11 @@
 #include <QtCore/QTime>
 #include <QTranslator>
 #include <QCleanlooksStyle>
+#include <QDebug>
 
-#include "kpref.h"
+#include "mainwindow.h"
 
-int main (int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
   QCoreApplication::setOrganizationName("Inform Group");
   QCoreApplication::setOrganizationDomain("bbpref.card.game.com");
   QCoreApplication::setApplicationName("BB Pref");
@@ -67,8 +68,9 @@ int main (int argc, char *argv[]) {
   if(openprefTranslator.load(openprefFilename))
     app.installTranslator(&openprefTranslator);
 
-  MainWindow kpref;
-  kpref.showFullScreen();
+  qDebug() << "Creating the main window " << endl;
 
+  MainWindow pref;
+  pref.showFullScreen();
   return app.exec();
 }
