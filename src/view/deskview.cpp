@@ -79,10 +79,12 @@ namespace {
 } // end of namespace
 
 ///////////////////////////////////////////////////////////////////////////////
-void SleepEventLoop::doEventKey (QKeyEvent *event) {
+void SleepEventLoop::doEventKey (QKeyEvent *event)
+{
   if (mIgnoreKey)
       return;
-  switch (event->key()) {
+  switch (event->key())
+  {
     case Qt::Key_Escape:
     case Qt::Key_Enter:
     case Qt::Key_Return:
@@ -93,7 +95,6 @@ void SleepEventLoop::doEventKey (QKeyEvent *event) {
     default: ;
   }
 }
-
 
 void SleepEventLoop::doEventMouse (QMouseEvent *event)
 {
@@ -123,6 +124,7 @@ public:
     m_eloop = new SleepEventLoop(parent);
     m_efilter = new SleepEventFilter(m_eloop);
     m_timer = new QTimer(m_eloop);
+    m_introAnimTimer = new QTimer(parent);
   }
 
   ~DeskViewPrivate()
@@ -130,11 +132,13 @@ public:
     m_efilter->deleteLater();
     m_eloop->deleteLater();
     m_timer->deleteLater();
+    m_introAnimTimer->deleteLater();
   }
 
   SleepEventLoop *m_eloop;
   SleepEventFilter *m_efilter;
   QTimer *m_timer;
+  QTimer *m_introAnimTimer;
 };
 
 bool DeskView::loadCards()
@@ -204,8 +208,10 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f)
     , mBidBmp(":/pics/bidinfo.png")
     , mIMoveBmp(":/pics/imove.png")
     , mDigitsBmp(":/pics/digits/digits.png")
+    , mCandelabriumBmp(":/pics/candelabrium.png")
     , m_backgroundColor(qRgb(0,128,0))
     , m_takeQuality(2)
+    , m_firePos(0)
 {
   setAttribute(Qt::WA_OpaquePaintEvent);
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -226,6 +232,9 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f)
   ClearScreen();
   setMouseTracking(true);
   setAutoFillBackground(false);
+
+  d_ptr->m_introAnimTimer->start(10);
+  connect(d_ptr->m_introAnimTimer, SIGNAL(timeout()), SLOT(introAnimation()));
 }
 
 
@@ -290,7 +299,6 @@ void DeskView::drawIMove (QPainter &p) {
   p.drawPixmap(x, y, mIMoveBmp);
 }
 
-
 void DeskView::drawPKeyBmp (bool show)
 {
   static int phase = 0;
@@ -307,7 +315,6 @@ void DeskView::drawPKeyBmp (bool show)
     ClearBox(4, height()-(img.height() + 8), img.width(), img.height());
   update(QRegion(4, height()-(img.height() + 8), img.width(), img.height()));
 }
-
 
 void DeskView::drawBmpChar (QPainter &p, int x0, int y0, int cx, int cy)
 {
@@ -340,7 +347,7 @@ static int numWidth (int n)
   return strlen(buf)*8;
 }
 
-void DeskView::drawGameBid (QPainter &p, eGameBid game)
+void DeskView::drawGameBid(QPainter &p, eGameBid game)
 {
   Q_ASSERT(game == raspass || game == withoutThree || (game >= 61 && game <= 105));
   int x, y;
@@ -374,14 +381,15 @@ void DeskView::mySleep (int seconds)
     removeEventFilter(d_ptr->m_efilter);
     return;
   }
-  if (seconds > 0) {
+  if (seconds > 0)
+  {
     connect(d_ptr->m_timer, SIGNAL(timeout()), d_ptr->m_eloop, SLOT(quit()));
     d_ptr->m_timer->start(seconds*1000);
-  } else if (seconds == -1) {
-    d_ptr->m_timer->start(1000);
-  } else if (seconds < -1) {
-    d_ptr->m_eloop->mIgnoreKey = true;
   }
+  else if (seconds == -1)
+    d_ptr->m_timer->start(1000);
+  else if (seconds < -1)
+    d_ptr->m_eloop->mIgnoreKey = true;
 
   if (d_ptr->m_eloop->isRunning())
     d_ptr->m_eloop->exit();
@@ -617,6 +625,30 @@ void DeskView::paintEvent (QPaintEvent *event)
   p.drawPixmap(0, 0, mDeskBmp);
 }
 
+void DeskView::drawIntro()
+{
+  const int px[] = {600-150+29, 600-150+97, 600-150+124, 600-150+166, 600-150+222};
+  const int py[] = { 20-125+78, 20-125+91,   20-125+35,   20-125+62,   20-125+68};
+  QPainter p(&mDeskBmp);
+  p.drawPixmap( 600, 20, mCandelabriumBmp );
+  for( int i = 0; i < 5; i++)
+  {
+    int idx = i * 30 + m_firePos;
+    idx = (idx % 150) + 1;
+    QString name;
+    name.sprintf(":/pics/flame/%04d.png", idx);
+    p.drawPixmap( px[i], py[i], QPixmap(name) );
+  }
+}
+
+void DeskView::introAnimation()
+{
+  if (!m_model || m_model->mGameRunning)
+    return;
+  m_firePos = (m_firePos + 1) % 150;
+  draw();
+}
+
 void DeskView::getLeftTop (int player, int & left, int & top)
 {
   left = 0; top = 0;
@@ -782,6 +814,9 @@ void DeskView::draw (bool emitSignal)
     drawIMove(p);
     p.end();
   }
+  else
+    drawIntro();
+
   /// @todo Calculate region which really needs updating
   if (emitSignal)
       update();

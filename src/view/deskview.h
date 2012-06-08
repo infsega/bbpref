@@ -22,8 +22,7 @@
 
 //deskview.h
 // all graphics function depend
-#ifndef DESKVIEW_H
-#define DESKVIEW_H
+#pragma once
 
 #include <QtCore/QHash>
 #include <QtCore/QMap>
@@ -51,13 +50,14 @@ class DeskViewPrivate;
  * Provides a self-contained widget capabla of preferans game visualization.
  * Works in pair with PrefModel.
  */
-class DeskView : public QWidget {
+class DeskView: public QWidget
+{
   Q_OBJECT
 public:
   explicit DeskView (QWidget * parent = 0, Qt::WindowFlags f = 0);
   ~DeskView ();
 
-  PrefModel * model() { return m_model; }
+  PrefModel* model() { return m_model; }
   void setModel(PrefModel *model);
   int backgroundType() const { return m_backgroundType; }
   void setBackgroundType(const int type);
@@ -121,12 +121,17 @@ protected:
   /// Override it in your class if you want it to look differently
   void drawBidBoard();
 
+  // draw candles and flames
+  void drawIntro();
+
   void  paintEvent (QPaintEvent *);
   void  keyPressEvent (QKeyEvent *);
   void  mousePressEvent (QMouseEvent *);
   void  mouseMoveEvent (QMouseEvent *);
   void  resizeEvent(QResizeEvent *event);
 
+private slots:
+  void introAnimation();
 
 private:
   void drawPKeyBmp (bool show);
@@ -153,6 +158,7 @@ private:
   QPixmap mIMoveBmp;
   QPixmap mKeyBmp[2];
   QPixmap mDigitsBmp;
+  QPixmap mCandelabriumBmp;
   int bidBmpX, bidBmpY;
   int m_leftRightMargin, m_topBottomMargin;
   QHash<QString, QPixmap> cardI;
@@ -161,11 +167,11 @@ private:
   QRgb m_backgroundColor;
   QBrush m_deskBackground;
   int m_takeQuality;
+  int m_firePos;
 };
 
-
-
-class SleepEventLoop : public QEventLoop {
+class SleepEventLoop : public QEventLoop
+{
   Q_OBJECT
 public:
   explicit SleepEventLoop (DeskView *aDeskView, QObject *parent=0) : QEventLoop(parent),
@@ -188,5 +194,3 @@ public:
   bool mIgnoreKey; // ignore key events?
   bool mIgnoreMouse; // ignore mouse events?
 };
-
-#endif
