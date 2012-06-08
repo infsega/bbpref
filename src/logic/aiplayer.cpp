@@ -30,10 +30,8 @@
 #include "aiplayer.h"
 #include "desktop.h"
 
-#include "debug.h"
-
-
-enum eHand {
+enum eHand
+{
   LeftHand=0,
   RightHand,
   NoHand

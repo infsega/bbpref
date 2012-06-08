@@ -237,7 +237,6 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f)
   connect(d_ptr->m_introAnimTimer, SIGNAL(timeout()), SLOT(introAnimation()));
 }
 
-
 DeskView::~DeskView()
 {
   writeSettings();
@@ -670,6 +669,27 @@ void DeskView::getLeftTop (int player, int & left, int & top)
   }
 }
 
+void DeskView::getPlayerTrickPos(int player, int& left, int& top)
+{
+  left = 0; top = 0;
+  switch (player)
+  {
+    case 1:
+      left = width2();
+      top = height() - m_topBottomMargin - CardHeight;
+      break;
+    case 2:
+      left = m_leftRightMargin;
+      top = m_topBottomMargin;
+      break;
+    case 3:
+      left = width2() - m_leftRightMargin;
+      top = m_topBottomMargin;
+      break;
+    default: ;
+  }
+}
+
 // draw ingame card (the card that is in game, not in hand)
 void DeskView::inGameCardLeftTop (int mCardNo, int &left, int &top)
 {
@@ -696,12 +716,12 @@ void DeskView::inGameCardLeftTop (int mCardNo, int &left, int &top)
   left = x; top = y;
 }
 
-void DeskView::animateTrick (int plrNo, const QCardList & cards)
+void DeskView::animateTrick(int plrNo, const QCardList & cards)
 {
   const int steps = 5 * (2 << m_takeQuality);
   int left, top;
 
-  getLeftTop(plrNo, left, top);
+  getPlayerTrickPos(plrNo, left, top);
   if (plrNo == 3)
       left -= CardWidth - 4;
 
@@ -732,6 +752,48 @@ void DeskView::animateTrick (int plrNo, const QCardList & cards)
   draw();
 }
 
+void DeskView::animateCommunityCardTrick (int plrNo, const QCardList& cards)
+{
+  Player* player = m_model->player(plrNo);
+
+  QMap<Card*, QPoint> finalPos;
+  foreach( Card* pCard, cards )
+  {
+    int x, y;
+    player->getCardPos(pCard, x, y);
+    finalPos[pCard] = QPoint(x, y);
+  }
+
+  if (optTakeAnim)
+  {
+    draw(false);
+    QRegion oldRegion;
+    QPixmap cache = mDeskBmp;
+    const int steps = 5 * (2 << m_takeQuality);
+    for (int f = optTakeAnim ? 0 : steps; f <= steps; f++)
+    {
+      QRegion newRegion;
+      for (int c = 0; c < cards.size(); c++)
+      {
+        Card* pCard = cards.at(c);
+        if (!pCard)
+            continue;
+        int x, y;
+        inGameCardLeftTop(c, x, y);
+        QPoint pt = finalPos[pCard];
+        x += (pt.x() - x) * f / steps;
+        y += (pt.y() - y) * f / steps;
+        drawCard(pCard, x, y, 1, 0);
+        newRegion += QRegion(x, y, CardWidth, CardHeight);
+      }
+      aniSleep(200/steps, newRegion + oldRegion);
+      mDeskBmp = cache;
+      oldRegion = newRegion;
+    }
+  }
+  player->mDealedCards.clear();
+  draw();
+}
 
 void DeskView::drawPool()
 {

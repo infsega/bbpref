@@ -94,8 +94,9 @@ public:
 
   /// @todo must be private
   void getLeftTop (int player, int & left, int & top);
-  
-  void animateTrick (int plrNo, const QCardList & cards);
+  void getPlayerTrickPos(int player, int& left, int& top);
+  void animateTrick(int plrNo, const QCardList& cards);
+  void animateCommunityCardTrick(int plrNo, const QCardList& cards);
 
   /// Ask user if he wants to play open or closed whist
   bool askWhistType ();

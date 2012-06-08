@@ -20,8 +20,7 @@
  *      http://www.gnu.org/licenses 
  */
 
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
 #include "prfconst.h"
 #include "cardlist.h"
@@ -39,7 +38,6 @@ class DeskView;
 class Player {
 public:
   Player (int number, PrefModel *model);
-  //Player (const Player &pl);
   virtual ~Player ();
 
   /// String identifier of concrete player
@@ -57,25 +55,31 @@ public:
 
   virtual void setCurrentStart (bool start);
 
-  void sortCards () { mCards.mySort(); }
+  void sortCards() { mCards.mySort(); }
 
-  void dealCard (Card *aCard) { mCards.insert(aCard); } // get dealed card
+  void dealCard(Card *aCard) { mCards.insert(aCard); }
+  void takeDeskCard(Card *aCard)
+  {
+    mCards.insert(aCard);
+    mDealedCards.append(aCard);
+  }
 
   /// Player's decision on move in the game
   virtual Card *makeMove (Card *lMove, Card *rMove, Player *aLeftPlayer, Player *aRightPlayer, bool isPassOut) = 0;
   /// Player's decision on move in the bidding
   virtual eGameBid makeBid (eGameBid lMove, eGameBid rMove) = 0;
 
-  virtual eGameBid makeFinalBid (eGameBid MaxGame, int nPlayerPass) = 0; // после получения игроком прикупа -- пасс или вист
+  virtual eGameBid makeFinalBid (eGameBid MaxGame, int nPlayerPass) = 0;
   virtual eGameBid makeDrop() = 0;
-  virtual void returnDrop (); // вернуть сброс
+  virtual void returnDrop();
 
   /// Player's decision on open or closed whist
   virtual bool chooseClosedWhist () = 0;
 
   /// @todo Move to view delegate
-  virtual void draw ();
-  virtual void highlightCard (int lx, int ly); // подсветить карту по данным координатам (и перерисовать руку, если надо)
+  virtual void draw();
+  virtual void highlightCard (int lx, int ly);
+  void getCardPos(const Card *card, int& x, int& y);
 
   void setNick (const QString nick) { m_nick = nick; }
   QString nick() const { return m_nick; }
@@ -115,7 +119,8 @@ protected:
 public:
   ScoreBoard mScore;
   CardList mCards; // my cards
-  CardList mCardsOut; // во взятках мои
+  CardList mCardsOut;
+  QCardList mDealedCards;
   // this part for miser catches
   Card *mCardCarryThru;
 
@@ -134,6 +139,3 @@ protected:
   int mTricksTaken;
   int mPrevHiCardIdx;
 };
-
-
-#endif

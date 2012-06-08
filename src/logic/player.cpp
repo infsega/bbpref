@@ -101,6 +101,13 @@ void Player::returnDrop () {
 int Player::buildHandXOfs (QList<CardPosInfo>& offsets, int startX, bool opened)
 {
   CardList lst = mCards.sorted();
+  if (invisibleHand())
+  {
+    foreach( Card* c, mDealedCards )
+      lst.remove(c);
+    foreach( Card* c, mDealedCards )
+      lst.insert(c);
+  }
 
   int suitsCount = lst.countSuits();
   int cardsCount = lst.count();
@@ -132,7 +139,6 @@ int Player::buildHandXOfs (QList<CardPosInfo>& offsets, int startX, bool opened)
   return cardsCount;
 }
 
-
 int Player::cardAt(int lx, int ly, bool opened)
 {
   int left, top;
@@ -151,7 +157,6 @@ int Player::cardAt(int lx, int ly, bool opened)
   return res;
 }
 
-
 void Player::drawAt (int left, int top, int selNo)
 {
   QList<CardPosInfo> offsets;
@@ -163,13 +168,13 @@ void Player::drawAt (int left, int top, int selNo)
   {
     int x = pi.offset, y = top;
     Card *card = mCards.at(pi.idx);
+    if ( mDealedCards.contains(card) )
+      continue;
     mDeskView->drawCard(card, x, y, !invisibleHand(), pi.idx == selNo);
   }
 
   mDeskView->update();
-  //mDeskView->update(left - 100, top - 100, offsets.last().offset - left + CARD_WIDTH + 100, CARD_HEIGHT + 100);
 }
-
 
 void Player::draw()
 {
@@ -179,7 +184,6 @@ void Player::draw()
   drawAt(left, top, mPrevHiCardIdx);
   mDeskView->drawPlayerMessage(mPlayerNo, mMessage, mPlayerNo!=m_model->mPlayerHi);
 }
-
 
 void Player::clearCardArea()
 {
@@ -197,10 +201,10 @@ void Player::clearCardArea()
     mDeskView->ClearBox(x, y, CARD_WIDTH, CARD_HEIGHT);
   }
   mDeskView->update();
-  //mDeskView->update(left - 100, top - 100, offsets.last().offset - left + CARD_WIDTH + 100, CARD_HEIGHT + 100);
 }
 
-void Player::highlightCard (int lx, int ly) {
+void Player::highlightCard (int lx, int ly)
+{
   Q_UNUSED(lx)
   Q_UNUSED(ly)
   mPrevHiCardIdx = -1;
@@ -219,5 +223,23 @@ bool Player::isValidMove(const Card *move, const Card *lMove,
   } else {
     mDeskView->model()->showMoveImpossible(true);
     return false;
+  }
+}
+
+void Player::getCardPos(const Card *card, int& x, int& y)
+{
+  if (!mDeskView)
+    return;
+  int left;
+  mDeskView->getLeftTop(mPlayerNo, left, y);
+  QList<CardPosInfo> offsets;
+  buildHandXOfs(offsets, left, !invisibleHand());
+  foreach( const CardPosInfo& pi, offsets )
+  {
+    if (card == mCards.at(pi.idx))
+    {
+      x = pi.offset;
+      return;
+    }
   }
 }
