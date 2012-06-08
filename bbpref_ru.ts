@@ -5,70 +5,62 @@
     <name></name>
     <message>
         <source>(w)</source>
-        <translation type="obsolete">(в)</translation>
+        <translation>(в)</translation>
     </message>
     <message>
         <source>Show</source>
-        <translation type="obsolete">Показать</translation>
+        <translation>Показать</translation>
     </message>
     <message>
         <source>Game</source>
-        <translation type="obsolete">Игра</translation>
+        <translation>Игра</translation>
     </message>
     <message>
         <source>Time</source>
-        <translation type="obsolete">Время</translation>
+        <translation>Время</translation>
     </message>
     <message>
         <source>Deal</source>
-        <translation type="obsolete">Расклад</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation type="obsolete">OK</translation>
-    </message>
-    <message>
-        <source>Remind Later</source>
-        <translation type="obsolete">Напомнить позже</translation>
+        <translation>Расклад</translation>
     </message>
 </context>
 <context>
     <name>Bid messages</name>
     <message>
         <source>whist</source>
-        <translation type="obsolete">вист</translation>
+        <translation>вист</translation>
     </message>
     <message>
         <source>pass</source>
-        <translation type="obsolete">пас</translation>
+        <translation>пас</translation>
     </message>
     <message>
         <source>6 no trumps</source>
-        <translation type="obsolete">6 без козыря</translation>
+        <translation>6 без козыря</translation>
     </message>
     <message>
         <source>7 no trumps</source>
-        <translation type="obsolete">7 без козыря</translation>
+        <translation>7 без козыря</translation>
     </message>
     <message>
         <source>8 no trumps</source>
-        <translation type="obsolete">8 без козыря</translation>
+        <translation>8 без козыря</translation>
     </message>
     <message>
         <source>9 no trumps</source>
-        <translation type="obsolete">9 без козыря</translation>
+        <translation>9 без козыря</translation>
     </message>
     <message>
         <source>10 no trumps</source>
-        <translation type="obsolete">10 без козыря</translation>
+        <translation>10 без козыря</translation>
     </message>
     <message>
         <source>Misere</source>
-        <translation type="obsolete">Мизер</translation>
+        <translation>Мизер</translation>
     </message>
     <message>
         <source>without three</source>
-        <translation type="obsolete">без трех</translation>
+        <translation>без трех</translation>
     </message>
 </context>
 <context>
@@ -87,7 +79,7 @@
     </message>
     <message>
         <source>no trump</source>
-        <translation type="obsolete">без козыря</translation>
+        <translation>без козыря</translation>
     </message>
     <message>
         <source>&amp;Misere</source>
@@ -135,6 +127,10 @@
     <message>
         <source>Do you want to whist with opened cards?</source>
         <translation>Вы хотите вистовать с открытыми картами?</translation>
+    </message>
+    <message>
+        <source>Do you confirm your drop?</source>
+        <translation>Подтверждаете сброс карт?</translation>
     </message>
 </context>
 <context>
@@ -243,23 +239,23 @@
     </message>
     <message>
         <source>This move is impossible</source>
-        <translation type="obsolete">Этот ход недопустим</translation>
+        <translation>Этот ход недопустим</translation>
     </message>
     <message>
         <source>Your move</source>
-        <translation type="obsolete">Ваш ход</translation>
+        <translation>Ваш ход</translation>
     </message>
     <message>
         <source>Select two cards to drop</source>
-        <translation type="obsolete">Снесите две карты</translation>
+        <translation>Снесите две карты</translation>
     </message>
     <message>
         <source>Choose whist type</source>
-        <translation type="obsolete">Выберите тип виста</translation>
+        <translation>Выберите тип виста</translation>
     </message>
     <message>
         <source>Do you want to whist with opened cards?</source>
-        <translation type="obsolete">Вы хотите вистовать с открытыми картами?</translation>
+        <translation>Вы хотите вистовать с открытыми картами?</translation>
     </message>
     <message>
         <source>Players</source>
@@ -282,7 +278,7 @@
     </message>
     <message>
         <source>Players</source>
-        <translation type="obsolete">Игроки</translation>
+        <translation>Игроки</translation>
     </message>
     <message>
         <source>Conventions</source>
@@ -290,7 +286,7 @@
     </message>
     <message>
         <source>Whist type:</source>
-        <translation type="obsolete">Тип виста:</translation>
+        <translation>Тип виста:</translation>
     </message>
     <message>
         <source>&amp;Stalingrad</source>
@@ -314,19 +310,19 @@
     </message>
     <message>
         <source>&amp;greedy</source>
-        <translation type="obsolete">&amp;жлобский</translation>
+        <translation>&amp;жлобский</translation>
     </message>
     <message>
         <source>Pass-out:</source>
-        <translation type="obsolete">Распасы:</translation>
+        <translation>Распасы:</translation>
     </message>
     <message>
         <source>6-7-7...</source>
-        <translation type="obsolete">6-7-7...</translation>
+        <translation>6-7-7...</translation>
     </message>
     <message>
         <source>6 of spades:</source>
-        <translation type="obsolete">6 пик:</translation>
+        <translation>6 пик:</translation>
     </message>
     <message>
         <source>Player 1 (left)</source>
@@ -405,71 +401,63 @@
     </message>
     <message>
         <source>Pool size:</source>
-        <translation type="obsolete">Размер пули:</translation>
+        <translation>Размер пули:</translation>
     </message>
     <message>
         <source>Whist type:</source>
-        <translation type="obsolete">Тип виста:</translation>
+        <translation>Тип виста:</translation>
     </message>
     <message>
         <source>&amp;greedy</source>
-        <translation type="obsolete">жлобский</translation>
+        <translation>жлобский</translation>
     </message>
     <message>
         <source>10 game:</source>
-        <translation type="obsolete">Десятерная игра:</translation>
+        <translation>Десятерная игра:</translation>
     </message>
     <message>
         <source>&amp;check</source>
-        <translation type="obsolete">&amp;проверять</translation>
+        <translation>&amp;проверять</translation>
     </message>
     <message>
         <source>6 of spades:</source>
-        <translation type="obsolete">6 пик</translation>
+        <translation>6 пик</translation>
     </message>
     <message>
         <source>&amp;Stalingrad</source>
-        <translation type="obsolete">&amp;Сталинград</translation>
+        <translation>&amp;Сталинград</translation>
     </message>
     <message>
         <source>Deal:</source>
-        <translation type="obsolete">Сдача:</translation>
+        <translation>Сдача:</translation>
     </message>
     <message>
         <source>Take:</source>
-        <translation type="obsolete">Взятка:</translation>
+        <translation>Взятка:</translation>
     </message>
     <message>
         <source>&amp;animated</source>
-        <translation type="obsolete">с &amp;анимацией</translation>
+        <translation>с &amp;анимацией</translation>
     </message>
     <message>
         <source>a&amp;nimated</source>
-        <translation type="obsolete">с а&amp;нимацией</translation>
+        <translation>с а&amp;нимацией</translation>
     </message>
     <message>
         <source>Alphabeta:</source>
-        <translation type="obsolete">Альфабета:</translation>
+        <translation>Альфабета:</translation>
     </message>
     <message>
         <source>AI cards:</source>
-        <translation type="obsolete">Карты компьютера:</translation>
+        <translation>Карты компьютера:</translation>
     </message>
     <message>
         <source>Sho&amp;w (debug)</source>
-        <translation type="obsolete">По&amp;казать</translation>
+        <translation>По&amp;казать</translation>
     </message>
     <message>
         <source>Pass-out:</source>
-        <translation type="obsolete">Распасы</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="obsolete">Отмена</translation>
-    </message>
-    <message>
-        <source>O&amp;K</source>
-        <translation type="obsolete">O&amp;K</translation>
+        <translation>Распасы</translation>
     </message>
     <message>
         <source>Animation</source>
@@ -550,23 +538,23 @@
     </message>
     <message>
         <source>6 no trump</source>
-        <translation type="obsolete">6 без козыря</translation>
+        <translation>6 без козыря</translation>
     </message>
     <message>
         <source>7 no trump</source>
-        <translation type="obsolete">7 без козыря</translation>
+        <translation>7 без козыря</translation>
     </message>
     <message>
         <source>8 no trump</source>
-        <translation type="obsolete">8 без козыря</translation>
+        <translation>8 без козыря</translation>
     </message>
     <message>
         <source>9 no trump</source>
-        <translation type="obsolete">9 без козыря</translation>
+        <translation>9 без козыря</translation>
     </message>
     <message>
         <source>10 no trump</source>
-        <translation type="obsolete">10 без козыря</translation>
+        <translation>10 без козыря</translation>
     </message>
     <message>
         <source>Misere</source>
@@ -606,23 +594,23 @@
     </message>
     <message>
         <source>6 no trumps</source>
-        <translation type="obsolete">6 без козыря</translation>
+        <translation>6 без козыря</translation>
     </message>
     <message>
         <source>7 no trumps</source>
-        <translation type="obsolete">7 без козыря</translation>
+        <translation>7 без козыря</translation>
     </message>
     <message>
         <source>8 no trumps</source>
-        <translation type="obsolete">8 без козыря</translation>
+        <translation>8 без козыря</translation>
     </message>
     <message>
         <source>9 no trumps</source>
-        <translation type="obsolete">9 без козыря</translation>
+        <translation>9 без козыря</translation>
     </message>
     <message>
         <source>10 no trumps</source>
-        <translation type="obsolete">10 без козыря</translation>
+        <translation>10 без козыря</translation>
     </message>
     <message>
         <source>without three</source>
@@ -642,14 +630,57 @@
     </message>
 </context>
 <context>
-    <name>ScoreHistoryDialog</name>
-    <message>
-        <source>Score History</source>
-        <translation>Журнал</translation>
-    </message>
+    <name>GameLogDialog</name>
     <message>
         <source>Deal #</source>
         <translation>Расклад №</translation>
+    </message>
+    <message>
+        <source>(w)</source>
+        <translation>(в)</translation>
+    </message>
+    <message>
+        <source>Show</source>
+        <translation>Показать</translation>
+    </message>
+    <message>
+        <source>Game</source>
+        <translation>Игра</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>Время</translation>
+    </message>
+    <message>
+        <source>Deal</source>
+        <translation>Расклад</translation>
+    </message>
+</context>
+<context>
+    <name>GameLogModel</name>
+    <message>
+        <source>Deal #</source>
+        <translation>Расклад №</translation>
+    </message>
+    <message>
+        <source>(w)</source>
+        <translation>(в)</translation>
+    </message>
+    <message>
+        <source>Show</source>
+        <translation>Показать</translation>
+    </message>
+    <message>
+        <source>Game</source>
+        <translation>Игра</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>Время</translation>
+    </message>
+    <message>
+        <source>Deal</source>
+        <translation>Расклад</translation>
     </message>
 </context>
 <context>

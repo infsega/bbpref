@@ -7,7 +7,7 @@
 #include <QMessageBox>
 
 #include "aboutdialog.h"
-#include "scorehistory.h"
+#include "gamelogdialog.h"
 #include "optiondialog.h"
 #include "desktop.h"
 #include "newgameform.h"
@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent):
 {
   ui->setupUi(this);
 
-  mDeskView = (DeskView*)centralWidget();
+  mDeskView = ui->widget;
   m_PrefModel = new PrefModel(mDeskView);
   mDeskView->setModel(m_PrefModel);
 
@@ -41,10 +41,6 @@ MainWindow::MainWindow(QWidget *parent):
 
   ui->statusbar->showMessage(tr("Welcome to BB Pref!"));
   BidDialog::instance(mDeskView)->hide();
-
-  qDebug() << "initialized. Main window " << width() << "x" << height() << endl;
-  showFullScreen();
-  qDebug() << "show. Main window " << width() << "x" << height() << endl;
 }
 
 MainWindow::~MainWindow()
@@ -119,7 +115,7 @@ void MainWindow::on_actionShowScore_triggered()
 
 void MainWindow::on_actionGameLog_triggered()
 {
-  ScoreHistoryDialog dlg(m_PrefModel, this);
+  GameLogDialog dlg(m_PrefModel, this);
   dlg.exec();
 }
 

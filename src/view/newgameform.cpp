@@ -12,7 +12,6 @@ NewGameDialog::NewGameDialog(PrefModel* i_model, QWidget *parent /* = NULL */)
 {
   ui->setupUi(this);
   connect(ui->cbRounds, SIGNAL(stateChanged(int)), SLOT(toggleRounds(int)));
-  connect(ui->buttonBox, SIGNAL(accepted()), SLOT(accept()));
 
   QSettings st;
   // Players
@@ -24,7 +23,8 @@ NewGameDialog::NewGameDialog(PrefModel* i_model, QWidget *parent /* = NULL */)
 
   // Conventions
   ui->sbGame->setValue(st.value("maxpool", 10).toInt());
-  if(st.value("quitmaxrounds", false).toBool()) {
+  if(st.value("quitmaxrounds", false).toBool())
+  {
     ui->cbRounds->setCheckState(Qt::Checked);
     ui->sbRounds->setValue(st.value("maxrounds", -1).toInt());
   }

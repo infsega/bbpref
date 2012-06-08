@@ -59,7 +59,8 @@ int main(int argc, char *argv[]) {
   // Load Qt translations first
   QString qtFilename = "qt_" + translationCode + ".qm";
   QTranslator qtTranslator(0);
-  if (qtTranslator.load(qtFilename, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
+  //QLibraryInfo::location(QLibraryInfo::TranslationsPath)
+  if (qtTranslator.load(qtFilename, "app/native/translations"))
     app.installTranslator(&qtTranslator);
 
   // Load translation of OpenPref

@@ -29,6 +29,7 @@
 #include <QtCore/QMap>
 #include <QtCore/QString>
 #include <QtCore/QEventLoop>
+#include <QtCore/QPointer>
 
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
@@ -138,22 +139,24 @@ private:
   void freeCards();
   bool loadCards ();
 
+  int width2() { return width() - 60; } // TODO: dirty hack!
+
   QPixmap *GetImgByName (const char *name);
 
 private:
   friend class DeskViewPrivate;
   friend class SleepEventLoop;
-  DeskViewPrivate * d_ptr;  
+  QPointer<DeskViewPrivate> d_ptr;
   PrefModel *m_model;
-  QPixmap *mDeskBmp;
-  QPixmap *mBidBmp;
-  QPixmap *mIMoveBmp;
-  QPixmap *mKeyBmp[2];
-  QPixmap *mDigitsBmp;
+  QPixmap mDeskBmp;
+  QPixmap mBidBmp;
+  QPixmap mIMoveBmp;
+  QPixmap mKeyBmp[2];
+  QPixmap mDigitsBmp;
   int bidBmpX, bidBmpY;
   int m_leftRightMargin, m_topBottomMargin;
-  QHash<QString, QPixmap *> cardI;
-  QMap<int, QPixmap *> bidIcons;
+  QHash<QString, QPixmap> cardI;
+  QMap<int, QPixmap> bidIcons;
   int m_backgroundType;
   QRgb m_backgroundColor;
   QBrush m_deskBackground;
