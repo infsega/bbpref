@@ -3,11 +3,12 @@
 
 #include <QMessageBox>
 #include <QStandardItemModel>
+#include <QMap>
 
 #include "desktop.h"
 #include "player.h"
 
-DealButton::DealButton(int rowNum, const QString & text, QWidget * parent)
+DealButton::DealButton(int rowNum, const QString& text, QWidget* parent)
 : QPushButton(text, parent)
 , m_rowNum(rowNum)
 {
@@ -88,9 +89,13 @@ void GameLogDialog::showDeal(const int row)
   for (int i=1; i<=3; i++)
   {
     output += QString("%1: ").arg(model->player(i)->nick());
-    foreach(const Card &c, model->gameLog().at(row).cardList[i-1])
+    CardList cl;
+    foreach(const Card& c, model->gameLog().at(row).cardList[i-1])
+      cl.insert(const_cast<Card*>(&c));
+    cl.mySort();
+    for( int ci = 0; ci < cl.count(); ci++ )
     {
-      output += c.toUniString();
+      output += cl.at(ci)->toUniString();
       output += ' ';
     }
     output += '\n';
