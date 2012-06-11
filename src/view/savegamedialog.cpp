@@ -2,6 +2,7 @@
 #include "ui_savegamedialog.h"
 
 #include <QMessageBox>
+#include <QDebug>
 
 #include "desktop.h"
 
@@ -32,11 +33,10 @@ void SaveGameDialog::setupButtons()
     QString caption = PrefModel::getHeader( gameSlotName(i) );
     if (caption.isEmpty())
     {
-      caption = tr("Empty");
+      caption = tr("Empty Slot");
       d_empty.insert(i);
     }
-    else
-      d_buttons.button(i)->setText(caption);
+    d_buttons.button(i)->setText(caption);
   }
 }
 
@@ -51,5 +51,6 @@ void SaveGameDialog::buttonClicked(int i_id)
       return;
   }
   d_selection = gameSlotName(i_id);
-  emit accepted();
+  qDebug() << d_selection << " chosen for save";
+  accept();
 }

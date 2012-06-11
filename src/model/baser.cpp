@@ -23,6 +23,7 @@
 #include "baser.h"
 #include <QByteArray>
 #include <QString>
+#include <QDebug>
 
 void serializeInt (QByteArray &ba, int i)
 {
@@ -33,14 +34,22 @@ void serializeInt (QByteArray &ba, int i)
   }
 }
 
-bool unserializeInt (QByteArray &ba, int *pos, int *i) {
+bool unserializeInt (QByteArray &ba, int *pos, int *i)
+{
   unsigned char buf[4];
-  if (*pos+4 > ba.size()) return false;
+  if (*pos+4 > ba.size())
+  {
+    qDebug() << "Not enough space for int";
+    return false;
+  }
   const unsigned char *u = (const unsigned char *)ba.constData();
-  u += *pos; *pos += 4;
-  for (int f = 3; f >= 0; f--) buf[f] = *u++;
+  u += *pos;
+  *pos += 4;
+  for (int f = 3; f >= 0; f--)
+    buf[f] = *u++;
   *i = 0;
-  for (int f = 0; f < 4; f++) {
+  for (int f = 0; f < 4; f++)
+  {
     *i <<= 8;
     *i |= buf[f];
   }
@@ -61,7 +70,11 @@ bool unserializeString(QByteArray& ba, int *pos, QString& o_string)
   if ( !unserializeInt(ba, pos, &sz) )
     return false;
   if (*pos + sz > ba.size())
+  {
+    qDebug() << "Not enough space for String";
     return false;
+  }
   o_string = QString::fromUtf8( ba.constData() + *pos, sz );
+  *pos += sz;
   return true;
 }

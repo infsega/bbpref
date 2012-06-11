@@ -46,15 +46,24 @@ QString PrefModel::getHeader(const QString& i_filename)
 {
   QFile fl(i_filename);
   if (!fl.open(QIODevice::ReadOnly))
+  {
+    qDebug() << i_filename << " doesn't exist";
     return QString();
+  }
   QByteArray ba(fl.readAll());
   fl.close();
   int pos = 0;
   GameHeader header;
   if (!unserializeHeader(ba, &pos, header))
+  {
+    qDebug() << i_filename << " contains invalid header";
     return QString();
+  }
   else
+  {
+    qDebug() << header.toString();
     return header.toString();
+  }
 }
 
 bool PrefModel::saveGame(const QString & name)
@@ -100,9 +109,13 @@ bool PrefModel::unserializeHeader(QByteArray& ba, int *pos, GameHeader& o_header
   }
   if (!unserializeString(ba, pos, o_header.d_timeStamp))
     return false;
+  qDebug() << o_header.d_timeStamp;
   for ( int f = 1; f <=3; f++ )
+  {
     if (!unserializeString(ba, pos, o_header.d_players[f - 1]))
       return false;
+    qDebug() << o_header.d_players[f - 1];
+  }
   return true;
 }
 

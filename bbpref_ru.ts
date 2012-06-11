@@ -2,6 +2,21 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="ru_RU">
 <context>
+    <name>SaveGameDialog</name>
+    <message>
+        <source>Confirmation</source>
+        <translation>Подтверждение</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to replace saved game data?</source>
+        <translation>Заменить уже имеющуюся игру?</translation>
+    </message>
+    <message>
+        <source>Empty Slot</source>
+        <translation>Пусто</translation>
+    </message>
+</context>
+<context>
     <name></name>
     <message>
         <source>(w)</source>
