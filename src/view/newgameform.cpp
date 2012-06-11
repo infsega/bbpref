@@ -3,6 +3,8 @@
 
 #include <QSettings>
 
+#include <bps/virtualkeyboard.h>
+
 #include "desktop.h"
 
 NewGameDialog::NewGameDialog(PrefModel* i_model, QWidget *parent /* = NULL */)
@@ -70,4 +72,9 @@ void NewGameDialog::copyOptions(PrefModel& o_model)
   o_model.optAlphaBeta1   = ui->cbAlphaBeta1->isChecked();
   o_model.optPlayerName2  = ui->leName2->text();
   o_model.optAlphaBeta2   = ui->cbAlphaBeta2->isChecked();
+}
+
+void NewGameDialog::on_buttonBox_accepted()
+{
+  virtualkeyboard_hide();
 }

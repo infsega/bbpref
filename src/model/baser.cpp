@@ -22,9 +22,12 @@
 
 #include "baser.h"
 #include <QByteArray>
+#include <QString>
 
-void serializeInt (QByteArray &ba, int i) {
-  for (int f = 3; f >= 0; f--) {
+void serializeInt (QByteArray &ba, int i)
+{
+  for (int f = 3; f >= 0; f--)
+  {
     unsigned char c = (i&0xff); i >>= 8;
     ba.append((char)c);
   }
@@ -41,5 +44,24 @@ bool unserializeInt (QByteArray &ba, int *pos, int *i) {
     *i <<= 8;
     *i |= buf[f];
   }
+  return true;
+}
+
+void serializeString(QByteArray& ba, const QString& i_string)
+{
+  QByteArray bas = i_string.toUtf8();
+  serializeInt(ba, bas.size());
+  ba.append(bas);
+}
+
+bool unserializeString(QByteArray& ba, int *pos, QString& o_string)
+{
+  QByteArray bas;
+  int sz = 0;
+  if ( !unserializeInt(ba, pos, &sz) )
+    return false;
+  if (*pos + sz > ba.size())
+    return false;
+  o_string = QString::fromUtf8( ba.constData() + *pos, sz );
   return true;
 }

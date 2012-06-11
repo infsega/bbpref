@@ -46,6 +46,8 @@ protected:
 private slots:
   void toggleRounds(int checked);
 
+  void on_buttonBox_accepted();
+
 private:
   Ui::NewGameDialog *ui;
   PrefModel* model;

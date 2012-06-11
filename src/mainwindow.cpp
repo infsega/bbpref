@@ -11,20 +11,11 @@
 #include "optiondialog.h"
 #include "desktop.h"
 #include "newgameform.h"
+#include "savegamedialog.h"
 
 #include <bps/navigator.h>
 #include <bps/locale.h>
 #include <bps/virtualkeyboard.h>
-
-static
-const char* GenName(const QString &str, const QString &ext)
-{
-  int dot_pos = str.indexOf(ext);
-  if (dot_pos == -1)
-    return (str + ext).toLocal8Bit();
-  else
-    return str.toLocal8Bit();
-}
 
 MainWindow::MainWindow(QWidget *parent):
   QMainWindow(parent),
@@ -96,15 +87,12 @@ void MainWindow::on_actionOpenGame_triggered()
 
 void MainWindow::on_actionSaveGame_triggered()
 {
-  if (m_PrefModel)
-  {
-    QString fn = QFileDialog::getSaveFileName(this, tr("Select file to save the current game"), "", "*.prf");
-    if (!fn.isEmpty())
-    {
-      fn = GenName(fn, ".prf");
-      m_PrefModel->saveGame(fn);
-    }
-  }
+  if (!m_PrefModel)
+    return;
+  SaveGameDialog dlg(this);
+  if (dlg.exec() == QDialog::Accepted)
+    if (!dlg.selection().isEmpty())
+      m_PrefModel->saveGame(dlg.selection());
 }
 
 void MainWindow::on_actionShowScore_triggered()

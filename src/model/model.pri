@@ -15,4 +15,5 @@ SOURCES += \
   $$PWD/cardlist.cpp \
   $$PWD/desktop.cpp \
   $$PWD/scoreboard.cpp\
-  $$PWD/ncounter.cpp
+  $$PWD/ncounter.cpp \
+    src/model/gamesaveload.cpp

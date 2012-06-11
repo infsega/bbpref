@@ -34,22 +34,34 @@ const char * sGameName (eGameBid game);
  *
  * Keeps information about all played rounds
  */
-struct GameLogEntry {
-    eGameBid game;
-    qint8 player;
-    bool whist[3];
-    qint16 takes[3];
-    qint16 score[3];
-    qint16 pool[3];
-    qint16 mountain[3];
-    qint16 leftWhists[3];
-    qint16 rightWhists[3];
-    float time;
-    QList<Card> cardList[3];
+struct GameLogEntry
+{
+  eGameBid game;
+  qint8 player;
+  bool whist[3];
+  qint16 takes[3];
+  qint16 score[3];
+  qint16 pool[3];
+  qint16 mountain[3];
+  qint16 leftWhists[3];
+  qint16 rightWhists[3];
+  float time;
+  QList<Card> cardList[3];
 };
 
 class DeskView;
 class Player;
+
+// short game info used for load/save
+struct GameHeader
+{
+  QString d_timeStamp;
+  QString d_players[3];
+  QString toString() const;
+};
+
+QString gameSlotName(int i_id);
+QString autoSaveSlotName();
 
 /**
  * @class PrefModel desktop.h
@@ -58,23 +70,22 @@ class Player;
  * Manages all game process but doesn't respond for any visual representation of
  * game events
  */
-class PrefModel : public QObject {
+class PrefModel : public QObject
+{
   Q_OBJECT
 
 public:
   explicit PrefModel (DeskView *aDeskView/*=0*/);
   virtual ~PrefModel ();
 
-  void runGame ();
+  void runGame();
   Card *cardOnDesk(int index) const;
 
-  bool saveGame (const QString & name);
-  bool loadGame (const QString & name);
+  bool saveGame (const QString& i_filename);
+  bool loadGame (const QString& i_filename);
+  static QString getHeader(const QString& i_filename);
 
   void closePool ();
-
-  void serialize (QByteArray &ba);
-  bool unserialize (QByteArray &ba, int *pos);
 
   Player *player (int num);
   Player *currentPlayer () const { return mPlayers[nCurrentMove.nValue]; }
@@ -129,6 +140,11 @@ public:
   bool optAlphaBeta2;
 
 private:
+  void serialize (QByteArray &ba);
+  bool unserialize(QByteArray& ba, int *pos);
+  bool unserialize(QByteArray& ba, GameHeader& o_header);
+  static bool unserializeHeader(QByteArray& ba, int *pos, GameHeader& o_header);
+
   static const QString bidMessage(const eGameBid game);
   void initPlayers ();
   Player *player (const WrapCounter &cnt);

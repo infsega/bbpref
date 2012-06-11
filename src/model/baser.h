@@ -20,13 +20,12 @@
  *      http://www.gnu.org/licenses 
  */
 
-#ifndef BASER_H
-#define BASER_H
+#pragma once
 
 class QByteArray;
+class QString;
 
 void serializeInt (QByteArray &ba, int i);
 bool unserializeInt (QByteArray &ba, int *pos, int *i);
-
-
-#endif
+void serializeString(QByteArray& ba, const QString& i_string);
+bool unserializeString(QByteArray& ba, int *pos, QString& o_string);

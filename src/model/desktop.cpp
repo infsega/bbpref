@@ -25,7 +25,6 @@
 #include "prfconst.h"
 
 #include <QtCore/QDebug>
-#include <QtCore/QFile>
 #include <QtCore/QTime>
 
 #include "aialphabeta.h"
@@ -235,7 +234,8 @@ void PrefModel::closePool () {
     R[i].rightWh += R[i].pool*10/3;
   }
   // goru - drugim na sebya
-  for (i = 1; i <= 3; i++) {
+  for (i = 1; i <= 3; i++)
+  {
     counter.nValue = i;
     ++counter;
     R[counter.nValue].rightWh += R[i].mount*10/3;
@@ -243,7 +243,8 @@ void PrefModel::closePool () {
     R[counter.nValue].leftWh += R[i].mount*10/3;
   }
   // schitaem visti
-  for (i = 1; i <= 3; i++) {
+  for (i = 1; i <= 3; i++)
+  {
     int i1, i2;
     counter.nValue = i;
     ++counter;
@@ -258,7 +259,8 @@ void PrefModel::closePool () {
 //    1     (     ),
 //    HumanPlayer   
 // if number is 1(pass) and offline game, create Player
-Card *PrefModel::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
+Card *PrefModel::makeGameMove (Card *lMove, Card *rMove, bool isPassOut)
+{
   Card *res = 0;
   Player *curPlr = player(nCurrentMove);
   Player *plr = 0;
@@ -266,26 +268,24 @@ Card *PrefModel::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
   // Human's move if current he whists with open cards or catches misere, and current player
   // passes or catches misere
   if (((player(1)->game() == whist && !m_closedWhist) || player(1)->game() == g86catch) &&
-      !curPlr->isHuman() && (curPlr->game() == gtPass || curPlr->game() == g86catch)) {
+      !curPlr->isHuman() && (curPlr->game() == gtPass || curPlr->game() == g86catch))
+  {
     plr = player(1)->create(nCurrentMove.nValue, this);
   }
 
   // 2. Current player passes
   // if AI whists with open cards, it makes move instead of human or other AI
-  else if (curPlr->game() == gtPass && !m_closedWhist) {
-    if (player(2)->game() == whist) {
+  else if (curPlr->game() == gtPass && !m_closedWhist)
+  {
+    if (player(2)->game() == whist)
       plr = player(2)->create(nCurrentMove.nValue, this);
-    }
-    else if (player(3)->game() == whist) {
+    else if (player(3)->game() == whist)
       plr = player(3)->create(nCurrentMove.nValue, this);
-    }
-  #ifndef QT_NO_DEBUG
     else
     {      
       qDebug() << player(1)->game() << player(2)->game() << player(3)->game();
       qFatal("Something went wrong!");
     }
-  #endif
   }
 
   if (plr) {
@@ -307,20 +307,24 @@ Card *PrefModel::makeGameMove (Card *lMove, Card *rMove, bool isPassOut) {
 }
 
 
-int PrefModel::playerWithMaxPool () {
-  int MaxBullet= -1,CurrBullet=-1,res=0;
-  for (int i =1 ;i<=3;i++) {
-     CurrBullet = player(i)->mScore.pool();
-      if (MaxBullet < CurrBullet && CurrBullet < optMaxPool ) {
-        MaxBullet = CurrBullet;
-        res = i;
-      }
+int PrefModel::playerWithMaxPool()
+{
+  int maxBullet = -1, currBullet = -1, res = 0;
+  for (int i = 1; i <= 3; i++)
+  {
+    currBullet = player(i)->mScore.pool();
+    if (maxBullet < currBullet && currBullet < optMaxPool )
+    {
+      maxBullet = currBullet;
+      res = i;
+    }
   }
   return res;
 }
 
 
-Player *PrefModel::player (int num) {
+Player *PrefModel::player (int num)
+{
   Q_ASSERT(num >= 1 && num <= 3);
   return mPlayers[num];
 }
@@ -338,20 +342,6 @@ Card *PrefModel::cardOnDesk(int num) const
   return mCardsOnDesk[num];
 }
 
-
-bool PrefModel::loadGame (const QString & name)  {
-  QFile fl(name);
-  if (!fl.open(QIODevice::ReadOnly)) {
-      printf("Load failed\n");
-	  return false;
-  }
-  QByteArray ba(fl.readAll());
-  fl.close();
-  int pos = 0;
-  return unserialize(ba, &pos);
-}
-
-
 void PrefModel::showMoveImpossible(const bool canRetry)
 {
   emit showHint(tr("This move is impossible"));
@@ -368,54 +358,8 @@ void PrefModel::showMoveHint()
     emitShowHint(tr("Select two cards to drop"));
 }
 
-bool PrefModel::saveGame (const QString & name)  {
-  QFile fl(name);
-  if (!fl.open(QIODevice::WriteOnly)) {
-      printf("Save failed\n");
-	  return false;
-  }
-  QByteArray ba;
-  serialize(ba);
-  fl.write(ba);
-  fl.close();
-  return true;
-}
-
-
-void PrefModel::serialize (QByteArray &ba) {
-  for (int f = 1; f <= 3; f++) {
-    Player *plr = player(f);
-    plr->mScore.serialize(ba);
-  }
-  serializeInt(ba, nCurrentStart.nValue);
-  serializeInt(ba, optMaxPool);
-  serializeInt(ba, optStalingrad);
-  serializeInt(ba, opt10Whist);
-  serializeInt(ba, optWhistGreedy);
-}
-
-
-bool PrefModel::unserialize (QByteArray &ba, int *pos) {
-  for (int f = 1; f <= 3; f++) {
-    Player *plr = player(f);
-    if (!plr->mScore.unserialize(ba, pos)) return false;
-  }
-  int t;
-  if (!unserializeInt(ba, pos, &t)) return false;
-  nCurrentStart.nValue = t;
-  if (!unserializeInt(ba, pos, &t)) return false;
-  optMaxPool = static_cast<bool>(t);
-  if (!unserializeInt(ba, pos, &t)) return false;
-  optStalingrad = static_cast<bool>(t);
-  if (!unserializeInt(ba, pos, &t)) return false;
-  opt10Whist = static_cast<bool>(t);
-  if (!unserializeInt(ba, pos, &t)) return false;
-  optWhistGreedy = static_cast<bool>(t);
-  return true;
-}
-
-
-void PrefModel::runGame () {
+void PrefModel::runGame()
+{
   eGameBid playerBids[4];
   initPlayers();
   // Randomize
