@@ -2,6 +2,17 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="ru_RU">
 <context>
+    <name>LoadGameDialog</name>
+    <message>
+        <source>Empty Slot</source>
+        <translation>Пусто</translation>
+    </message>
+    <message>
+        <source>[autosave]</source>
+        <translation>[автосохранение]</translation>
+    </message>
+</context>
+<context>
     <name>SaveGameDialog</name>
     <message>
         <source>Confirmation</source>

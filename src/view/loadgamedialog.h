@@ -2,22 +2,21 @@
 
 #include <QDialog>
 #include <QButtonGroup>
-#include <QSet>
 #include <QString>
 
 namespace Ui
 {
-  class SaveGameDialog;
+  class LoadGameDialog;
 }
 
-class SaveGameDialog: public QDialog
+class LoadGameDialog: public QDialog
 {
   Q_OBJECT
     
 public:
-  explicit SaveGameDialog(QWidget *parent = 0);
-  ~SaveGameDialog();
-
+  explicit LoadGameDialog(QWidget *parent = 0);
+  ~LoadGameDialog();
+    
   QString selection() const { return d_selection; }
 
 private:
@@ -25,10 +24,10 @@ private:
 
 private slots:
   void buttonClicked(int i_id);
+  void autosaveClicked();
 
 private:
-  Ui::SaveGameDialog *ui;
+  Ui::LoadGameDialog *ui;
   QButtonGroup d_buttons;
   QString      d_selection;
-  QSet<int>    d_empty;
 };

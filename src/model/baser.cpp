@@ -65,7 +65,6 @@ void serializeString(QByteArray& ba, const QString& i_string)
 
 bool unserializeString(QByteArray& ba, int *pos, QString& o_string)
 {
-  QByteArray bas;
   int sz = 0;
   if ( !unserializeInt(ba, pos, &sz) )
     return false;

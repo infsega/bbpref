@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QFileDialog>
 #include <QDebug>
 #include <QSettings>
 #include <QMessageBox>
@@ -12,6 +11,7 @@
 #include "desktop.h"
 #include "newgameform.h"
 #include "savegamedialog.h"
+#include "loadgamedialog.h"
 
 #include <bps/navigator.h>
 #include <bps/locale.h>
@@ -76,12 +76,16 @@ void MainWindow::on_actionNewGame_triggered()
 
 void MainWindow::on_actionOpenGame_triggered()
 {
-  QString fileName = QFileDialog::getOpenFileName(this, tr("Select saved game"), "", "*.prf");
-  if (!fileName.isEmpty())
+  LoadGameDialog dlg(this);
+  if (dlg.exec() == QDialog::Accepted)
   {
-    m_PrefModel->loadGame(fileName);
-    ui->actionSaveGame->setEnabled(true);
-    m_PrefModel->runGame();
+    QString filename = dlg.selection();
+    if (!filename.isEmpty())
+    {
+      m_PrefModel->loadGame(filename);
+      ui->actionSaveGame->setEnabled(true);
+      m_PrefModel->runGame();
+    }
   }
 }
 

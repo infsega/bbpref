@@ -815,6 +815,7 @@ LabelRecordOnPaper:
     mPlayingRound = true;
     mDeskView->draw();
     mDeskView->drawPool();
+    saveGame( autoSaveSlotName() );
     mPlayingRound = false;
     if (nPassCounter != 2) {
       //  
