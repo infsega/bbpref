@@ -21,8 +21,7 @@
  */
 
 //---------------------------------------------------------------------------
-#ifndef CARDLIST_H
-#define CARDLIST_H
+#pragma once
 
 #include <QByteArray>
 
@@ -49,7 +48,7 @@ public:
   void clearNulls();
 
   void mySort();
-  CardList sorted();
+  CardList sorted() const;
   Card *exists (int aFace, int aSuit) const;
   Card *exists (Card *cc) const;
 
@@ -97,19 +96,26 @@ public:
         return 0;
     return mList[idx];
   }
-  void putAt (int idx, Card *c) {
-    if (idx < 0) return;
-    while (idx >= mList.size()) mList << 0;
+  void putAt (int idx, Card *c)
+  {
+    if (idx < 0)
+      return;
+    while (idx >= mList.size())
+      mList << 0;
     mList[idx] = c;
   }
   void removeAt (int idx) { if (idx >= 0 && idx < mList.size()) mList[idx] = 0; }
   void remove (Card *c) { removeAt(mList.indexOf(c)); }
-  int insert (Card *c) {
+  int insert(Card *c)
+  {
     int idx = mList.indexOf(0);
-    if (idx < 0) {
+    if (idx < 0)
+    {
       idx = mList.size();
       mList << c;
-    } else mList[idx] = c;
+    }
+    else
+      mList[idx] = c;
     return idx;
   }
 
@@ -125,6 +131,8 @@ public:
   void newDeck ();
   void shuffle ();
 
+  QCardList items() const { return mList; }
+
 protected:
   //void removeNulls ();
   void shallowCopy (const CardList *list);
@@ -134,5 +142,3 @@ protected:
   QCardList mList;
 };
 
-
-#endif

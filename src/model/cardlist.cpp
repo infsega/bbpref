@@ -140,7 +140,7 @@ void CardList::mySort () {
   }
 }
 
-CardList CardList::sorted()
+CardList CardList::sorted() const
 {
   CardList cp(*this);
   cp.mySort();
