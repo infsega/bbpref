@@ -93,7 +93,7 @@ public:
   void drawOutlinedText (const QString & str, int x, int y, QRgb textColor=qRgb(255,255,255), QRgb outlineColor=qRgb(0,0,0));
 
   /// @todo must be private
-  void getLeftTop (int player, int & left, int & top);
+  void getPlayerCardRoom(int player, int& left, int& right, int& top);
   void getPlayerTrickPos(int player, int& left, int& top);
   void animateTrick(int plrNo, const QCardList& cards);
   void animateCommunityCardTrick(int plrNo, const QCardList& cards);
@@ -144,8 +144,6 @@ private:
 
   void freeCards();
   bool loadCards ();
-
-  int width2() { return width() - 60; } // TODO: dirty hack!
 
   QPixmap *GetImgByName (const char *name);
 

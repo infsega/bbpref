@@ -42,11 +42,11 @@ typedef struct
   int mount, pool, leftWh, rightWh;
 } tScores;
 
-static QHash<int, const char *> gameNames;
-
-const char * sGameName (eGameBid game)
+QString sGameName(eGameBid game)
 {
-  if(gameNames.isEmpty()) {
+  static QHash<int, QString> gameNames;
+  if (gameNames.isEmpty())
+  {
   gameNames[g86catch] = " ";
   gameNames[raspass] = "pass-out";
   gameNames[undefined] = "-----";
@@ -115,37 +115,40 @@ static int whoseTrick (Card *p1, Card *p2, Card *p3, int trump) {
 }
 
 /// @todo move to Card class
-static void cardName (char *dest, const Card *c) {
-  Q_ASSERT(dest != 0);
+static QString cardName (const Card *c)
+{
   Q_ASSERT(c != 0);
   static const char *faceN[] = {" 7"," 8"," 9","10"," J"," Q"," K"," A"};
   static const char *suitN[] = {"S","C","D","H"};
-  if (!c) { strcat(dest, "..."); return; }
+  if (!c)
+    return QString("...");
   int face = c->face(), suit = c->suit();
-  if (face >= 7 && face <= FACE_ACE && suit >= 1 && suit <= 4) {
-    strcat(dest, faceN[face-7]);
-    strcat(dest, suitN[suit-1]);
-    return;
-  }
-  strcat(dest, "???");
+  if (face >= 7 && face <= FACE_ACE && suit >= 1 && suit <= 4)
+    return QString().sprintf("%s%s", faceN[face - 7], suitN[suit - 1]);
+  return QString("???");
 }
 
 /// @todo move to CardList class
-static void dumpCardList (char *dest, const CardList &lst) {
-  CardList tmp(lst); tmp.mySort();
-  for (int f = 0; f < tmp.size(); f++) {
-    Card *c = tmp.at(f);
-    if (!c) continue;
-    strcat(dest, " ");
-    cardName(dest, c);
+static QString dumpCardList(const CardList &lst)
+{
+  QString dest;
+  foreach(Card* c, lst.sorted().items())
+  {
+    if (!c)
+      continue;
+    dest += " ";
+    dest += cardName(c);
   }
+  return dest;
 }
 
-
-void PrefModel::initPlayers() {
+void PrefModel::initPlayers()
+{
+  foreach(Player* player, mPlayers)
+    delete player;
   mPlayers.clear();
-  mPlayers << 0; // 0th player is nobody
 
+  mPlayers << 0; // 0th player is nobody
   mPlayers << new HumanPlayer(1, this);
   if (!optAlphaBeta1)
     mPlayers << new AiPlayer(2, this);
@@ -156,11 +159,10 @@ void PrefModel::initPlayers() {
   else 
     mPlayers << new AlphaBetaPlayer(3, this);
     
-  mPlayers[1]->setNick(optHumanName);  
+  mPlayers[1]->setNick(optHumanName);
   mPlayers[2]->setNick(optPlayerName1);
   mPlayers[3]->setNick(optPlayerName2);
 }
-
 
 PrefModel::PrefModel (DeskView *aDeskView)
     : QObject(0)
@@ -434,36 +436,27 @@ void PrefModel::runGame()
       mDeck = tmpDeck;
       mDeskView->draw();
     }
-    /*if (!mDeskView->optDealAnim) {
-      mDeskView->draw();
-//      mDeskView->update();
-      mDeskView->mySleep(0);
-    }*/
   // end of block to move
 
     qDebug() << "=========================================";
     qDebug() << "player " << nCurrentStart.nValue << " moves...";
-    char xxBuf[1024];
     for (int f = 1; f <= 3; f++)
     {
-      Player *plr = player(nCurrentStart); ++nCurrentStart;
-      xxBuf[0] = 0;
-      dumpCardList(xxBuf, plr->mCards);
-      qDebug() << "hand " << plr->number() << ":" << xxBuf;
+      Player *plr = player(nCurrentStart);
+      ++nCurrentStart;
+      qDebug() << "hand " << plr->number() << ":" << dumpCardList(plr->mCards);
     }
-    xxBuf[0] = 0;
-    cardName(xxBuf, mDeck.at(30));
-    cardName(xxBuf, mDeck.at(31));
-    qDebug() << "talon: " << xxBuf;
+    qDebug() << "talon: " << cardName(mDeck.at(30)) << " " << mDeck.at(31);
 
     emit gameChanged(tr("Bidding"));
     int curBidIdx = 1;
-    forever {
-      //      
+    forever
+    {
       Player *currentPlayer = player(plrCounter);
       mPlayerHi = plrCounter.nValue;
-      if (playerBids[curBidIdx] != gtPass) {
-        currentPlayer->setMessage(tr("thinking..."));
+      if (playerBids[curBidIdx] != gtPass)
+      {
+        currentPlayer->setThinking();
         mDeskView->draw(false);
         if (currentPlayer->number() != 1)
             mDeskView->mySleep(2);
@@ -482,11 +475,13 @@ void PrefModel::runGame()
           ((playerBids[1] == gtPass?1:0)+(playerBids[2] == gtPass?1:0)+(playerBids[3] == gtPass?1:0) >= 2)) break;
     }
     mPlayerHi = 0;
-    mDeskView->draw(false); //mDeskView->mySleep(0);
+    mDeskView->draw(false);
 
     // calculate max game
-    for (int i = 1; i <= 3; i++) {
-      if (playerBids[0] < playerBids[i]) playerBids[0] = playerBids[i];
+    for (int i = 1; i <= 3; i++)
+    {
+      if (playerBids[0] < playerBids[i])
+          playerBids[0] = playerBids[i];
     }
 
     // deliver talon and choose final bid (or pass-out if no player)
@@ -505,8 +500,8 @@ void PrefModel::runGame()
           qDebug() << "game: " << sGameName(playerBids[0]) << "; player: " << QString::number(i);
 
           mPlayerHi = i;
-          player(i%3+1)->setMessage("");
-          player((i+1)%3+1)->setMessage("");
+          player(i%3+1)->clearMessage();
+          player((i+1)%3+1)->clearMessage();
 
           mPlayerActive = i;
           nPassCounter = 0;
@@ -531,16 +526,19 @@ void PrefModel::runGame()
           QCardList cAni;
           for (int f = 0; f < 4; f++)
           {
-            cAni.append(mCardsOnDesk[f]);
-            mCardsOnDesk[f] = 0;
+            if (mCardsOnDesk[f])
+            {
+              cAni.append(mCardsOnDesk[f]);
+              mCardsOnDesk[f] = 0;
+            }
           }
-          //mDeskView->animateTrick(mPlayerActive, cAni); // will clear mCardsOnDesk[]
           mDeskView->animateCommunityCardTrick(mPlayerActive, cAni);
 
           // throw away
           eGameBid maxBid = m_currentGame;
           emitGameChanged(m_currentGame);
-          if (currentPlayer->game() != g86) {		//  not misere
+          if (currentPlayer->game() != g86)
+          {
             // not misere
             nCurrentMove.nValue = i;
             mDeskView->draw();
@@ -599,7 +597,7 @@ void PrefModel::runGame()
           if ((m_currentGame != g86)
             && !(!opt10Whist && m_currentGame>=101 && m_currentGame<=105)
             && !(optStalingrad && m_currentGame == g61)) {
-			player(passOrWhistPlayersCounter)->setMessage(tr("thinking..."));
+            player(passOrWhistPlayersCounter)->setThinking();
 			mDeskView->draw(false);
 			if (firstWhistPlayer != 1) mDeskView->mySleep(2);
 		  }
@@ -608,7 +606,7 @@ void PrefModel::runGame()
             nPassCounter++;
             player(passOrWhistPlayersCounter)->setMessage(tr("pass"));
           } else if (PassOrVistPlayers->game() == g86catch)
-            player(passOrWhistPlayersCounter)->setMessage("");
+            player(passOrWhistPlayersCounter)->clearMessage();
 		  else
 			player(passOrWhistPlayersCounter)->setMessage(tr("whist"));
 		  mDeskView->draw(false);
@@ -624,16 +622,17 @@ void PrefModel::runGame()
           if ((m_currentGame != g86)
             && !(!opt10Whist && m_currentGame>=101 && m_currentGame<=105)
             && !(optStalingrad && m_currentGame == g61)) {
-			player(passOrWhistPlayersCounter)->setMessage(tr("thinking..."));
+            player(passOrWhistPlayersCounter)->setThinking();
 			mDeskView->draw(false);
-			if (secondWhistPlayer != 1) mDeskView->mySleep(2);
+            if (secondWhistPlayer != 1)
+              mDeskView->mySleep(2);
 		  }
           PassOrVistPlayers->makeFinalBid(m_currentGame, nPassCounter);
           if (PassOrVistPlayers->game() == gtPass) {
             nPassCounter++;
             player(passOrWhistPlayersCounter)->setMessage(tr("pass"));
           } else if (PassOrVistPlayers->game() == g86catch)
-            player(passOrWhistPlayersCounter)->setMessage("");
+            player(passOrWhistPlayersCounter)->clearMessage();
           else if (PassOrVistPlayers->game() == halfwhist)
 			player(passOrWhistPlayersCounter)->setMessage(tr("half of whist"));
 		  else
@@ -645,7 +644,7 @@ void PrefModel::runGame()
 			--passOrWhistPlayersCounter;
 			mPlayerHi = firstWhistPlayer;
 			PassOrVistPlayers = player(firstWhistPlayer);
-			PassOrVistPlayers->setMessage(tr("thinking..."));
+            PassOrVistPlayers->setThinking();
 			mDeskView->draw(false);			
 			if (firstWhistPlayer != 1) mDeskView->mySleep(2);
             PassOrVist = PassOrVistPlayers->makeFinalBid(m_currentGame, 2);	// no more halfwhists!
@@ -664,9 +663,9 @@ void PrefModel::runGame()
           // choice made
           mDeskView->draw(false);
         mDeskView->longWait(1);
-        player(1)->setMessage("");
-        player(2)->setMessage("");
-        player(3)->setMessage("");
+        player(1)->clearMessage();
+        player(2)->clearMessage();
+        player(3)->clearMessage();
 
         qDebug() << "game: " << sGameName(m_currentGame) << "; player: " << QString::number(mPlayerActive);
 
@@ -698,7 +697,7 @@ void PrefModel::runGame()
 				m_closedWhist = false;
 				for (int n=1; n<=3; n++)
                     if (player(n)->game() == whist) {
-    					player(n)->setMessage(tr("thinking..."));
+                        player(n)->setThinking();
 						mDeskView->draw(false);
 						if (n != 1)
 							mDeskView->mySleep(1);
@@ -743,9 +742,9 @@ void PrefModel::runGame()
       mDeskView->longWait(1);
     }
 
-    player(1)->setMessage("");
-    player(2)->setMessage("");
-    player(3)->setMessage("");
+    player(1)->clearMessage();
+    player(2)->clearMessage();
+    player(3)->clearMessage();
     mDeskView->draw(true);
 
     // game (10 moves)
@@ -802,7 +801,8 @@ LabelRecordOnPaper:
             entry.rightWhists[f-1] = plr->mScore.rightWhists();
 //            entry.cardList[f-1] = tmplist[f-1];
             entry.time = elapsedTime / 1000.0;
-            for (int i=0; i<plr->mCards.size(); i++) {
+            for (int i=0; i<plr->mCards.size(); i++)
+            {
               const Card *c = plr->mCards.at(i);
               if(c)
                 entry.cardList[f-1] << *c;
@@ -817,9 +817,10 @@ LabelRecordOnPaper:
     mDeskView->drawPool();
     saveGame( autoSaveSlotName() );
     mPlayingRound = false;
-    if (nPassCounter != 2) {
-      //  
-      for (int f = 1; f <= 3; f++) {
+    if (nPassCounter != 2)
+    {
+      for (int f = 1; f <= 3; f++)
+      {
         Player *plr = player(f);
         plr->mCardsOut = plr->mCards;
         plr->mCards = tmplist[f-1];
@@ -836,7 +837,6 @@ LabelRecordOnPaper:
 void PrefModel::playingRound()
 {
   Card *firstCard, *secondCard, *thirdCard;
-  char xxBuf[1024];
   m_outCards.clear();
   for (int i = 1; i <= 10; i++)
   {
@@ -845,18 +845,18 @@ void PrefModel::playingRound()
              = firstCard = secondCard = thirdCard = 0;
     if (m_currentGame == raspass && (i >= 1 && i <= 3)) nCurrentMove = nCurrentStart;
 
-    qDebug() << "------------------------\nmove #" << i;
+    qDebug() << "------------------------";
+    qDebug() << "move #" << i;
     for (int f = 1; f <= 3; f++)
     {
-      Player *plr = player(nCurrentMove); ++nCurrentMove;
-      xxBuf[0] = 0;
-      dumpCardList(xxBuf, plr->mCards);
-      qDebug() << "hand " << plr->number() << ":" << xxBuf;
+      Player *plr = player(nCurrentMove);
+      ++nCurrentMove;
+      qDebug() << "hand " << plr->number() << ":" << dumpCardList(plr->mCards);
     }
 
     mPlayerHi = nCurrentMove.nValue;
     mDeskView->draw(false);
-    player(mPlayerHi)->setMessage(tr("thinking..."));
+    player(mPlayerHi)->setThinking();
     mDeskView->draw();
     mDeskView->mySleep(0);
     if (m_currentGame == raspass && (i == 1 || i == 2))
@@ -871,23 +871,23 @@ void PrefModel::playingRound()
       mCardsOnDesk[0] = 0;
       mCardsOnDesk[nCurrentMove.nValue] = firstCard = makeGameMove(0, 0, false);
     }
-    player(mPlayerHi)->setMessage("");
+    player(mPlayerHi)->clearMessage();
 
     ++nCurrentMove;
     mPlayerHi = nCurrentMove.nValue;
-    player(mPlayerHi)->setMessage(tr("thinking..."));
+    player(mPlayerHi)->setThinking();
     mDeskView->draw();
     mDeskView->mySleep(0);
     mCardsOnDesk[nCurrentMove.nValue] = secondCard = makeGameMove(0, firstCard, false);
-    player(mPlayerHi)->setMessage("");
+    player(mPlayerHi)->clearMessage();
 
     ++nCurrentMove;
     mPlayerHi = nCurrentMove.nValue;
-    player(mPlayerHi)->setMessage(tr("thinking..."));
+    player(mPlayerHi)->setThinking();
     mDeskView->draw();
     mDeskView->mySleep(0);
     mCardsOnDesk[nCurrentMove.nValue] = thirdCard = makeGameMove(firstCard, secondCard, false);
-    player(mPlayerHi)->setMessage("");
+    player(mPlayerHi)->clearMessage();
 
     checkMoves();
     m_outCards << mCardsOnDesk[0] << mCardsOnDesk[1] << mCardsOnDesk[2] << mCardsOnDesk[3];

@@ -27,7 +27,7 @@
 #include "cardlist.h"
 #include "ncounter.h"
 
-const char * sGameName (eGameBid game);
+QString sGameName(eGameBid game);
 
 /**
  * @struct GameLogEntry

@@ -555,6 +555,10 @@
         <translation>думаю...</translation>
     </message>
     <message>
+        <source>your turn...</source>
+        <translation>ваш ход...</translation>
+    </message>
+    <message>
         <source>whist</source>
         <translation>вист</translation>
     </message>

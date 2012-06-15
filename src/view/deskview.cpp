@@ -52,8 +52,10 @@ static void yellowize (QImage& im, QRgb newColor=qRgb(255, 255, 0))
   }
 }
 
-namespace {
-  class SleepEventFilter : public QObject {
+namespace
+{
+  class SleepEventFilter : public QObject
+  {
   public:
     SleepEventFilter (SleepEventLoop *eloop, QObject *parent=0) : QObject(parent) { mLoop = eloop; }
 
@@ -64,13 +66,17 @@ namespace {
     SleepEventLoop *mLoop;
     };
 
-  bool SleepEventFilter::eventFilter (QObject *obj, QEvent *e) {
+  bool SleepEventFilter::eventFilter (QObject *obj, QEvent *e)
+  {
     Q_UNUSED(obj)
     //
-    if (e->type() == QEvent::KeyPress) {
+    if (e->type() == QEvent::KeyPress)
+    {
       QKeyEvent *event = static_cast<QKeyEvent *>(e);
       mLoop->doEventKey(event);
-    } else if (e->type() == QEvent::MouseButtonPress) {
+    }
+    else if (e->type() == QEvent::MouseButtonPress)
+    {
       QMouseEvent *event = static_cast<QMouseEvent *>(e);
       mLoop->doEventMouse(event);
     }
@@ -82,7 +88,7 @@ namespace {
 void SleepEventLoop::doEventKey (QKeyEvent *event)
 {
   if (mIgnoreKey)
-      return;
+    return;
   switch (event->key())
   {
     case Qt::Key_Escape:
@@ -99,7 +105,7 @@ void SleepEventLoop::doEventKey (QKeyEvent *event)
 void SleepEventLoop::doEventMouse (QMouseEvent *event)
 {
   if (mIgnoreMouse)
-      return;
+    return;
   if (event->button() == Qt::LeftButton)
   {
     mMousePressed = true;
@@ -149,11 +155,13 @@ bool DeskView::loadCards()
   CardWidth = 71;
   CardHeight = 96;
 
-  setMinimumWidth(CardWidth*14.42);
-  if (CardHeight*6 > 570)
-    setMinimumHeight(CardHeight*6);
-  else
-    setMinimumHeight(570);
+  setMinimumWidth(1024 - 60);
+  setMinimumHeight(CardHeight * 6);
+  //setMinimumWidth(CardWidth*14.42);
+  //if (CardHeight*6 > 570)
+  //  setMinimumHeight(CardHeight*6);
+  //else
+  //  setMinimumHeight(570);
 
   for (int face = 7; face <= 14; face++)
   {
@@ -228,7 +236,7 @@ DeskView::DeskView (QWidget * parent, Qt::WindowFlags f)
 
   m_leftRightMargin = 20;
   m_topBottomMargin = 20;
-  mDeskBmp = QPixmap(width2(), height());
+  mDeskBmp = QPixmap(width(), height());
   ClearScreen();
   setMouseTracking(true);
   setAutoFillBackground(false);
@@ -277,13 +285,14 @@ void DeskView::setBackgroundColor(const QRgb color)
   }
 }
 
-void DeskView::drawIMove (QPainter &p) {
+void DeskView::drawIMove (QPainter &p)
+{
   int x = 0, y = 0;
   Q_ASSERT(m_model->nCurrentStart.nValue >= 1 && m_model->nCurrentStart.nValue <= 3);
   switch (m_model->nCurrentStart.nValue)
   {
   case 1:
-     x = width2()/2-15;
+     x = width()/2-15;
      y = height() - m_topBottomMargin - CardHeight - 30;
         break;
       case 2:
@@ -291,7 +300,7 @@ void DeskView::drawIMove (QPainter &p) {
         y = m_topBottomMargin + CardHeight + 20;
         break;
       case 3:
-        x = width2() - m_leftRightMargin - 20;
+        x = width() - m_leftRightMargin - 20;
         y = m_topBottomMargin + CardHeight + 20;
         break;
   }
@@ -403,7 +412,8 @@ void DeskView::mySleep (int seconds)
     drawPKeyBmp(false);
 }
 
-void DeskView::aniSleep (int milliseconds, const QRegion & region) {
+void DeskView::aniSleep (int milliseconds, const QRegion & region)
+{
   d_ptr->m_eloop->mIgnoreMouse = true;
   d_ptr->m_eloop->mIgnoreKey = true;
   installEventFilter(d_ptr->m_efilter);
@@ -421,9 +431,9 @@ void DeskView::aniSleep (int milliseconds, const QRegion & region) {
 
 void DeskView::ClearScreen()
 {
-  if (mDeskBmp.width() != width2() || mDeskBmp.height() != height())
-    mDeskBmp = QPixmap(width2(), height());
-  ClearBox(0, 0, width2(), height());
+  if (mDeskBmp.width() != width() || mDeskBmp.height() != height())
+    mDeskBmp = QPixmap(width(), height());
+  ClearBox(0, 0, width(), height());
 }
 
 void DeskView::ClearBox (int x1, int y1, int x2, int y2)
@@ -519,7 +529,7 @@ void DeskView::drawPlayerMessage (int player, const QString & msg, bool dim, boo
   switch (player)
   {
     case 1:
-      x = (width2()-msgBubble.width())/2;
+      x = (width()-msgBubble.width())/2;
       y = height()-msgBubble.height()-(m_topBottomMargin+CardHeight+40);
       break;
     case 2:
@@ -527,11 +537,11 @@ void DeskView::drawPlayerMessage (int player, const QString & msg, bool dim, boo
       y = 10;
       break;
     case 3:
-      x = width2()-msgBubble.width()-30;
+      x = width()-msgBubble.width()-30;
       y = 10;
       break;
     default:
-      x = (width2()-msgBubble.width())/2;
+      x = (width()-msgBubble.width())/2;
       y = (height()-msgBubble.height())/2;
       break;
   }
@@ -648,21 +658,26 @@ void DeskView::introAnimation()
   draw();
 }
 
-void DeskView::getLeftTop (int player, int & left, int & top)
+const int PLAYER_OFFSET = 100;
+
+void DeskView::getPlayerCardRoom(int player, int& left, int& right, int& top)
 {
   left = 0; top = 0;
   switch (player)
   {
     case 1:
-      left = width2() / 2;
+      left = PLAYER_OFFSET;
+      right = width() - PLAYER_OFFSET;
       top = height() - m_topBottomMargin - CardHeight;
       break;
     case 2:
       left = m_leftRightMargin;
+      right = (width() - m_leftRightMargin) / 2;
       top = m_topBottomMargin;
       break;
     case 3:
-      left = width2() - m_leftRightMargin;
+      left = (width() + m_leftRightMargin) / 2;
+      right = width() - m_leftRightMargin;
       top = m_topBottomMargin;
       break;
     default: ;
@@ -675,16 +690,16 @@ void DeskView::getPlayerTrickPos(int player, int& left, int& top)
   switch (player)
   {
     case 1:
-      left = width2();
-      top = height() - m_topBottomMargin - CardHeight;
+      left = width() - CardWidth;
+      top = height();
       break;
     case 2:
-      left = m_leftRightMargin;
-      top = m_topBottomMargin;
+      left = -CardHeight;
+      top = m_topBottomMargin + CardHeight;
       break;
     case 3:
-      left = width2() - m_leftRightMargin;
-      top = m_topBottomMargin;
+      left = width();
+      top = m_topBottomMargin + CardHeight;
       break;
     default: ;
   }
@@ -693,7 +708,7 @@ void DeskView::getPlayerTrickPos(int player, int& left, int& top)
 // draw ingame card (the card that is in game, not in hand)
 void DeskView::inGameCardLeftTop (int mCardNo, int &left, int &top)
 {
-  int x = width2()/2, y = height()/2;
+  int x = width()/2, y = height()/2;
   switch (mCardNo)
   {
     case 0:
@@ -718,6 +733,7 @@ void DeskView::inGameCardLeftTop (int mCardNo, int &left, int &top)
 
 void DeskView::animateTrick(int plrNo, const QCardList & cards)
 {
+  qDebug() << "Animate trick";
   const int steps = 5 * (2 << m_takeQuality);
   int left, top;
 
@@ -754,6 +770,7 @@ void DeskView::animateTrick(int plrNo, const QCardList & cards)
 
 void DeskView::animateCommunityCardTrick (int plrNo, const QCardList& cards)
 {
+  qDebug() << "animate community card trick";
   Player* player = m_model->player(plrNo);
 
   QMap<Card*, QPoint> finalPos;
@@ -808,7 +825,7 @@ void DeskView::drawBidBoard()
   const Player *plr3 = m_model->player(3);
   const int plrAct = m_model->activePlayerNumber();
   Q_ASSERT(plr1 && plr2 && plr3);
-  bidBmpX = width2()-(mBidBmp.width()+8);
+  bidBmpX = width()-(mBidBmp.width()+8);
   bidBmpY = height()-(mBidBmp.height()+8);
   QPainter p(&mDeskBmp);
   p.drawPixmap(bidBmpX, bidBmpY, mBidBmp);

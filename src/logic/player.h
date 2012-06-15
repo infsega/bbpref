@@ -35,7 +35,8 @@ class DeskView;
  * @brief Base class for all players
  *
  */
-class Player {
+class Player
+{
 public:
   Player (int number, PrefModel *model);
   virtual ~Player ();
@@ -85,6 +86,8 @@ public:
   QString nick() const { return m_nick; }
 
   void setMessage (const QString msg) { mMessage = msg; }
+  void setThinking();
+  void clearMessage();
   const QString message () const { return mMessage; }
 
   int number () const { return mPlayerNo; }
@@ -100,7 +103,7 @@ public:
 protected:
   virtual void internalInit ();
 
-  virtual void drawAt (int left, int top, int selNo=-1);
+  virtual void drawAt (int left, int right, int top, int selNo=-1);
   virtual void clearCardArea ();
 
   struct CardPosInfo
@@ -111,9 +114,8 @@ protected:
     int offset;
   };
 
-  int buildHandXOfs (QList<CardPosInfo>& offsets, int startX, bool opened);
-  virtual int cardAt (int lx, int ly, bool opened=true);
-
+  int buildHandXOfs (QList<CardPosInfo>& offsets, int startX, int endX, bool opened);
+  virtual int cardAt(int lx, int ly, bool opened = true);
   bool isValidMove(const Card *move, const Card *lMove, const Card *rMove, const int trump);
 
 public:

@@ -45,18 +45,18 @@ Player::Player (int number, PrefModel *model)
   internalInit();
 }
 
-
-Player::~Player () {
+Player::~Player()
+{
   clear();
 }
 
-
-inline void Player::internalInit () {
+inline void Player::internalInit()
+{
   clear();
 }
 
-
-void Player::clear () {
+void Player::clear()
+{
   mCards.clear();
   mCardsOut.clear();
   /// @todo to be moved elsewhere
@@ -72,25 +72,28 @@ void Player::clear () {
   mPrevHiCardIdx = -1;
 }
 
-
-inline bool Player::invisibleHand () const {
+inline bool Player::invisibleHand () const
+{
   /// @todo should be dispatched by model
   return mDeskView->optDebugHands ? false : mInvisibleHand;
 }
 
-
-inline void Player::setInvisibleHand (bool invis) {
+inline void Player::setInvisibleHand (bool invis)
+{
   mInvisibleHand = invis;
 }
 
-inline void Player::setCurrentStart (bool start) {
-	mIStart = start;
+inline void Player::setCurrentStart (bool start)
+{
+  mIStart = start;
 }
 
-
-void Player::returnDrop () {
-  if (mCardsOut.at(0)) mCards.insert(mCardsOut.at(0));
-  if (mCardsOut.at(1)) mCards.insert(mCardsOut.at(1));
+void Player::returnDrop()
+{
+  if (mCardsOut.at(0))
+    mCards.insert(mCardsOut.at(0));
+  if (mCardsOut.at(1))
+    mCards.insert(mCardsOut.at(1));
   mCardsOut.clear();
 }
 
@@ -98,13 +101,14 @@ void Player::returnDrop () {
 // build array with cards offsets and indicies
 // at least 28 ints (14 int pairs); return # of used ints; the last int is -1
 // result: ofs, cardNo, ..., -1
-int Player::buildHandXOfs (QList<CardPosInfo>& offsets, int startX, bool opened)
+int Player::buildHandXOfs(QList<CardPosInfo>& offsets, int startX, int endX, bool opened)
 {
   CardList lst = mCards.sorted();
-  if (invisibleHand())
+  if (!opened)
   {
     foreach( Card* c, mDealedCards )
       lst.remove(c);
+    lst.clearNulls();
     foreach( Card* c, mDealedCards )
       lst.insert(c);
   }
@@ -113,12 +117,33 @@ int Player::buildHandXOfs (QList<CardPosInfo>& offsets, int startX, bool opened)
   int cardsCount = lst.count();
   int suitOffset = opened ? ((mPlayerNo == 1) ? SUIT_OFFSET_P1 : SUIT_OFFSET) : CLOSED_CARD_OFFSET;
   int cardOffset = opened ? ((mPlayerNo == 1) ? CARD_OFFSET_P1 : CARD_OFFSET) : CLOSED_CARD_OFFSET;
-  int cardsWidth = (cardsCount - suitsCount) * cardOffset + (suitsCount - 1) * suitOffset + CARD_WIDTH;
+  int cardOffsetCount = (cardsCount - suitsCount);
+  int suitOffsetCount = (suitsCount - 1);
+  int offsetsCount = cardsCount - 1;
+  int cardsWidth = cardOffsetCount * cardOffset + suitOffsetCount * suitOffset + CARD_WIDTH;
 
-  if (mPlayerNo == 3)
-    startX -= cardsWidth;
-  else if (mPlayerNo == 1)
-    startX -= cardsWidth / 2;
+  int roomWidth = endX - startX;
+  if (roomWidth < cardsWidth)
+  {
+    int corr = (cardsWidth - roomWidth + offsetsCount - 1) / offsetsCount; // round up
+    suitOffset -= corr;
+    cardOffset -= corr;
+    cardsWidth -= corr * offsetsCount;
+  }
+
+  int startFrom = startX;
+  switch(mPlayerNo)
+  {
+  case 1:
+    startFrom = (startX + endX - cardsWidth) / 2;
+    break;
+  case 2:
+    startFrom = startX;
+    break;
+  case 3:
+    startFrom = endX - cardsWidth;
+    break;
+  }
 
   Card* prev = NULL;
   for(int i = 0; i < lst.size(); i++)
@@ -130,9 +155,9 @@ int Player::buildHandXOfs (QList<CardPosInfo>& offsets, int startX, bool opened)
     {
       bool suitChanged = prev->suit() != pCard->suit();
       int offset = suitChanged ? suitOffset : cardOffset;
-      startX += offset;
+      startFrom += offset;
     }
-    offsets.push_back( CardPosInfo( mCards.indexOf(pCard), startX ) );
+    offsets.push_back( CardPosInfo( mCards.indexOf(pCard), startFrom ) );
     prev = pCard;
   }
 
@@ -141,10 +166,10 @@ int Player::buildHandXOfs (QList<CardPosInfo>& offsets, int startX, bool opened)
 
 int Player::cardAt(int lx, int ly, bool opened)
 {
-  int left, top;
-  mDeskView->getLeftTop(mPlayerNo, left, top);
+  int left, right, top;
+  mDeskView->getPlayerCardRoom(mPlayerNo, left, right, top);
   QList<CardPosInfo> offsets;
-  buildHandXOfs(offsets, left, opened);
+  buildHandXOfs(offsets, left, right, opened);
 
   int res = -1;
   foreach( const CardPosInfo& pi, offsets )
@@ -157,10 +182,10 @@ int Player::cardAt(int lx, int ly, bool opened)
   return res;
 }
 
-void Player::drawAt (int left, int top, int selNo)
+void Player::drawAt(int left, int right, int top, int selNo)
 {
   QList<CardPosInfo> offsets;
-  int cnt = buildHandXOfs(offsets, left, !invisibleHand());
+  int cnt = buildHandXOfs(offsets, left, right, !invisibleHand());
   if (!cnt)
     return;
   left = offsets.begin()->offset;
@@ -178,10 +203,10 @@ void Player::drawAt (int left, int top, int selNo)
 
 void Player::draw()
 {
-  int left, top;
+  int left, top, right;
   Q_ASSERT(mDeskView);
-  mDeskView->getLeftTop(mPlayerNo, left, top);
-  drawAt(left, top, mPrevHiCardIdx);
+  mDeskView->getPlayerCardRoom(mPlayerNo, left, right, top);
+  drawAt(left, right, top, mPrevHiCardIdx);
   mDeskView->drawPlayerMessage(mPlayerNo, mMessage, mPlayerNo!=m_model->mPlayerHi);
 }
 
@@ -189,17 +214,9 @@ void Player::clearCardArea()
 {
   if (!mDeskView)
       return;
-  int left, top;
-  mDeskView->getLeftTop(mPlayerNo, left, top);
-  QList<CardPosInfo> offsets;
-  int cnt = buildHandXOfs(offsets, left, !invisibleHand());
-  if (!cnt)
-      return;
-  foreach( const CardPosInfo& pi, offsets )
-  {
-    int x = pi.offset, y = top;
-    mDeskView->ClearBox(x, y, CARD_WIDTH, CARD_HEIGHT);
-  }
+  int left, right, top;
+  mDeskView->getPlayerCardRoom(mPlayerNo, left, right, top);
+  mDeskView->ClearBox(left, top, right - left, CARD_HEIGHT);
   mDeskView->update();
 }
 
@@ -230,10 +247,10 @@ void Player::getCardPos(const Card *card, int& x, int& y)
 {
   if (!mDeskView)
     return;
-  int left;
-  mDeskView->getLeftTop(mPlayerNo, left, y);
+  int left, right;
+  mDeskView->getPlayerCardRoom(mPlayerNo, left, right, y);
   QList<CardPosInfo> offsets;
-  buildHandXOfs(offsets, left, !invisibleHand());
+  buildHandXOfs(offsets, left, right, !invisibleHand());
   foreach( const CardPosInfo& pi, offsets )
   {
     if (card == mCards.at(pi.idx))
@@ -242,4 +259,17 @@ void Player::getCardPos(const Card *card, int& x, int& y)
       return;
     }
   }
+}
+
+void Player::setThinking()
+{
+  if (isHuman())
+    setMessage( m_model->tr("your turn..."));
+  else
+    setMessage( m_model->tr("thinking..."));
+}
+
+void Player::clearMessage()
+{
+  setMessage("");
 }
