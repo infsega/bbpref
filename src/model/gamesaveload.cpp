@@ -121,6 +121,9 @@ bool PrefModel::unserializeHeader(QByteArray& ba, int *pos, GameHeader& o_header
 
 bool PrefModel::unserialize (QByteArray &ba, int *pos)
 {
+  GameHeader header;
+  if (!unserializeHeader(ba, pos, header))
+    return false;
   for (int f = 1; f <= 3; f++)
   {
     Player *plr = player(f);
