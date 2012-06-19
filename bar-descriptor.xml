@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <qnx xmlns="http://www.qnx.com/schemas/application/1.0">
     <id>com.games.card.bbpref</id>
-    <name>BB Pref</name>
-    <buildId>1</buildId>
-    <versionNumber>1.0.0</versionNumber>
-    <description>Preferans card game for BlackBerry platform</description>
+    <packageLocale>ru</packageLocale>
+    <name>Pref<text xml:lang="ru">&#x41f;&#x440;&#x435;&#x444;&#x435;&#x440;&#x430;&#x43d;&#x441;</text></name>
+    <buildId>2</buildId>
+    <versionNumber>1.0.1</versionNumber>
+    <description>Preferans card game for BlackBerry PlayBook<text xml:lang="ru">&#x41a;&#x430;&#x440;&#x442;&#x43e;&#x447;&#x43d;&#x430;&#x44f; &#x438;&#x433;&#x440;&#x430; &#x41f;&#x440;&#x435;&#x444;&#x435;&#x440;&#x430;&#x43d;&#x441;</text></description>
     <author>Inform Group</author>
     <authorId>gYAAgOqkKwwbBgrIM78i7xYWV1E</authorId>
 
@@ -24,7 +25,7 @@
     <action system="true">run_native</action>
 
     <!-- PROJECTPATH should point to the project binary, path can be relative -->
-    <asset entry="true" path="openpref" type="Qnx/Elf">openpref</asset>
+    <asset entry="true" path="bbpref" type="Qnx/Elf">bbpref</asset>
 
     <asset path="splashscreen.png">splashscreen.png</asset>
     <asset path="icon.png">icon.png</asset>

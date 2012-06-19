@@ -20,8 +20,7 @@
  *      http://www.gnu.org/licenses 
  */
 
-#ifndef SCOREBOARD_H
-#define SCOREBOARD_H
+#pragma once
 
 #include <QtCore/QList>
 #include <QtCore/QString>
@@ -41,9 +40,10 @@ class PrefModel;
  *
  * @sa ScoreWidget
  */
-class ScoreBoard {
+class ScoreBoard
+{
 public:
-  ScoreBoard (PrefModel *model);
+  ScoreBoard (PrefModel *model = 0);
   ~ScoreBoard ();
 
   int recordScores (eGameBid aGamerType, eGameBid aMyType, int nGamerVz, int nMyVz, int nGamer, int myNumber, int nqVist);
@@ -73,13 +73,10 @@ public:
   static void calculateScore(PrefModel *model, int nPassCounter);
 
 private:
+  PrefModel *m_model;
   QIntList mPool;
   QIntList mMountain;
   QIntList mLeftWhists;
   QIntList mRightWhists;
   int mScoreInWhists;
-  PrefModel *m_model;
 };
-
-
-#endif

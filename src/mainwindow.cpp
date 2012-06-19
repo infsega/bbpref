@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent):
   readSettings();
   doConnects();
 
-  ui->statusbar->showMessage(tr("Welcome to BB Pref!"));
+  ui->statusbar->showMessage(tr("Welcome to Pref!"));
   BidDialog::instance(mDeskView)->hide();
 }
 
@@ -82,9 +82,11 @@ void MainWindow::on_actionOpenGame_triggered()
     QString filename = dlg.selection();
     if (!filename.isEmpty())
     {
-      m_PrefModel->loadGame(filename);
+      if (!m_PrefModel->loadGame(filename))
+        return;
+      qDebug() << "Game loaded";
       ui->actionSaveGame->setEnabled(true);
-      m_PrefModel->runGame();
+      m_PrefModel->runGame(true);
     }
   }
 }
@@ -189,7 +191,7 @@ void MainWindow::on_actionExit_triggered()
 {
   if (m_PrefModel->mGameRunning)
   {
-    int ret = QMessageBox::question(this, tr("BB Pref"),
+    int ret = QMessageBox::question(this, tr("Pref"),
           tr("Do you really want to quit the game?"),
           QMessageBox::Yes | QMessageBox::Default,
           QMessageBox::No | QMessageBox::Escape);

@@ -142,10 +142,19 @@ static QString dumpCardList(const CardList &lst)
   return dest;
 }
 
-void PrefModel::initPlayers()
+void PrefModel::initPlayers(bool i_saveScore)
 {
+  typedef QMap<int, ScoreBoard> ScoreBoards;
+  ScoreBoards oldScore;
   foreach(Player* player, mPlayers)
+  {
+    if (!player)
+      continue;
+    if (i_saveScore)
+      oldScore[player->number()] = player->mScore;
     delete player;
+  }
+  qDebug() << "clear players";
   mPlayers.clear();
 
   mPlayers << 0; // 0th player is nobody
@@ -159,9 +168,18 @@ void PrefModel::initPlayers()
   else 
     mPlayers << new AlphaBetaPlayer(3, this);
     
+  qDebug() << "Set nicks";
   mPlayers[1]->setNick(optHumanName);
   mPlayers[2]->setNick(optPlayerName1);
   mPlayers[3]->setNick(optPlayerName2);
+
+  if (i_saveScore)
+  {
+    ScoreBoards::iterator it = oldScore.begin();
+    for(; it != oldScore.end(); ++it)
+      if (mPlayers[it.key()])
+        mPlayers[it.key()]->mScore = it.value();
+  }
 }
 
 PrefModel::PrefModel (DeskView *aDeskView)
@@ -192,12 +210,14 @@ PrefModel::PrefModel (DeskView *aDeskView)
   nCurrentStart.nMax = nCurrentMove.nMax = 3;
   mCardsOnDesk[0] = mCardsOnDesk[1] = mCardsOnDesk[2] = mCardsOnDesk[3] = 0;
   mOnDeskClosed = false;
-  initPlayers();
+  initPlayers(false);
 }
 
 
-PrefModel::~PrefModel () {
-  foreach (Player *p, mPlayers) delete p;
+PrefModel::~PrefModel()
+{
+  foreach (Player *p, mPlayers)
+    delete p;
   mPlayers.clear();
 }
 
@@ -217,13 +237,15 @@ int PrefModel::gameWhists (eGameBid gType) const
 }
 
 
-void PrefModel::closePool () {
+void PrefModel::closePool()
+{
   if(!mGameRunning)
     return;
   WrapCounter counter(1, 1, 3);
   int i;
   tScores R[4];
-  for (i = 1; i <= 3; i++) {
+  for (i = 1; i <= 3; i++)
+  {
     Player *G = player(i);
     R[i].mount = G->mScore.mountain();
     R[i].pool = G->mScore.pool();
@@ -290,7 +312,8 @@ Card *PrefModel::makeGameMove (Card *lMove, Card *rMove, bool isPassOut)
     }
   }
 
-  if (plr) {
+  if (plr)
+  {
     // Do player logic swap
     *plr = *curPlr;
     mPlayers[nCurrentMove.nValue] = plr;
@@ -300,7 +323,9 @@ Card *PrefModel::makeGameMove (Card *lMove, Card *rMove, bool isPassOut)
     *curPlr = *plr;
     mPlayers[nCurrentMove.nValue] = curPlr;
     delete plr;
-  } else {
+  }
+  else
+  {
     // No swaps, current player makes move himself
     res = curPlr->makeMove(lMove, rMove, player(nextPlayer(nCurrentMove)),
       player(previousPlayer(nCurrentMove)), isPassOut);
@@ -332,7 +357,8 @@ Player *PrefModel::player (int num)
 }
 
 
-inline Player *PrefModel::player (const WrapCounter &cnt) {
+inline Player *PrefModel::player (const WrapCounter &cnt)
+{
   Q_ASSERT(cnt.nValue >= 1 && cnt.nValue <= 3);
   return player(cnt.nValue);
 }
@@ -360,10 +386,11 @@ void PrefModel::showMoveHint()
     emitShowHint(tr("Select two cards to drop"));
 }
 
-void PrefModel::runGame()
+void PrefModel::runGame(bool i_saveScore /* = false */)
 {
+  qDebug() << "runGame";
   eGameBid playerBids[4];
-  initPlayers();
+  initPlayers(i_saveScore);
   // Randomize
   const QTime t = QTime::currentTime();
   qsrand((double)t.minute()*t.msec()/(t.second()+1)*UINT_MAX/3600);

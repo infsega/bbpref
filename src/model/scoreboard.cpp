@@ -55,7 +55,7 @@ ScoreBoard::ScoreBoard (PrefModel *model) : m_model(model)
   mScoreInWhists = 0;
 }
 
-ScoreBoard::~ScoreBoard ()
+ScoreBoard::~ScoreBoard()
 {
 }
 

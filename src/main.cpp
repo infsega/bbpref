@@ -38,7 +38,7 @@
 int main(int argc, char *argv[]) {
   QCoreApplication::setOrganizationName("Inform Group");
   QCoreApplication::setOrganizationDomain("bbpref.card.game.com");
-  QCoreApplication::setApplicationName("BB Pref");
+  QCoreApplication::setApplicationName("Pref");
 
   const QTime t = QTime::currentTime();
   qsrand((double)t.minute()*t.msec()/(t.second()+1)* std::numeric_limits<unsigned int>::max()/3600);

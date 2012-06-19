@@ -33,7 +33,7 @@ void serializeInt (QByteArray &ba, int i)
 
 bool unserializeInt (QByteArray &ba, int *pos, int *i)
 {
-  if (*pos + sizeof(int) > ba.size())
+  if (*pos + (int)sizeof(int) > (int)ba.size())
   {
     qDebug() << "Not enough space for int";
     return false;

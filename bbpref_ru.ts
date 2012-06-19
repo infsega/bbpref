@@ -96,8 +96,8 @@
         <translation>Торги</translation>
     </message>
     <message>
-        <source>BB Pref</source>
-        <translation>BB Pref</translation>
+        <source>Pref</source>
+        <translation>Преферанс</translation>
     </message>
     <message>
         <source>Do you really want to quit the game?</source>
@@ -183,17 +183,10 @@
     </message>
 </context>
 <context>
-    <name>HelpBrowser</name>
-    <message>
-        <source>Preferans Rules</source>
-        <translation>Правила преферанса</translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
-        <source>Welcome to BB Pref!</source>
-        <translation>Добро пожаловать в BB Pref!</translation>
+        <source>Welcome to Pref!</source>
+        <translation>Добро пожаловать!</translation>
     </message>
     <message>
         <source>&amp;Game</source>
@@ -232,16 +225,8 @@
         <translation>&amp;Справка</translation>
     </message>
     <message>
-        <source>&amp;Preferans Rules...</source>
-        <translation>&amp;Правила преферанса...</translation>
-    </message>
-    <message>
-        <source>&amp;About BB Pref</source>
-        <translation>О &amp;программе BB Pref</translation>
-    </message>
-    <message>
-        <source>BB Pref</source>
-        <translation>BB Pref</translation>
+        <source>Pref</source>
+        <translation>Преферанс</translation>
     </message>
     <message>
         <source>Do you really want to quit the game?</source>
@@ -292,7 +277,7 @@
         <translation>Журнал</translation>
     </message>
     <message>
-        <source>&lt;h2 align=center&gt;&amp;spades; &lt;font color=red&gt;&amp;diams;&lt;/font&gt; BB Pref </source>
+        <source>&lt;h2 align=center&gt;&amp;spades; &lt;font color=red&gt;&amp;diams;&lt;/font&gt; Pref </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -417,6 +402,14 @@
     <message>
         <source>End game after specified number of rounds</source>
         <translation>Закончить игру после определенного количества кругов</translation>
+    </message>
+    <message>
+        <source>Mr. West</source>
+        <translation>Балбес</translation>
+    </message>
+    <message>
+        <source>Dr. East</source>
+        <translation>Студент</translation>
     </message>
 </context>
 <context>

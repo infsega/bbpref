@@ -78,7 +78,7 @@ public:
   explicit PrefModel (DeskView *aDeskView/*=0*/);
   virtual ~PrefModel ();
 
-  void runGame();
+  void runGame(bool i_saveScore = false);
   Card *cardOnDesk(int index) const;
 
   bool saveGame (const QString& i_filename);
@@ -146,7 +146,7 @@ private:
   static bool unserializeHeader(QByteArray& ba, int *pos, GameHeader& o_header);
 
   static const QString bidMessage(const eGameBid game);
-  void initPlayers ();
+  void initPlayers(bool i_saveScore);
   Player *player (const WrapCounter &cnt);
   Card *makeGameMove (Card *lMove, Card *rMove, bool isPassOut);
   void playingRound();

@@ -1,7 +1,7 @@
 include($$PWD/src/main.pri)
 
 TEMPLATE = app
-TARGET = openpref
+TARGET = bbpref
 QT += gui
 CONFIG += qt warn_on
 CONFIG += debug_and_release
@@ -15,7 +15,7 @@ MOC_DIR = _build/moc
 RCC_DIR = _build/rcc
 RESOURCES += $$PWD/bbpref.qrc
 TRANSLATIONS = bbpref_ru.ts
-LIBS += c:/bbndk-2.0.1/target/qnx6/armle-v7/usr/lib/libbps.so
+LIBS += g:/bbdev/bbndk-2.0.1/target/qnx6/armle-v7/usr/lib/libbps.so
 
 ## Build qm files ##
 
