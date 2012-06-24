@@ -68,6 +68,6 @@ int main(int argc, char *argv[]) {
   qDebug() << "Creating the main window " << endl;
 
   MainWindow pref;
-  pref.showFullScreen();
+  pref.showMaximized();
   return app.exec();
 }

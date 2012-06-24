@@ -44,7 +44,8 @@ NewGameDialog::~NewGameDialog()
 
 void NewGameDialog::showEvent(QShowEvent *)
 {
-  showFullScreen();
+  //showFullScreen();
+  this->showMaximized();
 }
 
 void NewGameDialog::toggleRounds(int checked)

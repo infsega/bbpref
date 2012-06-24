@@ -66,7 +66,8 @@ GameLogDialog::GameLogDialog(PrefModel* i_model, QWidget *parent)
     ui->tableView->setIndexWidget(ui->tableView->model()->index(i, 5), btnDeal);
     connect(btnDeal, SIGNAL(clicked(int)), this, SLOT(showDeal(int)));
   }
-  showFullScreen();
+  //showFullScreen();
+  this->showMaximized();
 }
 
 GameLogDialog::~GameLogDialog()

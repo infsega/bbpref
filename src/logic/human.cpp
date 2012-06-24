@@ -195,6 +195,7 @@ void HumanPlayer::highlightCard (int lx, int ly)
   m_model->emitClearHint();
 }
 
-bool HumanPlayer::chooseClosedWhist () {
-	return mDeskView->askWhistType();
+bool HumanPlayer::chooseClosedWhist()
+{
+  return mDeskView->askWhistType();
 }

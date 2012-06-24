@@ -14,7 +14,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
   ui->titleLabel->setText(
     ui->titleLabel->text().replace("BBPREF_VERSION", BBPREF_VERSION) );
   connect( ui->titleLabel, SIGNAL(linkActivated(QString)), this, SLOT(onLinkActivated(QString)) );
-  showFullScreen();
+  showMaximized();
 }
 
 AboutDialog::~AboutDialog()

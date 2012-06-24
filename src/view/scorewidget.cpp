@@ -130,7 +130,8 @@ void ScoreWidget::resizeEvent(QResizeEvent *event)
 void ScoreWidget::showEvent(QShowEvent *event)
 {
   Q_UNUSED(event)
-  QDialog::showFullScreen();
+  //QDialog::showFullScreen();
+  QDialog::showMaximized();
 }
 
 void ScoreWidget::paintBlankPaper ()

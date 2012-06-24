@@ -3,16 +3,17 @@
     <id>com.games.card.bbpref</id>
     <packageLocale>ru</packageLocale>
     <name>Pref<text xml:lang="ru">&#x41f;&#x440;&#x435;&#x444;&#x435;&#x440;&#x430;&#x43d;&#x441;</text></name>
-    <buildId>2</buildId>
-    <versionNumber>1.0.1</versionNumber>
+    <buildId>3</buildId>
+    <versionNumber>1.0.2</versionNumber>
     <description>Preferans card game for BlackBerry PlayBook<text xml:lang="ru">&#x41a;&#x430;&#x440;&#x442;&#x43e;&#x447;&#x43d;&#x430;&#x44f; &#x438;&#x433;&#x440;&#x430; &#x41f;&#x440;&#x435;&#x444;&#x435;&#x440;&#x430;&#x43d;&#x441;</text></description>
     <author>Inform Group</author>
     <authorId>gYAAgOqkKwwbBgrIM78i7xYWV1E</authorId>
+    <category>core.games</category>
 
     <initialWindow>
         <systemChrome>none</systemChrome>
         <transparent>false</transparent>
-        <autoOrients>true</autoOrients>
+        <autoOrients>false</autoOrients>
         <aspectRatio>landscape</aspectRatio>
     </initialWindow>
 
