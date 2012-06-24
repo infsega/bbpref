@@ -175,8 +175,8 @@ void MainWindow::readSettings()
 {
   QSettings st;
   m_PrefModel->optHumanName   = st.value("humanname", getenv("USER")).toString();
-  m_PrefModel->optPlayerName1 = st.value("playername1", tr("Player 1")).toString();
-  m_PrefModel->optPlayerName2 = st.value("playername2", tr("Player 2")).toString();
+  m_PrefModel->optPlayerName1 = st.value("playername1", tr("Mr. West")).toString();
+  m_PrefModel->optPlayerName2 = st.value("playername2", tr("Dr. East")).toString();
   m_PrefModel->optAlphaBeta1  = st.value("alphabeta1", false).toBool();
   m_PrefModel->optAlphaBeta2  = st.value("alphabeta2", false).toBool();
 }
