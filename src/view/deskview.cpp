@@ -853,7 +853,7 @@ bool DeskView::askWhistType()
   const int ret = QMessageBox::question(this, tr("Choose whist type"),
     tr("Do you want to whist with opened cards?"),
     QMessageBox::Yes | QMessageBox::Default, QMessageBox::No | QMessageBox::Escape);
-  return (ret == QMessageBox::Yes);
+  return (ret == QMessageBox::No);
 }
 
 bool DeskView::askConfirmDrop ()
