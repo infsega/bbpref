@@ -698,7 +698,7 @@ void DeskView::getPlayerTrickPos(int player, int& left, int& top)
       top = m_topBottomMargin + CardHeight;
       break;
     case 3:
-      left = width();
+      left = width() + CardHeight;
       top = m_topBottomMargin + CardHeight;
       break;
     default: ;
